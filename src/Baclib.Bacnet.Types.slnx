@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="Baclib.Bacnet.Types.Tests/Baclib.Bacnet.Types.Tests.csproj" />
+  <Project Path="Baclib.Bacnet.Types/Baclib.Bacnet.Types.csproj" />
+</Solution>
