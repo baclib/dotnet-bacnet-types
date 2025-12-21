@@ -4,206 +4,327 @@
 namespace Baclib.Bacnet.Types;
 
 /// <summary>
-/// Represents BACnet object types as defined in ANSI/ASHRAE 135-2024.
+/// Represents the enumeration BACnetObjectType as defined in ANSI/ASHRAE 135-2024 Clause 20.6.
 /// </summary>
-/// <remarks>
-/// Object type values are 10-bit unsigned integers (0-1023).
-/// Values 0-127 are defined by ASHRAE, 128-1023 are vendor-specific.
-/// </remarks>
 public enum ObjectType : ushort
 {
-    /// <summary>Analog Input object (0)</summary>
+    /// <summary>
+    /// Represents an analog input object.
+    /// </summary>
     AnalogInput = 0,
 
-    /// <summary>Analog Output object (1)</summary>
+    /// <summary>
+    /// Represents an analog output object.
+    /// </summary>
     AnalogOutput = 1,
 
-    /// <summary>Analog Value object (2)</summary>
+    /// <summary>
+    /// Represents an analog value object.
+    /// </summary>
     AnalogValue = 2,
 
-    /// <summary>Binary Input object (3)</summary>
+    /// <summary>
+    /// Represents a binary input object.
+    /// </summary>
     BinaryInput = 3,
 
-    /// <summary>Binary Output object (4)</summary>
+    /// <summary>
+    /// Represents a binary output object.
+    /// </summary>
     BinaryOutput = 4,
 
-    /// <summary>Binary Value object (5)</summary>
+    /// <summary>
+    /// Represents a binary value object.
+    /// </summary>
     BinaryValue = 5,
 
-    /// <summary>Calendar object (6)</summary>
+    /// <summary>
+    /// Represents a calendar object.
+    /// </summary>
     Calendar = 6,
 
-    /// <summary>Command object (7)</summary>
+    /// <summary>
+    /// Represents a command object.
+    /// </summary>
     Command = 7,
 
-    /// <summary>Device object (8)</summary>
+    /// <summary>
+    /// Represents a device object.
+    /// </summary>
     Device = 8,
 
-    /// <summary>Event Enrollment object (9)</summary>
+    /// <summary>
+    /// Represents an event enrollment object.
+    /// </summary>
     EventEnrollment = 9,
 
-    /// <summary>File object (10)</summary>
+    /// <summary>
+    /// Represents a file object.
+    /// </summary>
     File = 10,
 
-    /// <summary>Group object (11)</summary>
+    /// <summary>
+    /// Represents a group object.
+    /// </summary>
     Group = 11,
 
-    /// <summary>Loop object (12)</summary>
+    /// <summary>
+    /// Represents a loop object.
+    /// </summary>
     Loop = 12,
 
-    /// <summary>Multi-State Input object (13)</summary>
+    /// <summary>
+    /// Represents a multi-state input object.
+    /// </summary>
     MultiStateInput = 13,
 
-    /// <summary>Multi-State Output object (14)</summary>
+    /// <summary>
+    /// Represents a multi-state output object.
+    /// </summary>
     MultiStateOutput = 14,
 
-    /// <summary>Notification Class object (15)</summary>
+    /// <summary>
+    /// Represents a notification class object.
+    /// </summary>
     NotificationClass = 15,
 
-    /// <summary>Program object (16)</summary>
+    /// <summary>
+    /// Represents a program object.
+    /// </summary>
     Program = 16,
 
-    /// <summary>Schedule object (17)</summary>
+    /// <summary>
+    /// Represents a schedule object.
+    /// </summary>
     Schedule = 17,
 
-    /// <summary>Averaging object (18)</summary>
+    /// <summary>
+    /// Represents an averaging object.
+    /// </summary>
     Averaging = 18,
 
-    /// <summary>Multi-State Value object (19)</summary>
+    /// <summary>
+    /// Represents a multi-state value object.
+    /// </summary>
     MultiStateValue = 19,
 
-    /// <summary>Trend Log object (20)</summary>
+    /// <summary>
+    /// Represents a trend log object.
+    /// </summary>
     TrendLog = 20,
 
-    /// <summary>Life Safety Point object (21)</summary>
+    /// <summary>
+    /// Represents a life safety point object.
+    /// </summary>
     LifeSafetyPoint = 21,
 
-    /// <summary>Life Safety Zone object (22)</summary>
+    /// <summary>
+    /// Represents a life safety zone object.
+    /// </summary>
     LifeSafetyZone = 22,
 
-    /// <summary>Accumulator object (23)</summary>
+    /// <summary>
+    /// Represents an accumulator object.
+    /// </summary>
     Accumulator = 23,
 
-    /// <summary>Pulse Converter object (24)</summary>
+    /// <summary>
+    /// Represents a pulse converter object.
+    /// </summary>
     PulseConverter = 24,
 
-    /// <summary>Event Log object (25)</summary>
+    /// <summary>
+    /// Represents an event log object.
+    /// </summary>
     EventLog = 25,
 
-    /// <summary>Global Group object (26)</summary>
+    /// <summary>
+    /// Represents a global group object.
+    /// </summary>
     GlobalGroup = 26,
 
-    /// <summary>Trend Log Multiple object (27)</summary>
+    /// <summary>
+    /// Represents a trend log multiple object.
+    /// </summary>
     TrendLogMultiple = 27,
 
-    /// <summary>Load Control object (28)</summary>
+    /// <summary>
+    /// Represents a load control object.
+    /// </summary>
     LoadControl = 28,
 
-    /// <summary>Structured View object (29)</summary>
+    /// <summary>
+    /// Represents a structured view object.
+    /// </summary>
     StructuredView = 29,
 
-    /// <summary>Access Door object (30)</summary>
+    /// <summary>
+    /// Represents an access door object.
+    /// </summary>
     AccessDoor = 30,
 
-    /// <summary>Timer object (31)</summary>
+    /// <summary>
+    /// Represents a timer object.
+    /// </summary>
     Timer = 31,
 
-    /// <summary>Access Credential object (32)</summary>
+    /// <summary>
+    /// Represents an access credential object.
+    /// </summary>
     AccessCredential = 32,
 
-    /// <summary>Access Point object (33)</summary>
+    /// <summary>
+    /// Represents an access point object.
+    /// </summary>
     AccessPoint = 33,
 
-    /// <summary>Access Rights object (34)</summary>
+    /// <summary>
+    /// Represents an access rights object.
+    /// </summary>
     AccessRights = 34,
 
-    /// <summary>Access User object (35)</summary>
+    /// <summary>
+    /// Represents an access user object.
+    /// </summary>
     AccessUser = 35,
 
-    /// <summary>Access Zone object (36)</summary>
+    /// <summary>
+    /// Represents an access zone object.
+    /// </summary>
     AccessZone = 36,
 
-    /// <summary>Credential Data Input object (37)</summary>
+    /// <summary>
+    /// Represents a credential data input object.
+    /// </summary>
     CredentialDataInput = 37,
 
-    /// <summary>Network Security object (38)</summary>
-    NetworkSecurity = 38,
-
-    /// <summary>BitString Value object (39)</summary>
+    /// <summary>
+    /// Represents a bit string value object.
+    /// </summary>
     BitstringValue = 39,
 
-    /// <summary>CharacterString Value object (40)</summary>
+    /// <summary>
+    /// Represents a character string value object.
+    /// </summary>
     CharacterstringValue = 40,
 
-    /// <summary>Date Pattern Value object (41)</summary>
-    DatePatternValue = 41,
+    /// <summary>
+    /// Represents a date pattern value object.
+    /// </summary>
+    DatepatternValue = 41,
 
-    /// <summary>Date Value object (42)</summary>
+    /// <summary>
+    /// Represents a date value object.
+    /// </summary>
     DateValue = 42,
 
-    /// <summary>DateTime Pattern Value object (43)</summary>
-    DatetimePatternValue = 43,
+    /// <summary>
+    /// Represents a datetime pattern value object.
+    /// </summary>
+    DatetimepatternValue = 43,
 
-    /// <summary>DateTime Value object (44)</summary>
+    /// <summary>
+    /// Represents a datetime value object.
+    /// </summary>
     DatetimeValue = 44,
 
-    /// <summary>Integer Value object (45)</summary>
+    /// <summary>
+    /// Represents an integer value object.
+    /// </summary>
     IntegerValue = 45,
 
-    /// <summary>Large Analog Value object (46)</summary>
+    /// <summary>
+    /// Represents a large analog value object.
+    /// </summary>
     LargeAnalogValue = 46,
 
-    /// <summary>OctetString Value object (47)</summary>
+    /// <summary>
+    /// Represents an octet string value object.
+    /// </summary>
     OctetstringValue = 47,
 
-    /// <summary>Positive Integer Value object (48)</summary>
+    /// <summary>
+    /// Represents a positive integer value object.
+    /// </summary>
     PositiveIntegerValue = 48,
 
-    /// <summary>Time Pattern Value object (49)</summary>
-    TimePatternValue = 49,
+    /// <summary>
+    /// Represents a time pattern value object.
+    /// </summary>
+    TimepatternValue = 49,
 
-    /// <summary>Time Value object (50)</summary>
+    /// <summary>
+    /// Represents a time value object.
+    /// </summary>
     TimeValue = 50,
 
-    /// <summary>Notification Forwarder object (51)</summary>
+    /// <summary>
+    /// Represents a notification forwarder object.
+    /// </summary>
     NotificationForwarder = 51,
 
-    /// <summary>Alert Enrollment object (52)</summary>
+    /// <summary>
+    /// Represents an alert enrollment object.
+    /// </summary>
     AlertEnrollment = 52,
 
-    /// <summary>Channel object (53)</summary>
+    /// <summary>
+    /// Represents a channel object.
+    /// </summary>
     Channel = 53,
 
-    /// <summary>Lighting Output object (54)</summary>
+    /// <summary>
+    /// Represents a lighting output object.
+    /// </summary>
     LightingOutput = 54,
 
-    /// <summary>Binary Lighting Output object (55)</summary>
+    /// <summary>
+    /// Represents a binary lighting output object.
+    /// </summary>
     BinaryLightingOutput = 55,
 
-    /// <summary>Network Port object (56)</summary>
+    /// <summary>
+    /// Represents a network port object.
+    /// </summary>
     NetworkPort = 56,
 
-    /// <summary>Elevator Group object (57)</summary>
+    /// <summary>
+    /// Represents an elevator group object.
+    /// </summary>
     ElevatorGroup = 57,
 
-    /// <summary>Escalator object (58)</summary>
+    /// <summary>
+    /// Represents an escalator object.
+    /// </summary>
     Escalator = 58,
 
-    /// <summary>Lift object (59)</summary>
+    /// <summary>
+    /// Represents a lift object.
+    /// </summary>
     Lift = 59,
 
-    /// <summary>Staging object (60)</summary>
+    /// <summary>
+    /// Represents a staging object.
+    /// </summary>
     Staging = 60,
 
-    /// <summary>Audit Log object (61)</summary>
+    /// <summary>
+    /// Represents an audit log object.
+    /// </summary>
     AuditLog = 61,
 
-    /// <summary>Audit Reporter object (62)</summary>
+    /// <summary>
+    /// Represents an audit reporter object.
+    /// </summary>
     AuditReporter = 62,
 
-    /// <summary>Color object (63)</summary>
+    /// <summary>
+    /// Represents a color object.
+    /// </summary>
     Color = 63,
 
-    /// <summary>Color Temperature object (64)</summary>
+    /// <summary>
+    /// Represents a color temperature object.
+    /// </summary>
     ColorTemperature = 64
 }
