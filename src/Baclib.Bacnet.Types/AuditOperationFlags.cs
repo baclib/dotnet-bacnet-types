@@ -1,7 +1,6 @@
 ﻿// SPDX-FileCopyrightText: Copyright 2024-2025, The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
-using System;
 using System.Collections;
 
 namespace Baclib.Bacnet.Types;
