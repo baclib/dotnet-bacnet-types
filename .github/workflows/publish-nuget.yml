@@ -26,10 +26,10 @@ jobs:
       - name: Pack
         run: dotnet pack --configuration Release --no-build --output ./nupkg src/Baclib.Bacnet.Types/Baclib.Bacnet.Types.csproj
 
-      - name: Publish to GitHub Packages
-        run: dotnet nuget push ./nupkg/*.nupkg --source "https://nuget.pkg.github.com/baclib" --api-key ${{ secrets.GITHUB_TOKEN }}
-        env:
-          NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #- name: Publish to GitHub Packages
+      #  run: dotnet nuget push ./nupkg/*.nupkg --source "https://nuget.pkg.github.com/baclib" --api-key ${{ secrets.GITHUB_TOKEN }}
+      #  env:
+      #    NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Clean up packages
         run: rm -rf ./nupkg
