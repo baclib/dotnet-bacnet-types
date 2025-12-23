@@ -6,9 +6,6 @@ namespace Baclib.Bacnet.Types;
 /// <summary>
 /// Represents the enumeration BACnetTimerState as defined in ANSI/ASHRAE 135-2024 Clause 20.6.
 /// </summary>
-/// <remarks>
-/// This enumeration defines the possible states of a BACnet Timer object.
-/// </remarks>
 public enum TimerState : byte
 {
     /// <summary>

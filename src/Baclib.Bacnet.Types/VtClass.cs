@@ -5,7 +5,6 @@ namespace Baclib.Bacnet.Types;
 
 /// <summary>
 /// Represents the enumeration BACnetVTClass as defined in ANSI/ASHRAE 135-2024 Clause 20.6.
-/// Specifies the type of virtual terminal emulation supported.
 /// </summary>
 public enum VtClass : ushort
 {
