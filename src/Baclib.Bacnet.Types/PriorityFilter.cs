@@ -6,134 +6,133 @@ using System.Collections;
 namespace Baclib.Bacnet.Types;
 
 /// <summary>
-/// Represents the BACnetPriorityFilter bit string (16 bits).
+/// Represents the bit string BACnetPriorityFilter as defined in ANSI/ASHRAE 135-2024 Clause 20.6.
 /// </summary>
 public readonly record struct PriorityFilter : IReadOnlyCollection<bool>
 {
     /// <summary>
-    /// Raw flags used to represent priority filter bits. All 16 bits are used.
+    /// Gets the underlying 16-bit unsigned integer containing the bits in system-native format.
     /// </summary>
     public ushort Flags { get; }
 
     /// <summary>
     /// Initializes a new instance of <see cref="PriorityFilter"/>.
     /// </summary>
-    /// <param name="flags">The raw flag value (16 bits).</param>
+    /// <param name="flags">
+    /// The underlying 16-bit unsigned integer containing the bits in system-native format.
+    /// Only the lower bits up to <see cref="Count"/> (always 16) are used. The remaining bits are always set to zero.
+    /// </param>
     public PriorityFilter(ushort flags)
     {
-        Flags = flags;
+        Flags = (ushort)(flags & 0xFFFF);
     }
 
     /// <summary>
-    /// Returns whether the bit at <paramref name="index"/> is set.
+    /// Manual life safety priority.
     /// </summary>
-    /// <param name="index">Bit index, 0 = manual-life-safety, 15 = priority-16.</param>
-    /// <returns><c>true</c> when the bit is set; otherwise <c>false</c>.</returns>
-    private bool GetFlag(int index) => (Flags & (1 << index)) != 0;
+    public bool ManualLifeSafety => Flags.GetBit(0);
 
     /// <summary>
-    /// True when manual-life-safety (bit 0) is set.
+    /// Automatic life safety priority.
     /// </summary>
-    public bool ManualLifeSafety => GetFlag(0);
+    public bool AutomaticLifeSafety => Flags.GetBit(1);
 
     /// <summary>
-    /// True when automatic-life-safety (bit 1) is set.
+    /// Priority 3.
     /// </summary>
-    public bool AutomaticLifeSafety => GetFlag(1);
+    public bool Priority3 => Flags.GetBit(2);
 
     /// <summary>
-    /// True when priority-3 (bit 2) is set.
+    /// Priority 4.
     /// </summary>
-    public bool Priority3 => GetFlag(2);
+    public bool Priority4 => Flags.GetBit(3);
 
     /// <summary>
-    /// True when priority-4 (bit 3) is set.
+    /// Critical equipment controls priority.
     /// </summary>
-    public bool Priority4 => GetFlag(3);
+    public bool CriticalEquipmentControls => Flags.GetBit(4);
 
     /// <summary>
-    /// True when critical-equipment-controls (bit 4) is set.
+    /// Minimum on/off priority.
     /// </summary>
-    public bool CriticalEquipmentControls => GetFlag(4);
+    public bool MinimumOnOff => Flags.GetBit(5);
 
     /// <summary>
-    /// True when minimum-on-off (bit 5) is set.
+    /// Priority 7.
     /// </summary>
-    public bool MinimumOnOff => GetFlag(5);
+    public bool Priority7 => Flags.GetBit(6);
 
     /// <summary>
-    /// True when priority-7 (bit 6) is set.
+    /// Manual operator priority.
     /// </summary>
-    public bool Priority7 => GetFlag(6);
+    public bool ManualOperator => Flags.GetBit(7);
 
     /// <summary>
-    /// True when manual-operator (bit 7) is set.
+    /// Priority 9.
     /// </summary>
-    public bool ManualOperator => GetFlag(7);
+    public bool Priority9 => Flags.GetBit(8);
 
     /// <summary>
-    /// True when priority-9 (bit 8) is set.
+    /// Priority 10.
     /// </summary>
-    public bool Priority9 => GetFlag(8);
+    public bool Priority10 => Flags.GetBit(9);
 
     /// <summary>
-    /// True when priority-10 (bit 9) is set.
+    /// Priority 11.
     /// </summary>
-    public bool Priority10 => GetFlag(9);
+    public bool Priority11 => Flags.GetBit(10);
 
     /// <summary>
-    /// True when priority-11 (bit 10) is set.
+    /// Priority 12.
     /// </summary>
-    public bool Priority11 => GetFlag(10);
+    public bool Priority12 => Flags.GetBit(11);
 
     /// <summary>
-    /// True when priority-12 (bit 11) is set.
+    /// Priority 13.
     /// </summary>
-    public bool Priority12 => GetFlag(11);
+    public bool Priority13 => Flags.GetBit(12);
 
     /// <summary>
-    /// True when priority-13 (bit 12) is set.
+    /// Priority 14.
     /// </summary>
-    public bool Priority13 => GetFlag(12);
+    public bool Priority14 => Flags.GetBit(13);
 
     /// <summary>
-    /// True when priority-14 (bit 13) is set.
+    /// Priority 15.
     /// </summary>
-    public bool Priority14 => GetFlag(13);
+    public bool Priority15 => Flags.GetBit(14);
 
     /// <summary>
-    /// True when priority-15 (bit 14) is set.
+    /// Priority 16.
     /// </summary>
-    public bool Priority15 => GetFlag(14);
-
-    /// <summary>
-    /// True when priority-16 (bit 15) is set.
-    /// </summary>
-    public bool Priority16 => GetFlag(15);
-
-    /// <summary>
-    /// Gets the number of bits used by this bit string (always 16).
-    /// </summary>
-    public int Count => 16;
+    public bool Priority16 => Flags.GetBit(15);
 
     /// <summary>
     /// Gets the boolean value of the bit at the specified <paramref name="index"/>.
     /// </summary>
-    /// <param name="index">Zero-based bit index: 0 = manual-life-safety, 15 = priority-16.</param>
-    /// <returns><c>true</c> if the bit is set; otherwise <c>false</c>.</returns>
-    /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="index"/> is less than 0 or greater than 15.</exception>
+    /// <param name="index">The zero-based bit index.</param>
+    /// <returns><see langword="true"/> if the bit is set; otherwise <see langword="false"/>.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="index"/> is less than 0 or greater than <see cref="Count"/>.</exception>
     public bool this[int index]
     {
         get
         {
-            if (index < 0 || index >= Count)
-            {
-                throw new ArgumentOutOfRangeException(nameof(index));
-            }
+            ArgumentOutOfRangeException.ThrowIfNegative(index);
+            ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual(index, _count);
 
-            return GetFlag(index);
+            return Flags.GetBit(index);
         }
     }
+
+    /// <summary>
+    /// The number of bits used by this bit string.
+    /// </summary>
+    private const int _count = 16;
+
+    /// <summary>
+    /// Gets the number of bits used by this bit string (always 16).
+    /// </summary>
+    public int Count => _count;
 
     /// <summary>
     /// Returns a value-type enumerator suitable for pattern-based foreach iteration.
@@ -149,29 +148,29 @@ public readonly record struct PriorityFilter : IReadOnlyCollection<bool>
     /// </remarks>
     public struct Enumerator
     {
-        private readonly PriorityFilter _filter;
+        private readonly PriorityFilter _bits;
         private int _index;
 
-        internal Enumerator(PriorityFilter filter)
+        internal Enumerator(PriorityFilter flags)
         {
-            _filter = filter;
+            _bits = flags;
             _index = -1;
         }
 
         /// <summary>
         /// Advances the enumerator to the next bit.
         /// </summary>
-        /// <returns><c>true</c> if the enumerator advanced to a valid bit; otherwise <c>false</c>.</returns>
+        /// <returns><see langword="true"/> if the enumerator advanced to a valid bit; otherwise <see langword="false"/>.</returns>
         public bool MoveNext()
         {
             _index++;
-            return _index < 16;
+            return _index < _bits.Count;
         }
 
         /// <summary>
         /// Gets the current bit value.
         /// </summary>
-        public readonly bool Current => _filter.GetFlag(_index);
+        public readonly bool Current => _bits.Flags.GetBit(_index);
     }
 
     /// <summary>
@@ -180,9 +179,9 @@ public readonly record struct PriorityFilter : IReadOnlyCollection<bool>
     /// </summary>
     IEnumerator<bool> IEnumerable<bool>.GetEnumerator()
     {
-        for (int i = 0; i < Count; i++)
+        for (int i = 0; i < _count; i++)
         {
-            yield return GetFlag(i);
+            yield return Flags.GetBit(i);
         }
     }
 

@@ -1,4 +1,4 @@
-﻿// SPDX-FileCopyrightText: Copyright 2024-2025, The BAClib Initiative and Contributors
+// SPDX-FileCopyrightText: Copyright 2024-2025, The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
 using System.Collections;
@@ -6,88 +6,88 @@ using System.Collections;
 namespace Baclib.Bacnet.Types;
 
 /// <summary>
-/// Represents the BACnetDaysOfWeek bit string.
+/// Represents the bit string BACnetDaysOfWeek as defined in ANSI/ASHRAE 135-2024 Clause 20.6.
 /// </summary>
 public readonly record struct DaysOfWeek : IReadOnlyCollection<bool>
 {
     /// <summary>
-    /// Raw flags used to represent days. Only bits 0..6 are used (bit 0 = Monday, bit 6 = Sunday).
-    /// The constructor masks the supplied value so the highest bit (bit 7) is always zero.
+    /// Gets the underlying 8-bit unsigned integer containing the bits in system-native format.
     /// </summary>
     public byte Flags { get; }
 
     /// <summary>
     /// Initializes a new instance of <see cref="DaysOfWeek"/>.
     /// </summary>
-    /// <param name="flags">The raw flag byte. Only the low 7 bits are used; the value is masked with <c>0x7F</c>.</param>
+    /// <param name="flags">
+    /// The underlying 8-bit unsigned integer containing the bits in system-native format.
+    /// Only the lower bits up to <see cref="Count"/> (always 7) are used. The remaining bits are always set to zero.
+    /// </param>
     public DaysOfWeek(byte flags)
     {
         Flags = (byte)(flags & 0x7F);
     }
 
     /// <summary>
-    /// Returns whether the bit at <paramref name="index"/> is set.
+    /// Monday.
     /// </summary>
-    /// <param name="index">Bit index, 0 = Monday ... 6 = Sunday.</param>
-    /// <returns><c>true</c> when the bit is set; otherwise <c>false</c>.</returns>
-    private bool GetFlag(int index) => (Flags & (1 << index)) != 0;
+    public bool Monday => Flags.GetBit(0);
 
     /// <summary>
-    /// True when Monday (bit 0) is set.
+    /// Tuesday.
     /// </summary>
-    public bool Monday => GetFlag(0);
+    public bool Tuesday => Flags.GetBit(1);
 
     /// <summary>
-    /// True when Tuesday (bit 1) is set.
+    /// Wednesday.
     /// </summary>
-    public bool Tuesday => GetFlag(1);
+    public bool Wednesday => Flags.GetBit(2);
 
     /// <summary>
-    /// True when Wednesday (bit 2) is set.
+    /// Thursday.
     /// </summary>
-    public bool Wednesday => GetFlag(2);
+    public bool Thursday => Flags.GetBit(3);
 
     /// <summary>
-    /// True when Thursday (bit 3) is set.
+    /// Friday.
     /// </summary>
-    public bool Thursday => GetFlag(3);
+    public bool Friday => Flags.GetBit(4);
 
     /// <summary>
-    /// True when Friday (bit 4) is set.
+    /// Saturday.
     /// </summary>
-    public bool Friday => GetFlag(4);
+    public bool Saturday => Flags.GetBit(5);
 
     /// <summary>
-    /// True when Saturday (bit 5) is set.
+    /// Sunday.
     /// </summary>
-    public bool Saturday => GetFlag(5);
-
-    /// <summary>
-    /// True when Sunday (bit 6) is set.
-    /// </summary>
-    public bool Sunday => GetFlag(6);
-
-    /// <summary>
-    /// Gets the number of bits used by this bit string (always 7).
-    /// </summary>
-    public int Count => 7;
+    public bool Sunday => Flags.GetBit(6);
 
     /// <summary>
     /// Gets the boolean value of the bit at the specified <paramref name="index"/>.
     /// </summary>
-    /// <param name="index">Zero-based bit index: 0 = Monday, 6 = Sunday.</param>
-    /// <returns><c>true</c> if the bit is set; otherwise <c>false</c>.</returns>
-    /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="index"/> is less than 0 or greater than 6.</exception>
+    /// <param name="index">The zero-based bit index.</param>
+    /// <returns><see langword="true"/> if the bit is set; otherwise <see langword="false"/>.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="index"/> is less than 0 or greater than <see cref="Count"/>.</exception>
     public bool this[int index]
     {
         get
         {
             ArgumentOutOfRangeException.ThrowIfNegative(index);
-            ArgumentOutOfRangeException.ThrowIfGreaterThan(index, 6);
+            ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual(index, _count);
 
-            return GetFlag(index);
+            return Flags.GetBit(index);
         }
     }
+
+    /// <summary>
+    /// The number of bits used by this bit string.
+    /// </summary>
+    private const int _count = 7;
+
+    /// <summary>
+    /// Gets the number of bits used by this bit string (always 7).
+    /// </summary>
+    public int Count => _count;
 
     /// <summary>
     /// Returns a value-type enumerator suitable for pattern-based foreach iteration.
@@ -103,29 +103,29 @@ public readonly record struct DaysOfWeek : IReadOnlyCollection<bool>
     /// </remarks>
     public struct Enumerator
     {
-        private readonly DaysOfWeek _days;
+        private readonly DaysOfWeek _bits;
         private int _index;
 
-        internal Enumerator(DaysOfWeek days)
+        internal Enumerator(DaysOfWeek flags)
         {
-            _days = days;
+            _bits = flags;
             _index = -1;
         }
 
         /// <summary>
         /// Advances the enumerator to the next bit.
         /// </summary>
-        /// <returns><c>true</c> if the enumerator advanced to a valid bit; otherwise <c>false</c>.</returns>
+        /// <returns><see langword="true"/> if the enumerator advanced to a valid bit; otherwise <see langword="false"/>.</returns>
         public bool MoveNext()
         {
             _index++;
-            return _index < 7;
+            return _index < _bits.Count;
         }
 
         /// <summary>
         /// Gets the current bit value.
         /// </summary>
-        public readonly bool Current => _days.GetFlag(_index);
+        public readonly bool Current => _bits.Flags.GetBit(_index);
     }
 
     /// <summary>
@@ -134,9 +134,9 @@ public readonly record struct DaysOfWeek : IReadOnlyCollection<bool>
     /// </summary>
     IEnumerator<bool> IEnumerable<bool>.GetEnumerator()
     {
-        for (int i = 0; i < Count; i++)
+        for (int i = 0; i < _count; i++)
         {
-            yield return GetFlag(i);
+            yield return Flags.GetBit(i);
         }
     }
 

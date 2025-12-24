@@ -1,4 +1,4 @@
-﻿// SPDX-FileCopyrightText: Copyright 2024-2025, The BAClib Initiative and Contributors
+// SPDX-FileCopyrightText: Copyright 2024-2025, The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
 using System.Collections;
@@ -6,70 +6,68 @@ using System.Collections;
 namespace Baclib.Bacnet.Types;
 
 /// <summary>
-/// Represents the BACnetResultFlags bit string (3 bits).
+/// Represents the bit string BACnetResultFlags as defined in ANSI/ASHRAE 135-2024 Clause 20.6.
 /// </summary>
 public readonly record struct ResultFlags : IReadOnlyCollection<bool>
 {
     /// <summary>
-    /// Raw flags used to represent result flags. Only bits 0..2 are used.
-    /// The constructor masks the supplied value so bits 3-7 are always zero.
+    /// Gets the underlying 8-bit unsigned integer containing the bits in system-native format.
     /// </summary>
     public byte Flags { get; }
 
     /// <summary>
     /// Initializes a new instance of <see cref="ResultFlags"/>.
     /// </summary>
-    /// <param name="flags">The raw flag byte. Only the low 3 bits are used; the value is masked with <c>0x07</c>.</param>
+    /// <param name="flags">
+    /// The underlying 8-bit unsigned integer containing the bits in system-native format.
+    /// Only the lower bits up to <see cref="Count"/> (always 3) are used. The remaining bits are always set to zero.
+    /// </param>
     public ResultFlags(byte flags)
     {
-        Flags = (byte)(flags & 0x07);
+        Flags = (byte)(flags & 0x7);
     }
 
     /// <summary>
-    /// Returns whether the bit at <paramref name="index"/> is set.
+    /// This is the first item.
     /// </summary>
-    /// <param name="index">Bit index, 0 = first-item, 1 = last-item, 2 = more-items.</param>
-    /// <returns><c>true</c> when the bit is set; otherwise <c>false</c>.</returns>
-    private bool GetFlag(int index) => (Flags & (1 << index)) != 0;
+    public bool FirstItem => Flags.GetBit(0);
 
     /// <summary>
-    /// True when first-item (bit 0) is set.
+    /// This is the last item.
     /// </summary>
-    public bool FirstItem => GetFlag(0);
+    public bool LastItem => Flags.GetBit(1);
 
     /// <summary>
-    /// True when last-item (bit 1) is set.
+    /// There are more items available.
     /// </summary>
-    public bool LastItem => GetFlag(1);
-
-    /// <summary>
-    /// True when more-items (bit 2) is set.
-    /// </summary>
-    public bool MoreItems => GetFlag(2);
-
-    /// <summary>
-    /// Gets the number of bits used by this bit string (always 3).
-    /// </summary>
-    public int Count => 3;
+    public bool MoreItems => Flags.GetBit(2);
 
     /// <summary>
     /// Gets the boolean value of the bit at the specified <paramref name="index"/>.
     /// </summary>
-    /// <param name="index">Zero-based bit index: 0 = first-item, 1 = last-item, 2 = more-items.</param>
-    /// <returns><c>true</c> if the bit is set; otherwise <c>false</c>.</returns>
-    /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="index"/> is less than 0 or greater than 2.</exception>
+    /// <param name="index">The zero-based bit index.</param>
+    /// <returns><see langword="true"/> if the bit is set; otherwise <see langword="false"/>.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="index"/> is less than 0 or greater than <see cref="Count"/>.</exception>
     public bool this[int index]
     {
         get
         {
-            if (index < 0 || index >= Count)
-            {
-                throw new ArgumentOutOfRangeException(nameof(index));
-            }
+            ArgumentOutOfRangeException.ThrowIfNegative(index);
+            ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual(index, _count);
 
-            return GetFlag(index);
+            return Flags.GetBit(index);
         }
     }
+
+    /// <summary>
+    /// The number of bits used by this bit string.
+    /// </summary>
+    private const int _count = 3;
+
+    /// <summary>
+    /// Gets the number of bits used by this bit string (always 3).
+    /// </summary>
+    public int Count => _count;
 
     /// <summary>
     /// Returns a value-type enumerator suitable for pattern-based foreach iteration.
@@ -85,29 +83,29 @@ public readonly record struct ResultFlags : IReadOnlyCollection<bool>
     /// </remarks>
     public struct Enumerator
     {
-        private readonly ResultFlags _flags;
+        private readonly ResultFlags _bits;
         private int _index;
 
         internal Enumerator(ResultFlags flags)
         {
-            _flags = flags;
+            _bits = flags;
             _index = -1;
         }
 
         /// <summary>
         /// Advances the enumerator to the next bit.
         /// </summary>
-        /// <returns><c>true</c> if the enumerator advanced to a valid bit; otherwise <c>false</c>.</returns>
+        /// <returns><see langword="true"/> if the enumerator advanced to a valid bit; otherwise <see langword="false"/>.</returns>
         public bool MoveNext()
         {
             _index++;
-            return _index < 3;
+            return _index < _bits.Count;
         }
 
         /// <summary>
         /// Gets the current bit value.
         /// </summary>
-        public readonly bool Current => _flags.GetFlag(_index);
+        public readonly bool Current => _bits.Flags.GetBit(_index);
     }
 
     /// <summary>
@@ -116,9 +114,9 @@ public readonly record struct ResultFlags : IReadOnlyCollection<bool>
     /// </summary>
     IEnumerator<bool> IEnumerable<bool>.GetEnumerator()
     {
-        for (int i = 0; i < Count; i++)
+        for (int i = 0; i < _count; i++)
         {
-            yield return GetFlag(i);
+            yield return Flags.GetBit(i);
         }
     }
 
