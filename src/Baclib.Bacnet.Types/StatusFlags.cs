@@ -30,22 +30,22 @@ public readonly record struct StatusFlags : IReadOnlyCollection<bool>
     /// <summary>
     /// Object is in alarm.
     /// </summary>
-    public bool InAlarm => Flags.GetBit(0);
+    public bool InAlarm => this[0];
 
     /// <summary>
     /// Object is in fault condition.
     /// </summary>
-    public bool Fault => Flags.GetBit(1);
+    public bool Fault => this[1];
 
     /// <summary>
     /// Object is overridden.
     /// </summary>
-    public bool Overridden => Flags.GetBit(2);
+    public bool Overridden => this[2];
 
     /// <summary>
     /// Object is out of service.
     /// </summary>
-    public bool OutOfService => Flags.GetBit(3);
+    public bool OutOfService => this[3];
 
     /// <summary>
     /// Gets the boolean value of the bit at the specified <paramref name="index"/>.

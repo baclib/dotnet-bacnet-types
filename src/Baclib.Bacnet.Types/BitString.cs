@@ -15,7 +15,7 @@ public readonly record struct BitString
     /// <summary>
     /// Shared empty bit string data to avoid allocations for empty instances.
     /// </summary>
-    private static readonly byte[] EmptyData = [0];
+    public static readonly byte[] EmptyData = [0];
 
     /// <summary>
     /// The raw BACnet-encoded data array.

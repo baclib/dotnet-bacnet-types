@@ -30,17 +30,17 @@ public readonly record struct LogStatus : IReadOnlyCollection<bool>
     /// <summary>
     /// Log is disabled.
     /// </summary>
-    public bool LogDisabled => Flags.GetBit(0);
+    public bool LogDisabled => this[0];
 
     /// <summary>
     /// Log buffer has been purged.
     /// </summary>
-    public bool BufferPurged => Flags.GetBit(1);
+    public bool BufferPurged => this[1];
 
     /// <summary>
     /// Log was interrupted.
     /// </summary>
-    public bool LogInterrupted => Flags.GetBit(2);
+    public bool LogInterrupted => this[2];
 
     /// <summary>
     /// Gets the boolean value of the bit at the specified <paramref name="index"/>.

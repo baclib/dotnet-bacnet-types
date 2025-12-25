@@ -30,17 +30,17 @@ public readonly record struct EventTransitionBits : IReadOnlyCollection<bool>
     /// <summary>
     /// Transition to offnormal state.
     /// </summary>
-    public bool ToOffnormal => Flags.GetBit(0);
+    public bool ToOffnormal => this[0];
 
     /// <summary>
     /// Transition to fault state.
     /// </summary>
-    public bool ToFault => Flags.GetBit(1);
+    public bool ToFault => this[1];
 
     /// <summary>
     /// Transition to normal state.
     /// </summary>
-    public bool ToNormal => Flags.GetBit(2);
+    public bool ToNormal => this[2];
 
     /// <summary>
     /// Gets the boolean value of the bit at the specified <paramref name="index"/>.

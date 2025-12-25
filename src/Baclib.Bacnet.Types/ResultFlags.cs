@@ -30,17 +30,17 @@ public readonly record struct ResultFlags : IReadOnlyCollection<bool>
     /// <summary>
     /// This is the first item.
     /// </summary>
-    public bool FirstItem => Flags.GetBit(0);
+    public bool FirstItem => this[0];
 
     /// <summary>
     /// This is the last item.
     /// </summary>
-    public bool LastItem => Flags.GetBit(1);
+    public bool LastItem => this[1];
 
     /// <summary>
     /// There are more items available.
     /// </summary>
-    public bool MoreItems => Flags.GetBit(2);
+    public bool MoreItems => this[2];
 
     /// <summary>
     /// Gets the boolean value of the bit at the specified <paramref name="index"/>.

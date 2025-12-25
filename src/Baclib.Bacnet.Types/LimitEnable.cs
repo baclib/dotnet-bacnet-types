@@ -30,12 +30,12 @@ public readonly record struct LimitEnable : IReadOnlyCollection<bool>
     /// <summary>
     /// Enable low limit.
     /// </summary>
-    public bool LowLimitEnable => Flags.GetBit(0);
+    public bool LowLimitEnable => this[0];
 
     /// <summary>
     /// Enable high limit.
     /// </summary>
-    public bool HighLimitEnable => Flags.GetBit(1);
+    public bool HighLimitEnable => this[1];
 
     /// <summary>
     /// Gets the boolean value of the bit at the specified <paramref name="index"/>.

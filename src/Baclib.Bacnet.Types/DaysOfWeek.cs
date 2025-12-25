@@ -30,37 +30,37 @@ public readonly record struct DaysOfWeek : IReadOnlyCollection<bool>
     /// <summary>
     /// Monday.
     /// </summary>
-    public bool Monday => Flags.GetBit(0);
+    public bool Monday => this[0];
 
     /// <summary>
     /// Tuesday.
     /// </summary>
-    public bool Tuesday => Flags.GetBit(1);
+    public bool Tuesday => this[1];
 
     /// <summary>
     /// Wednesday.
     /// </summary>
-    public bool Wednesday => Flags.GetBit(2);
+    public bool Wednesday => this[2];
 
     /// <summary>
     /// Thursday.
     /// </summary>
-    public bool Thursday => Flags.GetBit(3);
+    public bool Thursday => this[3];
 
     /// <summary>
     /// Friday.
     /// </summary>
-    public bool Friday => Flags.GetBit(4);
+    public bool Friday => this[4];
 
     /// <summary>
     /// Saturday.
     /// </summary>
-    public bool Saturday => Flags.GetBit(5);
+    public bool Saturday => this[5];
 
     /// <summary>
     /// Sunday.
     /// </summary>
-    public bool Sunday => Flags.GetBit(6);
+    public bool Sunday => this[6];
 
     /// <summary>
     /// Gets the boolean value of the bit at the specified <paramref name="index"/>.

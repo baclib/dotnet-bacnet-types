@@ -1,4 +1,4 @@
-﻿// SPDX-FileCopyrightText: Copyright 2024-2025, The BAClib Initiative and Contributors
+// SPDX-FileCopyrightText: Copyright 2024-2025, The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
 using System.Collections;
@@ -6,412 +6,397 @@ using System.Collections;
 namespace Baclib.Bacnet.Types;
 
 /// <summary>
-/// Represents the BACnetObjectTypesSupported bit string.
+/// Represents the bit string BACnetObjectTypesSupported as defined in ANSI/ASHRAE 135-2024 Clause 20.6.
 /// </summary>
 public readonly record struct ObjectTypesSupported : IReadOnlyCollection<bool>
 {
     /// <summary>
-    /// Raw flags used to represent object types. Bits 0..(Count-1) are possible, with bits 0..64 named.
-    /// The stored array is sized appropriately for the configured bit count.
+    /// Backing storage for the configured bits.
     /// </summary>
-    public readonly nuint[] _flags;
-
-    private readonly int _count;
+    private readonly byte[] _bytes = BitString.EmptyData;
 
     /// <summary>
-    /// Initializes a new instance of <see cref="ObjectTypesSupported"/>.
+    /// Minimum allowed bit count for this type.
     /// </summary>
-    /// <param name="flags">The raw flag array. Will be copied and masked to the configured bit count.</param>
-    /// <param name="bitCount">Number of bits used by this instance (allowed range 17..1024). Defaults to 17.</param>
-    /// <exception cref="ArgumentNullException">Thrown when <paramref name="flags"/> is null.</exception>
-    /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="bitCount"/> is outside the 17..1024 range.</exception>
-    public ObjectTypesSupported(nuint[] flags, int bitCount = 17)
+    public const int MinBitCount = 18;
+
+    /// <summary>
+    /// Maximum allowed bit count for this type.
+    /// </summary>
+    public const int MaxBitCount = 1024;
+
+    /// <summary>
+    /// Initializes a new instance of <see cref="ObjectTypesSupported"/> from a span of bytes.
+    /// </summary>
+    /// <param name="bitBytes">
+    /// Source bytes containing bit data. The span must be at least <c>(bitCount + 7) / 8</c> bytes long.
+    /// Only the first <c>minimumLength</c> bytes are copied; excess bytes in the span are ignored.
+    /// </param>
+    /// <param name="bitCount">Number of bits used by this instance (range <see cref="MinBitCount"/>.. <see cref="MaxBitCount"/>).</param>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="bitCount"/> is outside the allowed range.</exception>
+    /// <exception cref="ArgumentException">Thrown when <paramref name="bitBytes"/> is shorter than required for <paramref name="bitCount"/>.</exception>
+    public ObjectTypesSupported(ReadOnlySpan<byte> bitBytes, int bitCount = MinBitCount)
     {
-        ArgumentNullException.ThrowIfNull(flags);
-        ArgumentOutOfRangeException.ThrowIfLessThan(bitCount, 17, nameof(bitCount));
-        ArgumentOutOfRangeException.ThrowIfGreaterThan(bitCount, 1024, nameof(bitCount));
+        ArgumentOutOfRangeException.ThrowIfLessThan(bitCount, MinBitCount, nameof(bitCount));
+        ArgumentOutOfRangeException.ThrowIfGreaterThan(bitCount, MaxBitCount, nameof(bitCount));
 
-        _count = bitCount;
-
-        // Calculate the required array size.
-        int arraySize = (bitCount + (nuint.Size * 8 - 1)) / (nuint.Size * 8);
-        _flags = new nuint[arraySize];
-
-        // Copy and mask the input flags.
-        int copyLength = Math.Min(flags.Length, arraySize);
-        Array.Copy(flags, _flags, copyLength);
-
-        // Mask the last element to the configured bit count.
-        int bitsInLastElement = bitCount % (nuint.Size * 8);
-        if (bitsInLastElement > 0 && arraySize > 0)
+        int minimumLength = (bitCount + 7) / 8;
+        if (bitBytes.Length < minimumLength)
         {
-            nuint mask = (1U << bitsInLastElement) - 1U;
-            _flags[arraySize - 1] &= mask;
+            throw new ArgumentException($"Too short for {bitCount} bits.", nameof(bitBytes));
         }
+
+        _bytes = bitBytes[..minimumLength].ToArray();
+        Count = bitCount;
     }
 
     /// <summary>
-    /// Returns whether the bit at <paramref name="index"/> is set.
+    /// Analog input object.
     /// </summary>
-    /// <param name="index">Bit index, 0..(Count-1).</param>
-    /// <returns><c>true</c> when the bit is set; otherwise <c>false</c>.</returns>
-    private readonly bool GetFlag(int index)
-    {
-        if (_flags == null || _flags.Length == 0) return false;
+    public bool AnalogInput => this[0];
 
-        int elementIndex = index / (nuint.Size * 8);
-        int bitIndex = index % (nuint.Size * 8);
-
-        if (elementIndex >= _flags.Length) return false;
-
-        return (_flags[elementIndex] & ((nuint)1 << bitIndex)) != 0;
-    }
-
-    /// <summary>
-    /// True when Analog-Input (bit 0) is set.
-    /// </summary>
-    public bool AnalogInput => GetFlag(0);
-
     /// <summary>
-    /// True when Analog-Output (bit 1) is set.
+    /// Analog output object.
     /// </summary>
-    public bool AnalogOutput => GetFlag(1);
+    public bool AnalogOutput => this[1];
 
     /// <summary>
-    /// True when Analog-Value (bit 2) is set.
+    /// Analog value object.
     /// </summary>
-    public bool AnalogValue => GetFlag(2);
+    public bool AnalogValue => this[2];
 
     /// <summary>
-    /// True when Binary-Input (bit 3) is set.
+    /// Binary input object.
     /// </summary>
-    public bool BinaryInput => GetFlag(3);
+    public bool BinaryInput => this[3];
 
     /// <summary>
-    /// True when Binary-Output (bit 4) is set.
+    /// Binary output object.
     /// </summary>
-    public bool BinaryOutput => GetFlag(4);
+    public bool BinaryOutput => this[4];
 
     /// <summary>
-    /// True when Binary-Value (bit 5) is set.
+    /// Binary value object.
     /// </summary>
-    public bool BinaryValue => GetFlag(5);
+    public bool BinaryValue => this[5];
 
     /// <summary>
-    /// True when Calendar (bit 6) is set.
+    /// Calendar object.
     /// </summary>
-    public bool Calendar => GetFlag(6);
+    public bool Calendar => this[6];
 
     /// <summary>
-    /// True when Command (bit 7) is set.
+    /// Command object.
     /// </summary>
-    public bool Command => GetFlag(7);
+    public bool Command => this[7];
 
     /// <summary>
-    /// True when Device (bit 8) is set.
+    /// Device object.
     /// </summary>
-    public bool Device => GetFlag(8);
+    public bool Device => this[8];
 
     /// <summary>
-    /// True when Event-Enrollment (bit 9) is set.
+    /// Event enrollment object.
     /// </summary>
-    public bool EventEnrollment => GetFlag(9);
+    public bool EventEnrollment => this[9];
 
     /// <summary>
-    /// True when File (bit 10) is set.
+    /// File object.
     /// </summary>
-    public bool File => GetFlag(10);
+    public bool File => this[10];
 
     /// <summary>
-    /// True when Group (bit 11) is set.
+    /// Group object.
     /// </summary>
-    public bool Group => GetFlag(11);
+    public bool Group => this[11];
 
     /// <summary>
-    /// True when Loop (bit 12) is set.
+    /// Loop object.
     /// </summary>
-    public bool Loop => GetFlag(12);
+    public bool Loop => this[12];
 
     /// <summary>
-    /// True when Multi-State-Input (bit 13) is set.
+    /// Multi-state input object.
     /// </summary>
-    public bool MultiStateInput => GetFlag(13);
+    public bool MultiStateInput => this[13];
 
     /// <summary>
-    /// True when Multi-State-Output (bit 14) is set.
+    /// Multi-state output object.
     /// </summary>
-    public bool MultiStateOutput => GetFlag(14);
+    public bool MultiStateOutput => this[14];
 
     /// <summary>
-    /// True when Notification-Class (bit 15) is set.
+    /// Notification class object.
     /// </summary>
-    public bool NotificationClass => GetFlag(15);
+    public bool NotificationClass => this[15];
 
     /// <summary>
-    /// True when Program (bit 16) is set.
+    /// Program object.
     /// </summary>
-    public bool Program => GetFlag(16);
+    public bool Program => this[16];
 
     /// <summary>
-    /// True when Schedule (bit 17) is set.
+    /// Schedule object.
     /// </summary>
-    public bool Schedule => GetFlag(17);
+    public bool Schedule => this[17];
 
     /// <summary>
-    /// True when Averaging (bit 18) is set.
+    /// Averaging object.
     /// </summary>
-    public bool Averaging => GetFlag(18);
+    public bool Averaging => this[18];
 
     /// <summary>
-    /// True when Multi-State-Value (bit 19) is set.
+    /// Multi-state value object.
     /// </summary>
-    public bool MultiStateValue => GetFlag(19);
+    public bool MultiStateValue => this[19];
 
     /// <summary>
-    /// True when Trend-Log (bit 20) is set.
+    /// Trend log object.
     /// </summary>
-    public bool TrendLog => GetFlag(20);
+    public bool TrendLog => this[20];
 
     /// <summary>
-    /// True when Life-Safety-Point (bit 21) is set.
+    /// Life safety point object.
     /// </summary>
-    public bool LifeSafetyPoint => GetFlag(21);
+    public bool LifeSafetyPoint => this[21];
 
     /// <summary>
-    /// True when Life-Safety-Zone (bit 22) is set.
+    /// Life safety zone object.
     /// </summary>
-    public bool LifeSafetyZone => GetFlag(22);
+    public bool LifeSafetyZone => this[22];
 
     /// <summary>
-    /// True when Accumulator (bit 23) is set.
+    /// Accumulator object.
     /// </summary>
-    public bool Accumulator => GetFlag(23);
+    public bool Accumulator => this[23];
 
     /// <summary>
-    /// True when Pulse-Converter (bit 24) is set.
+    /// Pulse converter object.
     /// </summary>
-    public bool PulseConverter => GetFlag(24);
+    public bool PulseConverter => this[24];
 
     /// <summary>
-    /// True when Event-Log (bit 25) is set.
+    /// Event log object.
     /// </summary>
-    public bool EventLog => GetFlag(25);
+    public bool EventLog => this[25];
 
     /// <summary>
-    /// True when Global-Group (bit 26) is set.
+    /// Global group object.
     /// </summary>
-    public bool GlobalGroup => GetFlag(26);
+    public bool GlobalGroup => this[26];
 
     /// <summary>
-    /// True when Trend-Log-Multiple (bit 27) is set.
+    /// Trend log multiple object.
     /// </summary>
-    public bool TrendLogMultiple => GetFlag(27);
+    public bool TrendLogMultiple => this[27];
 
     /// <summary>
-    /// True when Load-Control (bit 28) is set.
+    /// Load control object.
     /// </summary>
-    public bool LoadControl => GetFlag(28);
+    public bool LoadControl => this[28];
 
     /// <summary>
-    /// True when Structured-View (bit 29) is set.
+    /// Structured view object.
     /// </summary>
-    public bool StructuredView => GetFlag(29);
+    public bool StructuredView => this[29];
 
     /// <summary>
-    /// True when Access-Door (bit 30) is set.
+    /// Access door object.
     /// </summary>
-    public bool AccessDoor => GetFlag(30);
+    public bool AccessDoor => this[30];
 
     /// <summary>
-    /// True when Timer (bit 31) is set.
+    /// Timer object.
     /// </summary>
-    public bool Timer => GetFlag(31);
+    public bool Timer => this[31];
 
     /// <summary>
-    /// True when Access-Credential (bit 32) is set.
+    /// Access credential object.
     /// </summary>
-    public bool AccessCredential => GetFlag(32);
+    public bool AccessCredential => this[32];
 
     /// <summary>
-    /// True when Access-Point (bit 33) is set.
+    /// Access point object.
     /// </summary>
-    public bool AccessPoint => GetFlag(33);
+    public bool AccessPoint => this[33];
 
     /// <summary>
-    /// True when Access-Rights (bit 34) is set.
+    /// Access rights object.
     /// </summary>
-    public bool AccessRights => GetFlag(34);
+    public bool AccessRights => this[34];
 
     /// <summary>
-    /// True when Access-User (bit 35) is set.
+    /// Access user object.
     /// </summary>
-    public bool AccessUser => GetFlag(35);
+    public bool AccessUser => this[35];
 
     /// <summary>
-    /// True when Access-Zone (bit 36) is set.
+    /// Access zone object.
     /// </summary>
-    public bool AccessZone => GetFlag(36);
+    public bool AccessZone => this[36];
 
     /// <summary>
-    /// True when Credential-Data-Input (bit 37) is set.
+    /// Credential data input object.
     /// </summary>
-    public bool CredentialDataInput => GetFlag(37);
+    public bool CredentialDataInput => this[37];
 
     /// <summary>
-    /// True when Bitstring-Value (bit 39) is set.
+    /// Bitstring value object.
     /// </summary>
-    public bool BitstringValue => GetFlag(39);
+    public bool BitstringValue => this[39];
 
     /// <summary>
-    /// True when Characterstring-Value (bit 40) is set.
+    /// Characterstring value object.
     /// </summary>
-    public bool CharacterstringValue => GetFlag(40);
+    public bool CharacterstringValue => this[40];
 
     /// <summary>
-    /// True when Datepattern-Value (bit 41) is set.
+    /// Datepattern value object.
     /// </summary>
-    public bool DatepatternValue => GetFlag(41);
+    public bool DatepatternValue => this[41];
 
     /// <summary>
-    /// True when Date-Value (bit 42) is set.
+    /// Date value object.
     /// </summary>
-    public bool DateValue => GetFlag(42);
+    public bool DateValue => this[42];
 
     /// <summary>
-    /// True when Datetimepattern-Value (bit 43) is set.
+    /// Datetimepattern value object.
     /// </summary>
-    public bool DatetimepatternValue => GetFlag(43);
+    public bool DatetimepatternValue => this[43];
 
     /// <summary>
-    /// True when Datetime-Value (bit 44) is set.
+    /// Datetime value object.
     /// </summary>
-    public bool DatetimeValue => GetFlag(44);
+    public bool DatetimeValue => this[44];
 
     /// <summary>
-    /// True when Integer-Value (bit 45) is set.
+    /// Integer value object.
     /// </summary>
-    public bool IntegerValue => GetFlag(45);
+    public bool IntegerValue => this[45];
 
     /// <summary>
-    /// True when Large-Analog-Value (bit 46) is set.
+    /// Large analog value object.
     /// </summary>
-    public bool LargeAnalogValue => GetFlag(46);
+    public bool LargeAnalogValue => this[46];
 
     /// <summary>
-    /// True when Octetstring-Value (bit 47) is set.
+    /// Octetstring value object.
     /// </summary>
-    public bool OctetstringValue => GetFlag(47);
+    public bool OctetstringValue => this[47];
 
     /// <summary>
-    /// True when Positive-Integer-Value (bit 48) is set.
+    /// Positive integer value object.
     /// </summary>
-    public bool PositiveIntegerValue => GetFlag(48);
+    public bool PositiveIntegerValue => this[48];
 
     /// <summary>
-    /// True when Timepattern-Value (bit 49) is set.
+    /// Timepattern value object.
     /// </summary>
-    public bool TimepatternValue => GetFlag(49);
+    public bool TimepatternValue => this[49];
 
     /// <summary>
-    /// True when Time-Value (bit 50) is set.
+    /// Time value object.
     /// </summary>
-    public bool TimeValue => GetFlag(50);
+    public bool TimeValue => this[50];
 
     /// <summary>
-    /// True when Notification-Forwarder (bit 51) is set.
+    /// Notification forwarder object.
     /// </summary>
-    public bool NotificationForwarder => GetFlag(51);
+    public bool NotificationForwarder => this[51];
 
     /// <summary>
-    /// True when Alert-Enrollment (bit 52) is set.
+    /// Alert enrollment object.
     /// </summary>
-    public bool AlertEnrollment => GetFlag(52);
+    public bool AlertEnrollment => this[52];
 
     /// <summary>
-    /// True when Channel (bit 53) is set.
+    /// Channel object.
     /// </summary>
-    public bool Channel => GetFlag(53);
+    public bool Channel => this[53];
 
     /// <summary>
-    /// True when Lighting-Output (bit 54) is set.
+    /// Lighting output object.
     /// </summary>
-    public bool LightingOutput => GetFlag(54);
+    public bool LightingOutput => this[54];
 
     /// <summary>
-    /// True when Binary-Lighting-Output (bit 55) is set.
+    /// Binary lighting output object.
     /// </summary>
-    public bool BinaryLightingOutput => GetFlag(55);
+    public bool BinaryLightingOutput => this[55];
 
     /// <summary>
-    /// True when Network-Port (bit 56) is set.
+    /// Network port object.
     /// </summary>
-    public bool NetworkPort => GetFlag(56);
+    public bool NetworkPort => this[56];
 
     /// <summary>
-    /// True when Elevator-Group (bit 57) is set.
+    /// Elevator group object.
     /// </summary>
-    public bool ElevatorGroup => GetFlag(57);
+    public bool ElevatorGroup => this[57];
 
     /// <summary>
-    /// True when Escalator (bit 58) is set.
+    /// Escalator object.
     /// </summary>
-    public bool Escalator => GetFlag(58);
+    public bool Escalator => this[58];
 
     /// <summary>
-    /// True when Lift (bit 59) is set.
+    /// Lift object.
     /// </summary>
-    public bool Lift => GetFlag(59);
+    public bool Lift => this[59];
 
     /// <summary>
-    /// True when Staging (bit 60) is set.
+    /// Staging object.
     /// </summary>
-    public bool Staging => GetFlag(60);
+    public bool Staging => this[60];
 
     /// <summary>
-    /// True when Audit-Log (bit 61) is set.
+    /// Audit log object.
     /// </summary>
-    public bool AuditLog => GetFlag(61);
+    public bool AuditLog => this[61];
 
     /// <summary>
-    /// True when Audit-Reporter (bit 62) is set.
+    /// Audit reporter object.
     /// </summary>
-    public bool AuditReporter => GetFlag(62);
+    public bool AuditReporter => this[62];
 
     /// <summary>
-    /// True when Color (bit 63) is set.
+    /// Color object.
     /// </summary>
-    public bool Color => GetFlag(63);
+    public bool Color => this[63];
 
     /// <summary>
-    /// True when Color-Temperature (bit 64) is set.
+    /// Color temperature object.
     /// </summary>
-    public bool ColorTemperature => GetFlag(64);
+    public bool ColorTemperature => this[64];
 
     /// <summary>
-    /// Gets the number of bits used by this bit string (configured via constructor, range 17..1024).
+    /// Gets the number of bits used by this instance.
     /// </summary>
-    public int Count => _count;
+    public int Count { get; }
 
     /// <summary>
-    /// Gets the boolean value of the bit at the specified <paramref name="index"/>.
+    /// Gets the boolean value of the bit at the specified zero-based <paramref name="index"/>.
     /// </summary>
-    /// <param name="index">Zero-based bit index: 0 = Analog-Input, (Count-1) = last bit.</param>
-    /// <returns><c>true</c> if the bit is set; otherwise <c>false</c>.</returns>
-    /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="index"/> is less than 0 or greater than or equal to <see cref="Count"/>.</exception>
+    /// <param name="index">Zero-based bit index.</param>
+    /// <returns><see langword="true"/> if the bit is set; otherwise <see langword="false"/>.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when <paramref name="index"/> is less than 0 or greater than or equal to <see cref="Count"/>.
+    /// </exception>
     public bool this[int index]
     {
         get
         {
-            ArgumentOutOfRangeException.ThrowIfNegative(index);
-            ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual(index, Count);
+            ArgumentOutOfRangeException.ThrowIfNegative(index, nameof(index));
+            ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual(index, Count, nameof(index));
 
-            return GetFlag(index);
+            return _bytes[index / 8].GetBit(index % 8);
         }
     }
 
     /// <summary>
     /// Returns a value-type enumerator suitable for pattern-based foreach iteration.
-    /// Use this when iterating the struct directly to avoid allocations/boxing.
+    /// The enumerator yields exactly <see cref="Count"/> boolean values.
     /// </summary>
     public Enumerator GetEnumerator() => new(this);
 
@@ -423,40 +408,55 @@ public readonly record struct ObjectTypesSupported : IReadOnlyCollection<bool>
     /// </remarks>
     public struct Enumerator
     {
-        private readonly ObjectTypesSupported _flags;
+        /// <summary>
+        /// Reference to the parent <see cref="ObjectTypesSupported"/> instance being enumerated.
+        /// </summary>
+        private readonly ObjectTypesSupported _bits;
+
+        /// <summary>
+        /// Current enumerator index. Starts at -1 before the first element; incremented by <see cref="MoveNext"/>.
+        /// Valid indices are 0..(<see cref="ObjectTypesSupported.Count"/> - 1).
+        /// </summary>
         private int _index;
 
-        internal Enumerator(ObjectTypesSupported flags)
+        /// <summary>
+        /// Initializes a new <see cref="Enumerator"/> for the specified <paramref name="bits"/>.
+        /// </summary>
+        /// <param name="bits">The parent <see cref="ObjectTypesSupported"/> instance to enumerate.</param>
+        /// <remarks>
+        /// The constructor sets the internal index to -1 so enumeration starts before the first element.
+        /// </remarks>
+        internal Enumerator(ObjectTypesSupported bits)
         {
-            _flags = flags;
+            _bits = bits;
             _index = -1;
         }
 
         /// <summary>
         /// Advances the enumerator to the next bit.
         /// </summary>
-        /// <returns><c>true</c> if the enumerator advanced to a valid bit; otherwise <c>false</c>.</returns>
+        /// <returns><see langword="true"/> if the enumerator advanced to a valid bit; otherwise <see langword="false"/>.</returns>
         public bool MoveNext()
         {
             _index++;
-            return _index < _flags.Count;
+            return _index < _bits.Count;
         }
 
         /// <summary>
         /// Gets the current bit value.
         /// </summary>
-        public readonly bool Current => _flags.GetFlag(_index);
+        public readonly bool Current => _bits[_index];
     }
 
     /// <summary>
-    /// Interface implementation for <see cref="IEnumerable{Boolean}"/>.
+    /// Interface implementation for <see cref="IEnumerable{Boolean}"/>
     /// Enumerating via the interface will allocate (iterator state machine) and may box the struct.
     /// </summary>
     IEnumerator<bool> IEnumerable<bool>.GetEnumerator()
     {
         for (int i = 0; i < Count; i++)
         {
-            yield return GetFlag(i);
+            yield return this[i];
         }
     }
 

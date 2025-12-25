@@ -30,82 +30,82 @@ public readonly record struct PriorityFilter : IReadOnlyCollection<bool>
     /// <summary>
     /// Manual life safety priority.
     /// </summary>
-    public bool ManualLifeSafety => Flags.GetBit(0);
+    public bool ManualLifeSafety => this[0];
 
     /// <summary>
     /// Automatic life safety priority.
     /// </summary>
-    public bool AutomaticLifeSafety => Flags.GetBit(1);
+    public bool AutomaticLifeSafety => this[1];
 
     /// <summary>
     /// Priority 3.
     /// </summary>
-    public bool Priority3 => Flags.GetBit(2);
+    public bool Priority3 => this[2];
 
     /// <summary>
     /// Priority 4.
     /// </summary>
-    public bool Priority4 => Flags.GetBit(3);
+    public bool Priority4 => this[3];
 
     /// <summary>
     /// Critical equipment controls priority.
     /// </summary>
-    public bool CriticalEquipmentControls => Flags.GetBit(4);
+    public bool CriticalEquipmentControls => this[4];
 
     /// <summary>
     /// Minimum on/off priority.
     /// </summary>
-    public bool MinimumOnOff => Flags.GetBit(5);
+    public bool MinimumOnOff => this[5];
 
     /// <summary>
     /// Priority 7.
     /// </summary>
-    public bool Priority7 => Flags.GetBit(6);
+    public bool Priority7 => this[6];
 
     /// <summary>
     /// Manual operator priority.
     /// </summary>
-    public bool ManualOperator => Flags.GetBit(7);
+    public bool ManualOperator => this[7];
 
     /// <summary>
     /// Priority 9.
     /// </summary>
-    public bool Priority9 => Flags.GetBit(8);
+    public bool Priority9 => this[8];
 
     /// <summary>
     /// Priority 10.
     /// </summary>
-    public bool Priority10 => Flags.GetBit(9);
+    public bool Priority10 => this[9];
 
     /// <summary>
     /// Priority 11.
     /// </summary>
-    public bool Priority11 => Flags.GetBit(10);
+    public bool Priority11 => this[10];
 
     /// <summary>
     /// Priority 12.
     /// </summary>
-    public bool Priority12 => Flags.GetBit(11);
+    public bool Priority12 => this[11];
 
     /// <summary>
     /// Priority 13.
     /// </summary>
-    public bool Priority13 => Flags.GetBit(12);
+    public bool Priority13 => this[12];
 
     /// <summary>
     /// Priority 14.
     /// </summary>
-    public bool Priority14 => Flags.GetBit(13);
+    public bool Priority14 => this[13];
 
     /// <summary>
     /// Priority 15.
     /// </summary>
-    public bool Priority15 => Flags.GetBit(14);
+    public bool Priority15 => this[14];
 
     /// <summary>
     /// Priority 16.
     /// </summary>
-    public bool Priority16 => Flags.GetBit(15);
+    public bool Priority16 => this[15];
 
     /// <summary>
     /// Gets the boolean value of the bit at the specified <paramref name="index"/>.
