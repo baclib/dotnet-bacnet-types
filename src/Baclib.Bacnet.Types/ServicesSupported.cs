@@ -11,43 +11,43 @@ namespace Baclib.Bacnet.Types;
 public readonly record struct ServicesSupported : IReadOnlyCollection<bool>
 {
     /// <summary>
-    /// Backing storage for the configured bits.
+    /// Underlying storage for the bits, represented as an array of bytes in system-native format.
     /// </summary>
     private readonly byte[] _bytes = BitString.EmptyData;
 
     /// <summary>
-    /// Minimum allowed bit count for this type.
+    /// Minimum number of bits required for this type.
     /// </summary>
-    public const int MinBitCount = 35;
+    public const int MinCount = 35;
 
     /// <summary>
-    /// Maximum allowed bit count for this type.
+    /// Maximum number of bits allowed for this type.
     /// </summary>
-    public const int MaxBitCount = 512;
+    public const int MaxCount = 512;
 
     /// <summary>
     /// Initializes a new instance of <see cref="ServicesSupported"/> from a span of bytes.
     /// </summary>
-    /// <param name="bitBytes">
-    /// Source bytes containing bit data. The span must be at least <c>(bitCount + 7) / 8</c> bytes long.
-    /// Only the first <c>minimumLength</c> bytes are copied; excess bytes in the span are ignored.
+    /// <param name="bytes">
+    /// The source bytes containing the bit data. The span must be at least <c>(count + 7) / 8</c> bytes long.
+    /// Only the minimum required number of bytes are copied, and any excess bytes in the span are ignored.
     /// </param>
-    /// <param name="bitCount">Number of bits used by this instance (range <see cref="MinBitCount"/>.. <see cref="MaxBitCount"/>).</param>
-    /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="bitCount"/> is outside the allowed range.</exception>
-    /// <exception cref="ArgumentException">Thrown when <paramref name="bitBytes"/> is shorter than required for <paramref name="bitCount"/>.</exception>
-    public ServicesSupported(ReadOnlySpan<byte> bitBytes, int bitCount = MinBitCount)
+    /// <param name="count">Number of bits used by this instance (range <see cref="MinCount"/>..<see cref="MaxCount"/>).</param>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="count"/> is outside the allowed range.</exception>
+    /// <exception cref="ArgumentException">Thrown when <paramref name="bytes"/> is shorter than required for <paramref name="count"/>.</exception>
+    public ServicesSupported(ReadOnlySpan<byte> bytes, int count = MinCount)
     {
-        ArgumentOutOfRangeException.ThrowIfLessThan(bitCount, MinBitCount, nameof(bitCount));
-        ArgumentOutOfRangeException.ThrowIfGreaterThan(bitCount, MaxBitCount, nameof(bitCount));
+        ArgumentOutOfRangeException.ThrowIfLessThan(count, MinCount, nameof(count));
+        ArgumentOutOfRangeException.ThrowIfGreaterThan(count, MaxCount, nameof(count));
 
-        int minimumLength = (bitCount + 7) / 8;
-        if (bitBytes.Length < minimumLength)
+        int minimumLength = (count + 7) / 8;
+        if (bytes.Length < minimumLength)
         {
-            throw new ArgumentException($"Too short for {bitCount} bits.", nameof(bitBytes));
+            throw new ArgumentException($"Too short for {count} bits.", nameof(bytes));
         }
 
-        _bytes = bitBytes[..minimumLength].ToArray();
-        Count = bitCount;
+        _bytes = bytes[..minimumLength].ToArray();
+        Count = count;
     }
 
     /// <summary>
@@ -286,11 +286,6 @@ public readonly record struct ServicesSupported : IReadOnlyCollection<bool>
     public bool AuthRequest => this[49];
 
     /// <summary>
-    /// Gets the number of bits used by this instance.
-    /// </summary>
-    public int Count { get; }
-
-    /// <summary>
     /// Gets the boolean value of the bit at the specified zero-based <paramref name="index"/>.
     /// </summary>
     /// <param name="index">Zero-based bit index.</param>
@@ -310,8 +305,13 @@ public readonly record struct ServicesSupported : IReadOnlyCollection<bool>
     }
 
     /// <summary>
+    /// Gets the number of bits used by this instance.
+    /// </summary>
+    public int Count { get; }
+
+    /// <summary>
     /// Returns a value-type enumerator suitable for pattern-based foreach iteration.
-    /// The enumerator yields exactly <see cref="Count"/> boolean values.
+    /// Use this when iterating the struct directly to avoid allocations/boxing.
     /// </summary>
     public Enumerator GetEnumerator() => new(this);
 
@@ -320,11 +320,13 @@ public readonly record struct ServicesSupported : IReadOnlyCollection<bool>
     /// </summary>
     /// <remarks>
     /// The enumerator is a struct so direct iteration over a <see cref="ServicesSupported"/> value does not allocate.
+    /// As is standard .NET practice, no range checks are performed in <see cref="Current"/>. The consumer must
+    /// call <see cref="MoveNext"/> and only access <see cref="Current"/> when it is valid.
     /// </remarks>
     public struct Enumerator
     {
         /// <summary>
-        /// Reference to the parent <see cref="ServicesSupported"/> instance being enumerated.
+        /// Copy of the parent <see cref="ServicesSupported"/> instance being enumerated.
         /// </summary>
         private readonly ServicesSupported _bits;
 
@@ -364,7 +366,7 @@ public readonly record struct ServicesSupported : IReadOnlyCollection<bool>
     }
 
     /// <summary>
-    /// Interface implementation for <see cref="IEnumerable{Boolean}"/>
+    /// Interface implementation for <see cref="IEnumerable{Boolean}"/>.
     /// Enumerating via the interface will allocate (iterator state machine) and may box the struct.
     /// </summary>
     IEnumerator<bool> IEnumerable<bool>.GetEnumerator()

@@ -16,12 +16,12 @@ public readonly record struct AuditOperationFlags : IReadOnlyCollection<bool>
     public ulong Flags { get; }
 
     /// <summary>
-    /// Minimum allowed bit count for this type.
+    /// Minimum number of bits required for this type.
     /// </summary>
     public const int MinCount = 16;
 
     /// <summary>
-    /// Maximum allowed bit count for this type.
+    /// Maximum number of bits allowed for this type.
     /// </summary>
     public const int MaxCount = 64;
 
@@ -32,7 +32,7 @@ public readonly record struct AuditOperationFlags : IReadOnlyCollection<bool>
     /// The underlying 64-bit unsigned integer containing the bits in system-native format.
     /// Only the lower bits up to <see cref="Count"/> are used. The remaining bits are always set to zero.
     /// </param>
-    /// <param name="count">Number of bits used by this instance (range <see cref="MinCount"/>.. <see cref="MaxCount"/>).</param>
+    /// <param name="count">Number of bits used by this instance (range <see cref="MinCount"/>..<see cref="MaxCount"/>).</param>
     /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="count"/> is outside the allowed range.</exception>
     public AuditOperationFlags(ulong flags, int count = MinCount)
     {
@@ -40,12 +40,7 @@ public readonly record struct AuditOperationFlags : IReadOnlyCollection<bool>
         ArgumentOutOfRangeException.ThrowIfGreaterThan(count, MaxCount, nameof(count));
 
         Count = count;
-        if (count < MaxCount)
-        {
-            ulong mask = (1UL << count) - 1;
-            flags &= mask;
-        }
-        Flags = flags;
+        Flags = flags.MaskBits(count);
     }
 
     /// <summary>
@@ -133,7 +128,9 @@ public readonly record struct AuditOperationFlags : IReadOnlyCollection<bool>
     /// </summary>
     /// <param name="index">The zero-based bit index.</param>
     /// <returns><see langword="true"/> if the bit is set; otherwise <see langword="false"/>.</returns>
-    /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="index"/> is less than 0 or greater than <see cref="Count"/>.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when <paramref name="index"/> is less than 0 or greater than or equal <see cref="Count"/>.
+    /// </exception>
     public bool this[int index]
     {
         get
@@ -146,7 +143,7 @@ public readonly record struct AuditOperationFlags : IReadOnlyCollection<bool>
     }
 
     /// <summary>
-    /// Gets the number of bits used by this bit string.
+    /// Gets the number of bits used by this instance.
     /// </summary>
     public int Count { get; }
 
@@ -161,15 +158,32 @@ public readonly record struct AuditOperationFlags : IReadOnlyCollection<bool>
     /// </summary>
     /// <remarks>
     /// The enumerator is a struct so direct iteration over a <see cref="AuditOperationFlags"/> value does not allocate.
+    /// As is standard .NET practice, no range checks are performed in <see cref="Current"/>. The consumer must
+    /// call <see cref="MoveNext"/> and only access <see cref="Current"/> when it is valid.
     /// </remarks>
     public struct Enumerator
     {
+        /// <summary>
+        /// Copy of the parent <see cref="AuditOperationFlags"/> instance being enumerated.
+        /// </summary>
         private readonly AuditOperationFlags _bits;
+
+        /// <summary>
+        /// Current enumerator index. Starts at -1 before the first element; incremented by <see cref="MoveNext"/>.
+        /// Valid indices are 0..(<see cref="AuditOperationFlags.Count"/> - 1).
+        /// </summary>
         private int _index;
 
-        internal Enumerator(AuditOperationFlags flags)
+        /// <summary>
+        /// Initializes a new <see cref="Enumerator"/> for the specified <paramref name="bits"/>.
+        /// </summary>
+        /// <param name="bits">The parent <see cref="AuditOperationFlags"/> instance to enumerate.</param>
+        /// <remarks>
+        /// The constructor sets the internal index to -1 so enumeration starts before the first element.
+        /// </remarks>
+        internal Enumerator(AuditOperationFlags bits)
         {
-            _bits = flags;
+            _bits = bits;
             _index = -1;
         }
 

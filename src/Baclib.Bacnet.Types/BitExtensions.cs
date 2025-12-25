@@ -79,4 +79,29 @@ public static class BitExtensions
         ArgumentOutOfRangeException.ThrowIfGreaterThan(index, 63, nameof(index));
         return (flags & (1ul << (63 - index))) != 0;
     }
+
+    /// <summary>
+    /// Returns a value that preserves only the least-significant <paramref name="count"/> bits of <paramref name="flags"/>.
+    /// </summary>
+    /// <param name="flags">The 64-bit value containing bit flags.</param>
+    /// <param name="count">The number of least-significant bits to preserve. Valid range is 0 through 63.</param>
+    /// <returns>
+    /// A value composed of the low-order <paramref name="count"/> bits of <paramref name="flags"/>; bits more significant
+    /// than that are cleared. If <paramref name="count"/> is zero, the method returns 0.
+    /// </returns>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when <paramref name="count"/> is less than 0 or greater than 63.
+    /// </exception>
+    public static ulong MaskBits(this ulong flags, int count)
+    {
+        ArgumentOutOfRangeException.ThrowIfLessThan(count, 0, nameof(count));
+        ArgumentOutOfRangeException.ThrowIfGreaterThan(count, 63, nameof(count));
+
+        if (count < 64)
+        {
+            ulong mask = (1UL << count) - 1;
+            return flags & mask;
+        }
+        return flags;
+    }
 }
