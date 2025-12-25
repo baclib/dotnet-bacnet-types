@@ -16,15 +16,36 @@ public readonly record struct AuditOperationFlags : IReadOnlyCollection<bool>
     public ulong Flags { get; }
 
     /// <summary>
+    /// Minimum allowed bit count for this type.
+    /// </summary>
+    public const int MinCount = 16;
+
+    /// <summary>
+    /// Maximum allowed bit count for this type.
+    /// </summary>
+    public const int MaxCount = 64;
+
+    /// <summary>
     /// Initializes a new instance of <see cref="AuditOperationFlags"/>.
     /// </summary>
     /// <param name="flags">
     /// The underlying 64-bit unsigned integer containing the bits in system-native format.
     /// Only the lower bits up to <see cref="Count"/> are used. The remaining bits are always set to zero.
     /// </param>
-    public AuditOperationFlags(ulong flags)
+    /// <param name="count">Number of bits used by this instance (range <see cref="MinCount"/>.. <see cref="MaxCount"/>).</param>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="count"/> is outside the allowed range.</exception>
+    public AuditOperationFlags(ulong flags, int count = MinCount)
     {
-        Flags = (ulong)(flags & 0xFFFFFFFFFFFFFFFF);
+        ArgumentOutOfRangeException.ThrowIfLessThan(count, MinCount, nameof(count));
+        ArgumentOutOfRangeException.ThrowIfGreaterThan(count, MaxCount, nameof(count));
+
+        Count = count;
+        if (count < MaxCount)
+        {
+            ulong mask = (1UL << count) - 1;
+            flags &= mask;
+        }
+        Flags = flags;
     }
 
     /// <summary>
@@ -118,21 +139,16 @@ public readonly record struct AuditOperationFlags : IReadOnlyCollection<bool>
         get
         {
             ArgumentOutOfRangeException.ThrowIfNegative(index);
-            ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual(index, _count);
+            ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual(index, Count);
 
             return Flags.GetBit(index);
         }
     }
 
     /// <summary>
-    /// The number of bits used by this bit string.
-    /// </summary>
-    private readonly int _count = 64;
-
-    /// <summary>
     /// Gets the number of bits used by this bit string.
     /// </summary>
-    public int Count => _count;
+    public int Count { get; }
 
     /// <summary>
     /// Returns a value-type enumerator suitable for pattern-based foreach iteration.
@@ -179,7 +195,7 @@ public readonly record struct AuditOperationFlags : IReadOnlyCollection<bool>
     /// </summary>
     IEnumerator<bool> IEnumerable<bool>.GetEnumerator()
     {
-        for (int i = 0; i < _count; i++)
+        for (int i = 0; i < Count; i++)
         {
             yield return Flags.GetBit(i);
         }
