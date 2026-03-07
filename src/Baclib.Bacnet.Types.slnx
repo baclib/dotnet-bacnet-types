@@ -1,8 +1,5 @@
 <Solution>
   <Project Path="Baclib.Bacnet.Types.Tests/Baclib.Bacnet.Types.Tests.csproj" />
   <Project Path="Baclib.Bacnet.Types/Baclib.Bacnet.Types.csproj" />
-  <Project Path="Generator/generator.esproj">
-    <Build />
-    <Deploy />
-  </Project>
+  <Project Path="Generator/Generator.esproj" />
 </Solution>
