@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: Copyright 2024-2025, The BAClib Initiative and Contributors
+// SPDX-FileCopyrightText: Copyright 2024-2026, The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
 namespace Baclib.Bacnet.Types;
@@ -101,6 +101,11 @@ public readonly record struct CharacterString
     /// Gets the string value converted from the BACnet character string.
     /// </summary>
     public string Value { get; } = string.Empty;
+
+    /// <summary>
+    /// Gets the length of the string value.
+    /// </summary>
+    public int Length => Value.Length;
 
     /// <summary>
     /// Gets the code page for DBCS character sets.

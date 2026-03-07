@@ -1,0 +1,15 @@
+{
+    "name": "generator",
+    "version": "1.0.0",
+    "description": "A tool for generating C# code based on generic type definitions.",
+    "type": "module",
+    "private": true,
+    "scripts": {
+        "start": "node generate.js"
+    },
+    "author": "The BAClib Initiative <baclib@mailbox.org> (https://github.com/baclib)",
+    "license": "EPL-2.0",
+    "devDependencies": {
+        "@baclib/generic-bacnet-types": "^1.0.0"
+    }
+}

@@ -19,8 +19,4 @@
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Folder Include="Structures\" />
-  </ItemGroup>
-
 </Project>
