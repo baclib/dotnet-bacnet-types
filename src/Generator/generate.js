@@ -16,43 +16,6 @@ const partials = Object.freeze([
     'choice', 'sequence', 'sequence-of'
 ]);
 
-
-const prefinels = [
-    'Any.cs',
-    'BitExtensions.cs',
-    'BitString.cs',
-    'BitString16.cs',
-    'BitString32.cs',
-    'BitString64.cs',
-    'BitString8.cs',
-    'Boolean.cs',
-    'CharacterEncoder.cs',
-    'CharacterSet.cs',
-    'CharacterString.cs',
-    'Choice.cs',
-    'Date.cs',
-    'DatePattern.cs',
-    'Double.cs',
-    'Enumerated.cs',
-    'Enumerated16.cs',
-    'Enumerated32.cs',
-    'Enumerated64.cs',
-    'Enumerated8.cs',
-    'IBitString.cs',
-    'Integer.cs',
-    'Null.cs',
-    'ObjectIdentifier.cs',
-    'ObjectType.cs',
-    'OctetString.cs',
-    'Real.cs',
-    'Sequence.cs',
-    'String.cs',
-    'Time.cs',
-    'TimePattern.cs',
-    'Unsigned.cs',
-    'WeekNDay.cs'
-];
-
 /**
  * CsharpTransformer - Generates C# code from BACnet type definitions using Handlebars templates.
  * 
@@ -68,7 +31,7 @@ export class CsharpTransformer {
     constructor() {
         this.fileName = null;
         this.definitions = [];
-        this.directory = path.join(__dirname, 'output');
+        this.directory = path.join(__dirname, '..', 'Baclib.Bacnet.Types');
         this.templatesDir = path.join(__dirname, 'templates');
 
         this.predefinedTypesDir = path.join(__dirname, '..', 'csharp');
@@ -226,7 +189,7 @@ export class CsharpTransformer {
             else {
                 fileObject.length = Math.max(...fileObject.items.map(item => item.position)) + 1;
             }
-            console.log('Bit string', fileObject);
+            //console.log('Bit string', fileObject);
         }
 
         if (fileObject.baseType === 'enumerated') {
@@ -268,16 +231,14 @@ export class CsharpTransformer {
     }
 
     async afterProcessing(result) {
-        /*
-        const predefinedFiles = await fs.readdir(this.predefinedTypesDir);
-        for (const file of predefinedFiles) {
-            if (file.startsWith('Baclib.Bacnet.Types.') || file.endsWith('.cs')) {
-                const srcPath = path.join(this.predefinedTypesDir, file);
-                const destPath = path.join(this.directory, file);
-                await fs.copyFile(srcPath, destPath);
+
+        const existingFiles = await fs.readdir(this.directory);
+        for (const file of existingFiles) {
+            if (file.endsWith('.cs') && !file.endsWith('.manual.cs')) {
+                await fs.unlink(path.join(this.directory, file));
             }
         }
-        */
+
         const templatePath = path.join(this.templatesDir, 'levels.hbs');
         for (const fileObject of this.fileObjects) {
             //const predefinedPath = path.join(this.predefinedTypesDir, fileObject.fileName);
@@ -289,6 +250,7 @@ export class CsharpTransformer {
                 writeFileSync(path.join(this.directory, fileObject.fileName), content);
             });
         }
+            console.log('Generated', this.directory);
     }
 
     /**
