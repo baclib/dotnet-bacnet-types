@@ -6,6 +6,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import Handlebars from 'handlebars';
+import { stringify } from 'querystring';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -231,26 +232,26 @@ export class CsharpTransformer {
     }
 
     async afterProcessing(result) {
-
         const existingFiles = await fs.readdir(this.directory);
         for (const file of existingFiles) {
             if (file.endsWith('.cs') && !file.endsWith('.manual.cs')) {
                 await fs.unlink(path.join(this.directory, file));
             }
         }
-
         const templatePath = path.join(this.templatesDir, 'levels.hbs');
         for (const fileObject of this.fileObjects) {
-            //const predefinedPath = path.join(this.predefinedTypesDir, fileObject.fileName);
-            //if (existsSync(predefinedPath)) {
-            //    continue;
-            //}
+
+            // skip bit-string for the moment, as they require special handling and we want to focus on the other types first
+            if (fileObject.className.startsWith('BitString') || fileObject.className === 'WeekNDay') {
+                console.warn('Skipping bit string', fileObject.className);
+                continue;
+            }
+
             //console.log('Processing', fileObject.fileName);
             this.render(templatePath, fileObject).then(content => {
                 writeFileSync(path.join(this.directory, fileObject.fileName), content);
             });
         }
-            console.log('Generated', this.directory);
     }
 
     /**
@@ -324,6 +325,69 @@ export class CsharpTransformer {
      */
     async render(templatePath, data) {
         if (!partials.includes(data.baseType)) {
+            switch (data.className) {
+                case 'Any':
+                    data.baseType = 'object';
+                    break;
+                case 'BitString':
+                    data.baseType = 'object';
+                    break;
+                case 'Boolean':
+                    data.baseType = 'bool';
+                    break;
+                case 'CharacterString':
+                    data.baseType = 'object';
+                    break;
+                case 'Choice':
+                    data.baseType = 'object';
+                    break;
+                case 'CreateObjectAck':
+                    data.baseType = 'Baclib.Bacnet.Types.ObjectIdentifier';
+                    break;
+                case 'DatePattern':
+                    data.baseType = 'object';
+                    break;
+                case 'Date':
+                    data.baseType = 'Baclib.Bacnet.Types.DatePattern';
+                    break;
+                case 'Double':
+                    data.baseType = 'double';
+                    break;
+                case 'Enumerated':
+                    data.baseType = 'object';
+                    break;
+                case 'Integer':
+                    data.baseType = 'int';
+                    break;
+                case 'Null':
+                    data.baseType = 'object';
+                    break;
+                case 'ObjectIdentifier':
+                    data.baseType = 'object';
+                    break;
+                case 'OctetString':
+                    data.baseType = 'object';
+                    break;
+                case 'Real':
+                    data.baseType = 'float';
+                    break;
+                case 'Sequence':
+                    data.baseType = 'object';
+                    break;
+                case 'String':
+                    data.baseType = 'string';
+                    break;
+                case 'TimePattern':
+                    data.baseType = 'object';
+                    break;
+                case 'Time':
+                    data.baseType = 'Baclib.Bacnet.Types.TimePattern';
+                    break;
+                case 'Unsigned':
+                    data.baseType = 'uint';
+                    break;
+            }
+            //console.warn(`${data.className.padEnd(16)} : ${stringify(data)}`);
             templatePath = path.join(path.dirname(templatePath), 'global-alias.hbs');
         }
         const template = await this.loadTemplate(templatePath);

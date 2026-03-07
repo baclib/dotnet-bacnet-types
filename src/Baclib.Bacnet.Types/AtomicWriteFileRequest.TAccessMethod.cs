@@ -1,0 +1,91 @@
+// SPDX-FileCopyrightText: Copyright 2024-2026, The BAClib Initiative and Contributors
+// SPDX-License-Identifier: EPL-2.0
+
+namespace Baclib.Bacnet.Types;
+
+public partial record class AtomicWriteFileRequest
+{
+    /// <summary>
+    /// Represents the choice access-method as defined in ANSI/ASHRAE 135-2024 Clause 21.
+    /// </summary>
+    public partial record class TAccessMethod
+    {
+        /// <summary>
+        /// Represents the tag choice of this choice type.
+        /// </summary>
+        public enum Option : byte
+        {
+            /// <summary>
+            /// Write data to the file as a stream of bytes.
+            /// </summary>
+            StreamAccess,
+    
+            /// <summary>
+            /// Write data to the file as a series of records.
+            /// </summary>
+            RecordAccess
+        }
+    
+        /// <summary>
+        /// The active choice of this instance.
+        /// </summary>
+        public Option Choice { get; }
+    
+        private object _choiceValue
+        {
+            get;
+        }
+    
+        private TAccessMethod(Option choice, object value)
+        {
+            Choice = choice;
+            _choiceValue = value;
+        }
+    
+        /// <summary>
+        /// Write data to the file as a stream of bytes.
+        /// </summary>
+        public TStreamAccess StreamAccess
+        {
+            get
+            {
+                if (Choice != Option.StreamAccess)
+                {
+                    throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.StreamAccess)} hat das Template erstellt");
+                }
+                return (TStreamAccess)_choiceValue;
+            }
+        }
+        
+        /// <summary>
+        /// Create function for Write data to the file as a stream of bytes.
+        /// </summary>
+        public static TAccessMethod NewStreamAccess(TStreamAccess value)
+        {
+            return new TAccessMethod(Option.StreamAccess, value);
+        }
+    
+        /// <summary>
+        /// Write data to the file as a series of records.
+        /// </summary>
+        public TRecordAccess RecordAccess
+        {
+            get
+            {
+                if (Choice != Option.RecordAccess)
+                {
+                    throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.RecordAccess)} hat das Template erstellt");
+                }
+                return (TRecordAccess)_choiceValue;
+            }
+        }
+        
+        /// <summary>
+        /// Create function for Write data to the file as a series of records.
+        /// </summary>
+        public static TAccessMethod NewRecordAccess(TRecordAccess value)
+        {
+            return new TAccessMethod(Option.RecordAccess, value);
+        }
+    }
+}

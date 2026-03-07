@@ -1,0 +1,15 @@
+// SPDX-FileCopyrightText: Copyright 2024-2026, The BAClib Initiative and Contributors
+// SPDX-License-Identifier: EPL-2.0
+
+namespace Baclib.Bacnet.Types;
+
+/// <summary>
+/// Represents the sequence BACnetDailySchedule as defined in ANSI/ASHRAE 135-2024 Clause 21.
+/// </summary>
+public partial record class DailySchedule
+{
+    /// <summary>
+    /// A list of time-value pairs defining scheduled values throughout the day.
+    /// </summary>
+    public required TDaySchedule DaySchedule { get; init; }
+    }

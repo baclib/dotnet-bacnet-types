@@ -4,7 +4,7 @@
 namespace Baclib.Bacnet.Types;
 
 /// <summary>
-/// Represents the enumeration BACnetObjectType as defined in ANSI/ASHRAE 135-2024 Clause 20.6.
+/// Represents the enumeration BACnetObjectType as defined in ANSI/ASHRAE 135-2024 Clause 21.
 /// </summary>
 public enum ObjectType : ushort
 {
