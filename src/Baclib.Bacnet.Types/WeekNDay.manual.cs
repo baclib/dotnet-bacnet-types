@@ -8,7 +8,7 @@ namespace Baclib.Bacnet.Types;
 /// Used for scheduling recurring events (e.g., "second Tuesday of March").
 /// Supports BACnet wildcard values (255) for unspecified fields.
 /// </summary>
-public readonly struct WeekNDay : IEquatable<WeekNDay>
+public readonly partial record struct WeekNDay
 {
     /// <summary>
     /// Wildcard value indicating an unspecified or "any" field value.
@@ -178,43 +178,4 @@ public readonly struct WeekNDay : IEquatable<WeekNDay>
 
         return $"{weekStr} of {monthStr}, {dayStr}";
     }
-
-    /// <summary>
-    /// Determines whether the specified BACnet WeekNDay is equal to the current value.
-    /// </summary>
-    /// <param name="other">The WeekNDay to compare.</param>
-    /// <returns>True if the values are equal; otherwise, false.</returns>
-    public bool Equals(WeekNDay other)
-    {
-        return Month == other.Month && Week == other.Week && DayOfWeek == other.DayOfWeek;
-    }
-
-    /// <summary>
-    /// Determines whether the specified object is equal to the current value.
-    /// </summary>
-    /// <param name="obj">The object to compare.</param>
-    /// <returns>True if the object is a WeekNDay and equal to the current value; otherwise, false.</returns>
-    public override bool Equals(object? obj)
-    {
-        return obj is WeekNDay other && Equals(other);
-    }
-
-    /// <summary>
-    /// Returns the hash code for this value.
-    /// </summary>
-    /// <returns>A hash code for the current value.</returns>
-    public override int GetHashCode()
-    {
-        return HashCode.Combine(Month, Week, DayOfWeek);
-    }
-
-    /// <summary>
-    /// Determines whether two BACnet WeekNDay values are equal.
-    /// </summary>
-    public static bool operator ==(WeekNDay left, WeekNDay right) => left.Equals(right);
-
-    /// <summary>
-    /// Determines whether two BACnet WeekNDay values are not equal.
-    /// </summary>
-    public static bool operator !=(WeekNDay left, WeekNDay right) => !left.Equals(right);
 }
