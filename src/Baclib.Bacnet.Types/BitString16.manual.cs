@@ -4,7 +4,7 @@
 namespace Baclib.Bacnet.Types;
 
 /// <summary>
-/// Represents a BACnet Bit String primitive data type as defined in ANSI/ASHRAE 135-2024 Clause 20.2.10.
+/// Represents a BACnet BitString primitive data type as defined in ANSI/ASHRAE 135-2024 Clause 20.2.10.
 /// This implementation supports up to 16 bits which are stored in a <see cref="ushort"/>, while the bit
 /// count is stored in a single <see cref="byte"/>.
 /// </summary>
@@ -13,7 +13,7 @@ namespace Baclib.Bacnet.Types;
 /// which is <em>not</em> the same as the BACnet ASN.1 encoded wire format (MSB-first). Encoding and
 /// decoding operations must perform bit order conversion when serializing to/from BACnet protocol data.
 /// </remarks>
-public readonly record struct BitString16 : IBitString
+public readonly partial record struct BitString16 : IBitString
 {
     /// <summary>
     /// The number of bits in this bit string.
