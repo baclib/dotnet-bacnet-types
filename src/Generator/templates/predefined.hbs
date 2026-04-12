@@ -3,6 +3,8 @@
 
 namespace {{namespace}};
 
-{{#nest this}}
-{{> (apply this)}}
-{{/nest}}
+/// <summary/>
+public readonly partial record struct {{className}}
+{
+    // See {{className}}.manual.cs for implementation details
+}

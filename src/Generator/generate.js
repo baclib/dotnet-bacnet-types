@@ -17,6 +17,29 @@ const partials = Object.freeze([
     'choice', 'sequence', 'sequence-of'
 ]);
 
+const fixedAliases = Object.freeze({
+    'boolean': 'bool',
+    'unsigned': 'uint',
+    'unsigned-8': 'byte',
+    'unsigned-16': 'ushort',
+    'unsigned-32': 'uint',
+    'unsigned-64': 'ulong',
+    'integer': 'int',
+    'integer-8': 'sbyte',
+    'integer-16': 'short',
+    'integer-32': 'int',
+    'integer-64': 'long',
+    'real': 'float',
+    'double': 'double',
+    'string': 'string',
+    'enumerated': 'uint',
+    'enumerated-8': 'byte',
+    'enumerated-16': 'ushort',
+    'enumerated-32': 'uint',
+    'enumerated-64': 'ulong',
+    'enumeration': 'uint'
+});
+
 /**
  * CsharpTransformer - Generates C# code from BACnet type definitions using Handlebars templates.
  * 
@@ -55,10 +78,13 @@ export class CsharpTransformer {
         const fileName = classHierarchy.join('.') + '.cs';
         const className = classHierarchy.pop();
         const typeData = {
+            fullname: context.fullname,
+            namespace: 'Baclib.Bacnet.Types',
             fileName,
             bacnetName: context.thisAlias ?? context.thisName,
             className,
             classHierarchy,
+            aliasBase: null,
             baseType: context.traits?.base ?? null,
             primitive: context.definition?.primitive ?? null,
             isAnonymous: !context.definition && Object.keys(context.traits).length !== 2,
@@ -324,71 +350,19 @@ export class CsharpTransformer {
      * @returns {Promise<string>} Rendered template
      */
     async render(templatePath, data) {
-        if (!partials.includes(data.baseType)) {
-            switch (data.className) {
-                case 'Any':
-                    data.baseType = 'object';
-                    break;
-                case 'BitString':
-                    data.baseType = 'object';
-                    break;
-                case 'Boolean':
-                    data.baseType = 'bool';
-                    break;
-                case 'CharacterString':
-                    data.baseType = 'object';
-                    break;
-                case 'Choice':
-                    data.baseType = 'object';
-                    break;
-                case 'CreateObjectAck':
-                    data.baseType = 'Baclib.Bacnet.Types.ObjectIdentifier';
-                    break;
-                case 'DatePattern':
-                    data.baseType = 'object';
-                    break;
-                case 'Date':
-                    data.baseType = 'Baclib.Bacnet.Types.DatePattern';
-                    break;
-                case 'Double':
-                    data.baseType = 'double';
-                    break;
-                case 'Enumerated':
-                    data.baseType = 'object';
-                    break;
-                case 'Integer':
-                    data.baseType = 'int';
-                    break;
-                case 'Null':
-                    data.baseType = 'object';
-                    break;
-                case 'ObjectIdentifier':
-                    data.baseType = 'object';
-                    break;
-                case 'OctetString':
-                    data.baseType = 'object';
-                    break;
-                case 'Real':
-                    data.baseType = 'float';
-                    break;
-                case 'Sequence':
-                    data.baseType = 'object';
-                    break;
-                case 'String':
-                    data.baseType = 'string';
-                    break;
-                case 'TimePattern':
-                    data.baseType = 'object';
-                    break;
-                case 'Time':
-                    data.baseType = 'Baclib.Bacnet.Types.TimePattern';
-                    break;
-                case 'Unsigned':
-                    data.baseType = 'uint';
-                    break;
-            }
-            //console.warn(`${data.className.padEnd(16)} : ${stringify(data)}`);
+
+        if (fixedAliases.hasOwnProperty(data.fullname)) {
+            data.aliasBase = fixedAliases[data.fullname];
             templatePath = path.join(path.dirname(templatePath), 'global-alias.hbs');
+        }
+        else if (!partials.includes(data.baseType)) {
+            if (data.baseType) {
+                data.aliasBase = data.namespace + '.' + this.toPascalCase(data.baseType);
+                templatePath = path.join(path.dirname(templatePath), 'global-alias.hbs');
+            }
+            else {
+                templatePath = path.join(path.dirname(templatePath), 'predefined.hbs');
+            }
         }
         const template = await this.loadTemplate(templatePath);
         return template(data);
