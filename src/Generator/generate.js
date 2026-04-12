@@ -7,7 +7,6 @@ import { EOL } from 'os';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import Handlebars from 'handlebars';
-import { stringify } from 'querystring';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -16,6 +15,15 @@ const partials = Object.freeze([
     'number', 'unsigned', 'integer', 'real', 'double',
     'octet-string', 'character-string', 'bit-string', 'enumerated',
     'choice', 'sequence', 'sequence-of'
+]);
+
+const refinedTypes = Object.freeze([
+    'any', 'choice', 'sequence', 'sequence-of',
+    'null',
+    'octet-string', 'character-string', 'bit-string', , 'bit-string-8', 'bit-string-16', 'bit-string-32', 'bit-string-64',
+    'date-pattern', 'time-pattern',
+    'object-identifier',
+    'week-n-day'
 ]);
 
 const fixedAliases = Object.freeze({
@@ -97,7 +105,6 @@ export class CsharpTransformer {
 
         if (typeof context.definition?.type === 'string') {
             typeData.baseType = this.toPascalCase(context.definition.type);
-            //console.log('##################################\n', typeData, '\n##################################');
         }
 
         if (typeData.baseType === 'unsigned' && (Object.hasOwn(context.traits, 'minimum') && Object.hasOwn(context.traits, 'maximum'))) {
@@ -217,7 +224,6 @@ export class CsharpTransformer {
             else {
                 fileObject.length = Math.max(...fileObject.items.map(item => item.position)) + 1;
             }
-            //console.log('Bit string', fileObject);
         }
 
         if (fileObject.baseType === 'enumerated') {
@@ -235,7 +241,6 @@ export class CsharpTransformer {
 
         this.fileObjects.push(fileObject);
     }
-
 
     startItem(context) {
     }
@@ -267,14 +272,6 @@ export class CsharpTransformer {
         }
         const templatePath = path.join(this.templatesDir, 'levels.hbs');
         for (const fileObject of this.fileObjects) {
-
-            // skip bit-string for the moment, as they require special handling and we want to focus on the other types first
-            if (fileObject.className.startsWith('BitString') || fileObject.className === 'WeekNDay') {
-                console.warn('Skipping bit string', fileObject.className);
-                continue;
-            }
-
-            //console.log('Processing', fileObject.fileName);
             this.render(templatePath, fileObject).then(content => {
                 writeFileSync(path.join(this.directory, fileObject.fileName), content);
             });
@@ -351,18 +348,21 @@ export class CsharpTransformer {
      * @returns {Promise<string>} Rendered template
      */
     async render(templatePath, data) {
-
+        const globalAliasPath = path.join(path.dirname(templatePath), 'global-alias.hbs');
         if (fixedAliases.hasOwnProperty(data.fullname)) {
             data.aliasBase = fixedAliases[data.fullname];
-            templatePath = path.join(path.dirname(templatePath), 'global-alias.hbs');
+            templatePath = globalAliasPath;
+        }
+        else if (refinedTypes.includes(data.fullname)) {
+            templatePath = path.join(path.dirname(templatePath), 'predefined.hbs');
         }
         else if (!partials.includes(data.baseType)) {
             if (data.baseType) {
                 data.aliasBase = data.namespace + '.' + this.toPascalCase(data.baseType);
-                templatePath = path.join(path.dirname(templatePath), 'global-alias.hbs');
+                templatePath = globalAliasPath;
             }
             else {
-                templatePath = path.join(path.dirname(templatePath), 'predefined.hbs');
+                throw new Error(`No base type for ${data.fullname}`);
             }
         }
         const template = await this.loadTemplate(templatePath);
