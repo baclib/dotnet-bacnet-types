@@ -13,7 +13,7 @@ namespace Baclib.Bacnet.Types;
 /// The year field represents years 1900-2154 (encoded as 0-254), with 255 indicating an unspecified year.
 /// This type can be converted to and from .NET DateTime and DateOnly types for specific dates.
 /// </remarks>
-public readonly record struct DatePattern
+public readonly partial record struct DatePattern
 {
     /// <summary>
     /// Wildcard value indicating an unspecified or "any" field value.

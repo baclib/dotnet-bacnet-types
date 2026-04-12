@@ -14,7 +14,7 @@ namespace Baclib.Bacnet.Types;
 /// - Bits 0-21: Instance number (22 bits, values 0-4194303)
 /// This design ensures efficient memory usage (4 bytes) and aligns with the BACnet wire format.
 /// </remarks>
-public readonly record struct ObjectIdentifier
+public readonly partial record struct ObjectIdentifier
 {
     /// <summary>
     /// Maximum allowed instance number (2^22 - 1 = 4194303).

@@ -13,7 +13,7 @@ namespace Baclib.Bacnet.Types;
 /// hundredths 0-99, with 255 indicating an unspecified value for any field.
 /// This type can be converted to and from .NET TimeSpan, TimeOnly, and DateTime types for specific times.
 /// </remarks>
-public readonly record struct TimePattern
+public readonly partial record struct TimePattern
 {
     /// <summary>
     /// Wildcard value indicating an unspecified or "any" field value.

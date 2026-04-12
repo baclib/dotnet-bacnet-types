@@ -12,7 +12,7 @@ namespace Baclib.Bacnet.Types;
 /// Supports multiple encodings including UTF-8, UCS-2, UCS-4, ISO-8859-1, JIS X 0208, and DBCS.
 /// The string value is decoded and stored alongside the encoding metadata for efficient access.
 /// </remarks>
-public readonly record struct CharacterString
+public readonly partial record struct CharacterString
 {
     /// <summary>
     /// The backing field for the character encoder.

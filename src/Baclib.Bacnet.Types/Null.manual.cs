@@ -11,7 +11,7 @@ namespace Baclib.Bacnet.Types;
 /// BACnet Null is encoded as a context/application tag with zero-length content.
 /// All instances of Null are semantically equivalent. Use <see cref="Value"/> to reference the singleton instance.
 /// </remarks>
-public readonly record struct Null
+public readonly partial record struct Null
 {
     /// <summary>
     /// Gets the singleton BACnet Null value.

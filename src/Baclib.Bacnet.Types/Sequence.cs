@@ -1,4 +1,10 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026, The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
-global using Sequence = object;
+namespace Baclib.Bacnet.Types;
+
+/// <summary/>
+public readonly partial record struct Sequence
+{
+    // See Sequence.manual.cs for implementation details
+}

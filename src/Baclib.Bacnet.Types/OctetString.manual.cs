@@ -12,7 +12,7 @@ namespace Baclib.Bacnet.Types;
 /// The data is copied on construction to ensure immutability. Use this type for BACnet octet string values
 /// such as UUIDs, MAC addresses, or arbitrary binary data.
 /// </remarks>
-public readonly record struct OctetString
+public readonly partial record struct OctetString
 {
     /// <summary>
     /// The underlying byte array containing the octet string data.
