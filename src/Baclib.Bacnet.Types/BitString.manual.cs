@@ -4,18 +4,18 @@
 namespace Baclib.Bacnet.Types;
 
 /// <summary>
-/// Represents a BACnet BitString primitive data type as defined in ANSI/ASHRAE 135-2024 Clause 20.2.10.
+/// Represents a BACnet Bit String primitive data type as defined in ANSI/ASHRAE 135-2024 Clause 20.2.10.
 /// </summary>
 /// <remarks>
-/// A BitString is a sequence of zero or more bits, each of which can be independently set to 0 or 1.
-/// BitStrings are commonly used in BACnet to represent status flags, configuration options, and bit-mapped values.
+/// A Bit String is a sequence of zero or more bits, each of which can be independently set to 0 or 1.
+/// Bit String data types are commonly used in BACnet to represent status flags, configuration options, and bit-mapped values.
 /// </remarks>
-public readonly record struct BitString
+public readonly partial record struct BitString
 {
     /// <summary>
     /// Shared empty bit string data to avoid allocations for empty instances.
     /// </summary>
-    public static readonly byte[] EmptyData = [0];
+    private static readonly byte[] EmptyData = [0];
 
     /// <summary>
     /// The raw BACnet-encoded data array.
@@ -39,7 +39,7 @@ public readonly record struct BitString
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="BitString"/> class with the specified bit count.
+    /// Initializes a new instance of the <see cref="BitString"/> struct with the specified bit count.
     /// </summary>
     /// <param name="bitCount">The number of bits in the bit string.</param>
     /// <exception cref="ArgumentOutOfRangeException">Thrown when bitCount is negative.</exception>
@@ -51,7 +51,7 @@ public readonly record struct BitString
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="BitString"/> class from a boolean array.
+    /// Initializes a new instance of the <see cref="BitString"/> struct from a boolean array.
     /// </summary>
     /// <param name="bits">The boolean array where true represents 1 and false represents 0.</param>
     /// <exception cref="ArgumentNullException">Thrown when bits is null.</exception>
@@ -74,11 +74,12 @@ public readonly record struct BitString
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="BitString"/> class from BACnet-encoded data.
+    /// Initializes a new instance of the <see cref="BitString"/> struct from BACnet-encoded data.
     /// </summary>
     /// <param name="source">The BACnet-encoded bit string data.</param>
     /// <exception cref="ArgumentOutOfRangeException">
-    /// Thrown when source is empty, unused bits count exceeds 7, or empty bit string has non-zero unused bits.
+    /// Thrown when source is empty, unused bits count exceeds 7, empty bit string has non-zero unused bits,
+    /// or unused bits in the last byte are non-zero.
     /// </exception>
     public BitString(ReadOnlySpan<byte> source)
     {
@@ -94,7 +95,26 @@ public readonly record struct BitString
             return;
         }
 
+        if (unusedBits > 0)
+        {
+            var unusedBitsMask = (byte)((1 << unusedBits) - 1);
+            if ((source[^1] & unusedBitsMask) != 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(source), "Unused bits in the last byte of a BACnet BitString must be zero.");
+            }
+        }
+
         _data = source.ToArray();
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="BitString"/> struct directly from a pre-validated
+    /// BACnet-encoded data array, without copying.
+    /// </summary>
+    /// <param name="data">The BACnet-encoded data array (first byte = unused bits count, remaining bytes = bit data).</param>
+    private BitString(byte[] data)
+    {
+        _data = data;
     }
 
     /// <summary>
@@ -123,6 +143,17 @@ public readonly record struct BitString
     /// Gets a value indicating whether this bit string is empty (length 0).
     /// </summary>
     public bool IsEmpty => _data.Length == 1;
+
+    /// <inheritdoc/>
+    public bool Equals(BitString other) => _data.AsSpan().SequenceEqual(other._data.AsSpan());
+
+    /// <inheritdoc/>
+    public override int GetHashCode()
+    {
+        var hash = new HashCode();
+        hash.AddBytes(_data);
+        return hash.ToHashCode();
+    }
 
     /// <summary>
     /// Calculates the byte index and bit mask for a given bit position.
@@ -175,9 +206,9 @@ public readonly record struct BitString
     }
 
     /// <summary>
-    /// Gets or sets the bit at the specified index.
+    /// Gets the bit at the specified index.
     /// </summary>
-    /// <param name="index">The zero-based index of the bit to get or set.</param>
+    /// <param name="index">The zero-based index of the bit to get.</param>
     /// <returns>True if the bit is set (1), false otherwise (0).</returns>
     /// <exception cref="ArgumentOutOfRangeException">
     /// Thrown when index is negative or greater than or equal to Length.
@@ -191,19 +222,40 @@ public readonly record struct BitString
 
             return GetBit(index);
         }
-        set
-        {
-            ArgumentOutOfRangeException.ThrowIfNegative(index);
-            ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual(index, Length);
+    }
 
-            SetBit(index, value);
-        }
+    /// <summary>
+    /// Returns a new <see cref="BitString"/> with the bit at the specified index set to the given value.
+    /// </summary>
+    /// <param name="index">The zero-based index of the bit to change.</param>
+    /// <param name="value">The new value for the bit.</param>
+    /// <returns>A new <see cref="BitString"/> with the specified bit set to <paramref name="value"/>.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when index is negative or greater than or equal to Length.
+    /// </exception>
+    public BitString WithBit(int index, bool value)
+    {
+        ArgumentOutOfRangeException.ThrowIfNegative(index);
+        ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual(index, Length);
+
+        var newData = (byte[])_data.Clone();
+        CalculateIndexMask(index, out var byteIndex, out var bitMask);
+        if (value)
+            newData[byteIndex] |= (byte)bitMask;
+        else
+            newData[byteIndex] &= (byte)~bitMask;
+
+        return new BitString(newData);
     }
 
     /// <summary>
     /// Gets all bits as a boolean array.
     /// </summary>
-    /// <returns>A boolean array where true represents 1 and false represents 0.</returns>
+    /// <returns>
+    /// A new boolean array where true represents 1 and false represents 0.
+    /// Bits are ordered MSB-first (index 0 = most significant bit of the first data byte).
+    /// Returns an empty array for an empty bit string.
+    /// </returns>
     public bool[] GetBits()
     {
         if (Length == 0)
@@ -223,7 +275,10 @@ public readonly record struct BitString
     /// <summary>
     /// Returns the bit data bytes as a read-only span (excluding the unused bits count byte).
     /// </summary>
-    /// <returns>A read-only span containing the bytes.</returns>
+    /// <returns>
+    /// A read-only span containing the bit data bytes in BACnet MSB-first wire format,
+    /// without the leading unused-bits-count byte. Returns an empty span for an empty bit string.
+    /// </returns>
     public ReadOnlySpan<byte> AsSpan()
     {
         if (_data.Length == 1)
@@ -256,7 +311,7 @@ public readonly record struct BitString
     /// <summary>
     /// Copies the BACnet-encoded bit string data to the destination span.
     /// </summary>
-    /// <param name="destination">The destination span to copy the data to. Must be at least <see cref="Length"/> bytes in size.</param>
+    /// <param name="destination">The destination span to copy the data to. Must be at least <c>(Length + 7) / 8 + 1</c> bytes in size (one unused-bits-count byte followed by the bit data bytes).</param>
     /// <exception cref="ArgumentException">Thrown when the destination span is too small.</exception>
     public void CopyTo(Span<byte> destination)
     {
