@@ -3,6 +3,7 @@
 
 import { existsSync, readFileSync, writeFileSync } from 'fs';
 import fs from 'fs/promises';
+import { EOL } from 'os';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import Handlebars from 'handlebars';
@@ -365,7 +366,14 @@ export class CsharpTransformer {
             }
         }
         const template = await this.loadTemplate(templatePath);
-        return template(data);
+        return this.normalizeLineEndings(template(data));
+    }
+
+    /**
+     * Normalize generated text to the current OS line ending.
+     */
+    normalizeLineEndings(content) {
+        return content.replace(/\r\n|\n|\r/g, EOL);
     }
 
     /**
