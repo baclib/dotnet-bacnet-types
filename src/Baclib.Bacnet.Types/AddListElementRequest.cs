@@ -21,7 +21,7 @@ public partial record class AddListElementRequest
     /// <summary>
     /// Optional array index if the property is an array.
     /// </summary>
-    public Unsigned? PropertyArrayIndex { get; init; }
+    public Optional<Unsigned> PropertyArrayIndex { get; init; }
 
     /// <summary>
     /// The elements to add to the list.

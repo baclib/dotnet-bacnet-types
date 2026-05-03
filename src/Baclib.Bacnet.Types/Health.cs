@@ -21,10 +21,10 @@ public partial record class Health
     /// <summary>
     /// Optional property identifier related to the health status.
     /// </summary>
-    public PropertyIdentifier? Property { get; init; }
+    public Optional<PropertyIdentifier> Property { get; init; }
 
     /// <summary>
     /// Optional additional details describing the health status or issue.
     /// </summary>
-    public CharacterString? Details { get; init; }
+    public Optional<CharacterString> Details { get; init; }
 }

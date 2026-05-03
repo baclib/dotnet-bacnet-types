@@ -31,5 +31,5 @@ public partial record class AuthenticationEvent
     /// <summary>
     /// Additional details about the authentication decision.
     /// </summary>
-    public CharacterString? DecisionDetails { get; init; }
+    public Optional<CharacterString> DecisionDetails { get; init; }
 }

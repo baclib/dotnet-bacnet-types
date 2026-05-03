@@ -11,7 +11,7 @@ public partial record class ActionCommand
     /// <summary>
     /// The optional device identifier (if different from the local device).
     /// </summary>
-    public ObjectIdentifier? DeviceIdentifier { get; init; }
+    public Optional<ObjectIdentifier> DeviceIdentifier { get; init; }
 
     /// <summary>
     /// The object identifier containing the property to write.
@@ -26,7 +26,7 @@ public partial record class ActionCommand
     /// <summary>
     /// Optional array index if the property is an array.
     /// </summary>
-    public Unsigned? PropertyArrayIndex { get; init; }
+    public Optional<Unsigned> PropertyArrayIndex { get; init; }
 
     /// <summary>
     /// The value to write to the property.
@@ -36,12 +36,12 @@ public partial record class ActionCommand
     /// <summary>
     /// Optional priority level for the write operation (1-16).
     /// </summary>
-    public TPriority? Priority { get; init; }
+    public Optional<TPriority> Priority { get; init; }
 
     /// <summary>
     /// Optional delay in seconds after executing this command before the next.
     /// </summary>
-    public Unsigned? PostDelay { get; init; }
+    public Optional<Unsigned> PostDelay { get; init; }
 
     /// <summary>
     /// Indicates whether to stop executing subsequent commands if this one fails.

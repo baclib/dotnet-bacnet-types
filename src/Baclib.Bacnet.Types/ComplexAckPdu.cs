@@ -36,12 +36,12 @@ public partial record class ComplexAckPdu
     /// <summary>
     /// The sequence number for segmented messages. Optional.
     /// </summary>
-    public TSequenceNumber? SequenceNumber { get; init; }
+    public Optional<TSequenceNumber> SequenceNumber { get; init; }
 
     /// <summary>
     /// The proposed window size for segmented messages. Optional.
     /// </summary>
-    public TProposedWindowSize? ProposedWindowSize { get; init; }
+    public Optional<TProposedWindowSize> ProposedWindowSize { get; init; }
 
     /// <summary>
     /// The confirmed service being acknowledged.

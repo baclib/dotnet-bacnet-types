@@ -22,7 +22,7 @@ public partial record class ConfirmedCovNotificationMultipleRequest
                 /// <summary>
                 /// The array index, if the property is an array. Optional.
                 /// </summary>
-                public Unsigned? PropertyArrayIndex { get; init; }
+                public Optional<Unsigned> PropertyArrayIndex { get; init; }
             
                 /// <summary>
                 /// The current value of the property.
@@ -32,7 +32,7 @@ public partial record class ConfirmedCovNotificationMultipleRequest
                 /// <summary>
                 /// Optional time when the property changed.
                 /// </summary>
-                public Time? TimeOfChange { get; init; }
+                public Optional<Time> TimeOfChange { get; init; }
             }
         }
     }

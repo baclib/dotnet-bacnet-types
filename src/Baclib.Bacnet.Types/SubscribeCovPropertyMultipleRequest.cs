@@ -21,12 +21,12 @@ public partial record class SubscribeCovPropertyMultipleRequest
     /// <summary>
     /// The duration of the subscription, in seconds. Optional.
     /// </summary>
-    public Unsigned? Lifetime { get; init; }
+    public Optional<Unsigned> Lifetime { get; init; }
 
     /// <summary>
     /// The maximum delay between notifications, in seconds. Optional.
     /// </summary>
-    public Unsigned? MaxNotificationDelay { get; init; }
+    public Optional<Unsigned> MaxNotificationDelay { get; init; }
 
     /// <summary>
     /// A list of COV subscription specifications for multiple objects and properties.

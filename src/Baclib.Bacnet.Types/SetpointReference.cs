@@ -11,5 +11,5 @@ public partial record class SetpointReference
     /// <summary>
     /// An optional reference to the setpoint property of an object.
     /// </summary>
-    public ObjectPropertyReference? Reference { get; init; }
+    public Optional<ObjectPropertyReference> Reference { get; init; }
 }

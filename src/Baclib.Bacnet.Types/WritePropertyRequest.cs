@@ -21,7 +21,7 @@ public partial record class WritePropertyRequest
     /// <summary>
     /// The index within an array property, if applicable. Optional.
     /// </summary>
-    public Unsigned? PropertyArrayIndex { get; init; }
+    public Optional<Unsigned> PropertyArrayIndex { get; init; }
 
     /// <summary>
     /// The value to write to the property.
@@ -31,5 +31,5 @@ public partial record class WritePropertyRequest
     /// <summary>
     /// The priority of the write operation, if applicable. Optional.
     /// </summary>
-    public TPriority? Priority { get; init; }
+    public Optional<TPriority> Priority { get; init; }
 }

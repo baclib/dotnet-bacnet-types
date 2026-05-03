@@ -18,17 +18,17 @@ public partial record class AuditLogQueryParameters
         /// <summary>
         /// The network address of the source device.
         /// </summary>
-        public Address? SourceDeviceAddress { get; init; }
+        public Optional<Address> SourceDeviceAddress { get; init; }
     
         /// <summary>
         /// The object identifier on the source device.
         /// </summary>
-        public ObjectIdentifier? SourceObjectIdentifier { get; init; }
+        public Optional<ObjectIdentifier> SourceObjectIdentifier { get; init; }
     
         /// <summary>
         /// Bit flags specifying which operation types to include.
         /// </summary>
-        public AuditOperationFlags? Operations { get; init; }
+        public Optional<AuditOperationFlags> Operations { get; init; }
     
         /// <summary>
         /// Filter for successful or failed operations.

@@ -16,10 +16,10 @@ public partial record class AuthenticationFactorFormat
     /// <summary>
     /// The vendor identifier for vendor-specific formats.
     /// </summary>
-    public Unsigned16? VendorId { get; init; }
+    public Optional<Unsigned16> VendorId { get; init; }
 
     /// <summary>
     /// The vendor-specific format identifier.
     /// </summary>
-    public Unsigned16? VendorFormat { get; init; }
+    public Optional<Unsigned16> VendorFormat { get; init; }
 }

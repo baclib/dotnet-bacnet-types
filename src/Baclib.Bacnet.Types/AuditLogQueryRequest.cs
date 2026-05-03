@@ -21,7 +21,7 @@ public partial record class AuditLogQueryRequest
     /// <summary>
     /// The sequence number at which to start retrieving records.
     /// </summary>
-    public Unsigned64? StartAtSequenceNumber { get; init; }
+    public Optional<Unsigned64> StartAtSequenceNumber { get; init; }
 
     /// <summary>
     /// The maximum number of records to return.

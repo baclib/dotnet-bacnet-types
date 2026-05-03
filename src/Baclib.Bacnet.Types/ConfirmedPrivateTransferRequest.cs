@@ -21,5 +21,5 @@ public partial record class ConfirmedPrivateTransferRequest
     /// <summary>
     /// Optional vendor-specific service parameters.
     /// </summary>
-    public Any? ServiceParameters { get; init; }
+    public Optional<Any> ServiceParameters { get; init; }
 }

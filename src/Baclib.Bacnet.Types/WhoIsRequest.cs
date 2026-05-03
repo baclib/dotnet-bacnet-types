@@ -11,10 +11,10 @@ public partial record class WhoIsRequest
     /// <summary>
     /// Optional lower limit of the device instance range to search for.
     /// </summary>
-    public TDeviceInstanceRangeLowLimit? DeviceInstanceRangeLowLimit { get; init; }
+    public Optional<TDeviceInstanceRangeLowLimit> DeviceInstanceRangeLowLimit { get; init; }
 
     /// <summary>
     /// Optional upper limit of the device instance range to search for.
     /// </summary>
-    public TDeviceInstanceRangeHighLimit? DeviceInstanceRangeHighLimit { get; init; }
+    public Optional<TDeviceInstanceRangeHighLimit> DeviceInstanceRangeHighLimit { get; init; }
 }

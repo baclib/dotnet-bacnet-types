@@ -21,7 +21,7 @@ public partial record class ReadPropertyAck
     /// <summary>
     /// Optional array index for the property.
     /// </summary>
-    public Unsigned? PropertyArrayIndex { get; init; }
+    public Optional<Unsigned> PropertyArrayIndex { get; init; }
 
     /// <summary>
     /// The value of the property being read.

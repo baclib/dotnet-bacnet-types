@@ -26,12 +26,12 @@ public partial record class AccessToken
     /// <summary>
     /// The token is not valid before this date and time.
     /// </summary>
-    public DateTime? NotBefore { get; init; }
+    public Optional<DateTime> NotBefore { get; init; }
 
     /// <summary>
     /// The token is not valid after this date and time.
     /// </summary>
-    public DateTime? NotAfter { get; init; }
+    public Optional<DateTime> NotAfter { get; init; }
 
     /// <summary>
     /// The identifier of the client to which the token applies.

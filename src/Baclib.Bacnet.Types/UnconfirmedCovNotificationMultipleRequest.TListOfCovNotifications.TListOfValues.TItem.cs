@@ -22,7 +22,7 @@ public partial record class UnconfirmedCovNotificationMultipleRequest
                 /// <summary>
                 /// The index within an array property, if applicable. Optional.
                 /// </summary>
-                public Unsigned? PropertyArrayIndex { get; init; }
+                public Optional<Unsigned> PropertyArrayIndex { get; init; }
             
                 /// <summary>
                 /// The new value of the property.
@@ -32,7 +32,7 @@ public partial record class UnconfirmedCovNotificationMultipleRequest
                 /// <summary>
                 /// The time when the value changed. Optional.
                 /// </summary>
-                public Time? TimeOfChange { get; init; }
+                public Optional<Time> TimeOfChange { get; init; }
             }
         }
     }

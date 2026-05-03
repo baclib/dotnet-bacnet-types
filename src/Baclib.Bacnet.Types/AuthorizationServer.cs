@@ -16,10 +16,10 @@ public partial record class AuthorizationServer
     /// <summary>
     /// The first cryptographic signing key used to verify tokens from this server.
     /// </summary>
-    public OctetString? SigningKey1 { get; init; }
+    public Optional<OctetString> SigningKey1 { get; init; }
 
     /// <summary>
     /// The second cryptographic signing key, allowing for key rotation.
     /// </summary>
-    public OctetString? SigningKey2 { get; init; }
+    public Optional<OctetString> SigningKey2 { get; init; }
 }

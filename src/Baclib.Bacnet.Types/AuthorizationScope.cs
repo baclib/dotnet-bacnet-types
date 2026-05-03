@@ -16,5 +16,5 @@ public partial record class AuthorizationScope
     /// <summary>
     /// Optional list of extended scope identifiers for vendor-specific or custom access scopes.
     /// </summary>
-    public TExtended? Extended { get; init; }
+    public Optional<TExtended> Extended { get; init; }
 }

@@ -21,5 +21,5 @@ public partial record class UnconfirmedPrivateTransferRequest
     /// <summary>
     /// Optional parameters for the proprietary service.
     /// </summary>
-    public Any? ServiceParameters { get; init; }
+    public Optional<Any> ServiceParameters { get; init; }
 }

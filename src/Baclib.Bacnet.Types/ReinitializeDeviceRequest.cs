@@ -16,5 +16,5 @@ public partial record class ReinitializeDeviceRequest
     /// <summary>
     /// Optional password required for reinitialization.
     /// </summary>
-    public TPassword? Password { get; init; }
+    public Optional<TPassword> Password { get; init; }
 }

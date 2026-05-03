@@ -10,7 +10,7 @@ public partial record class {{className}}
     /// </summary>
     {{/if}}
     {{#if optional}}
-    public {{type}}? {{name}} { get; init; }
+    public Optional<{{type}}> {{name}} { get; init; }
     {{else}}
     public required {{type}} {{name}} { get; init; }
     {{/if}}{{#unless @last}}

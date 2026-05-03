@@ -46,7 +46,7 @@ public partial record class ConfirmedEventNotificationRequest
     /// <summary>
     /// Optional descriptive text message about the event.
     /// </summary>
-    public CharacterString? MessageText { get; init; }
+    public Optional<CharacterString> MessageText { get; init; }
 
     /// <summary>
     /// The type of notification (alarm or event).
@@ -56,12 +56,12 @@ public partial record class ConfirmedEventNotificationRequest
     /// <summary>
     /// Indicates whether acknowledgment is required. Optional.
     /// </summary>
-    public Boolean? AckRequired { get; init; }
+    public Optional<Boolean> AckRequired { get; init; }
 
     /// <summary>
     /// The previous event state. Optional.
     /// </summary>
-    public EventState? FromState { get; init; }
+    public Optional<EventState> FromState { get; init; }
 
     /// <summary>
     /// The current event state.
@@ -71,5 +71,5 @@ public partial record class ConfirmedEventNotificationRequest
     /// <summary>
     /// Optional event-specific parameter values.
     /// </summary>
-    public NotificationParameters? EventValues { get; init; }
+    public Optional<NotificationParameters> EventValues { get; init; }
 }

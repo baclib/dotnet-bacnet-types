@@ -21,12 +21,12 @@ public partial record class ScFailedConnectionRequest
     /// <summary>
     /// Virtual MAC address of the peer device. Optional.
     /// </summary>
-    public TPeerVmac? PeerVmac { get; init; }
+    public Optional<TPeerVmac> PeerVmac { get; init; }
 
     /// <summary>
     /// UUID of the peer device. Optional.
     /// </summary>
-    public TPeerUuid? PeerUuid { get; init; }
+    public Optional<TPeerUuid> PeerUuid { get; init; }
 
     /// <summary>
     /// Error code for the failed connection attempt.
@@ -36,5 +36,5 @@ public partial record class ScFailedConnectionRequest
     /// <summary>
     /// Additional error details if available. Optional.
     /// </summary>
-    public CharacterString? ErrorDetails { get; init; }
+    public Optional<CharacterString> ErrorDetails { get; init; }
 }

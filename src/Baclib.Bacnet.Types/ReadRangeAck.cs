@@ -21,7 +21,7 @@ public partial record class ReadRangeAck
     /// <summary>
     /// Optional array index for the property.
     /// </summary>
-    public Unsigned? PropertyArrayIndex { get; init; }
+    public Optional<Unsigned> PropertyArrayIndex { get; init; }
 
     /// <summary>
     /// Flags indicating the position and availability of items in the result set.
@@ -41,5 +41,5 @@ public partial record class ReadRangeAck
     /// <summary>
     /// Optional sequence number of the first item in the result.
     /// </summary>
-    public Unsigned32? FirstSequenceNumber { get; init; }
+    public Optional<Unsigned32> FirstSequenceNumber { get; init; }
 }

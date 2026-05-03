@@ -26,5 +26,5 @@ public partial record class WriteGroupRequest
     /// <summary>
     /// If true, delays the write operation. Optional.
     /// </summary>
-    public Boolean? InhibitDelay { get; init; }
+    public Optional<Boolean> InhibitDelay { get; init; }
 }

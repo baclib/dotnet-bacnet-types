@@ -26,7 +26,7 @@ public partial record class DeviceObjectPropertyValue
     /// <summary>
     /// The index within an array property, if applicable. Optional.
     /// </summary>
-    public Unsigned? PropertyArrayIndex { get; init; }
+    public Optional<Unsigned> PropertyArrayIndex { get; init; }
 
     /// <summary>
     /// The value of the specified property.

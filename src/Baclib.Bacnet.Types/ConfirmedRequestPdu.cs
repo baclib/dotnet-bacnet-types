@@ -51,12 +51,12 @@ public partial record class ConfirmedRequestPdu
     /// <summary>
     /// The sequence number for segmented messages. Optional.
     /// </summary>
-    public TSequenceNumber? SequenceNumber { get; init; }
+    public Optional<TSequenceNumber> SequenceNumber { get; init; }
 
     /// <summary>
     /// The proposed window size for segmented messages. Optional.
     /// </summary>
-    public TProposedWindowSize? ProposedWindowSize { get; init; }
+    public Optional<TProposedWindowSize> ProposedWindowSize { get; init; }
 
     /// <summary>
     /// The confirmed service being requested.
@@ -66,5 +66,5 @@ public partial record class ConfirmedRequestPdu
     /// <summary>
     /// The service request parameters. Optional.
     /// </summary>
-    public ConfirmedServiceRequest? ServiceRequest { get; init; }
+    public Optional<ConfirmedServiceRequest> ServiceRequest { get; init; }
 }

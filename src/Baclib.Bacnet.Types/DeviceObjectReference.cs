@@ -11,7 +11,7 @@ public partial record class DeviceObjectReference
     /// <summary>
     /// The identifier of the BACnet device containing the object. Should be omitted if the object is local.
     /// </summary>
-    public ObjectIdentifier? DeviceIdentifier { get; init; }
+    public Optional<ObjectIdentifier> DeviceIdentifier { get; init; }
 
     /// <summary>
     /// The identifier of the BACnet object being referenced.

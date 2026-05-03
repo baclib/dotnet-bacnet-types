@@ -21,5 +21,5 @@ public partial record class ReadPropertyRequest
     /// <summary>
     /// Optional array index for the property.
     /// </summary>
-    public Unsigned? PropertyArrayIndex { get; init; }
+    public Optional<Unsigned> PropertyArrayIndex { get; init; }
 }

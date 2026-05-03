@@ -16,5 +16,5 @@ public partial record class NameValue
     /// <summary>
     /// The value associated with the name. Optional.
     /// </summary>
-    public Any? Value { get; init; }
+    public Optional<Any> Value { get; init; }
 }

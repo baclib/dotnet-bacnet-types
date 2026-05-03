@@ -16,5 +16,5 @@ public partial record class VtCloseError
     /// <summary>
     /// Optional list of VT session identifiers related to the error.
     /// </summary>
-    public TListOfVtSessionIdentifiers? ListOfVtSessionIdentifiers { get; init; }
+    public Optional<TListOfVtSessionIdentifiers> ListOfVtSessionIdentifiers { get; init; }
 }

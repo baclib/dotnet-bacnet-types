@@ -16,35 +16,35 @@ public partial record class AuthorizationStatus
     /// <summary>
     /// Error information if the authorization system is in an error state.
     /// </summary>
-    public Error? Error { get; init; }
+    public Optional<Error> Error { get; init; }
 
     /// <summary>
     /// Reference to the object and property that is the source of the error.
     /// </summary>
-    public ObjectPropertyReference? ErrorSource { get; init; }
+    public Optional<ObjectPropertyReference> ErrorSource { get; init; }
 
     /// <summary>
     /// Additional details about the error condition.
     /// </summary>
-    public CharacterString? ErrorDetails { get; init; }
+    public Optional<CharacterString> ErrorDetails { get; init; }
 
     /// <summary>
     /// A list of recent successful authentication events.
     /// </summary>
-    public TAuthenticationSuccess? AuthenticationSuccess { get; init; }
+    public Optional<TAuthenticationSuccess> AuthenticationSuccess { get; init; }
 
     /// <summary>
     /// A list of recent failed authentication events.
     /// </summary>
-    public TAuthenticationFailure? AuthenticationFailure { get; init; }
+    public Optional<TAuthenticationFailure> AuthenticationFailure { get; init; }
 
     /// <summary>
     /// A list of recent successful authorization events.
     /// </summary>
-    public TAuthorizationSuccess? AuthorizationSuccess { get; init; }
+    public Optional<TAuthorizationSuccess> AuthorizationSuccess { get; init; }
 
     /// <summary>
     /// A list of recent failed authorization events.
     /// </summary>
-    public TAuthorizationFailure? AuthorizationFailure { get; init; }
+    public Optional<TAuthorizationFailure> AuthorizationFailure { get; init; }
 }

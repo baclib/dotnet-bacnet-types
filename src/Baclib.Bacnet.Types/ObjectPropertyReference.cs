@@ -21,5 +21,5 @@ public partial record class ObjectPropertyReference
     /// <summary>
     /// The index within an array property, if applicable. Optional.
     /// </summary>
-    public Unsigned? PropertyArrayIndex { get; init; }
+    public Optional<Unsigned> PropertyArrayIndex { get; init; }
 }

@@ -28,16 +28,16 @@ public partial record class NotificationParameters
         /// <summary>
         /// Optional information about the last state transition of the timer.
         /// </summary>
-        public TimerTransition? LastStateChange { get; init; }
+        public Optional<TimerTransition> LastStateChange { get; init; }
     
         /// <summary>
         /// Optional initial timeout value in seconds.
         /// </summary>
-        public Unsigned? InitialTimeout { get; init; }
+        public Optional<Unsigned> InitialTimeout { get; init; }
     
         /// <summary>
         /// Optional date and time when the timer will expire.
         /// </summary>
-        public DateTime? ExpirationTime { get; init; }
+        public Optional<DateTime> ExpirationTime { get; init; }
     }
 }

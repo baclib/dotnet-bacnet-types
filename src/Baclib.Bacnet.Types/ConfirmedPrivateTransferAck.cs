@@ -21,5 +21,5 @@ public partial record class ConfirmedPrivateTransferAck
     /// <summary>
     /// Optional vendor-specific result data.
     /// </summary>
-    public Any? ResultBlock { get; init; }
+    public Optional<Any> ResultBlock { get; init; }
 }

@@ -21,5 +21,5 @@ public partial record class LandingCallStatus
     /// <summary>
     /// Optional text description of the floor.
     /// </summary>
-    public CharacterString? FloorText { get; init; }
+    public Optional<CharacterString> FloorText { get; init; }
 }

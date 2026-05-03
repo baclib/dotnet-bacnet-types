@@ -21,12 +21,12 @@ public partial record class PropertyAccessResult
     /// <summary>
     /// Optional array index for the property.
     /// </summary>
-    public Unsigned? PropertyArrayIndex { get; init; }
+    public Optional<Unsigned> PropertyArrayIndex { get; init; }
 
     /// <summary>
     /// Optional identifier of the device associated with the property.
     /// </summary>
-    public ObjectIdentifier? DeviceIdentifier { get; init; }
+    public Optional<ObjectIdentifier> DeviceIdentifier { get; init; }
 
     /// <summary>
     /// The result of accessing the property, either a value or an error.

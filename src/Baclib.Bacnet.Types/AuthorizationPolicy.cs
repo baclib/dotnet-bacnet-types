@@ -11,12 +11,12 @@ public partial record class AuthorizationPolicy
     /// <summary>
     /// The policy is not valid before this date and time.
     /// </summary>
-    public DateTime? NotBefore { get; init; }
+    public Optional<DateTime> NotBefore { get; init; }
 
     /// <summary>
     /// The policy is not valid after this date and time.
     /// </summary>
-    public DateTime? NotAfter { get; init; }
+    public Optional<DateTime> NotAfter { get; init; }
 
     /// <summary>
     /// A list of client identifiers to which this policy applies.

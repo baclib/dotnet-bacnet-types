@@ -21,7 +21,7 @@ public partial record class RemoveListElementRequest
     /// <summary>
     /// Optional array index for the property list.
     /// </summary>
-    public Unsigned? PropertyArrayIndex { get; init; }
+    public Optional<Unsigned> PropertyArrayIndex { get; init; }
 
     /// <summary>
     /// The elements to be removed from the list.

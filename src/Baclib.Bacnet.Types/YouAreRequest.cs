@@ -26,10 +26,10 @@ public partial record class YouAreRequest
     /// <summary>
     /// The BACnet device identifier. Optional.
     /// </summary>
-    public ObjectIdentifier? DeviceIdentifier { get; init; }
+    public Optional<ObjectIdentifier> DeviceIdentifier { get; init; }
 
     /// <summary>
     /// The MAC address of the device. Optional.
     /// </summary>
-    public OctetString? DeviceMacAddress { get; init; }
+    public Optional<OctetString> DeviceMacAddress { get; init; }
 }

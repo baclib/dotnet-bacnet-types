@@ -16,7 +16,7 @@ public partial record class ConfirmedTextMessageRequest
     /// <summary>
     /// An optional classification for the message.
     /// </summary>
-    public TMessageClass? MessageClass { get; init; }
+    public Optional<TMessageClass> MessageClass { get; init; }
 
     /// <summary>
     /// The priority level of the message.

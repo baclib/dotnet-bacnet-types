@@ -26,5 +26,5 @@ public partial record class ConfirmedPrivateTransferError
     /// <summary>
     /// Optional vendor-specific error parameters.
     /// </summary>
-    public Any? ErrorParameters { get; init; }
+    public Optional<Any> ErrorParameters { get; init; }
 }

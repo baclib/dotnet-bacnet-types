@@ -38,6 +38,6 @@ public partial record class NotificationParameters
         /// <summary>
         /// Optional authentication factor information associated with the access event.
         /// </summary>
-        public AuthenticationFactor? AuthenticationFactor { get; init; }
+        public Optional<AuthenticationFactor> AuthenticationFactor { get; init; }
     }
 }

@@ -22,7 +22,7 @@ public partial record class CovMultipleSubscription
                 /// <summary>
                 /// The minimum change in value required to trigger a notification. Optional.
                 /// </summary>
-                public float? CovIncrement { get; init; }
+                public Optional<float> CovIncrement { get; init; }
             
                 /// <summary>
                 /// Indicates whether the property value should include a timestamp.

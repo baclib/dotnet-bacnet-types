@@ -21,12 +21,12 @@ public partial record class AuthorizationEvent
     /// <summary>
     /// Information about the authenticated client.
     /// </summary>
-    public AuthenticationClient? Client { get; init; }
+    public Optional<AuthenticationClient> Client { get; init; }
 
     /// <summary>
     /// The access token presented for authorization.
     /// </summary>
-    public AccessToken? Token { get; init; }
+    public Optional<AccessToken> Token { get; init; }
 
     /// <summary>
     /// The authorization decision that was made.
@@ -36,5 +36,5 @@ public partial record class AuthorizationEvent
     /// <summary>
     /// Additional details about the authorization decision.
     /// </summary>
-    public CharacterString? DecisionDetails { get; init; }
+    public Optional<CharacterString> DecisionDetails { get; init; }
 }

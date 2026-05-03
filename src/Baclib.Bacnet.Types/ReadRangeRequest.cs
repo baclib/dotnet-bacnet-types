@@ -21,10 +21,10 @@ public partial record class ReadRangeRequest
     /// <summary>
     /// Optional array index for the property.
     /// </summary>
-    public Unsigned? PropertyArrayIndex { get; init; }
+    public Optional<Unsigned> PropertyArrayIndex { get; init; }
 
     /// <summary>
     /// Optional range specification for reading values.
     /// </summary>
-    public TRange? Range { get; init; }
+    public Optional<TRange> Range { get; init; }
 }

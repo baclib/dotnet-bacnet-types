@@ -31,5 +31,5 @@ public partial record class CovSubscription
     /// <summary>
     /// The minimum change in value required to trigger a notification. Optional.
     /// </summary>
-    public float? CovIncrement { get; init; }
+    public Optional<float> CovIncrement { get; init; }
 }

@@ -11,5 +11,5 @@ public partial record class GetEventInformationRequest
     /// <summary>
     /// Optional object identifier of the last event object received, used for pagination of event information.
     /// </summary>
-    public ObjectIdentifier? LastReceivedObjectIdentifier { get; init; }
+    public Optional<ObjectIdentifier> LastReceivedObjectIdentifier { get; init; }
 }

@@ -21,5 +21,5 @@ public partial record class GroupChannelValue
     /// <summary>
     /// Optional priority level for the channel value (1-16, where 1 is highest priority).
     /// </summary>
-    public TOverridingPriority? OverridingPriority { get; init; }
+    public Optional<TOverridingPriority> OverridingPriority { get; init; }
 }

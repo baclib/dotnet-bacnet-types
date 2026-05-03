@@ -26,10 +26,10 @@ public partial record class ScHubConnection
     /// <summary>
     /// Error code if the connection failed. Optional.
     /// </summary>
-    public Error? Error { get; init; }
+    public Optional<Error> Error { get; init; }
 
     /// <summary>
     /// Additional error details if available. Optional.
     /// </summary>
-    public CharacterString? ErrorDetails { get; init; }
+    public Optional<CharacterString> ErrorDetails { get; init; }
 }

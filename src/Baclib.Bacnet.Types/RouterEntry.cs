@@ -26,5 +26,5 @@ public partial record class RouterEntry
     /// <summary>
     /// Optional performance index for the router entry.
     /// </summary>
-    public Unsigned8? PerformanceIndex { get; init; }
+    public Optional<Unsigned8> PerformanceIndex { get; init; }
 }

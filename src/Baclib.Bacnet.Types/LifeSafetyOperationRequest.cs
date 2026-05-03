@@ -26,5 +26,5 @@ public partial record class LifeSafetyOperationRequest
     /// <summary>
     /// Optional identifier of the target BACnet object for the operation.
     /// </summary>
-    public ObjectIdentifier? ObjectIdentifier { get; init; }
+    public Optional<ObjectIdentifier> ObjectIdentifier { get; init; }
 }

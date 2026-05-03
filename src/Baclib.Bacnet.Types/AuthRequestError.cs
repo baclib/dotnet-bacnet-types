@@ -16,5 +16,5 @@ public partial record class AuthRequestError
     /// <summary>
     /// Additional details about the error.
     /// </summary>
-    public CharacterString? ErrorDetails { get; init; }
+    public Optional<CharacterString> ErrorDetails { get; init; }
 }

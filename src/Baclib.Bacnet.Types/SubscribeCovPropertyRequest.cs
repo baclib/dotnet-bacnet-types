@@ -21,12 +21,12 @@ public partial record class SubscribeCovPropertyRequest
     /// <summary>
     /// Indicates if confirmed notifications should be issued. Optional.
     /// </summary>
-    public Boolean? IssueConfirmedNotifications { get; init; }
+    public Optional<Boolean> IssueConfirmedNotifications { get; init; }
 
     /// <summary>
     /// The duration of the subscription, in seconds. Optional.
     /// </summary>
-    public Unsigned? Lifetime { get; init; }
+    public Optional<Unsigned> Lifetime { get; init; }
 
     /// <summary>
     /// The property of the object to be monitored.
@@ -36,5 +36,5 @@ public partial record class SubscribeCovPropertyRequest
     /// <summary>
     /// The minimum change in value required to trigger a notification. Optional.
     /// </summary>
-    public float? CovIncrement { get; init; }
+    public Optional<float> CovIncrement { get; init; }
 }

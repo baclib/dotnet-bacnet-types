@@ -16,5 +16,5 @@ public partial record class VtDataAck
     /// <summary>
     /// The number of octets accepted, if not all data was accepted. Optional.
     /// </summary>
-    public Unsigned? AcceptedOctetCount { get; init; }
+    public Optional<Unsigned> AcceptedOctetCount { get; init; }
 }

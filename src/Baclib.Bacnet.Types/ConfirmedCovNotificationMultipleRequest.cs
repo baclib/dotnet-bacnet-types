@@ -26,7 +26,7 @@ public partial record class ConfirmedCovNotificationMultipleRequest
     /// <summary>
     /// Optional timestamp for the notification.
     /// </summary>
-    public DateTime? Timestamp { get; init; }
+    public Optional<DateTime> Timestamp { get; init; }
 
     /// <summary>
     /// A list of COV notifications for multiple objects.

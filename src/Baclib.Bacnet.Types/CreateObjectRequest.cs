@@ -16,5 +16,5 @@ public partial record class CreateObjectRequest
     /// <summary>
     /// An optional list of initial property values to be set when the object is created.
     /// </summary>
-    public TListOfInitialValues? ListOfInitialValues { get; init; }
+    public Optional<TListOfInitialValues> ListOfInitialValues { get; init; }
 }

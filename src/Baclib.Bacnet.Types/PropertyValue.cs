@@ -16,7 +16,7 @@ public partial record class PropertyValue
     /// <summary>
     /// The index within an array property, if applicable. Optional.
     /// </summary>
-    public Unsigned? Index { get; init; }
+    public Optional<Unsigned> Index { get; init; }
 
     /// <summary>
     /// The value of the specified property.
@@ -26,5 +26,5 @@ public partial record class PropertyValue
     /// <summary>
     /// The priority of the value, if applicable. Optional.
     /// </summary>
-    public TPriority? Priority { get; init; }
+    public Optional<TPriority> Priority { get; init; }
 }

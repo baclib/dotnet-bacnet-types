@@ -11,7 +11,7 @@ public partial record class DeviceCommunicationControlRequest
     /// <summary>
     /// The duration in minutes for which the communication control should remain in effect. Optional.
     /// </summary>
-    public Unsigned16? TimeDuration { get; init; }
+    public Optional<Unsigned16> TimeDuration { get; init; }
 
     /// <summary>
     /// Indicates whether to enable or disable communication.
@@ -21,5 +21,5 @@ public partial record class DeviceCommunicationControlRequest
     /// <summary>
     /// An optional password for authentication. Maximum length of 20 characters.
     /// </summary>
-    public TPassword? Password { get; init; }
+    public Optional<TPassword> Password { get; init; }
 }

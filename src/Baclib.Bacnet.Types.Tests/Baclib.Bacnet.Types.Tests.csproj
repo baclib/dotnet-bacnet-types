@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Baclib.Bacnet.Types\Baclib.Bacnet.Types.csproj" />
+    <ProjectReference Include="..\Baclib.Bacnet.Serialization.Asn1\Baclib.Bacnet.Serialization.Asn1.csproj" />
   </ItemGroup>
 
 </Project>

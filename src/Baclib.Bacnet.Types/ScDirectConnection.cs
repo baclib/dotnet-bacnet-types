@@ -31,25 +31,25 @@ public partial record class ScDirectConnection
     /// <summary>
     /// Network address of the peer device. Optional.
     /// </summary>
-    public HostNPort? PeerAddress { get; init; }
+    public Optional<HostNPort> PeerAddress { get; init; }
 
     /// <summary>
     /// Virtual MAC address of the peer device. Optional.
     /// </summary>
-    public TPeerVmac? PeerVmac { get; init; }
+    public Optional<TPeerVmac> PeerVmac { get; init; }
 
     /// <summary>
     /// UUID of the peer device. Optional.
     /// </summary>
-    public TPeerUuid? PeerUuid { get; init; }
+    public Optional<TPeerUuid> PeerUuid { get; init; }
 
     /// <summary>
     /// Error code if the connection failed. Optional.
     /// </summary>
-    public Error? Error { get; init; }
+    public Optional<Error> Error { get; init; }
 
     /// <summary>
     /// Additional error details if available. Optional.
     /// </summary>
-    public CharacterString? ErrorDetails { get; init; }
+    public Optional<CharacterString> ErrorDetails { get; init; }
 }

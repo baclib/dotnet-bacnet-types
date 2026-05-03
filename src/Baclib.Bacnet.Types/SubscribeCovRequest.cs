@@ -21,10 +21,10 @@ public partial record class SubscribeCovRequest
     /// <summary>
     /// Indicates if confirmed notifications should be issued. Optional.
     /// </summary>
-    public Boolean? IssueConfirmedNotifications { get; init; }
+    public Optional<Boolean> IssueConfirmedNotifications { get; init; }
 
     /// <summary>
     /// The duration of the subscription, in seconds. Optional.
     /// </summary>
-    public Unsigned? Lifetime { get; init; }
+    public Optional<Unsigned> Lifetime { get; init; }
 }

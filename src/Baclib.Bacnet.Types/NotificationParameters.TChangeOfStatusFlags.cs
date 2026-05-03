@@ -13,7 +13,7 @@ public partial record class NotificationParameters
         /// <summary>
         /// Optional present value of the object at the time the status flags changed.
         /// </summary>
-        public Any? PresentValue { get; init; }
+        public Optional<Any> PresentValue { get; init; }
     
         /// <summary>
         /// The status flags that have changed.

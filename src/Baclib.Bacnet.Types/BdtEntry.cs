@@ -16,5 +16,5 @@ public partial record class BdtEntry
     /// <summary>
     /// Optional broadcast mask for the BDT entry.
     /// </summary>
-    public OctetString? BroadcastMask { get; init; }
+    public Optional<OctetString> BroadcastMask { get; init; }
 }

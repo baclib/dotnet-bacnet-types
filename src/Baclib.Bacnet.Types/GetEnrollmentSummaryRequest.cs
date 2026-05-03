@@ -16,25 +16,25 @@ public partial record class GetEnrollmentSummaryRequest
     /// <summary>
     /// Optional filter to match a specific event recipient process.
     /// </summary>
-    public RecipientProcess? EnrollmentFilter { get; init; }
+    public Optional<RecipientProcess> EnrollmentFilter { get; init; }
 
     /// <summary>
     /// Optional filter for event state.
     /// </summary>
-    public TEventStateFilter? EventStateFilter { get; init; }
+    public Optional<TEventStateFilter> EventStateFilter { get; init; }
 
     /// <summary>
     /// Optional filter to match a specific event type.
     /// </summary>
-    public EventType? EventTypeFilter { get; init; }
+    public Optional<EventType> EventTypeFilter { get; init; }
 
     /// <summary>
     /// Optional filter to include events within a priority range.
     /// </summary>
-    public TPriorityFilter? PriorityFilter { get; init; }
+    public Optional<TPriorityFilter> PriorityFilter { get; init; }
 
     /// <summary>
     /// Optional filter to match a specific notification class.
     /// </summary>
-    public Unsigned? NotificationClassFilter { get; init; }
+    public Optional<Unsigned> NotificationClassFilter { get; init; }
 }

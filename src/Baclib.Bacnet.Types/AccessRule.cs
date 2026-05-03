@@ -16,7 +16,7 @@ public partial record class AccessRule
     /// <summary>
     /// Reference to the time range object/property when specified.
     /// </summary>
-    public DeviceObjectPropertyReference? TimeRange { get; init; }
+    public Optional<DeviceObjectPropertyReference> TimeRange { get; init; }
 
     /// <summary>
     /// Specifies how the location is determined.
@@ -26,7 +26,7 @@ public partial record class AccessRule
     /// <summary>
     /// Reference to the location object when specified.
     /// </summary>
-    public DeviceObjectReference? Location { get; init; }
+    public Optional<DeviceObjectReference> Location { get; init; }
 
     /// <summary>
     /// Indicates whether this access rule is enabled.

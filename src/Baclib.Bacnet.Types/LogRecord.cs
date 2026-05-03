@@ -21,5 +21,5 @@ public partial record class LogRecord
     /// <summary>
     /// Optional status flags indicating the state of the logged object at the time of recording.
     /// </summary>
-    public StatusFlags? StatusFlags { get; init; }
+    public Optional<StatusFlags> StatusFlags { get; init; }
 }

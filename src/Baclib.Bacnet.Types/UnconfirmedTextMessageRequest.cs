@@ -16,7 +16,7 @@ public partial record class UnconfirmedTextMessageRequest
     /// <summary>
     /// Optional message class, either numeric or character string.
     /// </summary>
-    public TMessageClass? MessageClass { get; init; }
+    public Optional<TMessageClass> MessageClass { get; init; }
 
     /// <summary>
     /// The priority of the text message.

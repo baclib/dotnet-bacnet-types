@@ -18,32 +18,32 @@ public partial record class AuditLogQueryParameters
         /// <summary>
         /// The network address of the target device.
         /// </summary>
-        public Address? TargetDeviceAddress { get; init; }
+        public Optional<Address> TargetDeviceAddress { get; init; }
     
         /// <summary>
         /// The object identifier on the target device.
         /// </summary>
-        public ObjectIdentifier? TargetObjectIdentifier { get; init; }
+        public Optional<ObjectIdentifier> TargetObjectIdentifier { get; init; }
     
         /// <summary>
         /// The property identifier on the target object.
         /// </summary>
-        public PropertyIdentifier? TargetPropertyIdentifier { get; init; }
+        public Optional<PropertyIdentifier> TargetPropertyIdentifier { get; init; }
     
         /// <summary>
         /// The array index of the target property.
         /// </summary>
-        public Unsigned? TargetArrayIndex { get; init; }
+        public Optional<Unsigned> TargetArrayIndex { get; init; }
     
         /// <summary>
         /// The priority level of the operation (1-16).
         /// </summary>
-        public TTargetPriority? TargetPriority { get; init; }
+        public Optional<TTargetPriority> TargetPriority { get; init; }
     
         /// <summary>
         /// Bit flags specifying which operation types to include.
         /// </summary>
-        public AuditOperationFlags? Operations { get; init; }
+        public Optional<AuditOperationFlags> Operations { get; init; }
     
         /// <summary>
         /// Filter for successful or failed operations.
