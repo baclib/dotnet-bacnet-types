@@ -5,7 +5,7 @@ using Baclib.Bacnet.Types;
 
 namespace Baclib.Bacnet.Serialization.Asn1.Codecs;
 
-public sealed class BitString32Asn1Codec : Asn1CodecBase<BitString32>
+public sealed class BitString32Asn1Codec : Asn1Codec<BitString32>
 {
     private BitString32Asn1Codec()
     {
@@ -19,9 +19,9 @@ public sealed class BitString32Asn1Codec : Asn1CodecBase<BitString32>
 
     private static void Encode(ref AsduEncoder encoder, byte tagNumber, AsduTagClass tagClass, in BitString32 value)
     {
-        var bytes = encoder.Encode(tagNumber, tagClass, AsduLength.BitString32);
+        var bytes = encoder.Encode(tagClass, tagNumber, AsduLength.BitString32);
         var unusedBits = (byte)(32 - value.Count);
-        AsduPrimitives.WriteBitStringFromFlags32(bytes, value.Flags, unusedBits);
+        AsduEncoder.WriteBitStringFromFlags32(bytes, value.Flags, unusedBits);
     }
 
     public override void Encode(ref AsduEncoder encoder, in BitString32 value) => Encode(ref encoder, (byte)ApplicationTagNumber.BitString, AsduTagClass.Application, in value);
@@ -35,7 +35,7 @@ public sealed class BitString32Asn1Codec : Asn1CodecBase<BitString32>
             : decoder.Decode(tagNumber, AsduLength.BitString32);
         var unusedBits = bytes[0];
         var count = (byte)(32 - unusedBits);
-        var flags = AsduPrimitives.ReadBitFlags32(bytes);
+        var flags = AsduDecoder.ReadBitFlags32(bytes);
         return new BitString32(flags, count);
     }
 
@@ -50,7 +50,7 @@ public sealed class BitString32Asn1Codec : Asn1CodecBase<BitString32>
         {
             var unusedBits = bytes[0];
             var count = (byte)(32 - unusedBits);
-            var flags = AsduPrimitives.ReadBitFlags32(bytes);
+            var flags = AsduDecoder.ReadBitFlags32(bytes);
             return new BitString32(flags, count);
         }
 

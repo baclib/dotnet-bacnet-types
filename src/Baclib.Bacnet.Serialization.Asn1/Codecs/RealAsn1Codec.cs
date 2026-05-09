@@ -5,7 +5,7 @@ using Baclib.Bacnet.Types;
 
 namespace Baclib.Bacnet.Serialization.Asn1.Codecs;
 
-public sealed class RealAsn1Codec : Asn1CodecBase<float>
+public sealed class RealAsn1Codec : Asn1Codec<float>
 {
     private RealAsn1Codec()
     {
@@ -19,8 +19,8 @@ public sealed class RealAsn1Codec : Asn1CodecBase<float>
 
     private static void Encode(ref AsduEncoder encoder, byte tagNumber, AsduTagClass tagClass, in float value)
     {
-        var bytes = encoder.Encode(tagNumber, tagClass, AsduLength.Real);
-        AsduPrimitives.WriteReal(bytes, value);
+        var bytes = encoder.Encode(tagClass, tagNumber, AsduLength.Real);
+        AsduEncoder.WriteReal(bytes, value);
     }
 
     public override void Encode(ref AsduEncoder encoder, in float value) => Encode(ref encoder, (byte)ApplicationTagNumber.Real, AsduTagClass.Application, in value);
@@ -35,7 +35,7 @@ public sealed class RealAsn1Codec : Asn1CodecBase<float>
             throw new AsduException();
         }
 
-        return AsduPrimitives.ReadReal(bytes);
+        return AsduDecoder.ReadReal(bytes);
     }
 
     public override float Decode(ref AsduDecoder decoder) => Decode(ref decoder, (byte)ApplicationTagNumber.Real, AsduTagClass.Application);
@@ -51,7 +51,7 @@ public sealed class RealAsn1Codec : Asn1CodecBase<float>
                 throw new AsduException();
             }
 
-            return AsduPrimitives.ReadReal(bytes);
+            return AsduDecoder.ReadReal(bytes);
         }
 
         return default;

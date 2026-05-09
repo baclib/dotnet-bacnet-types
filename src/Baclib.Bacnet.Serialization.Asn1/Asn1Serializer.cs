@@ -10,38 +10,50 @@ public static class Asn1Serializer
 {
     public static byte[] Encode<T>(in T value)
     {
+        throw new NotImplementedException();
+
+        /*
         IAsn1Codec<T> codec = Asn1CodecRegistry.Get<T>();
         int size = codec.GetEncodedSize(in value);
 
         var encoder = new AsduEncoder(size);
         codec.Encode(ref encoder, in value);
         return encoder.Buffer;
+        */
     }
 
     public static byte[] Encode(object value)
     {
         ArgumentNullException.ThrowIfNull(value);
 
+        /*
         IAsn1CodecUntyped codec = Asn1CodecRegistry.Get(value.GetType());
         int size = codec.GetEncodedSize(value);
 
         var encoder = new AsduEncoder(size);
         codec.EncodeObject(ref encoder, value);
         return encoder.Buffer;
+        */
+        throw new NotImplementedException();
     }
 
     public static T Decode<T>(ReadOnlySpan<byte> data)
     {
+        throw new NotImplementedException();
+        /*
         IAsn1Codec<T> codec = Asn1CodecRegistry.Get<T>();
 
         var decoder = new AsduDecoder(data);
         T value = codec.Decode(ref decoder);
         EnsureFullyConsumed(decoder);
         return value;
+        */
     }
 
     public static object Decode(ReadOnlySpan<byte> data, Type targetType)
     {
+        throw new NotImplementedException();
+        /*
         ArgumentNullException.ThrowIfNull(targetType);
 
         IAsn1CodecUntyped codec = Asn1CodecRegistry.Get(targetType);
@@ -50,6 +62,7 @@ public static class Asn1Serializer
         object value = codec.DecodeObject(ref decoder);
         EnsureFullyConsumed(decoder);
         return value;
+        */
     }
 
     public static bool TryDecode<T>(ReadOnlySpan<byte> data, out T value)

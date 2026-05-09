@@ -5,7 +5,7 @@ using Baclib.Bacnet.Types;
 
 namespace Baclib.Bacnet.Serialization.Asn1.Codecs;
 
-public sealed class Integer32Asn1Codec : Asn1CodecBase<int>
+public sealed class Integer32Asn1Codec : Asn1Codec<int>
 {
     private Integer32Asn1Codec()
     {
@@ -20,20 +20,20 @@ public sealed class Integer32Asn1Codec : Asn1CodecBase<int>
     private static void Encode(ref AsduEncoder encoder, byte tagNumber, AsduTagClass tagClass, in int value)
     {
         var length = AsduLength.FromInteger32(value);
-        var bytes = encoder.Encode(tagNumber, tagClass, length);
+        var bytes = encoder.Encode(tagClass, tagNumber, length);
         switch (length)
         {
             case AsduLength.Signed8:
-                AsduPrimitives.WriteInteger8(bytes, (sbyte)value);
+                AsduEncoder.WriteInteger8(bytes, (sbyte)value);
                 break;
             case AsduLength.Signed16:
-                AsduPrimitives.WriteInteger16(bytes, (short)value);
+                AsduEncoder.WriteInteger16(bytes, (short)value);
                 break;
             case AsduLength.Signed24:
-                AsduPrimitives.WriteInteger24(bytes, value);
+                AsduEncoder.WriteInteger24(bytes, value);
                 break;
             case AsduLength.Signed32:
-                AsduPrimitives.WriteInteger32(bytes, value);
+                AsduEncoder.WriteInteger32(bytes, value);
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(value), "Invalid length for signed 32-bit integer.");
@@ -48,10 +48,10 @@ public sealed class Integer32Asn1Codec : Asn1CodecBase<int>
     {
         return bytes.Length switch
         {
-            AsduLength.Signed8 => AsduPrimitives.ReadSigned8(bytes),
-            AsduLength.Signed16 => AsduPrimitives.ReadSigned16(bytes),
-            AsduLength.Signed24 => AsduPrimitives.ReadSigned24(bytes),
-            AsduLength.Signed32 => AsduPrimitives.ReadSigned32(bytes),
+            AsduLength.Signed8 => AsduDecoder.ReadSigned8(bytes),
+            AsduLength.Signed16 => AsduDecoder.ReadSigned16(bytes),
+            AsduLength.Signed24 => AsduDecoder.ReadSigned24(bytes),
+            AsduLength.Signed32 => AsduDecoder.ReadSigned32(bytes),
             _ => throw new AsduException()
         };
     }

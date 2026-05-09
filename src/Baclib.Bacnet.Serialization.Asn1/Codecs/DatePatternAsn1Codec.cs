@@ -5,7 +5,7 @@ using Baclib.Bacnet.Types;
 
 namespace Baclib.Bacnet.Serialization.Asn1.Codecs;
 
-public sealed class DatePatternAsn1Codec : Asn1CodecBase<DatePattern>
+public sealed class DatePatternAsn1Codec : Asn1Codec<DatePattern>
 {
     private DatePatternAsn1Codec()
     {

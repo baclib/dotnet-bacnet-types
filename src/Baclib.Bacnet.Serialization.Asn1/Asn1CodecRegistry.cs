@@ -9,6 +9,7 @@ namespace Baclib.Bacnet.Serialization.Asn1;
 /// </summary>
 public static partial class Asn1CodecRegistry
 {
+    /*
     private static readonly Dictionary<Type, IAsn1CodecUntyped> s_codecs = CreateRegistry();
 
     private static Dictionary<Type, IAsn1CodecUntyped> CreateRegistry()
@@ -31,9 +32,9 @@ public static partial class Asn1CodecRegistry
         ArgumentNullException.ThrowIfNull(targetType);
 
         if (TryGet(targetType, out IAsn1CodecUntyped codec))
-        {
-            return codec;
-        }
+        // {
+        //    return codec;
+        //}
 
         throw new NotSupportedException($"No ASN.1 codec registered for type {targetType.FullName}.");
     }
@@ -47,5 +48,5 @@ public static partial class Asn1CodecRegistry
         }
 
         throw new NotSupportedException($"Registered codec for type {typeof(T).FullName} is not compatible with IAsn1Codec<{typeof(T).Name}>.");
-    }
+    }    */
 }

@@ -5,7 +5,7 @@ using Baclib.Bacnet.Types;
 
 namespace Baclib.Bacnet.Serialization.Asn1.Codecs;
 
-public sealed class PropertyIdentifierAsn1Codec : Asn1CodecBase<PropertyIdentifier>
+public sealed class PropertyIdentifierAsn1Codec : Asn1Codec<PropertyIdentifier>
 {
     public static readonly PropertyIdentifierAsn1Codec Instance = new();
 
@@ -28,12 +28,14 @@ public sealed class PropertyIdentifierAsn1Codec : Asn1CodecBase<PropertyIdentifi
 
     public override void Encode(ref AsduEncoder encoder, in PropertyIdentifier value)
     {
-        encoder.WriteEnumerated((Enumerated)(uint)value);
+        throw new NotImplementedException();
+        //encoder.WriteEnumerated((Enumerated)(uint)value);
     }
 
     public override void Encode(ref AsduEncoder encoder, byte contextTagNumber, in PropertyIdentifier value)
     {
-        encoder.WriteEnumerated(contextTagNumber, (Enumerated)(uint)value);
+        throw new NotImplementedException();
+        //encoder.WriteEnumerated(contextTagNumber, (Enumerated)(uint)value);
     }
 
     public override PropertyIdentifier Decode(ref AsduDecoder decoder)

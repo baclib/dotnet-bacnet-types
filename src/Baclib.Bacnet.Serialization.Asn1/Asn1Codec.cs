@@ -7,16 +7,13 @@ public abstract class Asn1Codec
     public abstract Type Type { get; }
 }
 
-public abstract class Asn1Codec<T> : Asn1Codec
+public abstract class Asn1Codec<T> : Asn1Codec, IAsn1Codec<T>
 {
     public sealed override Type Type => typeof(T);
 
     public abstract int GetEncodedSize(in T value);
 
-    public virtual int GetEncodedSize(byte tagNumber, in T value)
-    {
-        return AsduLength.FromTagNumber(tagNumber) + GetEncodedSize(in value);
-    }
+    public abstract int GetEncodedSize(byte tagNumber, in T value);
 
     public abstract void Encode(ref AsduEncoder encoder, in T value);
 

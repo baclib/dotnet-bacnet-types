@@ -5,13 +5,13 @@ using Baclib.Bacnet.Types;
 
 namespace Baclib.Bacnet.Serialization.Asn1.Codecs;
 
-public sealed class NullAsn1Codec : Asn1CodecBase<Null>
+public sealed class NullAsn1Codec : Asn1Codec<Null>
 {
     private NullAsn1Codec()
     {
     }
 
-    public static readonly NullAsn1Codec Instance = new();
+    public static NullAsn1Codec Instance { get; } = new();
 
     public override int GetEncodedSize(in Null value) => AsduLength.Sum(ApplicationTagNumber.Null, AsduLength.Null);
 

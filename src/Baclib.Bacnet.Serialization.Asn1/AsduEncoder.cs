@@ -43,20 +43,6 @@ public ref struct AsduEncoder
         _buffer = new byte[size];
     }
 
-    /// <summary>
-    /// Creates an <see cref="AsduWriter"/> with appropriately sized buffer and serializes the construct.
-    /// </summary>
-    /// <typeparam name="T">The construct type.</typeparam>
-    /// <param name="construct">The construct to serialize.</param>
-    /// <returns>An <see cref="AsduWriter"/> containing the serialized data.</returns>
-    public static AsduEncoder Create<T>(T construct) where T : IAsduConstruct<T>
-    {
-        int size = construct.GetAsduSize();
-        var writer = new AsduEncoder(size);
-        construct.Serialize(ref writer);
-        return writer;
-    }
-
 
 
     public void WriteByte(byte value)
@@ -65,553 +51,570 @@ public ref struct AsduEncoder
     }
 
 
+    #region Tag handling
 
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private void WriteEnclosingTag(int number, AsduTagKind kind)
+    {
+        if (number < 0 || number > 254)
+        {
+            throw new ArgumentOutOfRangeException(nameof(number), "Number must be between 0 and 254.");
+        }
 
+        var mask = (int)kind >> 8;
+        if (number < 15)
+        {
+            _buffer[_index++] = (byte)(number << 4 | mask);
+        }
+        else
+        {
+            mask |= 0xF0;
+            _buffer[_index++] = (byte)mask;
+            _buffer[_index++] = (byte)number;
+        }
+    }
 
-    #region Null
-
-    /// <summary>Writes a Null value with the application Null tag.</summary>
-    public void WriteNull() => _buffer[_index++] = 0;
-
-    /// <summary>Writes a Null value with a specific context tag number.</summary>
+    /// <summary>Writes an opening tag with the specified context tag number.</summary>
     /// <param name="number">The context tag number.</param>
-    public void WriteNull(int number) => WriteTag(number, 0);
+    public void WriteOpeningTag(int number) => WriteEnclosingTag(number, AsduTagKind.Opening);
 
-    #endregion
-
-    #region Boolean
-
-    /// <summary>Writes a Boolean value with the application Boolean tag.</summary>
-    /// <param name="value">The Boolean value.</param>
-    public void WriteBoolean(bool value) => _buffer[_index++] = value ? (byte)0x11 : (byte)0x10;
-
-    /// <summary>Writes a Boolean value with a specific context tag number.</summary>
+    /// <summary>Writes a closing tag with the specified context tag number.</summary>
     /// <param name="number">The context tag number.</param>
-    /// <param name="value">The Boolean value.</param>
-    public void WriteBoolean(int number, bool value)
-    {
-        WriteTag(number, 1);
-        _buffer[_index++] = (byte)(value ? 1 : 0);
-    }
+    public void WriteClosingTag(int number) => WriteEnclosingTag(number, AsduTagKind.Closing);
 
     #endregion
 
-    #region Unsigned8
 
-    private void WriteUnsigned8(AsduTagNumberOld number, byte value)
+
+
+
+
+
+
+
+    public static int WriteTag(Span<byte> bytes, AsduTagClass tagClass, byte tagNumber, int dataLength)
     {
-        WriteTag(number, AsduLength.Unsigned8);
-        _buffer[_index++] = value;
-    }
-
-    /// <summary>Writes an unsigned 8-bit integer with the application Unsigned tag.</summary>
-    /// <param name="value">The unsigned 8-bit integer value.</param>
-    public void WriteUnsigned8(byte value) => WriteUnsigned8(AsduTagNumberOld.Unsigned, value);
-
-    /// <summary>Writes an unsigned 8-bit integer with a specific context tag number.</summary>
-    /// <param name="number">The context tag number.</param>
-    /// <param name="value">The unsigned 8-bit integer value.</param>
-    public void WriteUnsigned8(int number, byte value) => WriteUnsigned8(new AsduTagNumberOld(number), value);
-
-    #endregion
-
-    #region Unsigned16
-
-    private void WriteUnsigned16(AsduTagNumberOld number, ushort value)
-    {
-        var length = AsduLength.FromUnsigned16(value);
-        WriteTag(number, length);
-        switch (length)
+        int index;
+        ref byte initialOctet = ref bytes[0];
+        if (tagNumber < 15)
         {
-            case 1:
-                _buffer[_index++] = (byte)value;
-                break;
-            case 2:
-                _buffer[_index++] = (byte)(value >> 8);
-                _buffer[_index++] = (byte)value;
-                break;
-            default:
-                throw new ArgumentOutOfRangeException(nameof(value), "Invalid length for unsigned 16-bit integer.");
+            index = 1;
+            initialOctet = (byte)(tagNumber << 4);
         }
-    }
-
-    /// <summary>Writes an unsigned 16-bit integer with the application Unsigned tag.</summary>
-    /// <param name="value">The unsigned 16-bit integer value.</param>
-    public void WriteUnsigned16(ushort value) => WriteUnsigned16(AsduTagNumberOld.Unsigned, value);
-
-    /// <summary>Writes a signed 16-bit integer (treated as unsigned) with the application Unsigned tag.</summary>
-    /// <param name="value">The signed 16-bit integer value.</param>
-    public void WriteUnsigned16(short value) => WriteUnsigned16(AsduTagNumberOld.Unsigned, (ushort)value);
-
-    /// <summary>Writes an unsigned 16-bit integer with a specific context tag number.</summary>
-    /// <param name="number">The context tag number.</param>
-    /// <param name="value">The unsigned 16-bit integer value.</param>
-    public void WriteUnsigned16(int number, ushort value) => WriteUnsigned16(new AsduTagNumberOld(number), value);
-
-    /// <summary>Writes a signed 16-bit integer (treated as unsigned) with a specific context tag number.</summary>
-    /// <param name="number">The context tag number.</param>
-    /// <param name="value">The signed 16-bit integer value.</param>
-    public void WriteUnsigned16(int number, short value) => WriteUnsigned16(new AsduTagNumberOld(number), (ushort)value);
-
-    #endregion
-
-    #region Unsigned32
-
-
-
-
-
-
-
-
-    private void WriteUnsigned32(AsduTagNumberOld number, uint value)
-    {
-        var length = AsduLength.FromUnsigned32(value);
-        WriteTag(number, length);
-        switch (length)
+        else
         {
-            case 1:
-                _buffer[_index++] = (byte)value;
-                break;
-            case 2:
-                _buffer[_index++] = (byte)(value >> 8);
-                _buffer[_index++] = (byte)value;
-                break;
-            case 3:
-                _buffer[_index++] = (byte)(value >> 16);
-                _buffer[_index++] = (byte)(value >> 8);
-                _buffer[_index++] = (byte)value;
-                break;
-            case 4:
-                _buffer[_index++] = (byte)(value >> 24);
-                _buffer[_index++] = (byte)(value >> 16);
-                _buffer[_index++] = (byte)(value >> 8);
-                _buffer[_index++] = (byte)value;
-                break;
-            default:
-                throw new ArgumentOutOfRangeException(nameof(value), "Invalid length for unsigned 32-bit integer.");
+            index = 2;
+            initialOctet = 0xF0;
+            bytes[1] = tagNumber;
         }
-    }
-
-    /// <summary>Writes an unsigned 32-bit integer with the application Unsigned tag.</summary>
-    public void WriteUnsigned32(uint value) => WriteUnsigned32(AsduTagNumberOld.Unsigned, value);
-
-    /// <summary>Writes a signed 32-bit integer (treated as unsigned) with the application Unsigned tag.</summary>
-    public void WriteUnsigned32(int value) => WriteUnsigned32(AsduTagNumberOld.Unsigned, (uint)value);
-
-    /// <summary>Writes an unsigned 32-bit integer with a specific context tag number.</summary>
-    public void WriteUnsigned32(int number, uint value) => WriteUnsigned32(new AsduTagNumberOld(number), value);
-
-    /// <summary>Writes a signed 32-bit integer (treated as unsigned) with a specific context tag number.</summary>
-    public void WriteUnsigned32(int number, int value) => WriteUnsigned32(new AsduTagNumberOld(number), (uint)value);
-
-    #endregion
-
-    #region Unsigned64
-
-    private void WriteUnsigned64(AsduTagNumberOld number, ulong value)
-    {
-        var length = AsduLength.FromUnsigned64(value);
-        WriteTag(number, length);
-        switch (length)
+        if (tagClass == AsduTagClass.Context)
         {
-            case 1:
-                _buffer[_index++] = (byte)value;
-                break;
-            case 2:
-                _buffer[_index++] = (byte)(value >> 8);
-                _buffer[_index++] = (byte)value;
-                break;
-            case 3:
-                _buffer[_index++] = (byte)(value >> 16);
-                _buffer[_index++] = (byte)(value >> 8);
-                _buffer[_index++] = (byte)value;
-                break;
-            case 4:
-                _buffer[_index++] = (byte)(value >> 24);
-                _buffer[_index++] = (byte)(value >> 16);
-                _buffer[_index++] = (byte)(value >> 8);
-                _buffer[_index++] = (byte)value;
-                break;
-            case 5:
-                _buffer[_index++] = (byte)(value >> 32);
-                _buffer[_index++] = (byte)(value >> 24);
-                _buffer[_index++] = (byte)(value >> 16);
-                _buffer[_index++] = (byte)(value >> 8);
-                _buffer[_index++] = (byte)value;
-                break;
-            case 6:
-                _buffer[_index++] = (byte)(value >> 40);
-                _buffer[_index++] = (byte)(value >> 32);
-                _buffer[_index++] = (byte)(value >> 24);
-                _buffer[_index++] = (byte)(value >> 16);
-                _buffer[_index++] = (byte)(value >> 8);
-                _buffer[_index++] = (byte)value;
-                break;
-            case 7:
-                _buffer[_index++] = (byte)(value >> 48);
-                _buffer[_index++] = (byte)(value >> 40);
-                _buffer[_index++] = (byte)(value >> 32);
-                _buffer[_index++] = (byte)(value >> 24);
-                _buffer[_index++] = (byte)(value >> 16);
-                _buffer[_index++] = (byte)(value >> 8);
-                _buffer[_index++] = (byte)value;
-                break;
-            case 8:
-                _buffer[_index++] = (byte)(value >> 56);
-                _buffer[_index++] = (byte)(value >> 48);
-                _buffer[_index++] = (byte)(value >> 40);
-                _buffer[_index++] = (byte)(value >> 32);
-                _buffer[_index++] = (byte)(value >> 24);
-                _buffer[_index++] = (byte)(value >> 16);
-                _buffer[_index++] = (byte)(value >> 8);
-                _buffer[_index++] = (byte)value;
-                break;
-            default:
-                throw new ArgumentOutOfRangeException(nameof(value), "Invalid length for unsigned 64-bit integer.");
+            initialOctet |= 0x08;
         }
-    }
-
-    /// <summary>Writes an unsigned 64-bit integer with the application Unsigned tag.</summary>
-    public void WriteUnsigned64(ulong value) => WriteUnsigned64(AsduTagNumberOld.Unsigned, value);
-
-    /// <summary>Writes a signed 64-bit integer (treated as unsigned) with the application Unsigned tag.</summary>
-    public void WriteUnsigned64(long value) => WriteUnsigned64(AsduTagNumberOld.Unsigned, (ulong)value);
-
-    /// <summary>Writes an unsigned 64-bit integer with a specific context tag number.</summary>
-    public void WriteUnsigned64(int number, ulong value) => WriteUnsigned64(new AsduTagNumberOld(number), value);
-
-    /// <summary>Writes a signed 64-bit integer (treated as unsigned) with a specific context tag number.</summary>
-    public void WriteUnsigned64(int number, long value) => WriteUnsigned64(new AsduTagNumberOld(number), (ulong)value);
-
-    #endregion
-
-    #region Integer8
-
-    private void WriteInteger8(AsduTagNumberOld number, sbyte value)
-    {
-        WriteTag(number, AsduLength.Integer8);
-        _buffer[_index++] = (byte)value;
-    }
-
-    /// <summary>Writes a signed 8-bit integer with the application Signed tag.</summary>
-    public void WriteInteger8(sbyte value) => WriteInteger8(AsduTagNumberOld.Signed, value);
-
-    /// <summary>Writes an unsigned 8-bit integer (treated as signed) with the application Signed tag.</summary>
-    public void WriteInteger8(byte value) => WriteInteger8(AsduTagNumberOld.Signed, (sbyte)value);
-
-    /// <summary>Writes a signed 8-bit integer with a specific context tag number.</summary>
-    public void WriteInteger8(int number, sbyte value) => WriteInteger8(new AsduTagNumberOld(number), value);
-
-    /// <summary>Writes an unsigned 8-bit integer (treated as signed) with a specific context tag number.</summary>
-    public void WriteInteger8(int number, byte value) => WriteInteger8(new AsduTagNumberOld(number), (sbyte)value);
-
-    #endregion
-
-    #region Integer16
-
-    private void WriteInteger16(AsduTagNumberOld number, short value)
-    {
-        var length = AsduLength.FromInteger16(value);
-        WriteTag(number, length);
-        switch (length)
+        if (dataLength < 5)
         {
-            case 1:
-                _buffer[_index++] = (byte)value;
-                break;
-            case 2:
-                _buffer[_index++] = (byte)(value >> 8);
-                _buffer[_index++] = (byte)value;
-                break;
-            default:
-                throw new ArgumentOutOfRangeException(nameof(value), "Invalid length for signed 16-bit integer.");
+            initialOctet |= (byte)dataLength;
         }
-    }
-
-    /// <summary>Writes a signed 16-bit integer with the application Signed tag.</summary>
-    public void WriteInteger16(short value) => WriteInteger16(AsduTagNumberOld.Signed, value);
-
-    /// <summary>Writes a signed 16-bit integer with a specific context tag number.</summary>
-    public void WriteInteger16(int number, short value) => WriteInteger16(new AsduTagNumberOld(number), value);
-
-    #endregion
-
-    #region Integer32
-
-    private void WriteInteger32(AsduTagNumberOld number, int value)
-    {
-        var length = AsduLength.FromInteger32(value);
-        WriteTag(number, length);
-        switch (length)
+        else
         {
-            case 1:
-                _buffer[_index++] = (byte)value;
-                break;
-            case 2:
-                _buffer[_index++] = (byte)(value >> 8);
-                _buffer[_index++] = (byte)value;
-                break;
-            case 3:
-                _buffer[_index++] = (byte)(value >> 16);
-                _buffer[_index++] = (byte)(value >> 8);
-                _buffer[_index++] = (byte)value;
-                break;
-            case 4:
-                _buffer[_index++] = (byte)(value >> 24);
-                _buffer[_index++] = (byte)(value >> 16);
-                _buffer[_index++] = (byte)(value >> 8);
-                _buffer[_index++] = (byte)value;
-                break;
-            default:
-                throw new ArgumentOutOfRangeException(nameof(value), "Invalid length for signed 32-bit integer.");
+            initialOctet |= 0x05;
+            if (dataLength < 0xFE)
+            {
+                bytes[index++] = (byte)dataLength;
+            }
+            else if (dataLength < 0x10000)
+            {
+                bytes[index++] = 254;
+                BinaryPrimitives.WriteUInt16BigEndian(bytes.Slice(index, 2), (ushort)dataLength);
+                index += 2;
+            }
+            else
+            {
+                bytes[index++] = 255;
+                BinaryPrimitives.WriteUInt32BigEndian(bytes.Slice(index, 4), unchecked((uint)dataLength));
+                index += 4;
+            }
         }
+        return index;
     }
 
-    /// <summary>Writes a signed 32-bit integer with the application Signed tag.</summary>
-    public void WriteInteger32(int value) => WriteInteger32(AsduTagNumberOld.Signed, value);
-
-    /// <summary>Writes a signed 32-bit integer with a specific context tag number.</summary>
-    public void WriteInteger32(int number, int value) => WriteInteger32(new AsduTagNumberOld(number), value);
-
-    #endregion
-
-    #region Integer64
-
-    private void WriteInteger64(AsduTagNumberOld number, long value)
+    public Span<byte> Encode(AsduTagClass tagClass, byte tagNumber, int dataLength)
     {
-        var length = AsduLength.FromInteger64(value);
-        WriteTag(number, length);
-        switch (length)
-        {
-            case 1:
-                _buffer[_index++] = (byte)value;
-                break;
-            case 2:
-                _buffer[_index++] = (byte)(value >> 8);
-                _buffer[_index++] = (byte)value;
-                break;
-            case 3:
-                _buffer[_index++] = (byte)(value >> 16);
-                _buffer[_index++] = (byte)(value >> 8);
-                _buffer[_index++] = (byte)value;
-                break;
-            case 4:
-                _buffer[_index++] = (byte)(value >> 24);
-                _buffer[_index++] = (byte)(value >> 16);
-                _buffer[_index++] = (byte)(value >> 8);
-                _buffer[_index++] = (byte)value;
-                break;
-            case 5:
-                _buffer[_index++] = (byte)(value >> 32);
-                _buffer[_index++] = (byte)(value >> 24);
-                _buffer[_index++] = (byte)(value >> 16);
-                _buffer[_index++] = (byte)(value >> 8);
-                _buffer[_index++] = (byte)value;
-                break;
-            case 6:
-                _buffer[_index++] = (byte)(value >> 40);
-                _buffer[_index++] = (byte)(value >> 32);
-                _buffer[_index++] = (byte)(value >> 24);
-                _buffer[_index++] = (byte)(value >> 16);
-                _buffer[_index++] = (byte)(value >> 8);
-                _buffer[_index++] = (byte)value;
-                break;
-            case 7:
-                _buffer[_index++] = (byte)(value >> 48);
-                _buffer[_index++] = (byte)(value >> 40);
-                _buffer[_index++] = (byte)(value >> 32);
-                _buffer[_index++] = (byte)(value >> 24);
-                _buffer[_index++] = (byte)(value >> 16);
-                _buffer[_index++] = (byte)(value >> 8);
-                _buffer[_index++] = (byte)value;
-                break;
-            case 8:
-                _buffer[_index++] = (byte)(value >> 56);
-                _buffer[_index++] = (byte)(value >> 48);
-                _buffer[_index++] = (byte)(value >> 40);
-                _buffer[_index++] = (byte)(value >> 32);
-                _buffer[_index++] = (byte)(value >> 24);
-                _buffer[_index++] = (byte)(value >> 16);
-                _buffer[_index++] = (byte)(value >> 8);
-                _buffer[_index++] = (byte)value;
-                break;
-            default:
-                throw new ArgumentOutOfRangeException(nameof(value), "Invalid length for signed 64-bit integer.");
-        }
+        _index += WriteTag(_buffer.AsSpan(_index), tagClass, tagNumber, dataLength);
+        var bytes = _buffer.AsSpan(_index, dataLength);
+        _index += dataLength;
+        return bytes;
     }
 
-    /// <summary>Writes a signed 64-bit integer with the application Signed tag.</summary>
-    public void WriteInteger64(long value) => WriteInteger64(AsduTagNumberOld.Signed, value);
+    public Span<byte> Encode(ApplicationTagNumber tagNumber, int dataLength) => Encode(AsduTagClass.Application, (byte)tagNumber, dataLength);
 
-    /// <summary>Writes a signed 64-bit integer with a specific context tag number.</summary>
-    public void WriteInteger64(int number, long value) => WriteInteger64(new AsduTagNumberOld(number), value);
+    public Span<byte> Encode(byte tagNumber, int dataLength) => Encode(AsduTagClass.Context, tagNumber, dataLength);
 
-    #endregion
 
-    #region Real
 
-    private void WriteRealData(AsduTagNumberOld number, float value)
+
+
+
+
+
+
+
+
+    /// <summary>
+    /// Writes a BACnet Boolean Value.
+    /// </summary>
+    /// <param name="bytes">A span with at least 1 byte capacity.</param>
+    /// <param name="value">The boolean to write.</param>
+    public static void WriteBoolean(Span<byte> bytes, bool value)
     {
-        WriteTag(number, AsduLength.Real);
-        BinaryPrimitives.WriteSingleBigEndian(_buffer.AsSpan(_index, AsduLength.Real), value);
-        _index += AsduLength.Real;
+        bytes[0] = value ? (byte)1 : (byte)0;
     }
 
-    /// <summary>Writes a 32-bit floating-point number with the application Real tag.</summary>
-    public void WriteReal(float value) => WriteRealData(AsduTagNumberOld.Real, value);
-
-    /// <summary>Writes a 32-bit floating-point number with a specific context tag number.</summary>
-    public void WriteReal(int number, float value) => WriteRealData(new AsduTagNumberOld(number), value);
-
-    #endregion
-
-    #region Double
-
-    private void WriteDoubleData(AsduTagNumberOld number, double value)
+    /// <summary>
+    /// Writes an 8-bit BACnet Unsigned Integer Value.
+    /// </summary>
+    /// <param name="bytes">A span with at least 1 byte capacity.</param>
+    /// <param name="value">The 8-bit unsigned integer to write.</param>
+    public static void WriteUnsigned8(Span<byte> bytes, byte value)
     {
-        WriteTag(number, AsduLength.Double);
-        BinaryPrimitives.WriteDoubleBigEndian(_buffer.AsSpan(_index, AsduLength.Double), value);
-        _index += AsduLength.Double;
+        bytes[0] = value;
     }
 
-    /// <summary>Writes a 64-bit floating-point number with the application Double tag.</summary>
-    public void WriteDouble(double value) => WriteDoubleData(AsduTagNumberOld.Double, value);
-
-    /// <summary>Writes a 64-bit floating-point number with a specific context tag number.</summary>
-    public void WriteDouble(int number, double value) => WriteDoubleData(new AsduTagNumberOld(number), value);
-
-    #endregion
-
-    #region OctetString
-
-    /// <summary>Writes an octet string with a specific tag number.</summary>
-    /// <param name="number">The tag number to use.</param>
-    /// <param name="value">The octet string value to write.</param>
-    public void WriteOctetString(AsduTagNumberOld number, OctetString value)
+    /// <summary>
+    /// Writes a 16-bit BACnet Unsigned Integer Value.
+    /// </summary>
+    /// <param name="bytes">A span with at least 2 bytes capacity.</param>
+    /// <param name="value">The 16-bit unsigned integer to write.</param>
+    public static void WriteUnsigned16(Span<byte> bytes, ushort value)
     {
-        WriteTag(number, value.Length);
-        value.AsSpan().CopyTo(_buffer.AsSpan(_index));
-        _index += value.Length;
+        BinaryPrimitives.WriteUInt16BigEndian(bytes, value);
     }
 
-    /// <summary>Writes an octet string with the application OctetString tag.</summary>
-    public void WriteOctetString(OctetString value) => WriteOctetString(AsduTagNumberOld.OctetString, value);
-
-    /// <summary>Writes an octet string with a specific context tag number.</summary>
-    public void WriteOctetString(int number, OctetString value) => WriteOctetString(new AsduTagNumberOld(number), value);
-
-    #endregion
-
-    #region CharacterString
-
-    /// <summary>Writes a BACnet character string with a specific tag number.</summary>
-    /// <param name="number">The tag number to use.</param>
-    /// <param name="value">The character string value to write.</param>
-    public void WriteCharacterString(AsduTagNumberOld number, CharacterString value)
+    /// <summary>
+    /// Writes a 24-bit BACnet Unsigned Integer Value.
+    /// </summary>
+    /// <param name="bytes">A span with at least 3 bytes capacity.</param>
+    /// <param name="value">The 24-bit unsigned integer to write (as a 32-bit value).</param>
+    public static void WriteUnsigned24(Span<byte> bytes, uint value)
     {
-        var encoded = value.ToBytes();
-        WriteTag(number, encoded.Length);
-        encoded.CopyTo(_buffer.AsSpan(_index));
-        _index += encoded.Length;
+        bytes[0] = (byte)(value >> 16);
+        bytes[1] = (byte)(value >> 8);
+        bytes[2] = (byte)value;
     }
 
-    /// <summary>Writes a BACnet character string with the application CharacterString tag.</summary>
-    public void WriteCharacterString(CharacterString value) => WriteCharacterString(AsduTagNumberOld.CharacterString, value);
-
-    /// <summary>Writes a BACnet character string with a specific context tag number.</summary>
-    public void WriteCharacterString(int number, CharacterString value) => WriteCharacterString(new AsduTagNumberOld(number), value);
-
-    #endregion
-
-    #region BitString
-
-    /// <summary>Writes a BACnet bit string with a specific tag number.</summary>
-    /// <param name="number">The tag number to use.</param>
-    /// <param name="value">The bit string value to write.</param>
-    public void WriteBitString(AsduTagNumberOld number, BitString value)
+    /// <summary>
+    /// Writes a 32-bit BACnet Unsigned Integer Value.
+    /// </summary>
+    /// <param name="bytes">A span with at least 4 bytes capacity.</param>
+    /// <param name="value">The 32-bit unsigned integer to write.</param>
+    public static void WriteUnsigned32(Span<byte> bytes, uint value)
     {
-        //TODO: var encoded = value.Encode();
-        //WriteTag(number, encoded.Length);
-        //encoded.CopyTo(_buffer.AsSpan(_index));
-        //_index += encoded.Length;
+        BinaryPrimitives.WriteUInt32BigEndian(bytes, value);
     }
 
-    /// <summary>Writes a BACnet bit string with the application BitString tag.</summary>
-    public void WriteBitString(BitString value) => WriteBitString(AsduTagNumberOld.BitString, value);
-
-    /// <summary>Writes a BACnet bit string with a specific context tag number.</summary>
-    public void WriteBitString(int number, BitString value) => WriteBitString(new AsduTagNumberOld(number), value);
-
-    #endregion
-
-    #region Enumerated
-
-    private void WriteEnumerated(AsduTagNumberOld number, Enumerated value) => WriteUnsigned32(number, value);
-
-    /// <summary>Writes a BACnet enumerated value with the application Enumerated tag.</summary>
-    public void WriteEnumerated(Enumerated value) => WriteEnumerated(AsduTagNumberOld.Enumerated, value);
-
-    /// <summary>Writes a BACnet enumerated value with a specific context tag number.</summary>
-    public void WriteEnumerated(int number, Enumerated value) => WriteEnumerated(new AsduTagNumberOld(number), value);
-
-    #endregion
-
-    #region Date
-
-    private void WriteDate(AsduTagNumberOld number, Date value)
+    /// <summary>
+    /// Writes a 40-bit BACnet Unsigned Integer Value.
+    /// </summary>
+    /// <param name="bytes">A span with at least 5 bytes capacity.</param>
+    /// <param name="value">The 40-bit unsigned integer to write (as a 64-bit value).</param>
+    public static void WriteUnsigned40(Span<byte> bytes, ulong value)
     {
-        WriteTag(number, 4);
-        _buffer[_index++] = value.Year;
-        _buffer[_index++] = value.Month;
-        _buffer[_index++] = value.Day;
-        _buffer[_index++] = value.DayOfWeek;
+        bytes[0] = (byte)(value >> 32);
+        bytes[1] = (byte)(value >> 24);
+        bytes[2] = (byte)(value >> 16);
+        bytes[3] = (byte)(value >> 8);
+        bytes[4] = (byte)value;
     }
 
-    /// <summary>Writes a BACnet date with the application Date tag.</summary>
-    public void WriteDate(Date value) => WriteDate(AsduTagNumberOld.Date, value);
-
-    /// <summary>Writes a BACnet date with a specific context tag number.</summary>
-    public void WriteDate(int number, Date value) => WriteDate(new AsduTagNumberOld(number), value);
-
-    #endregion
-
-    #region Time
-
-    private void WriteTime(AsduTagNumberOld number, Time value)
+    /// <summary>
+    /// Writes a 48-bit BACnet Unsigned Integer Value.
+    /// </summary>
+    /// <param name="bytes">A span with at least 6 bytes capacity.</param>
+    /// <param name="value">The 48-bit unsigned integer to write (as a 64-bit value).</param>
+    public static void WriteUnsigned48(Span<byte> bytes, ulong value)
     {
-        WriteTag(number, 4);
-        _buffer[_index++] = value.Hour;
-        _buffer[_index++] = value.Minute;
-        _buffer[_index++] = value.Second;
-        _buffer[_index++] = value.Hundredths;
+        bytes[0] = (byte)(value >> 40);
+        bytes[1] = (byte)(value >> 32);
+        bytes[2] = (byte)(value >> 24);
+        bytes[3] = (byte)(value >> 16);
+        bytes[4] = (byte)(value >> 8);
+        bytes[5] = (byte)value;
     }
 
-    /// <summary>Writes a BACnet time with the application Time tag.</summary>
-    public void WriteTime(Time value) => WriteTime(AsduTagNumberOld.Time, value);
-
-    /// <summary>Writes a BACnet time with a specific context tag number.</summary>
-    public void WriteTime(int number, Time value) => WriteTime(new AsduTagNumberOld(number), value);
-
-    #endregion
-
-    #region ObjectIdentifier
-
-    private void WriteObjectIdentifier(AsduTagNumberOld number, ObjectIdentifier value)
+    /// <summary>
+    /// Writes a 56-bit BACnet Unsigned Integer Value.
+    /// </summary>
+    /// <param name="bytes">A span with at least 7 bytes capacity.</param>
+    /// <param name="value">The 56-bit unsigned integer to write (as a 64-bit value).</param>
+    public static void WriteUnsigned56(Span<byte> bytes, ulong value)
     {
-        WriteTag(number, 4);
-        BinaryPrimitives.WriteUInt32BigEndian(_buffer.AsSpan(_index, 4), value.Value);
-        _index += 4;
+        bytes[0] = (byte)(value >> 48);
+        bytes[1] = (byte)(value >> 40);
+        bytes[2] = (byte)(value >> 32);
+        bytes[3] = (byte)(value >> 24);
+        bytes[4] = (byte)(value >> 16);
+        bytes[5] = (byte)(value >> 8);
+        bytes[6] = (byte)value;
     }
 
-    /// <summary>Writes a BACnet object identifier with the application ObjectIdentifier tag.</summary>
-    public void WriteObjectIdentifier(ObjectIdentifier value) => WriteObjectIdentifier(AsduTagNumberOld.ObjectIdentifier, value);
+    /// <summary>
+    /// Writes a 64-bit BACnet Unsigned Integer Value.
+    /// </summary>
+    /// <param name="bytes">A span with at least 8 bytes capacity.</param>
+    /// <param name="value">The 64-bit unsigned integer to write.</param>
+    public static void WriteUnsigned64(Span<byte> bytes, ulong value)
+    {
+        BinaryPrimitives.WriteUInt64BigEndian(bytes, value);
+    }
 
-    /// <summary>Writes a BACnet object identifier with a specific context tag number.</summary>
-    public void WriteObjectIdentifier(int number, ObjectIdentifier value) => WriteObjectIdentifier(new AsduTagNumberOld(number), value);
+    /// <summary>
+    /// Writes an 8-bit BACnet Signed Integer Value.
+    /// </summary>
+    /// <param name="bytes">A span with at least 1 byte capacity.</param>
+    /// <param name="value">The 8-bit signed integer to write.</param>
+    public static void WriteInteger8(Span<byte> bytes, sbyte value)
+    {
+        bytes[0] = (byte)value;
+    }
 
-    #endregion
+    /// <summary>
+    /// Writes a 16-bit BACnet Signed Integer Value.
+    /// </summary>
+    /// <param name="bytes">A span with at least 2 bytes capacity.</param>
+    /// <param name="value">The 16-bit signed integer to write.</param>
+    public static void WriteInteger16(Span<byte> bytes, short value)
+    {
+        BinaryPrimitives.WriteInt16BigEndian(bytes, value);
+    }
 
+    /// <summary>
+    /// Writes a 24-bit BACnet Signed Integer Value.
+    /// </summary>
+    /// <param name="bytes">A span with at least 3 bytes capacity.</param>
+    /// <param name="value">The 24-bit signed integer to write (as a 32-bit value).</param>
+    public static void WriteInteger24(Span<byte> bytes, int value)
+    {
+        bytes[0] = (byte)(value >> 16);
+        bytes[1] = (byte)(value >> 8);
+        bytes[2] = (byte)value;
+    }
+
+    /// <summary>
+    /// Writes a 32-bit BACnet Signed Integer Value.
+    /// </summary>
+    /// <param name="bytes">A span with at least 4 bytes capacity.</param>
+    /// <param name="value">The 32-bit signed integer to write.</param>
+    public static void WriteInteger32(Span<byte> bytes, int value)
+    {
+        BinaryPrimitives.WriteInt32BigEndian(bytes, value);
+    }
+
+    /// <summary>
+    /// Writes a 40-bit BACnet Signed Integer Value.
+    /// </summary>
+    /// <param name="bytes">A span with at least 5 bytes capacity.</param>
+    /// <param name="value">The 40-bit signed integer to write (as a 64-bit value).</param>
+    public static void WriteInteger40(Span<byte> bytes, long value)
+    {
+        bytes[0] = (byte)(value >> 32);
+        bytes[1] = (byte)(value >> 24);
+        bytes[2] = (byte)(value >> 16);
+        bytes[3] = (byte)(value >> 8);
+        bytes[4] = (byte)value;
+    }
+
+    /// <summary>
+    /// Writes a 48-bit BACnet Signed Integer Value.
+    /// </summary>
+    /// <param name="bytes">A span with at least 6 bytes capacity.</param>
+    /// <param name="value">The 48-bit signed integer to write (as a 64-bit value).</param>
+    public static void WriteInteger48(Span<byte> bytes, long value)
+    {
+        bytes[0] = (byte)(value >> 40);
+        bytes[1] = (byte)(value >> 32);
+        bytes[2] = (byte)(value >> 24);
+        bytes[3] = (byte)(value >> 16);
+        bytes[4] = (byte)(value >> 8);
+        bytes[5] = (byte)value;
+    }
+
+    /// <summary>
+    /// Writes a 56-bit BACnet Signed Integer Value.
+    /// </summary>
+    /// <param name="bytes">A span with at least 7 bytes capacity.</param>
+    /// <param name="value">The 56-bit signed integer to write (as a 64-bit value).</param>
+    public static void WriteInteger56(Span<byte> bytes, long value)
+    {
+        bytes[0] = (byte)(value >> 48);
+        bytes[1] = (byte)(value >> 40);
+        bytes[2] = (byte)(value >> 32);
+        bytes[3] = (byte)(value >> 24);
+        bytes[4] = (byte)(value >> 16);
+        bytes[5] = (byte)(value >> 8);
+        bytes[6] = (byte)value;
+    }
+
+    /// <summary>
+    /// Writes a 64-bit BACnet Signed Integer Value.
+    /// </summary>
+    /// <param name="bytes">A span with at least 8 bytes capacity.</param>
+    /// <param name="value">The 64-bit signed integer to write.</param>
+    public static void WriteInteger64(Span<byte> bytes, long value)
+    {
+        BinaryPrimitives.WriteInt64BigEndian(bytes, value);
+    }
+
+    /// <summary>
+    /// Writes a 32-bit BACnet Real Number Value (IEEE 754 single-precision floating point).
+    /// </summary>
+    /// <param name="bytes">A span with at least 4 bytes capacity.</param>
+    /// <param name="value">The 32-bit float value to write.</param>
+    public static void WriteReal(Span<byte> bytes, float value)
+    {
+        BinaryPrimitives.WriteSingleBigEndian(bytes, value);
+    }
+
+    /// <summary>
+    /// Writes a 64-bit BACnet Double Precision Real Number Value (IEEE 754 double-precision floating point).
+    /// </summary>
+    /// <param name="bytes">A span with at least 8 bytes capacity.</param>
+    /// <param name="value">The 64-bit double value to write.</param>
+    public static void WriteDouble(Span<byte> bytes, double value)
+    {
+        BinaryPrimitives.WriteDoubleBigEndian(bytes, value);
+    }
+
+    /// <summary>
+    /// Writes a BACnet Octet String Value to the given bytes.
+    /// </summary>
+    /// <param name="bytes">A span with sufficient capacity to hold the octet string data.</param>
+    /// <param name="value">The octet string to write.</param>
+    public static void WriteOctetString(Span<byte> bytes, OctetString value)
+    {
+        value.CopyTo(bytes);
+    }
+
+    /// <summary>
+    /// Writes a BACnet Character String Value to the given bytes.
+    /// </summary>
+    /// <param name="bytes">A span with sufficient capacity to hold the character string data.</param>
+    /// <param name="value">The character string to write.</param>
+    public static void WriteCharacterString(Span<byte> bytes, CharacterString value)
+    {
+        value.CopyTo(bytes);
+    }
+
+    /// <summary>
+    /// Writes a BACnet Bit String Value to the given bytes.
+    /// </summary>
+    /// <param name="bytes">A span with sufficient capacity to hold the bit string data.</param>
+    /// <param name="value">The bit string to write.</param>
+    /// <remarks>
+    /// This method writes the bit string in BACnet format, including the unused bits count as the first byte.
+    /// </remarks>
+    public static void WriteBitString(Span<byte> bytes, BitString value)
+    {
+        value.CopyTo(bytes);
+    }
+
+    /// <summary>
+    /// Writes an 8-bit native flags value as a BACnet Bit String Value.
+    /// </summary>
+    /// <param name="bytes">A span with at least 2 bytes capacity. The first byte will be the unused bits count.</param>
+    /// <param name="value">The native 8-bit flags value to write.</param>
+    /// <param name="unusedBits">The number of unused bits in the last byte.</param>
+    public static void WriteBitStringFromFlags8(Span<byte> bytes, byte value, byte unusedBits)
+    {
+        bytes[0] = unusedBits;
+        bytes[1] = BitReverser.Reverse8Bits(value);
+    }
+
+    /// <summary>
+    /// Writes a 16-bit native flags value as a BACnet Bit String Value.
+    /// </summary>
+    /// <param name="bytes">A span with at least 3 bytes capacity. The first byte will be the unused bits count.</param>
+    /// <param name="value">The native 16-bit flags value to write.</param>
+    /// <param name="unusedBits">The number of unused bits in the last byte.</param>
+    public static void WriteBitStringFromFlags16(Span<byte> bytes, ushort value, byte unusedBits)
+    {
+        bytes[0] = unusedBits;
+        var reversed = BitReverser.Reverse16Bits(value);
+        BinaryPrimitives.WriteUInt16BigEndian(bytes[1..], reversed);
+    }
+
+    /// <summary>
+    /// Writes a 24-bit native flags value as a BACnet Bit String Value.
+    /// </summary>
+    /// <param name="bytes">A span with at least 4 bytes capacity. The first byte will be the unused bits count.</param>
+    /// <param name="value">The native 24-bit flags value to write (as a 32-bit unsigned integer).</param>
+    /// <param name="unusedBits">The number of unused bits in the last byte.</param>
+    public static void WriteBitStringFromFlags24(Span<byte> bytes, uint value, byte unusedBits)
+    {
+        bytes[0] = unusedBits;
+        var reversed = BitReverser.Reverse32Bits(value);
+        WriteUnsigned24(bytes[1..], reversed);
+    }
+
+    /// <summary>
+    /// Writes a 32-bit native flags value as a BACnet Bit String Value.
+    /// </summary>
+    /// <param name="bytes">A span with at least 5 bytes capacity. The first byte will be the unused bits count.</param>
+    /// <param name="value">The native 32-bit flags value to write.</param>
+    /// <param name="unusedBits">The number of unused bits in the last byte.</param>
+    public static void WriteBitStringFromFlags32(Span<byte> bytes, uint value, byte unusedBits)
+    {
+        bytes[0] = unusedBits;
+        var reversed = BitReverser.Reverse32Bits(value);
+        BinaryPrimitives.WriteUInt32BigEndian(bytes[1..], reversed);
+    }
+
+    /// <summary>
+    /// Writes a 40-bit native flags value as a BACnet Bit String Value.
+    /// </summary>
+    /// <param name="bytes">A span with at least 6 bytes capacity. The first byte will be the unused bits count.</param>
+    /// <param name="value">The native 40-bit flags value to write (as a 64-bit unsigned integer).</param>
+    /// <param name="unusedBits">The number of unused bits in the last byte.</param>
+    public static void WriteBitStringFromFlags40(Span<byte> bytes, ulong value, byte unusedBits)
+    {
+        bytes[0] = unusedBits;
+        var reversed = BitReverser.Reverse64Bits(value);
+        WriteUnsigned40(bytes[1..], reversed);
+    }
+
+    /// <summary>
+    /// Writes a 48-bit native flags value as a BACnet Bit String Value.
+    /// </summary>
+    /// <param name="bytes">A span with at least 7 bytes capacity. The first byte will be the unused bits count.</param>
+    /// <param name="value">The native 48-bit flags value to write (as a 64-bit unsigned integer).</param>
+    /// <param name="unusedBits">The number of unused bits in the last byte.</param>
+    public static void WriteBitStringFromFlags48(Span<byte> bytes, ulong value, byte unusedBits)
+    {
+        bytes[0] = unusedBits;
+        var reversed = BitReverser.Reverse64Bits(value);
+        WriteUnsigned48(bytes[1..], reversed);
+    }
+
+    /// <summary>
+    /// Writes a 56-bit native flags value as a BACnet Bit String Value.
+    /// </summary>
+    /// <param name="bytes">A span with at least 8 bytes capacity. The first byte will be the unused bits count.</param>
+    /// <param name="value">The native 56-bit flags value to write (as a 64-bit unsigned integer).</param>
+    /// <param name="unusedBits">The number of unused bits in the last byte.</param>
+    public static void WriteBitStringFromFlags56(Span<byte> bytes, ulong value, byte unusedBits)
+    {
+        bytes[0] = unusedBits;
+        var reversed = BitReverser.Reverse64Bits(value);
+        WriteUnsigned56(bytes[1..], reversed);
+    }
+
+    /// <summary>
+    /// Writes a 64-bit native flags value as a BACnet Bit String Value.
+    /// </summary>
+    /// <param name="bytes">A span with at least 9 bytes capacity. The first byte will be the unused bits count.</param>
+    /// <param name="value">The native 64-bit flags value to write.</param>
+    /// <param name="unusedBits">The number of unused bits in the last byte.</param>
+    public static void WriteBitStringFromFlags64(Span<byte> bytes, ulong value, byte unusedBits)
+    {
+        bytes[0] = unusedBits;
+        var reversed = BitReverser.Reverse64Bits(value);
+        BinaryPrimitives.WriteUInt64BigEndian(bytes[1..], reversed);
+    }
+
+    /// <summary>
+    /// Writes an 8-bit BACnet Enumerated Value.
+    /// </summary>
+    /// <param name="bytes">A span with at least 1 byte capacity.</param>
+    /// <param name="value">The 8-bit enumerated value to write.</param>
+    public static void WriteEnumerated8(Span<byte> bytes, byte value) => WriteUnsigned8(bytes, value);
+
+    /// <summary>
+    /// Writes a 16-bit BACnet Enumerated Value.
+    /// </summary>
+    /// <param name="bytes">A span with at least 2 bytes capacity.</param>
+    /// <param name="value">The 16-bit enumerated value to write.</param>
+    public static void WriteEnumerated16(Span<byte> bytes, ushort value) => WriteUnsigned16(bytes, value);
+
+    /// <summary>
+    /// Writes a 24-bit BACnet Enumerated Value.
+    /// </summary>
+    /// <param name="bytes">A span with at least 3 bytes capacity.</param>
+    /// <param name="value">The 24-bit enumerated value to write (as a 32-bit unsigned integer).</param>
+    public static void WriteEnumerated24(Span<byte> bytes, uint value) => WriteUnsigned24(bytes, value);
+
+    /// <summary>
+    /// Writes a 32-bit BACnet Enumerated Value.
+    /// </summary>
+    /// <param name="bytes">A span with at least 4 bytes capacity.</param>
+    /// <param name="value">The 32-bit enumerated value to write.</param>
+    public static void WriteEnumerated32(Span<byte> bytes, uint value) => WriteUnsigned32(bytes, value);
+
+    /// <summary>
+    /// Writes a 40-bit BACnet Enumerated Value.
+    /// </summary>
+    /// <param name="bytes">A span with at least 5 bytes capacity.</param>
+    /// <param name="value">The 40-bit enumerated value to write (as a 64-bit unsigned integer).</param>
+    public static void WriteEnumerated40(Span<byte> bytes, ulong value) => WriteUnsigned40(bytes, value);
+
+    /// <summary>
+    /// Writes a 48-bit BACnet Enumerated Value.
+    /// </summary>
+    /// <param name="bytes">A span with at least 6 bytes capacity.</param>
+    /// <param name="value">The 48-bit enumerated value to write (as a 64-bit unsigned integer).</param>
+    public static void WriteEnumerated48(Span<byte> bytes, ulong value) => WriteUnsigned48(bytes, value);
+
+    /// <summary>
+    /// Writes a 56-bit BACnet Enumerated Value.
+    /// </summary>
+    /// <param name="bytes">A span with at least 7 bytes capacity.</param>
+    /// <param name="value">The 56-bit enumerated value to write (as a 64-bit unsigned integer).</param>
+    public static void WriteEnumerated56(Span<byte> bytes, ulong value) => WriteUnsigned56(bytes, value);
+
+    /// <summary>
+    /// Writes a 64-bit BACnet Enumerated Value.
+    /// </summary>
+    /// <param name="bytes">A span with at least 8 bytes capacity.</param>
+    /// <param name="value">The 64-bit enumerated value to write.</param>
+    public static void WriteEnumerated64(Span<byte> bytes, ulong value) => WriteUnsigned64(bytes, value);
+
+    /// <summary>
+    /// Writes a BACnet Date Value.
+    /// </summary>
+    /// <param name="bytes">A span with at least 4 bytes capacity.</param>
+    /// <param name="value">The Date Value to write (year, month, day, dayOfWeek).</param>
+    public static void WriteDate(Span<byte> bytes, Date value)
+    {
+        bytes[0] = value.Year;
+        bytes[1] = value.Month;
+        bytes[2] = value.Day;
+        bytes[3] = value.DayOfWeek;
+    }
+
+    /// <summary>
+    /// Writes a BACnet Time Value.
+    /// </summary>
+    /// <param name="bytes">A span with at least 4 bytes capacity.</param>
+    /// <param name="value">The Time Value to write (hour, minute, second, hundredths).</param>
+    public static void WriteTime(Span<byte> bytes, Time value)
+    {
+        bytes[0] = value.Hour;
+        bytes[1] = value.Minute;
+        bytes[2] = value.Second;
+        bytes[3] = value.Hundredths;
+    }
+
+    /// <summary>
+    /// Writes a BACnet Object Identifier Value.
+    /// </summary>
+    /// <param name="bytes">A span with at least 4 bytes capacity.</param>
+    /// <param name="value">The Object Identifier Value to write.</param>
+    public static void WriteObjectIdentifier(Span<byte> bytes, ObjectIdentifier value)
+    {
+        BinaryPrimitives.WriteUInt32BigEndian(bytes, value.Value);
+    }
+}
+
+/*
     #region Construct
 
     /// <summary>Writes a BACnet construct that implements <see cref="IAsduConstruct{T}"/>.</summary>
@@ -661,169 +664,5 @@ public ref struct AsduEncoder
 
     #endregion
 
-    #region Tag handling
-
-
-    public void WriteApplicationTag(ApplicationTagNumber number, int lengthValue)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void WriteContextTag(int number, int length)
-    {
-        throw new NotImplementedException();
-    }
-
-
-    private void WriteTag(AsduTagNumberOld number, int length)
-    {
-        ref byte initialOctet = ref _buffer[_index++];
-        if (number.Value < 15)
-        {
-            initialOctet = (byte)(number.Value << 4);
-        }
-        else
-        {
-            initialOctet = 0xF0;
-            _buffer[_index++] = (byte)number.Value;
-        }
-        if (number.IsContextClass)
-        {
-            initialOctet |= 0x08;
-        }
-        if (length < 5)
-        {
-            initialOctet |= (byte)length;
-        }
-        else
-        {
-            initialOctet |= 0x05;
-            if (length < 0xFE)
-            {
-                _buffer[_index++] = (byte)length;
-            }
-            else if (length < 0x10000)
-            {
-                _buffer[_index++] = 254;
-                _buffer[_index++] = (byte)(length >> 8);
-                _buffer[_index++] = (byte)length;
-            }
-            else
-            {
-                _buffer[_index++] = 255;
-                _buffer[_index++] = (byte)(length >> 24);
-                _buffer[_index++] = (byte)(length >> 16);
-                _buffer[_index++] = (byte)(length >> 8);
-                _buffer[_index++] = (byte)length;
-            }
-        }
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private void WriteEnclosingTag(int number, AsduTagKind kind)
-    {
-        if (number < 0 || number > 254)
-        {
-            throw new ArgumentOutOfRangeException(nameof(number), "Number must be between 0 and 254.");
-        }
-
-        var mask = (int)kind >> 8;
-        if (number < 15)
-        {
-            _buffer[_index++] = (byte)(number << 4 | mask);
-        }
-        else
-        {
-            mask |= 0xF0;
-            _buffer[_index++] = (byte)mask;
-            _buffer[_index++] = (byte)number;
-        }
-    }
-
-    /// <summary>Writes an opening tag with the specified context tag number.</summary>
-    /// <param name="number">The context tag number.</param>
-    public void WriteOpeningTag(int number) => WriteEnclosingTag(number, AsduTagKind.Opening);
-
-    /// <summary>Writes a closing tag with the specified context tag number.</summary>
-    /// <param name="number">The context tag number.</param>
-    public void WriteClosingTag(int number) => WriteEnclosingTag(number, AsduTagKind.Closing);
-
-    #endregion
-
-
-
-
-
-    public Span<byte> Encode(byte tagNumber, AsduTagClass tagClass, int lengthValue)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Span<byte> Encode(ApplicationTagNumber tagNumber, int lengthValue)
-    {
-        throw new NotImplementedException();
-    }
-
-
-    public Span<byte> Encode(byte tagNumber, int lengthValue)
-    {
-        throw new NotImplementedException();
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-    /// <summary>
-    /// Writes a BACnet Boolean Value.
-    /// </summary>
-    /// <param name="bytes">A span with at least 1 byte capacity.</param>
-    /// <param name="value">The boolean to write.</param>
-    public static void WriteBoolean(Span<byte> bytes, bool value)
-    {
-        bytes[0] = value ? (byte)1 : (byte)0;
-    }
-
-    /// <summary>
-    /// Writes a BACnet Object Identifier Value.
-    /// </summary>
-    /// <param name="bytes">A span with at least 4 bytes capacity.</param>
-    /// <param name="value">The Object Identifier Value to write.</param>
-    public static void WriteObjectIdentifier(Span<byte> bytes, ObjectIdentifier value)
-    {
-        BinaryPrimitives.WriteUInt32BigEndian(bytes, value.Value);
-    }
-
-    /// <summary>
-    /// Writes a BACnet Date Value.
-    /// </summary>
-    /// <param name="bytes">A span with at least 4 bytes capacity.</param>
-    /// <param name="value">The Date Value to write (year, month, day, dayOfWeek).</param>
-    public static void WriteDate(Span<byte> bytes, Date value)
-    {
-        bytes[0] = value.Year;
-        bytes[1] = value.Month;
-        bytes[2] = value.Day;
-        bytes[3] = value.DayOfWeek;
-    }
-
-    /// <summary>
-    /// Writes a BACnet Time Value.
-    /// </summary>
-    /// <param name="bytes">A span with at least 4 bytes capacity.</param>
-    /// <param name="value">The Time Value to write (hour, minute, second, hundredths).</param>
-    public static void WriteTime(Span<byte> bytes, Time value)
-    {
-        bytes[0] = value.Hour;
-        bytes[1] = value.Minute;
-        bytes[2] = value.Second;
-        bytes[3] = value.Hundredths;
-    }
-}
+ 
+ */

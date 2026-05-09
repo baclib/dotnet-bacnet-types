@@ -5,7 +5,7 @@ using Baclib.Bacnet.Types;
 
 namespace Baclib.Bacnet.Serialization.Asn1.Codecs;
 
-public sealed class Integer16Asn1Codec : Asn1CodecBase<short>
+public sealed class Integer16Asn1Codec : Asn1Codec<short>
 {
     private Integer16Asn1Codec()
     {
@@ -20,14 +20,14 @@ public sealed class Integer16Asn1Codec : Asn1CodecBase<short>
     private static void Encode(ref AsduEncoder encoder, byte tagNumber, AsduTagClass tagClass, in short value)
     {
         var length = AsduLength.FromInteger16(value);
-        var bytes = encoder.Encode(tagNumber, tagClass, length);
+        var bytes = encoder.Encode(tagClass, tagNumber, length);
         if (length == AsduLength.Signed8)
         {
-            AsduPrimitives.WriteInteger8(bytes, (sbyte)value);
+            AsduEncoder.WriteInteger8(bytes, (sbyte)value);
             return;
         }
 
-        AsduPrimitives.WriteInteger16(bytes, value);
+        AsduEncoder.WriteInteger16(bytes, value);
     }
 
     public override void Encode(ref AsduEncoder encoder, in short value) => Encode(ref encoder, (byte)ApplicationTagNumber.Signed, AsduTagClass.Application, in value);
@@ -38,8 +38,8 @@ public sealed class Integer16Asn1Codec : Asn1CodecBase<short>
     {
         return bytes.Length switch
         {
-            AsduLength.Signed8 => AsduPrimitives.ReadSigned8(bytes),
-            AsduLength.Signed16 => AsduPrimitives.ReadSigned16(bytes),
+            AsduLength.Signed8 => AsduDecoder.ReadSigned8(bytes),
+            AsduLength.Signed16 => AsduDecoder.ReadSigned16(bytes),
             _ => throw new AsduException()
         };
     }

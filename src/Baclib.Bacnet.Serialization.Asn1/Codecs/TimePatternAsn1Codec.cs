@@ -5,7 +5,7 @@ using Baclib.Bacnet.Types;
 
 namespace Baclib.Bacnet.Serialization.Asn1.Codecs;
 
-public sealed class TimePatternAsn1Codec : Asn1CodecBase<TimePattern>
+public sealed class TimePatternAsn1Codec : Asn1Codec<TimePattern>
 {
     private TimePatternAsn1Codec()
     {

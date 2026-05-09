@@ -5,7 +5,7 @@ using Baclib.Bacnet.Types;
 
 namespace Baclib.Bacnet.Serialization.Asn1.Codecs;
 
-public sealed class OctetStringAsn1Codec : Asn1CodecBase<OctetString>
+public sealed class OctetStringAsn1Codec : Asn1Codec<OctetString>
 {
     private OctetStringAsn1Codec()
     {
@@ -19,8 +19,8 @@ public sealed class OctetStringAsn1Codec : Asn1CodecBase<OctetString>
 
     private static void Encode(ref AsduEncoder encoder, byte tagNumber, AsduTagClass tagClass, in OctetString value)
     {
-        var bytes = encoder.Encode(tagNumber, tagClass, value.Length);
-        AsduPrimitives.WriteOctetString(bytes, value);
+        var bytes = encoder.Encode(tagClass, tagNumber, value.Length);
+        AsduEncoder.WriteOctetString(bytes, value);
     }
 
     public override void Encode(ref AsduEncoder encoder, in OctetString value) => Encode(ref encoder, (byte)ApplicationTagNumber.OctetString, AsduTagClass.Application, in value);

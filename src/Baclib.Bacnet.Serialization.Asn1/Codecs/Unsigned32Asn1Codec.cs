@@ -5,7 +5,7 @@ using Baclib.Bacnet.Types;
 
 namespace Baclib.Bacnet.Serialization.Asn1.Codecs;
 
-public sealed class Unsigned32Asn1Codec : Asn1CodecBase<uint>
+public sealed class Unsigned32Asn1Codec : Asn1Codec<uint>
 {
     private Unsigned32Asn1Codec()
     {
@@ -20,20 +20,20 @@ public sealed class Unsigned32Asn1Codec : Asn1CodecBase<uint>
     private static void Encode(ref AsduEncoder encoder, byte tagNumber, AsduTagClass tagClass, in uint value)
     {
         var length = AsduLength.FromUnsigned32(value);
-        var bytes = encoder.Encode(tagNumber, tagClass, length);
+        var bytes = encoder.Encode(tagClass, tagNumber, length);
         switch (length)
         {
             case 1:
-                AsduPrimitives.WriteUnsigned8(bytes, (byte)value);
+                AsduEncoder.WriteUnsigned8(bytes, (byte)value);
                 break;
             case 2:
-                AsduPrimitives.WriteUnsigned16(bytes, (ushort)value);
+                AsduEncoder.WriteUnsigned16(bytes, (ushort)value);
                 break;
             case 3:
-                AsduPrimitives.WriteUnsigned24(bytes, value);
+                AsduEncoder.WriteUnsigned24(bytes, value);
                 break;
             case 4:
-                AsduPrimitives.WriteUnsigned32(bytes, value);
+                AsduEncoder.WriteUnsigned32(bytes, value);
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(value), "Invalid length for unsigned 32-bit integer.");

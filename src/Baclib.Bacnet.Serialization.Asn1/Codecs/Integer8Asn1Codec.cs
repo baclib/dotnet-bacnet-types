@@ -5,7 +5,7 @@ using Baclib.Bacnet.Types;
 
 namespace Baclib.Bacnet.Serialization.Asn1.Codecs;
 
-public sealed class Integer8Asn1Codec : Asn1CodecBase<sbyte>
+public sealed class Integer8Asn1Codec : Asn1Codec<sbyte>
 {
     private Integer8Asn1Codec()
     {
@@ -19,8 +19,8 @@ public sealed class Integer8Asn1Codec : Asn1CodecBase<sbyte>
 
     private static void Encode(ref AsduEncoder encoder, byte tagNumber, AsduTagClass tagClass, in sbyte value)
     {
-        var bytes = encoder.Encode(tagNumber, tagClass, AsduLength.Integer8);
-        AsduPrimitives.WriteInteger8(bytes, value);
+        var bytes = encoder.Encode(tagClass, tagNumber, AsduLength.Integer8);
+        AsduEncoder.WriteInteger8(bytes, value);
     }
 
     public override void Encode(ref AsduEncoder encoder, in sbyte value) => Encode(ref encoder, (byte)ApplicationTagNumber.Signed, AsduTagClass.Application, in value);
@@ -35,7 +35,7 @@ public sealed class Integer8Asn1Codec : Asn1CodecBase<sbyte>
             throw new AsduException();
         }
 
-        return AsduPrimitives.ReadSigned8(bytes);
+        return AsduDecoder.ReadSigned8(bytes);
     }
 
     public override sbyte Decode(ref AsduDecoder decoder) => Decode(ref decoder, (byte)ApplicationTagNumber.Signed, AsduTagClass.Application);
@@ -51,7 +51,7 @@ public sealed class Integer8Asn1Codec : Asn1CodecBase<sbyte>
                 throw new AsduException();
             }
 
-            return AsduPrimitives.ReadSigned8(bytes);
+            return AsduDecoder.ReadSigned8(bytes);
         }
 
         return default;

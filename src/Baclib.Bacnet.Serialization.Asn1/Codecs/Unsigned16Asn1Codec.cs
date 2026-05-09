@@ -5,7 +5,7 @@ using Baclib.Bacnet.Types;
 
 namespace Baclib.Bacnet.Serialization.Asn1.Codecs;
 
-public sealed class Unsigned16Asn1Codec : Asn1CodecBase<ushort>
+public sealed class Unsigned16Asn1Codec : Asn1Codec<ushort>
 {
     private Unsigned16Asn1Codec()
     {
@@ -20,14 +20,14 @@ public sealed class Unsigned16Asn1Codec : Asn1CodecBase<ushort>
     private static void Encode(ref AsduEncoder encoder, byte tagNumber, AsduTagClass tagClass, in ushort value)
     {
         var length = AsduLength.FromUnsigned16(value);
-        var bytes = encoder.Encode(tagNumber, tagClass, length);
+        var bytes = encoder.Encode(tagClass, tagNumber, length);
         if (length == AsduLength.Unsigned8)
         {
-            AsduPrimitives.WriteUnsigned8(bytes, (byte)value);
+            AsduEncoder.WriteUnsigned8(bytes, (byte)value);
             return;
         }
 
-        AsduPrimitives.WriteUnsigned16(bytes, value);
+        AsduEncoder.WriteUnsigned16(bytes, value);
     }
 
     public override void Encode(ref AsduEncoder encoder, in ushort value) => Encode(ref encoder, (byte)ApplicationTagNumber.Unsigned, AsduTagClass.Application, in value);

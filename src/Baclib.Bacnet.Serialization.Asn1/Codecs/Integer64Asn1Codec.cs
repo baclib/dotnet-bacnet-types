@@ -5,7 +5,7 @@ using Baclib.Bacnet.Types;
 
 namespace Baclib.Bacnet.Serialization.Asn1.Codecs;
 
-public sealed class Integer64Asn1Codec : Asn1CodecBase<long>
+public sealed class Integer64Asn1Codec : Asn1Codec<long>
 {
     private Integer64Asn1Codec()
     {
@@ -20,32 +20,32 @@ public sealed class Integer64Asn1Codec : Asn1CodecBase<long>
     private static void Encode(ref AsduEncoder encoder, byte tagNumber, AsduTagClass tagClass, in long value)
     {
         var length = AsduLength.FromInteger64(value);
-        var bytes = encoder.Encode(tagNumber, tagClass, length);
+        var bytes = encoder.Encode(tagClass, tagNumber, length);
         switch (length)
         {
             case AsduLength.Signed8:
-                AsduPrimitives.WriteInteger8(bytes, (sbyte)value);
+                AsduEncoder.WriteInteger8(bytes, (sbyte)value);
                 break;
             case AsduLength.Signed16:
-                AsduPrimitives.WriteInteger16(bytes, (short)value);
+                AsduEncoder.WriteInteger16(bytes, (short)value);
                 break;
             case AsduLength.Signed24:
-                AsduPrimitives.WriteInteger24(bytes, (int)value);
+                AsduEncoder.WriteInteger24(bytes, (int)value);
                 break;
             case AsduLength.Signed32:
-                AsduPrimitives.WriteInteger32(bytes, (int)value);
+                AsduEncoder.WriteInteger32(bytes, (int)value);
                 break;
             case AsduLength.Signed40:
-                AsduPrimitives.WriteInteger40(bytes, value);
+                AsduEncoder.WriteInteger40(bytes, value);
                 break;
             case AsduLength.Signed48:
-                AsduPrimitives.WriteInteger48(bytes, value);
+                AsduEncoder.WriteInteger48(bytes, value);
                 break;
             case AsduLength.Signed56:
-                AsduPrimitives.WriteInteger56(bytes, value);
+                AsduEncoder.WriteInteger56(bytes, value);
                 break;
             case AsduLength.Signed64:
-                AsduPrimitives.WriteInteger64(bytes, value);
+                AsduEncoder.WriteInteger64(bytes, value);
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(value), "Invalid length for signed 64-bit integer.");
@@ -60,14 +60,14 @@ public sealed class Integer64Asn1Codec : Asn1CodecBase<long>
     {
         return bytes.Length switch
         {
-            AsduLength.Signed8 => AsduPrimitives.ReadSigned8(bytes),
-            AsduLength.Signed16 => AsduPrimitives.ReadSigned16(bytes),
-            AsduLength.Signed24 => AsduPrimitives.ReadSigned24(bytes),
-            AsduLength.Signed32 => AsduPrimitives.ReadSigned32(bytes),
-            AsduLength.Signed40 => AsduPrimitives.ReadSigned40(bytes),
-            AsduLength.Signed48 => AsduPrimitives.ReadSigned48(bytes),
-            AsduLength.Signed56 => AsduPrimitives.ReadSigned56(bytes),
-            AsduLength.Signed64 => AsduPrimitives.ReadSigned64(bytes),
+            AsduLength.Signed8 => AsduDecoder.ReadSigned8(bytes),
+            AsduLength.Signed16 => AsduDecoder.ReadSigned16(bytes),
+            AsduLength.Signed24 => AsduDecoder.ReadSigned24(bytes),
+            AsduLength.Signed32 => AsduDecoder.ReadSigned32(bytes),
+            AsduLength.Signed40 => AsduDecoder.ReadSigned40(bytes),
+            AsduLength.Signed48 => AsduDecoder.ReadSigned48(bytes),
+            AsduLength.Signed56 => AsduDecoder.ReadSigned56(bytes),
+            AsduLength.Signed64 => AsduDecoder.ReadSigned64(bytes),
             _ => throw new AsduException()
         };
     }

@@ -5,6 +5,7 @@ global using Enumerated = uint;
 
 using Baclib.Bacnet.Types;
 using System.Buffers.Binary;
+using System.Formats.Asn1;
 using System.Runtime.CompilerServices;
 
 namespace Baclib.Bacnet.Serialization.Asn1;
@@ -26,22 +27,11 @@ public ref struct AsduDecoder(ReadOnlySpan<byte> asdu)
 
     public readonly bool End => _index >= _asdu.Length;
 
-    #region Decode tag only
+    #region Decode required tag
 
     public int DecodeTag(AsduTagClass tagClass, byte tagNumber)
     {
-        if (End)
-        {
-            throw new AsduException();
-        }
-
-        var tagLength = AsduTag.PeekTag(_asdu[_index..], tagNumber, tagClass, out int dataLength);
-        if (tagLength <= 0)
-        {
-            throw new AsduException();
-        }
-
-        _index += tagLength;
+        _index += ReadTag(_asdu[_index..], tagClass, tagNumber, out int dataLength);
         return dataLength;
     }
 
@@ -51,23 +41,17 @@ public ref struct AsduDecoder(ReadOnlySpan<byte> asdu)
 
     #endregion
 
-    #region Decode optional tag only
+    #region Decode optional tag
 
     public bool DecodeTagOptional(AsduTagClass tagClass, byte tagNumber, out int dataLength)
     {
-        if (End)
-        {
-            dataLength = 0;
-            return false;
-        }
-
-        var tagLength = AsduTag.PeekTag(_asdu[_index..], tagNumber, tagClass, out dataLength);
-        if (tagLength <= 0)
+        var length = PeekTag(_asdu[_index..], tagClass, tagNumber, out dataLength);
+        if (length == 0)
         {
             return false;
         }
 
-        _index += tagLength;
+        _index += length;
         return true;
     }
 
@@ -81,50 +65,24 @@ public ref struct AsduDecoder(ReadOnlySpan<byte> asdu)
 
     public void DecodeOpeningTag(byte tagNumber)
     {
-        if (End)
-        {
-            throw new AsduException();
-        }
-
-        var tagLength = AsduTag.PeekTag(_asdu[_index..], tagNumber, AsduTagType.Opening);
-        if (tagLength <= 0)
-        {
-            throw new AsduException();
-        }
-
-        _index += tagLength;
+        _index += ReadTag(_asdu[_index..], tagNumber, AsduTagType.Opening);
     }
 
     public bool DecodeOpeningTagOptional(byte tagNumber)
     {
-        if (End)
+        var length = PeekTag(_asdu[_index..], tagNumber, AsduTagType.Opening);
+        if (length == 0)
         {
             return false;
         }
 
-        var tagLength = AsduTag.PeekTag(_asdu[_index..], tagNumber, AsduTagType.Opening);
-        if (tagLength <= 0)
-        {
-            return false;
-        }
-
-        _index += tagLength;
+        _index += length;
         return true;
     }
 
-    public bool DecodeClosingTag(byte tagNumber)
+    public void DecodeClosingTag(byte tagNumber)
     {
-        if (_index >= _asdu.Length)
-        {
-            throw new AsduException();
-        }
-        var tagLength = AsduTag.PeekTag(_asdu[_index..], tagNumber, AsduTagType.Closing);
-        if (tagLength > 0)
-        {
-            _index += tagLength;
-            return true;
-        }
-        throw new AsduException();
+        _index += ReadTag(_asdu[_index..], tagNumber, AsduTagType.Closing);
     }
 
     #endregion
@@ -210,175 +168,151 @@ public ref struct AsduDecoder(ReadOnlySpan<byte> asdu)
 
     #endregion
 
-    /*
-#region Construct
+ 
 
-/// <summary>Reads a BACnet construct that implements <see cref="IAsduConstruct{T}"/>.</summary>
-/// <typeparam name="T">The construct type to read.</typeparam>
-/// <returns>The deserialized construct.</returns>
-public T Decode<T>() where T : IAsduConstruct<T> => T.Deserialize(this);
-
-/// <summary>Reads a BACnet construct enclosed in opening/closing tags.</summary>
-/// <typeparam name="T">The construct type to read.</typeparam>
-/// <param name="number">The context tag number for the enclosing tags.</param>
-/// <returns>The deserialized construct.</returns>
-public T Decode<T>(int number) where T : IAsduConstruct<T> => DecodeOptional<T>(number) ?? throw new AsduException();
-
-/// <summary>Tries to read an optional BACnet construct.</summary>
-/// <typeparam name="T">The construct type to read.</typeparam>
-/// <returns>The deserialized construct if present; otherwise, default.</returns>
-public T? DecodeOptional<T>() where T : IAsduConstruct<T> => EndOfSeries() ? default : Decode<T>();
-
-/// <summary>Tries to read an optional BACnet construct enclosed in opening/closing tags.</summary>
-/// <typeparam name="T">The construct type to read.</typeparam>
-/// <param name="number">The context tag number for the enclosing tags.</param>
-/// <returns>The deserialized construct if tags are present; otherwise, default.</returns>
-public T? DecodeOptional<T>(int number) where T : IAsduConstruct<T>
-{
-if (!DecodeOptionalOpeningTag(number))
-{
-    return default;
-}
-
-var result = T.Deserialize(this);
-DecodeClosingTag(number);
-return result;
-}
-
-#endregion
-
-#region Series
-
-[MethodImpl(MethodImplOptions.AggressiveInlining)]
-private bool EndOfSeries() => _index >= _asdu.Length || (_asdu[_index] & 15) == 15;
-
-/// <summary>Reads a series of BACnet constructs until end of buffer or closing tag.</summary>
-/// <typeparam name="T">The construct type to read.</typeparam>
-/// <returns>An immutable array of constructs.</returns>
-public ImmutableArray<T> DecodeSeries<T>() where T : IAsduConstruct<T>
-{
-var items = new List<T>();
-while (!EndOfSeries())
-{
-    var item = Decode<T>();
-    items.Add(item);
-}
-return [.. items];
-}
-
-/// <summary>Reads a series of BACnet constructs enclosed in opening/closing tags.</summary>
-/// <typeparam name="T">The construct type to read.</typeparam>
-/// <param name="number">The context tag number for the enclosing tags.</param>
-/// <returns>An immutable array of constructs.</returns>
-public ImmutableArray<T> DecodeSeries<T>(int number) where T : IAsduConstruct<T> => DecodeOptionalSeries<T>(number) ?? throw new AsduException();
-
-/// <summary>Tries to read an optional series of BACnet constructs.</summary>
-/// <typeparam name="T">The construct type to read.</typeparam>
-/// <returns>An immutable array of constructs if present; otherwise, default.</returns>
-public ImmutableArray<T>? DecodeOptionalSeries<T>() where T : IAsduConstruct<T> => EndOfSeries() ? default : DecodeSeries<T>();
-
-/// <summary>Tries to read an optional series of BACnet constructs enclosed in opening/closing tags.</summary>
-/// <typeparam name="T">The construct type to read.</typeparam>
-/// <param name="number">The context tag number for the enclosing tags.</param>
-/// <returns>An immutable array of constructs if tags are present; otherwise, default.</returns>
-public ImmutableArray<T>? DecodeOptionalSeries<T>(int number) where T : IAsduConstruct<T>
-{
-if (!DecodeOptionalOpeningTag(number))
-{
-    return default;
-}
-
-var result = DecodeSeries<T>();
-DecodeClosingTag(number);
-return result;
-}
-
-#endregion
-
-#region Any
-
-/// <summary>Reads any ASDU data as raw bytes until the next closing tag or end of buffer.</summary>
-/// <returns>An immutable array of raw ASDU bytes.</returns>
-public ImmutableArray<byte> DecodeAny() => DecodeOptionalAny() ?? throw new AsduException();
-
-/// <summary>Reads any ASDU data enclosed in opening/closing tags as raw bytes.</summary>
-/// <param name="openingTagNumber">The context tag number for the enclosing tags.</param>
-/// <returns>An immutable array of raw ASDU bytes.</returns>
-public ImmutableArray<byte> DecodeAny(int openingTagNumber) => DecodeOptionalAny(openingTagNumber) ?? throw new AsduException();
-
-/// <summary>Tries to read optional ASDU data as raw bytes.</summary>
-/// <returns>An immutable array of raw ASDU bytes if present; otherwise, null.</returns>
-public ImmutableArray<byte>? DecodeOptionalAny()
-{
-var start = _index;
-var length = ForwardIndex(0);
-return length > 0 ? ImmutableArray.Create(_asdu, start, length) : null;
-}
-
-/// <summary>Tries to read optional ASDU data enclosed in opening/closing tags as raw bytes.</summary>
-/// <param name="openingTagNumber">The context tag number for the enclosing tags.</param>
-/// <returns>An immutable array of raw ASDU bytes if tags are present; otherwise, null.</returns>
-public ImmutableArray<byte>? DecodeOptionalAny(int openingTagNumber)
-{
-if (!DecodeOptionalOpeningTag(openingTagNumber))
-{
-    return null;
-}
-var start = _index;
-var length = ForwardIndex(openingTagNumber);
-return length > 0 ? ImmutableArray.Create(_asdu, start, length) : null;
-}
-
-private int ForwardIndex(int closingTagNumber)
-{
-var start = _index;
-while (!EndOfBuffer)
-{
-    var control = _asdu[_index++];
-    var number = control >> 4;
-    if (number == 15)
+    public static int PeekTag(ReadOnlySpan<byte> bytes, AsduTagClass tagClass, byte tagNumber, out int dataLength)
     {
-        number = _asdu[_index++];
+        if (bytes.Length == 0)
+        {
+            dataLength = 0;
+            return 0;
+        }
+
+        var control = bytes[0];
+        var number = (byte)(control >> 4);
+        var index = 1;
+
+        if (number == 15)
+        {
+            if (bytes.Length < 2)
+            {
+                dataLength = 0;
+                return 0;
+            }
+            number = bytes[1];
+            index = 2;
+        }
+
+        if (number != tagNumber || ((control & 0x08) != 0 ? AsduTagClass.Context : AsduTagClass.Application) != tagClass)
+        {
+            dataLength = 0;
+            return 0;
+        }
+
+        int lengthValue = control & 7;
+        if (lengthValue < 5)
+        {
+            dataLength = lengthValue;
+            return index;
+        }
+
+        if (lengthValue == 5)
+        {
+            if (bytes.Length <= index)
+            {
+                dataLength = 0;
+                return 0;
+            }
+
+            dataLength = bytes[index];
+            if (dataLength < 254)
+            {
+                return index + 1;
+            }
+
+            if (dataLength == 254)
+            {
+                if (bytes.Length < index + 3)
+                {
+                    dataLength = 0;
+                    return 0;
+                }
+                dataLength = BinaryPrimitives.ReadUInt16BigEndian(bytes.Slice(index + 1, 2));
+                return index + 3;
+            }
+
+            if (bytes.Length < index + 5)
+            {
+                dataLength = 0;
+                return 0;
+            }
+            dataLength = BinaryPrimitives.ReadInt32BigEndian(bytes.Slice(index + 1, 4));
+            return index + 5;
+        }
+
+        dataLength = 0;
+        return 0;
     }
-    int length = control & 0x07;
-    switch (length)
+
+    public static int PeekTag(ReadOnlySpan<byte> bytes, ApplicationTagNumber tagNumber, out int dataLength) => PeekTag(bytes, AsduTagClass.Application, (byte)tagNumber, out dataLength);
+
+    public static int PeekTag(ReadOnlySpan<byte> bytes, byte tagNumber, out int dataLength) => PeekTag(bytes, AsduTagClass.Context, tagNumber, out dataLength);
+
+    public static int PeekTag(ReadOnlySpan<byte> bytes, byte tagNumber, AsduTagType tagType)
     {
-        case < 5:
+        if (tagNumber < 15)
         {
-            _index += length;
-            break;
-        }
-        case 5:
-        {
-            length = _asdu[_index++];
-            if (length > 253)
+            if (bytes.Length == 0)
             {
-                length = length == 254 ? _asdu[_index++] << 8 | _asdu[_index++] : _asdu[_index++] << 24 | _asdu[_index++] << 16 | _asdu[_index++] << 8 | _asdu[_index++];
+                return 0;
             }
-            _index += length;
-            break;
+
+            byte expected = (byte)((tagNumber << 4) | (tagType == AsduTagType.Opening ? 6 : 7));
+            return bytes[0] == expected ? 1 : 0;
         }
-        case 6:
+
+        if (bytes.Length < 2)
         {
-            ForwardIndex(number);
-            break;
+            return 0;
         }
-        case 7:
-        {
-            if (number == closingTagNumber)
-            {
-                return _index - (number < 15 ? 1 : 2) - start;
-            }
-            throw new ArgumentException($"Invalid closing tag number {number}.");
-        }
+
+        byte expectedFirst = (byte)(tagType == AsduTagType.Opening ? 0xFE : 0xFF);
+        return (bytes[0] == expectedFirst & bytes[1] == tagNumber) ? 2 : 0;
     }
-}
-return _index - start;
-}
 
-#endregion
 
-*/
+
+
+
+
+
+
+
+
+
+    public static int ReadTag(ReadOnlySpan<byte> bytes, AsduTagClass tagClass, byte tagNumber, out int dataLength)
+    {
+        var tagLength = PeekTag(bytes, tagClass, tagNumber, out dataLength);
+        if (tagLength == 0)
+        {
+            throw new AsduException($"Tag number {tagNumber} with class {tagClass} does not exist.");
+        }
+        return tagLength;
+    }
+
+    public static int ReadTag(ReadOnlySpan<byte> bytes, ApplicationTagNumber tagNumber, out int dataLength) => ReadTag(bytes, AsduTagClass.Application, (byte)tagNumber, out dataLength);
+
+    public static int ReadTag(ReadOnlySpan<byte> bytes, byte tagNumber, out int dataLength) => ReadTag(bytes, AsduTagClass.Context, tagNumber, out dataLength);
+
+    public static int ReadTag(ReadOnlySpan<byte> bytes, byte tagNumber, AsduTagType tagType)
+    {
+        var tagLength = PeekTag(bytes, tagNumber, tagType);
+        if (tagLength == 0)
+        {
+            throw new AsduException($"Tag number {tagNumber} with type {tagType} does not exist.");
+        }
+        return tagLength;
+    }
+
+
+
+
+
+
+
+
+
+
 
     #region Reading function
 
@@ -497,9 +431,272 @@ return _index - start;
         return BinaryPrimitives.ReadUInt64BigEndian(bytes);
     }
 
+    /// <summary>
+    /// Reads an 8-bit BACnet Signed Integer Value.
+    /// </summary>
+    /// <param name="bytes">A span containing at least 1 byte.</param>
+    /// <returns>The 8-bit signed integer.</returns>
+    public static sbyte ReadSigned8(ReadOnlySpan<byte> bytes)
+    {
+        return (sbyte)bytes[0];
+    }
 
+    /// <summary>
+    /// Reads a 16-bit BACnet Signed Integer Value.
+    /// </summary>
+    /// <param name="bytes">A span containing at least 2 bytes.</param>
+    /// <returns>The 16-bit signed integer.</returns>
+    public static short ReadSigned16(ReadOnlySpan<byte> bytes)
+    {
+        return BinaryPrimitives.ReadInt16BigEndian(bytes);
+    }
 
+    /// <summary>
+    /// Reads a 24-bit BACnet Signed Integer Value.
+    /// </summary>
+    /// <param name="bytes">A span containing at least 3 bytes.</param>
+    /// <returns>The 24-bit signed integer as a 32-bit value.</returns>
+    public static int ReadSigned24(ReadOnlySpan<byte> bytes)
+    {
+        int byte0 = bytes[0];
+        int byte1 = bytes[1];
+        int byte2 = bytes[2];
 
+        int value = (byte0 << 16) | (byte1 << 8) | byte2;
+        if ((value & 0x800000) != 0)
+        {
+            value |= unchecked((int)0xFF000000);
+        }
+        return value;
+    }
+
+    /// <summary>
+    /// Reads a 32-bit BACnet Signed Integer Value.
+    /// </summary>
+    /// <param name="bytes">A span containing at least 4 bytes.</param>
+    /// <returns>The 32-bit signed integer.</returns>
+    public static int ReadSigned32(ReadOnlySpan<byte> bytes)
+    {
+        return BinaryPrimitives.ReadInt32BigEndian(bytes);
+    }
+
+    /// <summary>
+    /// Reads a 40-bit BACnet Signed Integer Value.
+    /// </summary>
+    /// <param name="bytes">A span containing at least 5 bytes.</param>
+    /// <returns>The 40-bit signed integer as a 64-bit value.</returns>
+    public static long ReadSigned40(ReadOnlySpan<byte> bytes)
+    {
+        long byte0 = bytes[0];
+        long byte1 = bytes[1];
+        long byte2 = bytes[2];
+        long byte3 = bytes[3];
+        long byte4 = bytes[4];
+
+        long value = (byte0 << 32) | (byte1 << 24) | (byte2 << 16) | (byte3 << 8) | byte4;
+        if ((value & 0x8000000000L) != 0)
+        {
+            value |= unchecked((long)0xFFFFFF0000000000L);
+        }
+        return value;
+    }
+
+    /// <summary>
+    /// Reads a 48-bit BACnet Signed Integer Value.
+    /// </summary>
+    /// <param name="bytes">A span containing at least 6 bytes.</param>
+    /// <returns>The 48-bit signed integer as a 64-bit value.</returns>
+    public static long ReadSigned48(ReadOnlySpan<byte> bytes)
+    {
+        long byte0 = bytes[0];
+        long byte1 = bytes[1];
+        long byte2 = bytes[2];
+        long byte3 = bytes[3];
+        long byte4 = bytes[4];
+        long byte5 = bytes[5];
+
+        long value = (byte0 << 40) | (byte1 << 32) | (byte2 << 24) | (byte3 << 16) | (byte4 << 8) | byte5;
+        if ((value & 0x800000000000L) != 0)
+        {
+            value |= unchecked((long)0xFFFF000000000000L);
+        }
+        return value;
+    }
+
+    /// <summary>
+    /// Reads a 56-bit BACnet Signed Integer Value.
+    /// </summary>
+    /// <param name="bytes">A span containing at least 7 bytes.</param>
+    /// <returns>The 56-bit signed integer as a 64-bit value.</returns>
+    public static long ReadSigned56(ReadOnlySpan<byte> bytes)
+    {
+        long byte0 = bytes[0];
+        long byte1 = bytes[1];
+        long byte2 = bytes[2];
+        long byte3 = bytes[3];
+        long byte4 = bytes[4];
+        long byte5 = bytes[5];
+        long byte6 = bytes[6];
+
+        long value = (byte0 << 48) | (byte1 << 40) | (byte2 << 32) | (byte3 << 24) | (byte4 << 16) | (byte5 << 8) | byte6;
+        if ((value & 0x80000000000000L) != 0)
+        {
+            value |= unchecked((long)0xFF00000000000000L);
+        }
+        return value;
+    }
+
+    /// <summary>
+    /// Reads a 64-bit BACnet Signed Integer Value.
+    /// </summary>
+    /// <param name="bytes">A span containing at least 8 bytes.</param>
+    /// <returns>The 64-bit signed integer.</returns>
+    public static long ReadSigned64(ReadOnlySpan<byte> bytes)
+    {
+        return BinaryPrimitives.ReadInt64BigEndian(bytes);
+    }
+
+    /// <summary>
+    /// Reads a BACnet Real Number Value (IEEE 754 single-precision floating point).
+    /// </summary>
+    /// <param name="bytes">A span containing at least 4 bytes.</param>
+    /// <returns>The 32-bit float value.</returns>
+    public static float ReadReal(ReadOnlySpan<byte> bytes)
+    {
+        return BinaryPrimitives.ReadSingleBigEndian(bytes);
+    }
+
+    /// <summary>
+    /// Reads a BACnet Double Precision Real Number Value (IEEE 754 double-precision floating point).
+    /// </summary>
+    /// <param name="bytes">A span containing at least 8 bytes.</param>
+    /// <returns>The 64-bit double value.</returns>
+    public static double ReadDouble(ReadOnlySpan<byte> bytes)
+    {
+        return BinaryPrimitives.ReadDoubleBigEndian(bytes);
+    }
+
+    /// <summary>
+    /// Reads a BACnet Octet String Value from the given bytes.
+    /// </summary>
+    /// <param name="bytes">A span containing zero or more bytes.</param>
+    /// <returns>An <see cref="OctetString"/> instance.</returns>
+    public static OctetString ReadOctetString(ReadOnlySpan<byte> bytes)
+    {
+        return new OctetString(bytes);
+    }
+
+    /// <summary>
+    /// Reads a BACnet Character String Value from the given bytes.
+    /// </summary>
+    /// <param name="bytes">
+    /// A span containing at least 1 byte. The first byte is the character set byte. If the character set
+    /// is DBCS (first byte is <c>0x01</c>), the span must be at least 3 bytes long. Bytes two and three
+    /// represent an unsigned integer that indicates the DBCS code page.
+    /// </param>
+    /// <returns>A <see cref="CharacterString"/> instance.</returns>
+    public static CharacterString ReadCharacterString(ReadOnlySpan<byte> bytes)
+    {
+        return new CharacterString(bytes);
+    }
+
+    /// <summary>
+    /// Reads a BACnet Bit String Value from the given bytes.
+    /// </summary>
+    /// <param name="bytes">A span containing at least 2 bytes. The first byte is the unused bits count.</param>
+    /// <returns>A <see cref="BitString"/> instance.</returns>
+    public static BitString ReadBitString(ReadOnlySpan<byte> bytes)
+    {
+        return new BitString(bytes);
+    }
+
+    /// <summary>
+    /// Reads an 8-bit BACnet Bit String Value and returns it as a native flags value.
+    /// </summary>
+    /// <param name="bytes">A span containing at least 2 bytes. The first byte is the unused bits count.</param>
+    /// <returns>The native 8-bit flags value.</returns>
+    public static byte ReadBitFlags8(ReadOnlySpan<byte> bytes)
+    {
+        return BitReverser.Reverse8Bits(bytes[1]);
+    }
+
+    /// <summary>
+    /// Reads a 16-bit BACnet Bit String Value and returns it as a native flags value.
+    /// </summary>
+    /// <param name="bytes">A span containing at least 3 bytes. The first byte is the unused bits count.</param>
+    /// <returns>The native 16-bit flags value.</returns>
+    public static ushort ReadBitFlags16(ReadOnlySpan<byte> bytes)
+    {
+        var value = BinaryPrimitives.ReadUInt16BigEndian(bytes[1..]);
+        return BitReverser.Reverse16Bits(value);
+    }
+
+    /// <summary>
+    /// Reads a 24-bit BACnet Bit String Value and returns it as a native flags value.
+    /// </summary>
+    /// <param name="bytes">A span containing at least 4 bytes. The first byte is the unused bits count.</param>
+    /// <returns>The native 24-bit flags value as a 32-bit unsigned integer.</returns>
+    public static uint ReadBitFlags24(ReadOnlySpan<byte> bytes)
+    {
+        var value = ReadUnsigned24(bytes[1..]);
+        return BitReverser.Reverse32Bits(value);
+    }
+
+    /// <summary>
+    /// Reads a 32-bit BACnet Bit String Value and returns it as a native flags value.
+    /// </summary>
+    /// <param name="bytes">A span containing at least 5 bytes.</param>
+    /// <returns>The native 32-bit flags value.</returns>
+    public static uint ReadBitFlags32(ReadOnlySpan<byte> bytes)
+    {
+        var value = BinaryPrimitives.ReadUInt32BigEndian(bytes[1..]);
+        return BitReverser.Reverse32Bits(value);
+    }
+
+    /// <summary>
+    /// Reads a 40-bit BACnet Bit String Value and returns it as a native flags value.
+    /// </summary>
+    /// <param name="bytes">A span containing at least 6 bytes.</param>
+    /// <returns>The native 40-bit flags value as a 64-bit unsigned integer.</returns>
+    public static ulong ReadBitFlags40(ReadOnlySpan<byte> bytes)
+    {
+        var value = ReadUnsigned40(bytes[1..]);
+        return BitReverser.Reverse64Bits(value);
+    }
+
+    /// <summary>
+    /// Reads a 48-bit BACnet Bit String Value and returns it as a native flags value.
+    /// </summary>
+    /// <param name="bytes">A span containing at least 7 bytes.</param>
+    /// <returns>The native 48-bit flags value as a 64-bit unsigned integer.</returns>
+    public static ulong ReadBitFlags48(ReadOnlySpan<byte> bytes)
+    {
+        var value = ReadUnsigned48(bytes[1..]);
+        return BitReverser.Reverse64Bits(value);
+    }
+
+    /// <summary>
+    /// Reads a 56-bit BACnet Bit String Value and returns it as a native flags value.
+    /// </summary>
+    /// <param name="bytes">A span containing at least 8 bytes. The first byte is the unused bits count.</param>
+    /// <param name="unusedBits">Outputs the number of unused bits in the last byte.</param>
+    /// <returns>The native 56-bit flags value as a 64-bit unsigned integer.</returns>
+    public static ulong ReadBitFlags56(ReadOnlySpan<byte> bytes)
+    {
+        var value = ReadUnsigned56(bytes[1..]);
+        return BitReverser.Reverse64Bits(value);
+    }
+
+    /// <summary>
+    /// Reads a 64-bit BACnet Bit String Value and returns it as a native flags value.
+    /// </summary>
+    /// <param name="bytes">A span containing at least 9 bytes. The first byte is the unused bits count.</param>
+    /// <returns>The native 64-bit flags value.</returns>
+    public static ulong ReadBitFlags64(ReadOnlySpan<byte> bytes)
+    {
+        var value = BinaryPrimitives.ReadUInt64BigEndian(bytes[1..]);
+        return BitReverser.Reverse64Bits(value);
+    }
 
     /// <summary>
     /// Reads a BACnet DatePattern Value.
@@ -544,3 +741,147 @@ return _index - start;
 
     #endregion
 }
+
+
+
+
+
+
+
+
+
+
+/*
+
+#region Series
+
+[MethodImpl(MethodImplOptions.AggressiveInlining)]
+private bool EndOfSeries() => _index >= _asdu.Length || (_asdu[_index] & 15) == 15;
+
+/// <summary>Reads a series of BACnet constructs until end of buffer or closing tag.</summary>
+/// <typeparam name="T">The construct type to read.</typeparam>
+/// <returns>An immutable array of constructs.</returns>
+public ImmutableArray<T> DecodeSeries<T>() where T : IAsduConstruct<T>
+{
+var items = new List<T>();
+while (!EndOfSeries())
+{
+ var item = Decode<T>();
+ items.Add(item);
+}
+return [.. items];
+}
+
+/// <summary>Reads a series of BACnet constructs enclosed in opening/closing tags.</summary>
+/// <typeparam name="T">The construct type to read.</typeparam>
+/// <param name="number">The context tag number for the enclosing tags.</param>
+/// <returns>An immutable array of constructs.</returns>
+public ImmutableArray<T> DecodeSeries<T>(int number) where T : IAsduConstruct<T> => DecodeOptionalSeries<T>(number) ?? throw new AsduException();
+
+/// <summary>Tries to read an optional series of BACnet constructs.</summary>
+/// <typeparam name="T">The construct type to read.</typeparam>
+/// <returns>An immutable array of constructs if present; otherwise, default.</returns>
+public ImmutableArray<T>? DecodeOptionalSeries<T>() where T : IAsduConstruct<T> => EndOfSeries() ? default : DecodeSeries<T>();
+
+/// <summary>Tries to read an optional series of BACnet constructs enclosed in opening/closing tags.</summary>
+/// <typeparam name="T">The construct type to read.</typeparam>
+/// <param name="number">The context tag number for the enclosing tags.</param>
+/// <returns>An immutable array of constructs if tags are present; otherwise, default.</returns>
+public ImmutableArray<T>? DecodeOptionalSeries<T>(int number) where T : IAsduConstruct<T>
+{
+if (!DecodeOptionalOpeningTag(number))
+{
+ return default;
+}
+
+var result = DecodeSeries<T>();
+DecodeClosingTag(number);
+return result;
+}
+
+#endregion
+
+#region Any
+
+/// <summary>Reads any ASDU data as raw bytes until the next closing tag or end of buffer.</summary>
+/// <returns>An immutable array of raw ASDU bytes.</returns>
+public ImmutableArray<byte> DecodeAny() => DecodeOptionalAny() ?? throw new AsduException();
+
+/// <summary>Reads any ASDU data enclosed in opening/closing tags as raw bytes.</summary>
+/// <param name="openingTagNumber">The context tag number for the enclosing tags.</param>
+/// <returns>An immutable array of raw ASDU bytes.</returns>
+public ImmutableArray<byte> DecodeAny(int openingTagNumber) => DecodeOptionalAny(openingTagNumber) ?? throw new AsduException();
+
+/// <summary>Tries to read optional ASDU data as raw bytes.</summary>
+/// <returns>An immutable array of raw ASDU bytes if present; otherwise, null.</returns>
+public ImmutableArray<byte>? DecodeOptionalAny()
+{
+var start = _index;
+var length = ForwardIndex(0);
+return length > 0 ? ImmutableArray.Create(_asdu, start, length) : null;
+}
+
+/// <summary>Tries to read optional ASDU data enclosed in opening/closing tags as raw bytes.</summary>
+/// <param name="openingTagNumber">The context tag number for the enclosing tags.</param>
+/// <returns>An immutable array of raw ASDU bytes if tags are present; otherwise, null.</returns>
+public ImmutableArray<byte>? DecodeOptionalAny(int openingTagNumber)
+{
+if (!DecodeOptionalOpeningTag(openingTagNumber))
+{
+ return null;
+}
+var start = _index;
+var length = ForwardIndex(openingTagNumber);
+return length > 0 ? ImmutableArray.Create(_asdu, start, length) : null;
+}
+
+private int ForwardIndex(int closingTagNumber)
+{
+var start = _index;
+while (!EndOfBuffer)
+{
+ var control = _asdu[_index++];
+ var number = control >> 4;
+ if (number == 15)
+ {
+     number = _asdu[_index++];
+ }
+ int length = control & 0x07;
+ switch (length)
+ {
+     case < 5:
+     {
+         _index += length;
+         break;
+     }
+     case 5:
+     {
+         length = _asdu[_index++];
+         if (length > 253)
+         {
+             length = length == 254 ? _asdu[_index++] << 8 | _asdu[_index++] : _asdu[_index++] << 24 | _asdu[_index++] << 16 | _asdu[_index++] << 8 | _asdu[_index++];
+         }
+         _index += length;
+         break;
+     }
+     case 6:
+     {
+         ForwardIndex(number);
+         break;
+     }
+     case 7:
+     {
+         if (number == closingTagNumber)
+         {
+             return _index - (number < 15 ? 1 : 2) - start;
+         }
+         throw new ArgumentException($"Invalid closing tag number {number}.");
+     }
+ }
+}
+return _index - start;
+}
+
+#endregion
+
+*/

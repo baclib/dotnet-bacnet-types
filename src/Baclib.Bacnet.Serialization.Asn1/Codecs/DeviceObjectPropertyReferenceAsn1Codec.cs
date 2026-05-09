@@ -5,6 +5,7 @@ using Baclib.Bacnet.Types;
 
 namespace Baclib.Bacnet.Serialization.Asn1.Codecs;
 
+/*
 public sealed class DeviceObjectPropertyReferenceAsn1Codec : Asn1CodecBase<DeviceObjectPropertyReference>
 {
     public static readonly DeviceObjectPropertyReferenceAsn1Codec Instance = new();
@@ -50,17 +51,15 @@ public sealed class DeviceObjectPropertyReferenceAsn1Codec : Asn1CodecBase<Devic
 
     public override void Encode(ref AsduEncoder encoder, in DeviceObjectPropertyReference value)
     {
-        encoder.WriteObjectIdentifier(0, value.ObjectIdentifier);
-        encoder.WriteEnumerated(1, (Enumerated)(uint)value.PropertyIdentifier);
-
+        ObjectIdentifierAsn1Codec.Instance.Encode(ref encoder, 0, value.ObjectIdentifier);
+        PropertyIdentifierAsn1Codec.Instance.Encode(ref encoder, 1, value.PropertyIdentifier);
         if (value.PropertyArrayIndex.HasValue)
         {
-            encoder.WriteUnsigned32(2, value.PropertyArrayIndex.Value);
+            Unsigned32Asn1Codec.Instance.Encode(ref encoder, 2, value.PropertyArrayIndex.Value);
         }
-
         if (value.DeviceIdentifier.HasValue)
         {
-            encoder.WriteObjectIdentifier(3, value.DeviceIdentifier.Value);
+            ObjectIdentifierAsn1Codec.Instance.Encode(ref encoder, 3, value.DeviceIdentifier.Value);
         }
     }
 
@@ -105,3 +104,4 @@ public sealed class DeviceObjectPropertyReferenceAsn1Codec : Asn1CodecBase<Devic
         throw new NotImplementedException();
     }
 }
+*/

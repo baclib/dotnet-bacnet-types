@@ -5,7 +5,7 @@ using Baclib.Bacnet.Types;
 
 namespace Baclib.Bacnet.Serialization.Asn1.Codecs;
 
-public sealed class Unsigned64Asn1Codec : Asn1CodecBase<ulong>
+public sealed class Unsigned64Asn1Codec : Asn1Codec<ulong>
 {
     private Unsigned64Asn1Codec()
     {
@@ -20,32 +20,32 @@ public sealed class Unsigned64Asn1Codec : Asn1CodecBase<ulong>
     private static void Encode(ref AsduEncoder encoder, byte tagNumber, AsduTagClass tagClass, in ulong value)
     {
         var length = AsduLength.FromUnsigned64(value);
-        var bytes = encoder.Encode(tagNumber, tagClass, length);
+        var bytes = encoder.Encode(tagClass, tagNumber, length);
         switch (length)
         {
             case AsduLength.Unsigned8:
-                AsduPrimitives.WriteUnsigned8(bytes, (byte)value);
+                AsduEncoder.WriteUnsigned8(bytes, (byte)value);
                 break;
             case AsduLength.Unsigned16:
-                AsduPrimitives.WriteUnsigned16(bytes, (ushort)value);
+                AsduEncoder.WriteUnsigned16(bytes, (ushort)value);
                 break;
             case AsduLength.Unsigned24:
-                AsduPrimitives.WriteUnsigned24(bytes, (uint)value);
+                AsduEncoder.WriteUnsigned24(bytes, (uint)value);
                 break;
             case AsduLength.Unsigned32:
-                AsduPrimitives.WriteUnsigned32(bytes, (uint)value);
+                AsduEncoder.WriteUnsigned32(bytes, (uint)value);
                 break;
             case AsduLength.Unsigned40:
-                AsduPrimitives.WriteUnsigned40(bytes, value);
+                AsduEncoder.WriteUnsigned40(bytes, value);
                 break;
             case AsduLength.Unsigned48:
-                AsduPrimitives.WriteUnsigned48(bytes, value);
+                AsduEncoder.WriteUnsigned48(bytes, value);
                 break;
             case AsduLength.Unsigned56:
-                AsduPrimitives.WriteUnsigned56(bytes, value);
+                AsduEncoder.WriteUnsigned56(bytes, value);
                 break;
             case AsduLength.Unsigned64:
-                AsduPrimitives.WriteUnsigned64(bytes, value);
+                AsduEncoder.WriteUnsigned64(bytes, value);
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(value), "Invalid length for unsigned 64-bit integer.");

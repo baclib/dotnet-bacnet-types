@@ -5,7 +5,7 @@ using Baclib.Bacnet.Types;
 
 namespace Baclib.Bacnet.Serialization.Asn1.Codecs;
 
-public sealed class DoubleAsn1Codec : Asn1CodecBase<double>
+public sealed class DoubleAsn1Codec : Asn1Codec<double>
 {
     private DoubleAsn1Codec()
     {
@@ -19,8 +19,8 @@ public sealed class DoubleAsn1Codec : Asn1CodecBase<double>
 
     private static void Encode(ref AsduEncoder encoder, byte tagNumber, AsduTagClass tagClass, in double value)
     {
-        var bytes = encoder.Encode(tagNumber, tagClass, AsduLength.Double);
-        AsduPrimitives.WriteDouble(bytes, value);
+        var bytes = encoder.Encode(tagClass, tagNumber, AsduLength.Double);
+        AsduEncoder.WriteDouble(bytes, value);
     }
 
     public override void Encode(ref AsduEncoder encoder, in double value) => Encode(ref encoder, (byte)ApplicationTagNumber.Double, AsduTagClass.Application, in value);
@@ -35,7 +35,7 @@ public sealed class DoubleAsn1Codec : Asn1CodecBase<double>
             throw new AsduException();
         }
 
-        return AsduPrimitives.ReadDouble(bytes);
+        return AsduDecoder.ReadDouble(bytes);
     }
 
     public override double Decode(ref AsduDecoder decoder) => Decode(ref decoder, (byte)ApplicationTagNumber.Double, AsduTagClass.Application);
@@ -51,7 +51,7 @@ public sealed class DoubleAsn1Codec : Asn1CodecBase<double>
                 throw new AsduException();
             }
 
-            return AsduPrimitives.ReadDouble(bytes);
+            return AsduDecoder.ReadDouble(bytes);
         }
 
         return default;

@@ -1,0 +1,63 @@
+// SPDX-FileCopyrightText: Copyright 2024-2026, The BAClib Initiative and Contributors
+// SPDX-License-Identifier: EPL-2.0
+
+using Baclib.Bacnet.Types;
+
+namespace Baclib.Bacnet.Serialization.Asn1.Codecs;
+
+public sealed class {{className}}Asn1Codec : Asn1Codec<{{csharpType}}>
+{
+    private {{className}}Asn1Codec()
+    {
+    }
+
+    public static readonly {{className}}Asn1Codec Instance = new();
+
+    public override int GetEncodedSize(in {{csharpType}} value) => AsduLength.Sum(ApplicationTagNumber.{{tagName}}, AsduLength.{{lengthConst}});
+
+    public override int GetEncodedSize(byte tagNumber, in {{csharpType}} value) => AsduLength.Sum(tagNumber, AsduLength.{{lengthConst}});
+
+    private static void Encode(ref AsduEncoder encoder, byte tagNumber, AsduTagClass tagClass, in {{csharpType}} value)
+    {
+        var bytes = encoder.Encode(tagClass, tagNumber, AsduLength.{{lengthConst}});
+        var unusedBits = (byte)({{bits}} - value.Count);
+        AsduEncoder.{{writeFlagsMethod}}(bytes, value.Flags, unusedBits);
+    }
+
+    public override void Encode(ref AsduEncoder encoder, in {{csharpType}} value) => Encode(ref encoder, (byte)ApplicationTagNumber.{{tagName}}, AsduTagClass.Application, in value);
+
+    public override void Encode(ref AsduEncoder encoder, byte tagNumber, in {{csharpType}} value) => Encode(ref encoder, tagNumber, AsduTagClass.Context, in value);
+
+    private static {{csharpType}} Decode(ref AsduDecoder decoder, byte tagNumber, AsduTagClass tagClass)
+    {
+        var bytes = tagClass == AsduTagClass.Application
+            ? decoder.Decode(ApplicationTagNumber.{{tagName}}, AsduLength.{{lengthConst}})
+            : decoder.Decode(tagNumber, AsduLength.{{lengthConst}});
+        var unusedBits = bytes[0];
+        var count = (byte)({{bits}} - unusedBits);
+        var flags = AsduDecoder.{{readFlagsMethod}}(bytes);
+        return new {{csharpType}}(flags, count);
+    }
+
+    public override {{csharpType}} Decode(ref AsduDecoder decoder) => Decode(ref decoder, (byte)ApplicationTagNumber.{{tagName}}, AsduTagClass.Application);
+
+    public override {{csharpType}} Decode(ref AsduDecoder decoder, byte tagNumber) => Decode(ref decoder, tagNumber, AsduTagClass.Context);
+
+    private static Optional<{{csharpType}}> DecodeOptional(ref AsduDecoder decoder, byte tagNumber, AsduTagClass tagClass)
+    {
+        var bytes = decoder.DecodeOptional(tagClass, tagNumber, AsduLength.{{lengthConst}});
+        if (!bytes.IsEmpty)
+        {
+            var unusedBits = bytes[0];
+            var count = (byte)({{bits}} - unusedBits);
+            var flags = AsduDecoder.{{readFlagsMethod}}(bytes);
+            return new {{csharpType}}(flags, count);
+        }
+
+        return default;
+    }
+
+    public override Optional<{{csharpType}}> DecodeOptional(ref AsduDecoder decoder) => DecodeOptional(ref decoder, (byte)ApplicationTagNumber.{{tagName}}, AsduTagClass.Application);
+
+    public override Optional<{{csharpType}}> DecodeOptional(ref AsduDecoder decoder, byte tagNumber) => DecodeOptional(ref decoder, tagNumber, AsduTagClass.Context);
+}

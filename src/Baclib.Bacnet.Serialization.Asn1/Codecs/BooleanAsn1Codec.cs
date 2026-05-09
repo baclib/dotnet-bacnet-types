@@ -5,7 +5,7 @@ using Baclib.Bacnet.Types;
 
 namespace Baclib.Bacnet.Serialization.Asn1.Codecs;
 
-public sealed class BooleanAsn1Codec : Asn1CodecBase<bool>
+public sealed class BooleanAsn1Codec : Asn1Codec<bool>
 {
     private BooleanAsn1Codec()
     {
@@ -19,8 +19,8 @@ public sealed class BooleanAsn1Codec : Asn1CodecBase<bool>
 
     private static void Encode(ref AsduEncoder encoder, byte tagNumber, AsduTagClass tagClass, in double value)
     {
-        var bytes = encoder.Encode(tagNumber, tagClass, AsduLength.Boolean);
-        AsduPrimitives.WriteDouble(bytes, value);
+        var bytes = encoder.Encode(tagClass, tagNumber, AsduLength.Boolean);
+        AsduEncoder.WriteDouble(bytes, value);
     }
 
     public override void Encode(ref AsduEncoder encoder, in bool value)

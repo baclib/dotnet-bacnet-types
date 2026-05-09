@@ -392,3 +392,321 @@ import { traverseDefinitions } from '@baclib/generic-bacnet-types/src/traverse.j
 
 const transformer = new CsharpTransformer();
 await traverseDefinitions(transformer);
+
+/**
+ * Static codec specifications for all primitive BACnet types.
+ * Each entry maps a type fullname to the parameters needed to render its codec template.
+ */
+const codecSpecs = new Map([
+    ['boolean', {
+        template: 'codec-boolean',
+        className: 'Boolean',
+        csharpType: 'bool',
+        tagName: 'Boolean',
+        lengthConst: 'Boolean',
+    }],
+    ['null', {
+        template: 'codec-null',
+        className: 'Null',
+        csharpType: 'Null',
+        tagName: 'Null',
+        lengthConst: 'Null',
+    }],
+    ['real', {
+        template: 'codec-fixed-numeric',
+        className: 'Real',
+        csharpType: 'float',
+        tagName: 'Real',
+        lengthConst: 'Real',
+        writeMethod: 'WriteReal',
+        readMethod: 'ReadReal',
+    }],
+    ['double', {
+        template: 'codec-fixed-numeric',
+        className: 'Double',
+        csharpType: 'double',
+        tagName: 'Double',
+        lengthConst: 'Double',
+        writeMethod: 'WriteDouble',
+        readMethod: 'ReadDouble',
+    }],
+    ['unsigned-8', {
+        template: 'codec-fixed-byte',
+        className: 'Unsigned8',
+        csharpType: 'byte',
+        tagName: 'Unsigned',
+        lengthConst: 'Unsigned8',
+        fromLengthMethod: 'FromUnsigned8',
+        writeMethod: 'WriteUnsigned8',
+        readMethod: 'ReadUnsigned8',
+    }],
+    ['unsigned-16', {
+        template: 'codec-variable-2',
+        className: 'Unsigned16',
+        csharpType: 'ushort',
+        tagName: 'Unsigned',
+        fromLengthMethod: 'FromUnsigned16',
+        levels: [
+            { lengthConst: 'Unsigned8', writeMethod: 'WriteUnsigned8', cast: '(byte)', readMethod: 'ReadUnsigned8' },
+            { lengthConst: 'Unsigned16', writeMethod: 'WriteUnsigned16', cast: '', readMethod: 'ReadUnsigned16' },
+        ],
+    }],
+    ['unsigned-32', {
+        template: 'codec-variable-n',
+        className: 'Unsigned32',
+        csharpType: 'uint',
+        tagName: 'Unsigned',
+        fromLengthMethod: 'FromUnsigned32',
+        errorMsg: 'Invalid length for unsigned 32-bit integer.',
+        levels: [
+            { lengthConst: 'Unsigned8',  writeMethod: 'WriteUnsigned8',  cast: '(byte)',   readMethod: 'ReadUnsigned8' },
+            { lengthConst: 'Unsigned16', writeMethod: 'WriteUnsigned16', cast: '(ushort)', readMethod: 'ReadUnsigned16' },
+            { lengthConst: 'Unsigned24', writeMethod: 'WriteUnsigned24', cast: '',         readMethod: 'ReadUnsigned24' },
+            { lengthConst: 'Unsigned32', writeMethod: 'WriteUnsigned32', cast: '',         readMethod: 'ReadUnsigned32' },
+        ],
+    }],
+    ['unsigned-64', {
+        template: 'codec-variable-n',
+        className: 'Unsigned64',
+        csharpType: 'ulong',
+        tagName: 'Unsigned',
+        fromLengthMethod: 'FromUnsigned64',
+        errorMsg: 'Invalid length for unsigned 64-bit integer.',
+        levels: [
+            { lengthConst: 'Unsigned8',  writeMethod: 'WriteUnsigned8',  cast: '(byte)',   readMethod: 'ReadUnsigned8' },
+            { lengthConst: 'Unsigned16', writeMethod: 'WriteUnsigned16', cast: '(ushort)', readMethod: 'ReadUnsigned16' },
+            { lengthConst: 'Unsigned24', writeMethod: 'WriteUnsigned24', cast: '(uint)',   readMethod: 'ReadUnsigned24' },
+            { lengthConst: 'Unsigned32', writeMethod: 'WriteUnsigned32', cast: '(uint)',   readMethod: 'ReadUnsigned32' },
+            { lengthConst: 'Unsigned40', writeMethod: 'WriteUnsigned40', cast: '',         readMethod: 'ReadUnsigned40' },
+            { lengthConst: 'Unsigned48', writeMethod: 'WriteUnsigned48', cast: '',         readMethod: 'ReadUnsigned48' },
+            { lengthConst: 'Unsigned56', writeMethod: 'WriteUnsigned56', cast: '',         readMethod: 'ReadUnsigned56' },
+            { lengthConst: 'Unsigned64', writeMethod: 'WriteUnsigned64', cast: '',         readMethod: 'ReadUnsigned64' },
+        ],
+    }],
+    ['integer-8', {
+        template: 'codec-fixed-byte',
+        className: 'Integer8',
+        csharpType: 'sbyte',
+        tagName: 'Signed',
+        lengthConst: 'Signed8',
+        fromLengthMethod: 'FromInteger8',
+        writeMethod: 'WriteInteger8',
+        readMethod: 'ReadSigned8',
+    }],
+    ['integer-16', {
+        template: 'codec-variable-2',
+        className: 'Integer16',
+        csharpType: 'short',
+        tagName: 'Signed',
+        fromLengthMethod: 'FromInteger16',
+        levels: [
+            { lengthConst: 'Signed8',  writeMethod: 'WriteInteger8',  cast: '(sbyte)', readMethod: 'ReadSigned8' },
+            { lengthConst: 'Signed16', writeMethod: 'WriteInteger16', cast: '',        readMethod: 'ReadSigned16' },
+        ],
+    }],
+    ['integer-32', {
+        template: 'codec-variable-n',
+        className: 'Integer32',
+        csharpType: 'int',
+        tagName: 'Signed',
+        fromLengthMethod: 'FromInteger32',
+        errorMsg: 'Invalid length for signed 32-bit integer.',
+        levels: [
+            { lengthConst: 'Signed8',  writeMethod: 'WriteInteger8',  cast: '(sbyte)', readMethod: 'ReadSigned8' },
+            { lengthConst: 'Signed16', writeMethod: 'WriteInteger16', cast: '(short)', readMethod: 'ReadSigned16' },
+            { lengthConst: 'Signed24', writeMethod: 'WriteInteger24', cast: '',        readMethod: 'ReadSigned24' },
+            { lengthConst: 'Signed32', writeMethod: 'WriteInteger32', cast: '',        readMethod: 'ReadSigned32' },
+        ],
+    }],
+    ['integer-64', {
+        template: 'codec-variable-n',
+        className: 'Integer64',
+        csharpType: 'long',
+        tagName: 'Signed',
+        fromLengthMethod: 'FromInteger64',
+        errorMsg: 'Invalid length for signed 64-bit integer.',
+        levels: [
+            { lengthConst: 'Signed8',  writeMethod: 'WriteInteger8',  cast: '(sbyte)', readMethod: 'ReadSigned8' },
+            { lengthConst: 'Signed16', writeMethod: 'WriteInteger16', cast: '(short)', readMethod: 'ReadSigned16' },
+            { lengthConst: 'Signed24', writeMethod: 'WriteInteger24', cast: '(int)',   readMethod: 'ReadSigned24' },
+            { lengthConst: 'Signed32', writeMethod: 'WriteInteger32', cast: '(int)',   readMethod: 'ReadSigned32' },
+            { lengthConst: 'Signed40', writeMethod: 'WriteInteger40', cast: '',        readMethod: 'ReadSigned40' },
+            { lengthConst: 'Signed48', writeMethod: 'WriteInteger48', cast: '',        readMethod: 'ReadSigned48' },
+            { lengthConst: 'Signed56', writeMethod: 'WriteInteger56', cast: '',        readMethod: 'ReadSigned56' },
+            { lengthConst: 'Signed64', writeMethod: 'WriteInteger64', cast: '',        readMethod: 'ReadSigned64' },
+        ],
+    }],
+    ['bit-string-8', {
+        template: 'codec-bit-string',
+        className: 'BitString8',
+        csharpType: 'BitString8',
+        tagName: 'BitString',
+        lengthConst: 'BitString8',
+        bits: 8,
+        readFlagsMethod: 'ReadBitFlags8',
+        writeFlagsMethod: 'WriteBitStringFromFlags8',
+    }],
+    ['bit-string-16', {
+        template: 'codec-bit-string',
+        className: 'BitString16',
+        csharpType: 'BitString16',
+        tagName: 'BitString',
+        lengthConst: 'BitString16',
+        bits: 16,
+        readFlagsMethod: 'ReadBitFlags16',
+        writeFlagsMethod: 'WriteBitStringFromFlags16',
+    }],
+    ['bit-string-32', {
+        template: 'codec-bit-string',
+        className: 'BitString32',
+        csharpType: 'BitString32',
+        tagName: 'BitString',
+        lengthConst: 'BitString32',
+        bits: 32,
+        readFlagsMethod: 'ReadBitFlags32',
+        writeFlagsMethod: 'WriteBitStringFromFlags32',
+    }],
+    ['bit-string-64', {
+        template: 'codec-bit-string',
+        className: 'BitString64',
+        csharpType: 'BitString64',
+        tagName: 'BitString',
+        lengthConst: 'BitString64',
+        bits: 64,
+        readFlagsMethod: 'ReadBitFlags64',
+        writeFlagsMethod: 'WriteBitStringFromFlags64',
+    }],
+    ['octet-string', {
+        template: 'codec-octet-string',
+        className: 'OctetString',
+        csharpType: 'OctetString',
+        tagName: 'OctetString',
+    }],
+    ['character-string', {
+        template: 'codec-character-string',
+        className: 'CharacterString',
+        csharpType: 'CharacterString',
+        tagName: 'CharacterString',
+    }],
+    ['object-identifier', {
+        template: 'codec-fixed-tagged',
+        className: 'ObjectIdentifier',
+        csharpType: 'ObjectIdentifier',
+        tagName: 'ObjectIdentifier',
+        lengthConst: 'ObjectIdentifier',
+        writeMethod: 'WriteObjectIdentifier',
+        readMethod: 'ReadObjectIdentifier',
+    }],
+    ['date-pattern', {
+        template: 'codec-fixed-tagged',
+        className: 'DatePattern',
+        csharpType: 'DatePattern',
+        tagName: 'Date',
+        lengthConst: 'Date',
+        writeMethod: 'WriteDate',
+        readMethod: 'ReadDatePattern',
+    }],
+    ['time-pattern', {
+        template: 'codec-fixed-tagged',
+        className: 'TimePattern',
+        csharpType: 'TimePattern',
+        tagName: 'Time',
+        lengthConst: 'Time',
+        writeMethod: 'WriteTime',
+        readMethod: 'ReadTimePattern',
+    }],
+]);
+
+/**
+ * Asn1CodecTransformer - Generates ASN.1 codec classes for BACnet types by iterating
+ * type definitions and rendering Handlebars templates from templates/codecs/.
+ */
+export class Asn1CodecTransformer {
+
+    constructor() {
+        this.directory = path.join(__dirname, '..', 'Baclib.Bacnet.Serialization.Asn1', 'Codecs');
+        this.templatesDir = path.join(__dirname, 'templates', 'codecs');
+        this.templateCache = new Map();
+        this.codecObjects = [];
+        this.processed = new Set();
+    }
+
+    async start() {
+        await fs.mkdir(this.directory, { recursive: true });
+    }
+
+    /**
+     * Called for top-level type definitions that have no explicit traits (simple aliases, primitives).
+     */
+    startDefinition(context) {
+        if (!context.traits) {
+            this.processType(context.fullname);
+        }
+    }
+
+    endDefinition(context) {}
+
+    startTraits(context) {}
+
+    /**
+     * Called after all traits for a type have been processed.
+     * Covers types with explicit trait blocks (ranged types, sequences, etc.).
+     */
+    endTraits(context) {
+        this.processType(context.fullname);
+    }
+
+    startItem(context) {}
+
+    endItem(context) {}
+
+    /**
+     * Checks whether this type has a known codec spec and queues it for generation.
+     */
+    processType(fullname) {
+        if (this.processed.has(fullname)) return;
+        const spec = codecSpecs.get(fullname);
+        if (spec) {
+            this.processed.add(fullname);
+            this.codecObjects.push({ ...spec });
+        }
+    }
+
+    async afterProcessing(result) {
+        // Only overwrite files that will be (re)generated; leave others untouched.
+        const generatedFileNames = new Set(this.codecObjects.map(o => `${o.className}Asn1Codec.cs`));
+        const existingFiles = await fs.readdir(this.directory);
+        for (const file of existingFiles) {
+            if (generatedFileNames.has(file)) {
+                await fs.unlink(path.join(this.directory, file));
+            }
+        }
+        for (const codecObject of this.codecObjects) {
+            const templatePath = path.join(this.templatesDir, `${codecObject.template}.hbs`);
+            const content = await this.render(templatePath, codecObject);
+            writeFileSync(path.join(this.directory, `${codecObject.className}Asn1Codec.cs`), content);
+        }
+    }
+
+    async loadTemplate(templatePath) {
+        if (this.templateCache.has(templatePath)) {
+            return this.templateCache.get(templatePath);
+        }
+        const templateContent = await fs.readFile(templatePath, 'utf-8');
+        const compiled = Handlebars.compile(templateContent, { noEscape: true });
+        this.templateCache.set(templatePath, compiled);
+        return compiled;
+    }
+
+    async render(templatePath, data) {
+        const template = await this.loadTemplate(templatePath);
+        return this.normalizeLineEndings(template(data));
+    }
+
+    normalizeLineEndings(content) {
+        return content.replace(/\r\n|\n|\r/g, EOL);
+    }
+}
+
+const codecTransformer = new Asn1CodecTransformer();
+await traverseDefinitions(codecTransformer);

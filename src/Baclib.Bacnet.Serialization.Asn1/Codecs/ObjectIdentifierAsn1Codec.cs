@@ -5,7 +5,7 @@ using Baclib.Bacnet.Types;
 
 namespace Baclib.Bacnet.Serialization.Asn1.Codecs;
 
-public sealed class ObjectIdentifierAsn1Codec : Asn1CodecBase<ObjectIdentifier>
+public sealed class ObjectIdentifierAsn1Codec : Asn1Codec<ObjectIdentifier>
 {
     private ObjectIdentifierAsn1Codec()
     {
