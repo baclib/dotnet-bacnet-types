@@ -23,16 +23,16 @@ public sealed class Unsigned32Asn1Codec : Asn1Codec<uint>
         var bytes = encoder.Encode(tagClass, tagNumber, length);
         switch (length)
         {
-            case 1:
+            case AsduLength.Unsigned8:
                 AsduEncoder.WriteUnsigned8(bytes, (byte)value);
                 break;
-            case 2:
+            case AsduLength.Unsigned16:
                 AsduEncoder.WriteUnsigned16(bytes, (ushort)value);
                 break;
-            case 3:
+            case AsduLength.Unsigned24:
                 AsduEncoder.WriteUnsigned24(bytes, value);
                 break;
-            case 4:
+            case AsduLength.Unsigned32:
                 AsduEncoder.WriteUnsigned32(bytes, value);
                 break;
             default:
@@ -72,6 +72,7 @@ public sealed class Unsigned32Asn1Codec : Asn1Codec<uint>
         {
             return ReadUnsigned32(ref bytes);
         }
+
         return default;
     }
 

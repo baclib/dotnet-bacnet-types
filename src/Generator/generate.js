@@ -351,7 +351,15 @@ export class CsharpTransformer {
         const globalAliasPath = path.join(path.dirname(templatePath), 'global-alias.hbs');
         if (fixedAliases.hasOwnProperty(data.fullname)) {
             data.aliasBase = fixedAliases[data.fullname];
-            templatePath = globalAliasPath;
+
+            if (data.fullname.startsWith('enum')) {
+                data.enumBase = data.aliasBase;
+                templatePath = path.join(path.dirname(templatePath), 'enumerated-n.hbs');
+                console.log(JSON.stringify(data, null, 2));
+            }
+            else {
+                templatePath = globalAliasPath;
+            }
         }
         else if (refinedTypes.includes(data.fullname)) {
             templatePath = path.join(path.dirname(templatePath), 'predefined.hbs');

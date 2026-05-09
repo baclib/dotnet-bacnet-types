@@ -7,24 +7,15 @@ namespace Baclib.Bacnet.Serialization.Asn1.Codecs;
 
 public sealed class PropertyIdentifierAsn1Codec : Asn1Codec<PropertyIdentifier>
 {
-    public static readonly PropertyIdentifierAsn1Codec Instance = new();
-
     private PropertyIdentifierAsn1Codec()
     {
     }
 
-    public override int GetEncodedSize(in PropertyIdentifier value)
-    {
-        int dataLength = AsduLength.FromUnsigned32((uint)value);
-        return 1 + dataLength;
-    }
+    public static readonly PropertyIdentifierAsn1Codec Instance = new();
 
-    public override int GetEncodedSize(byte contextTagNumber, in PropertyIdentifier value)
-    {
-        int dataLength = AsduLength.FromUnsigned32((uint)value);
-        int tagHeaderLength = contextTagNumber < 15 ? 1 : 2;
-        return tagHeaderLength + dataLength;
-    }
+    public override int GetEncodedSize(in PropertyIdentifier value) => AsduLength.Sum(ApplicationTagNumber.Signed, AsduLength.FromUnsigned32((uint)value));
+
+    public override int GetEncodedSize(byte tagNumber, in PropertyIdentifier value) => AsduLength.Sum(tagNumber, AsduLength.FromUnsigned32((uint)value));
 
     public override void Encode(ref AsduEncoder encoder, in PropertyIdentifier value)
     {

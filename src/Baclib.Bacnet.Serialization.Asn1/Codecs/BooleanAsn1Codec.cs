@@ -17,12 +17,6 @@ public sealed class BooleanAsn1Codec : Asn1Codec<bool>
 
     public override int GetEncodedSize(byte tagNumber, in bool value) => AsduLength.Sum(tagNumber, AsduLength.Boolean);
 
-    private static void Encode(ref AsduEncoder encoder, byte tagNumber, AsduTagClass tagClass, in double value)
-    {
-        var bytes = encoder.Encode(tagClass, tagNumber, AsduLength.Boolean);
-        AsduEncoder.WriteDouble(bytes, value);
-    }
-
     public override void Encode(ref AsduEncoder encoder, in bool value)
     {
         encoder.Encode(ApplicationTagNumber.Boolean, value ? 1 : 0);

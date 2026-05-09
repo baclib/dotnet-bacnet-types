@@ -526,56 +526,56 @@ public ref struct AsduEncoder
     /// </summary>
     /// <param name="bytes">A span with at least 1 byte capacity.</param>
     /// <param name="value">The 8-bit enumerated value to write.</param>
-    public static void WriteEnumerated8(Span<byte> bytes, byte value) => WriteUnsigned8(bytes, value);
+    public static void WriteEnumerated8(Span<byte> bytes, Enumerated8 value) => WriteUnsigned8(bytes, (byte)value);
 
     /// <summary>
     /// Writes a 16-bit BACnet Enumerated Value.
     /// </summary>
     /// <param name="bytes">A span with at least 2 bytes capacity.</param>
     /// <param name="value">The 16-bit enumerated value to write.</param>
-    public static void WriteEnumerated16(Span<byte> bytes, ushort value) => WriteUnsigned16(bytes, value);
+    public static void WriteEnumerated16(Span<byte> bytes, Enumerated16 value) => WriteUnsigned16(bytes, (ushort)value);
 
     /// <summary>
     /// Writes a 24-bit BACnet Enumerated Value.
     /// </summary>
     /// <param name="bytes">A span with at least 3 bytes capacity.</param>
     /// <param name="value">The 24-bit enumerated value to write (as a 32-bit unsigned integer).</param>
-    public static void WriteEnumerated24(Span<byte> bytes, uint value) => WriteUnsigned24(bytes, value);
+    public static void WriteEnumerated24(Span<byte> bytes, Enumerated32 value) => WriteUnsigned24(bytes, (uint)value);
 
     /// <summary>
     /// Writes a 32-bit BACnet Enumerated Value.
     /// </summary>
     /// <param name="bytes">A span with at least 4 bytes capacity.</param>
     /// <param name="value">The 32-bit enumerated value to write.</param>
-    public static void WriteEnumerated32(Span<byte> bytes, uint value) => WriteUnsigned32(bytes, value);
+    public static void WriteEnumerated32(Span<byte> bytes, Enumerated32 value) => WriteUnsigned32(bytes, (uint)value);
 
     /// <summary>
     /// Writes a 40-bit BACnet Enumerated Value.
     /// </summary>
     /// <param name="bytes">A span with at least 5 bytes capacity.</param>
     /// <param name="value">The 40-bit enumerated value to write (as a 64-bit unsigned integer).</param>
-    public static void WriteEnumerated40(Span<byte> bytes, ulong value) => WriteUnsigned40(bytes, value);
+    public static void WriteEnumerated40(Span<byte> bytes, Enumerated64 value) => WriteUnsigned40(bytes, (ulong)value);
 
     /// <summary>
     /// Writes a 48-bit BACnet Enumerated Value.
     /// </summary>
     /// <param name="bytes">A span with at least 6 bytes capacity.</param>
     /// <param name="value">The 48-bit enumerated value to write (as a 64-bit unsigned integer).</param>
-    public static void WriteEnumerated48(Span<byte> bytes, ulong value) => WriteUnsigned48(bytes, value);
+    public static void WriteEnumerated48(Span<byte> bytes, Enumerated64 value) => WriteUnsigned48(bytes, (ulong)value);
 
     /// <summary>
     /// Writes a 56-bit BACnet Enumerated Value.
     /// </summary>
     /// <param name="bytes">A span with at least 7 bytes capacity.</param>
     /// <param name="value">The 56-bit enumerated value to write (as a 64-bit unsigned integer).</param>
-    public static void WriteEnumerated56(Span<byte> bytes, ulong value) => WriteUnsigned56(bytes, value);
+    public static void WriteEnumerated56(Span<byte> bytes, Enumerated64 value) => WriteUnsigned56(bytes, (ulong)value);
 
     /// <summary>
     /// Writes a 64-bit BACnet Enumerated Value.
     /// </summary>
     /// <param name="bytes">A span with at least 8 bytes capacity.</param>
     /// <param name="value">The 64-bit enumerated value to write.</param>
-    public static void WriteEnumerated64(Span<byte> bytes, ulong value) => WriteUnsigned64(bytes, value);
+    public static void WriteEnumerated64(Span<byte> bytes, Enumerated64 value) => WriteUnsigned64(bytes, (ulong)value);
 
     /// <summary>
     /// Writes a BACnet Date Value.

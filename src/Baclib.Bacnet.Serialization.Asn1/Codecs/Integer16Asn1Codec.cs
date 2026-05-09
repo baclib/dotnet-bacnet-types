@@ -60,7 +60,6 @@ public sealed class Integer16Asn1Codec : Asn1Codec<short>
         {
             return ReadInteger16(ref bytes);
         }
-
         return default;
     }
 

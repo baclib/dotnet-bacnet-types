@@ -19,7 +19,7 @@ public sealed class Integer8Asn1Codec : Asn1Codec<sbyte>
 
     private static void Encode(ref AsduEncoder encoder, byte tagNumber, AsduTagClass tagClass, in sbyte value)
     {
-        var bytes = encoder.Encode(tagClass, tagNumber, AsduLength.Integer8);
+        var bytes = encoder.Encode(tagClass, tagNumber, AsduLength.Signed8);
         AsduEncoder.WriteInteger8(bytes, value);
     }
 
@@ -34,7 +34,6 @@ public sealed class Integer8Asn1Codec : Asn1Codec<sbyte>
         {
             throw new AsduException();
         }
-
         return AsduDecoder.ReadSigned8(bytes);
     }
 
@@ -50,10 +49,8 @@ public sealed class Integer8Asn1Codec : Asn1Codec<sbyte>
             {
                 throw new AsduException();
             }
-
             return AsduDecoder.ReadSigned8(bytes);
         }
-
         return default;
     }
 

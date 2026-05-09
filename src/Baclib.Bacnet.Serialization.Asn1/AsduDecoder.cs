@@ -699,6 +699,62 @@ public ref struct AsduDecoder(ReadOnlySpan<byte> asdu)
     }
 
     /// <summary>
+    /// Reads an 8-bit BACnet Enumerated Value.
+    /// </summary>
+    /// <param name="bytes">A span containing at least 1 byte.</param>
+    /// <returns>The 8-bit enumerated value.</returns>
+    public static Enumerated8 ReadEnumerated8(ReadOnlySpan<byte> bytes) => (Enumerated8)ReadUnsigned8(bytes);
+
+    /// <summary>
+    /// Reads a 16-bit BACnet Enumerated Value.
+    /// </summary>
+    /// <param name="bytes">A span containing at least 2 bytes.</param>
+    /// <returns>The 16-bit enumerated value.</returns>
+    public static Enumerated16 ReadEnumerated16(ReadOnlySpan<byte> bytes) => (Enumerated16)ReadUnsigned16(bytes);
+
+    /// <summary>
+    /// Reads a 24-bit BACnet Enumerated Value.
+    /// </summary>
+    /// <param name="bytes">A span containing at least 3 bytes.</param>
+    /// <returns>The 24-bit enumerated value as a 32-bit enumerated.</returns>
+    public static Enumerated32 ReadEnumerated24(ReadOnlySpan<byte> bytes) => (Enumerated32)ReadUnsigned24(bytes);
+
+    /// <summary>
+    /// Reads a 32-bit enumerated value from the specified read-only byte span.
+    /// </summary>
+    /// <param name="bytes">A span containing at least 4 bytes.</param>
+    /// <returns>The 32-bit enumerated value.</returns>
+    public static Enumerated32 ReadEnumerated32(ReadOnlySpan<byte> bytes) => (Enumerated32)ReadUnsigned32(bytes);
+
+    /// <summary>
+    /// Reads a 40-bit unsigned integer from the specified byte span and returns it as an Enumerated64 value.
+    /// </summary>
+    /// <param name="bytes">A read-only span of bytes containing the 40-bit unsigned integer to read. Must contain at least 5 bytes.</param>
+    /// <returns>An Enumerated64 value representing the 40-bit unsigned integer read from the byte span.</returns>
+    public static Enumerated64 ReadEnumerated40(ReadOnlySpan<byte> bytes) => (Enumerated64)ReadUnsigned40(bytes);
+
+    /// <summary>
+    /// Reads a 48-bit enumerated value from the specified read-only byte span.
+    /// </summary>
+    /// <param name="bytes">A read-only span of bytes containing the 48-bit value to read. Must be at least 6 bytes in length.</param>
+    /// <returns>An Enumerated64 value representing the 48-bit enumerated value read from the byte span.</returns>
+    public static Enumerated64 ReadEnumerated48(ReadOnlySpan<byte> bytes) => (Enumerated64)ReadUnsigned48(bytes);
+
+    /// <summary>
+    /// Reads a 56-bit unsigned integer from the specified byte span and returns it as an Enumerated64 value.
+    /// </summary>
+    /// <param name="bytes">A read-only span of bytes containing the 56-bit unsigned integer to read. Must contain at least 7 bytes.</param>
+    /// <returns>An Enumerated64 value representing the 56-bit unsigned integer read from the specified bytes.</returns>
+    public static Enumerated64 ReadEnumerated56(ReadOnlySpan<byte> bytes) => (Enumerated64)ReadUnsigned56(bytes);
+
+    /// <summary>
+    /// Reads a 64-bit enumerated value from the specified read-only byte span.
+    /// </summary>
+    /// <param name="bytes">A read-only span of bytes containing the encoded 64-bit enumerated value to read.</param>
+    /// <returns>An <see cref="Enumerated64"/> value representing the decoded 64-bit enumerated value from the input bytes.</returns>
+    public static Enumerated64 ReadEnumerated64(ReadOnlySpan<byte> bytes) => (Enumerated64)ReadUnsigned64(bytes);
+
+    /// <summary>
     /// Reads a BACnet DatePattern Value.
     /// </summary>
     /// <param name="bytes">A span containing at least 4 bytes (year, month, day, dayOfWeek).</param>

@@ -88,6 +88,7 @@ public sealed class Unsigned64Asn1Codec : Asn1Codec<ulong>
         {
             return ReadUnsigned64(ref bytes);
         }
+
         return default;
     }
 
