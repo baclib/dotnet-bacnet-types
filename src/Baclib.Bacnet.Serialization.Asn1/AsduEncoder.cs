@@ -1,9 +1,6 @@
 ﻿// SPDX-FileCopyrightText: Copyright 2024-2025 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: BSD-2-Clause
 
-global using Date = Baclib.Bacnet.Types.DatePattern;
-global using Time = Baclib.Bacnet.Types.TimePattern;
-
 using Baclib.Bacnet.Types;
 using System.Buffers.Binary;
 using System.Runtime.CompilerServices;
@@ -20,7 +17,12 @@ namespace Baclib.Bacnet.Serialization.Asn1;
 /// </remarks>
 public ref struct AsduEncoder
 {
+    /// <summary>
+    /// Backing buffer used for encoded output.
+    /// </summary>
     private readonly byte[] _buffer;
+
+    #region State and buffer views
 
     /// <summary>
     /// Gets a copy of the encoded ASDU bytes.
@@ -28,14 +30,29 @@ public ref struct AsduEncoder
     /// </summary>
     public byte[] Buffer => ToArray();
 
+    /// <summary>
+    /// Gets the current write position from the start of the buffer.
+    /// </summary>
     public readonly int Position => _index;
 
+    /// <summary>
+    /// Gets the number of bytes written so far.
+    /// </summary>
     public readonly int WrittenLength => _index;
 
+    /// <summary>
+    /// Gets the number of remaining writable bytes in the backing buffer.
+    /// </summary>
     public readonly int RemainingLength => _buffer.Length - _index;
 
+    /// <summary>
+    /// Gets a span over the bytes written so far.
+    /// </summary>
     public readonly ReadOnlySpan<byte> WrittenSpan => _buffer.AsSpan(0, _index);
 
+    /// <summary>
+    /// Current write offset into <see cref="_buffer"/>.
+    /// </summary>
     private int _index = 0;
 
     /// <summary>
@@ -82,17 +99,66 @@ public ref struct AsduEncoder
         return true;
     }
 
+    #endregion
 
+    #region Raw writing
 
+    /// <summary>
+    /// Writes a single raw byte and advances the write position.
+    /// </summary>
+    /// <param name="value">The raw byte to write.</param>
     public void WriteByte(byte value)
     {
         _buffer[_index++] = value;
     }
 
+    /// <summary>
+    /// Writes raw bytes directly into the output buffer.
+    /// </summary>
+    /// <param name="bytes">The bytes to copy.</param>
+    public void EncodeAny(ReadOnlySpan<byte> bytes)
+    {
+        bytes.CopyTo(_buffer.AsSpan(_index));
+        _index += bytes.Length;
+    }
+
+    /// <summary>
+    /// Alias for <see cref="EncodeAny(ReadOnlySpan{byte})"/>.
+    /// </summary>
+    /// <param name="bytes">The bytes to copy.</param>
+    public void WriteAny(ReadOnlySpan<byte> bytes) => EncodeAny(bytes);
+
+    /// <summary>
+    /// Writes raw bytes enclosed by opening and closing context tags.
+    /// </summary>
+    /// <param name="openingTagNumber">The opening/closing context tag number.</param>
+    /// <param name="bytes">The bytes to copy inside the enclosing tags.</param>
+    public void EncodeAny(byte openingTagNumber, ReadOnlySpan<byte> bytes)
+    {
+        WriteOpeningTag(openingTagNumber);
+        EncodeAny(bytes);
+        WriteClosingTag(openingTagNumber);
+    }
+
+    /// <summary>
+    /// Alias for <see cref="EncodeAny(byte, ReadOnlySpan{byte})"/>.
+    /// </summary>
+    /// <param name="openingTagNumber">The opening/closing context tag number.</param>
+    /// <param name="bytes">The bytes to copy inside the enclosing tags.</param>
+    public void WriteAny(byte openingTagNumber, ReadOnlySpan<byte> bytes) => EncodeAny(openingTagNumber, bytes);
+
+    #endregion
+
 
     #region Tag handling
 
 
+    /// <summary>
+    /// Writes an enclosing context tag (opening or closing).
+    /// </summary>
+    /// <param name="number">The context tag number to encode.</param>
+    /// <param name="kind">The enclosing tag kind.</param>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="number"/> is outside 0..254.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void WriteEnclosingTag(int number, AsduTagKind kind)
     {
@@ -124,14 +190,73 @@ public ref struct AsduEncoder
 
     #endregion
 
+    #region Construct and series
+
+    /// <summary>
+    /// Encodes a value using the provided codec.
+    /// </summary>
+    /// <typeparam name="T">The value type encoded by the codec.</typeparam>
+    /// <param name="codec">The codec used to encode the value.</param>
+    /// <param name="value">The value to encode.</param>
+    public void Encode<T>(IAsn1Encoder<T> codec, in T value)
+    {
+        codec.Encode(ref this, in value);
+    }
+
+    /// <summary>
+    /// Encodes a value using the provided codec as a context-tagged value.
+    /// </summary>
+    /// <typeparam name="T">The value type encoded by the codec.</typeparam>
+    /// <param name="codec">The codec used to encode the value.</param>
+    /// <param name="contextTagNumber">The context tag number to encode with.</param>
+    /// <param name="value">The value to encode.</param>
+    public void Encode<T>(IAsn1Encoder<T> codec, byte contextTagNumber, in T value)
+    {
+        codec.Encode(ref this, contextTagNumber, in value);
+    }
+
+    /// <summary>
+    /// Encodes a sequence of values using the provided codec.
+    /// </summary>
+    /// <typeparam name="T">The value type encoded by the codec.</typeparam>
+    /// <param name="codec">The codec used to encode each value.</param>
+    /// <param name="values">The values to encode.</param>
+    public void EncodeSeries<T>(IAsn1Encoder<T> codec, IEnumerable<T> values)
+    {
+        foreach (var value in values)
+        {
+            codec.Encode(ref this, in value);
+        }
+    }
+
+    /// <summary>
+    /// Encodes a sequence of values enclosed by opening and closing context tags.
+    /// </summary>
+    /// <typeparam name="T">The value type encoded by the codec.</typeparam>
+    /// <param name="codec">The codec used to encode each value.</param>
+    /// <param name="openingTagNumber">The opening/closing context tag number.</param>
+    /// <param name="values">The values to encode.</param>
+    public void EncodeSeries<T>(IAsn1Encoder<T> codec, byte openingTagNumber, IEnumerable<T> values)
+    {
+        WriteOpeningTag(openingTagNumber);
+        EncodeSeries(codec, values);
+        WriteClosingTag(openingTagNumber);
+    }
+
+    #endregion
+
+    #region Tag and payload encoding
 
 
-
-
-
-
-
-
+    /// <summary>
+    /// Writes an ASN.1 tag header into a destination span.
+    /// </summary>
+    /// <param name="bytes">The destination span to receive the encoded tag header.</param>
+    /// <param name="tagClass">The tag class to encode.</param>
+    /// <param name="tagNumber">The tag number to encode.</param>
+    /// <param name="dataLength">The payload length encoded in the tag header.</param>
+    /// <returns>The number of bytes written for the tag header.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="dataLength"/> is negative.</exception>
     public static int WriteTag(Span<byte> bytes, AsduTagClass tagClass, byte tagNumber, int dataLength)
     {
         if (dataLength < 0)
@@ -183,6 +308,13 @@ public ref struct AsduEncoder
         return index;
     }
 
+    /// <summary>
+    /// Writes a tag header and reserves a payload span.
+    /// </summary>
+    /// <param name="tagClass">The tag class to encode.</param>
+    /// <param name="tagNumber">The tag number to encode.</param>
+    /// <param name="dataLength">The payload length in bytes.</param>
+    /// <returns>A writable span for the payload bytes.</returns>
     public Span<byte> Encode(AsduTagClass tagClass, byte tagNumber, int dataLength)
     {
         _index += WriteTag(_buffer.AsSpan(_index), tagClass, tagNumber, dataLength);
@@ -191,19 +323,25 @@ public ref struct AsduEncoder
         return bytes;
     }
 
+    /// <summary>
+    /// Writes an application tag header and reserves a payload span.
+    /// </summary>
+    /// <param name="tagNumber">The application tag number.</param>
+    /// <param name="dataLength">The payload length in bytes.</param>
+    /// <returns>A writable span for the payload bytes.</returns>
     public Span<byte> Encode(ApplicationTagNumber tagNumber, int dataLength) => Encode(AsduTagClass.Application, (byte)tagNumber, dataLength);
 
+    /// <summary>
+    /// Writes a context tag header and reserves a payload span.
+    /// </summary>
+    /// <param name="tagNumber">The context tag number.</param>
+    /// <param name="dataLength">The payload length in bytes.</param>
+    /// <returns>A writable span for the payload bytes.</returns>
     public Span<byte> Encode(byte tagNumber, int dataLength) => Encode(AsduTagClass.Context, tagNumber, dataLength);
 
+    #endregion
 
-
-
-
-
-
-
-
-
+    #region Writing functions
 
     /// <summary>
     /// Writes a BACnet Boolean Value.
@@ -322,8 +460,6 @@ public ref struct AsduEncoder
         bytes[0] = (byte)value;
     }
 
-    public static void WriteSigned8(Span<byte> bytes, sbyte value) => WriteInteger8(bytes, value);
-
     /// <summary>
     /// Writes a 16-bit BACnet Signed Integer Value.
     /// </summary>
@@ -333,8 +469,6 @@ public ref struct AsduEncoder
     {
         BinaryPrimitives.WriteInt16BigEndian(bytes, value);
     }
-
-    public static void WriteSigned16(Span<byte> bytes, short value) => WriteInteger16(bytes, value);
 
     /// <summary>
     /// Writes a 24-bit BACnet Signed Integer Value.
@@ -348,8 +482,6 @@ public ref struct AsduEncoder
         bytes[2] = (byte)value;
     }
 
-    public static void WriteSigned24(Span<byte> bytes, int value) => WriteInteger24(bytes, value);
-
     /// <summary>
     /// Writes a 32-bit BACnet Signed Integer Value.
     /// </summary>
@@ -359,8 +491,6 @@ public ref struct AsduEncoder
     {
         BinaryPrimitives.WriteInt32BigEndian(bytes, value);
     }
-
-    public static void WriteSigned32(Span<byte> bytes, int value) => WriteInteger32(bytes, value);
 
     /// <summary>
     /// Writes a 40-bit BACnet Signed Integer Value.
@@ -376,8 +506,6 @@ public ref struct AsduEncoder
         bytes[4] = (byte)value;
     }
 
-    public static void WriteSigned40(Span<byte> bytes, long value) => WriteInteger40(bytes, value);
-
     /// <summary>
     /// Writes a 48-bit BACnet Signed Integer Value.
     /// </summary>
@@ -392,8 +520,6 @@ public ref struct AsduEncoder
         bytes[4] = (byte)(value >> 8);
         bytes[5] = (byte)value;
     }
-
-    public static void WriteSigned48(Span<byte> bytes, long value) => WriteInteger48(bytes, value);
 
     /// <summary>
     /// Writes a 56-bit BACnet Signed Integer Value.
@@ -411,8 +537,6 @@ public ref struct AsduEncoder
         bytes[6] = (byte)value;
     }
 
-    public static void WriteSigned56(Span<byte> bytes, long value) => WriteInteger56(bytes, value);
-
     /// <summary>
     /// Writes a 64-bit BACnet Signed Integer Value.
     /// </summary>
@@ -422,8 +546,6 @@ public ref struct AsduEncoder
     {
         BinaryPrimitives.WriteInt64BigEndian(bytes, value);
     }
-
-    public static void WriteSigned64(Span<byte> bytes, long value) => WriteInteger64(bytes, value);
 
     /// <summary>
     /// Writes a 32-bit BACnet Real Number Value (IEEE 754 single-precision floating point).
@@ -642,7 +764,7 @@ public ref struct AsduEncoder
     /// </summary>
     /// <param name="bytes">A span with at least 4 bytes capacity.</param>
     /// <param name="value">The Date Value to write (year, month, day, dayOfWeek).</param>
-    public static void WriteDate(Span<byte> bytes, Date value)
+    public static void WriteDatePattern(Span<byte> bytes, DatePattern value)
     {
         bytes[0] = value.Year;
         bytes[1] = value.Month;
@@ -655,7 +777,7 @@ public ref struct AsduEncoder
     /// </summary>
     /// <param name="bytes">A span with at least 4 bytes capacity.</param>
     /// <param name="value">The Time Value to write (hour, minute, second, hundredths).</param>
-    public static void WriteTime(Span<byte> bytes, Time value)
+    public static void WriteTimePattern(Span<byte> bytes, TimePattern value)
     {
         bytes[0] = value.Hour;
         bytes[1] = value.Minute;
@@ -672,57 +794,6 @@ public ref struct AsduEncoder
     {
         BinaryPrimitives.WriteUInt32BigEndian(bytes, value.Value);
     }
+
+    #endregion
 }
-
-/*
-    #region Construct
-
-    /// <summary>Writes a BACnet construct that implements <see cref="IAsduConstruct{T}"/>.</summary>
-    /// <typeparam name="T">The construct type.</typeparam>
-    /// <param name="value">The construct to write.</param>
-    public void Write<T>(T value) where T : IAsduConstruct<T>
-    {
-        value.Serialize(ref this);
-    }
-
-    /// <summary>Writes a BACnet construct enclosed in opening/closing tags.</summary>
-    /// <typeparam name="T">The construct type.</typeparam>
-    /// <param name="number">The context tag number for the enclosing tags.</param>
-    /// <param name="value">The construct to write.</param>
-    public void Write<T>(int number, T value) where T : IAsduConstruct<T>
-    {
-        WriteOpeningTag(number);
-        value.Serialize(ref this);
-        WriteClosingTag(number);
-    }
-
-    #endregion
-
-    #region Series
-
-    /// <summary>Writes a series of BACnet constructs.</summary>
-    /// <typeparam name="T">The construct type.</typeparam>
-    /// <param name="series">The series of constructs to write.</param>
-    public void WriteSeries<T>(IEnumerable<T> series) where T : IAsduConstruct<T>
-    {
-        foreach (var item in series)
-        {
-            Write(item);
-        }
-    }
-
-    /// <summary>Writes a series of BACnet constructs enclosed in opening/closing tags.</summary>
-    /// <typeparam name="T">The construct type.</typeparam>
-    /// <param name="number">The context tag number for the enclosing tags.</param>
-    /// <param name="series">The series of constructs to write.</param>
-    public void WriteSeries<T>(int number, IEnumerable<T> series) where T : IAsduConstruct<T>
-    {
-        WriteOpeningTag(number);
-        WriteSeries(series);
-        WriteClosingTag(number);
-    }
-
-    #endregion
-
- 
- */

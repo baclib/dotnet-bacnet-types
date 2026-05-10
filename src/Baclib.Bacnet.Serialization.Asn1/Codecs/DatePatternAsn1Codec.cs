@@ -20,13 +20,13 @@ public sealed class DatePatternAsn1Codec : Asn1Codec<DatePattern>
     public override void Encode(ref AsduEncoder encoder, in DatePattern value)
     {
         var bytes = encoder.Encode(ApplicationTagNumber.Date, AsduLength.Date);
-        AsduEncoder.WriteDate(bytes, value);
+        AsduEncoder.WriteDatePattern(bytes, value);
     }
 
     public override void Encode(ref AsduEncoder encoder, byte tagNumber, in DatePattern value)
     {
         var bytes = encoder.Encode(tagNumber, AsduLength.Date);
-        AsduEncoder.WriteDate(bytes, value);
+        AsduEncoder.WriteDatePattern(bytes, value);
     }
 
     public override DatePattern Decode(ref AsduDecoder decoder)

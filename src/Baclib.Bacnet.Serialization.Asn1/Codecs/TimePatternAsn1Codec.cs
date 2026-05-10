@@ -20,13 +20,13 @@ public sealed class TimePatternAsn1Codec : Asn1Codec<TimePattern>
     public override void Encode(ref AsduEncoder encoder, in TimePattern value)
     {
         var bytes = encoder.Encode(ApplicationTagNumber.Time, AsduLength.Time);
-        AsduEncoder.WriteTime(bytes, value);
+        AsduEncoder.WriteTimePattern(bytes, value);
     }
 
     public override void Encode(ref AsduEncoder encoder, byte tagNumber, in TimePattern value)
     {
         var bytes = encoder.Encode(tagNumber, AsduLength.Time);
-        AsduEncoder.WriteTime(bytes, value);
+        AsduEncoder.WriteTimePattern(bytes, value);
     }
 
     public override TimePattern Decode(ref AsduDecoder decoder)
