@@ -23,14 +23,23 @@ public ref struct AsduEncoder
     private readonly byte[] _buffer;
 
     /// <summary>
-    /// Gets the underlying byte buffer containing the encoded ASDU data.
+    /// Gets a copy of the encoded ASDU bytes.
+    /// Prefer <see cref="WrittenSpan"/> for zero-copy access in internal hot paths.
     /// </summary>
-    public byte[] Buffer => _buffer[.._index];
+    public byte[] Buffer => ToArray();
 
-    int _index = 0;
+    public readonly int Position => _index;
+
+    public readonly int WrittenLength => _index;
+
+    public readonly int RemainingLength => _buffer.Length - _index;
+
+    public readonly ReadOnlySpan<byte> WrittenSpan => _buffer.AsSpan(0, _index);
+
+    private int _index = 0;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="AsduWriter"/> class with the specified buffer size.
+    /// Initializes a new instance of the <see cref="AsduEncoder"/> class with the specified buffer size.
     /// </summary>
     /// <param name="size">The size of the buffer to allocate.</param>
     /// <exception cref="ArgumentOutOfRangeException">Thrown when size is negative.</exception>
@@ -41,6 +50,36 @@ public ref struct AsduEncoder
             throw new ArgumentOutOfRangeException(nameof(size), "Size must be non-negative.");
         }
         _buffer = new byte[size];
+    }
+
+    /// <summary>
+    /// Resets the write position to the beginning so the buffer can be reused.
+    /// Existing bytes are not cleared.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void Reset() => _index = 0;
+
+    /// <summary>
+    /// Copies the encoded bytes into a new array.
+    /// </summary>
+    public readonly byte[] ToArray() => _buffer.AsSpan(0, _index).ToArray();
+
+    /// <summary>
+    /// Copies encoded bytes into a destination span.
+    /// </summary>
+    /// <returns>
+    /// True if destination has enough capacity and copy succeeded; otherwise false.
+    /// </returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public readonly bool TryCopyTo(Span<byte> destination)
+    {
+        if (destination.Length < _index)
+        {
+            return false;
+        }
+
+        _buffer.AsSpan(0, _index).CopyTo(destination);
+        return true;
     }
 
 
@@ -95,6 +134,11 @@ public ref struct AsduEncoder
 
     public static int WriteTag(Span<byte> bytes, AsduTagClass tagClass, byte tagNumber, int dataLength)
     {
+        if (dataLength < 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(dataLength), "Data length must be non-negative.");
+        }
+
         int index;
         ref byte initialOctet = ref bytes[0];
         if (tagNumber < 15)
@@ -278,6 +322,8 @@ public ref struct AsduEncoder
         bytes[0] = (byte)value;
     }
 
+    public static void WriteSigned8(Span<byte> bytes, sbyte value) => WriteInteger8(bytes, value);
+
     /// <summary>
     /// Writes a 16-bit BACnet Signed Integer Value.
     /// </summary>
@@ -287,6 +333,8 @@ public ref struct AsduEncoder
     {
         BinaryPrimitives.WriteInt16BigEndian(bytes, value);
     }
+
+    public static void WriteSigned16(Span<byte> bytes, short value) => WriteInteger16(bytes, value);
 
     /// <summary>
     /// Writes a 24-bit BACnet Signed Integer Value.
@@ -300,6 +348,8 @@ public ref struct AsduEncoder
         bytes[2] = (byte)value;
     }
 
+    public static void WriteSigned24(Span<byte> bytes, int value) => WriteInteger24(bytes, value);
+
     /// <summary>
     /// Writes a 32-bit BACnet Signed Integer Value.
     /// </summary>
@@ -309,6 +359,8 @@ public ref struct AsduEncoder
     {
         BinaryPrimitives.WriteInt32BigEndian(bytes, value);
     }
+
+    public static void WriteSigned32(Span<byte> bytes, int value) => WriteInteger32(bytes, value);
 
     /// <summary>
     /// Writes a 40-bit BACnet Signed Integer Value.
@@ -324,6 +376,8 @@ public ref struct AsduEncoder
         bytes[4] = (byte)value;
     }
 
+    public static void WriteSigned40(Span<byte> bytes, long value) => WriteInteger40(bytes, value);
+
     /// <summary>
     /// Writes a 48-bit BACnet Signed Integer Value.
     /// </summary>
@@ -338,6 +392,8 @@ public ref struct AsduEncoder
         bytes[4] = (byte)(value >> 8);
         bytes[5] = (byte)value;
     }
+
+    public static void WriteSigned48(Span<byte> bytes, long value) => WriteInteger48(bytes, value);
 
     /// <summary>
     /// Writes a 56-bit BACnet Signed Integer Value.
@@ -355,6 +411,8 @@ public ref struct AsduEncoder
         bytes[6] = (byte)value;
     }
 
+    public static void WriteSigned56(Span<byte> bytes, long value) => WriteInteger56(bytes, value);
+
     /// <summary>
     /// Writes a 64-bit BACnet Signed Integer Value.
     /// </summary>
@@ -364,6 +422,8 @@ public ref struct AsduEncoder
     {
         BinaryPrimitives.WriteInt64BigEndian(bytes, value);
     }
+
+    public static void WriteSigned64(Span<byte> bytes, long value) => WriteInteger64(bytes, value);
 
     /// <summary>
     /// Writes a 32-bit BACnet Real Number Value (IEEE 754 single-precision floating point).

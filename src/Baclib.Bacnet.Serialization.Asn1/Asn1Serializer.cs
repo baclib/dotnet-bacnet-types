@@ -18,7 +18,7 @@ public static class Asn1Serializer
 
         var encoder = new AsduEncoder(size);
         codec.Encode(ref encoder, in value);
-        return encoder.Buffer;
+        return encoder.ToArray();
         */
     }
 
@@ -32,7 +32,7 @@ public static class Asn1Serializer
 
         var encoder = new AsduEncoder(size);
         codec.EncodeObject(ref encoder, value);
-        return encoder.Buffer;
+        return encoder.ToArray();
         */
         throw new NotImplementedException();
     }

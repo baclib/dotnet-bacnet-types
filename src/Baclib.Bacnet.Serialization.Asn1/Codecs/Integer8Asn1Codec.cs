@@ -34,7 +34,7 @@ public sealed class Integer8Asn1Codec : Asn1Codec<sbyte>
         {
             throw new AsduException();
         }
-        return AsduDecoder.ReadSigned8(bytes);
+        return AsduDecoder.ReadInteger8(bytes);
     }
 
     public override sbyte Decode(ref AsduDecoder decoder) => Decode(ref decoder, (byte)ApplicationTagNumber.Signed, AsduTagClass.Application);
@@ -49,7 +49,7 @@ public sealed class Integer8Asn1Codec : Asn1Codec<sbyte>
             {
                 throw new AsduException();
             }
-            return AsduDecoder.ReadSigned8(bytes);
+            return AsduDecoder.ReadInteger8(bytes);
         }
         return default;
     }

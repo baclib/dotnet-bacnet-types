@@ -48,10 +48,10 @@ public sealed class Integer32Asn1Codec : Asn1Codec<int>
     {
         return bytes.Length switch
         {
-            AsduLength.Signed8 => AsduDecoder.ReadSigned8(bytes),
-            AsduLength.Signed16 => AsduDecoder.ReadSigned16(bytes),
-            AsduLength.Signed24 => AsduDecoder.ReadSigned24(bytes),
-            AsduLength.Signed32 => AsduDecoder.ReadSigned32(bytes),
+            AsduLength.Signed8 => AsduDecoder.ReadInteger8(bytes),
+            AsduLength.Signed16 => AsduDecoder.ReadInteger16(bytes),
+            AsduLength.Signed24 => AsduDecoder.ReadInteger24(bytes),
+            AsduLength.Signed32 => AsduDecoder.ReadInteger32(bytes),
             _ => throw new AsduException()
         };
     }
