@@ -9,7 +9,7 @@ public class TimeTests
     public void Constructor_WithValidFields_ShouldCreateTime()
     {
         // Act
-        var time = new Time(14, 30, 45, 50);
+        var time = new TimePattern(14, 30, 45, 50);
 
         // Assert
         Assert.Equal(14, time.Hour);
@@ -25,7 +25,7 @@ public class TimeTests
         var timeSpan = new TimeSpan(0, 14, 30, 45, 500); // 14:30:45.500
 
         // Act
-        var time = new Time(timeSpan);
+        var time = new TimePattern(timeSpan);
 
         // Assert
         Assert.Equal(14, time.Hour);
@@ -41,7 +41,7 @@ public class TimeTests
         var timeOnly = new TimeOnly(9, 15, 30, 250); // 09:15:30.250
 
         // Act
-        var time = new Time(timeOnly);
+        var time = new TimePattern(timeOnly);
 
         // Assert
         Assert.Equal(9, time.Hour);
@@ -57,7 +57,7 @@ public class TimeTests
         var negativeTimeSpan = TimeSpan.FromHours(-1);
 
         // Act & Assert
-        Assert.Throws<ArgumentOutOfRangeException>(() => new Time(negativeTimeSpan));
+        Assert.Throws<ArgumentOutOfRangeException>(() => new TimePattern(negativeTimeSpan));
     }
 
     [Fact]
@@ -67,14 +67,14 @@ public class TimeTests
         var tooLarge = TimeSpan.FromDays(1);
 
         // Act & Assert
-        Assert.Throws<ArgumentOutOfRangeException>(() => new Time(tooLarge));
+        Assert.Throws<ArgumentOutOfRangeException>(() => new TimePattern(tooLarge));
     }
 
     [Fact]
     public void IsValid_AllValidFields_ShouldReturnTrue()
     {
         // Arrange
-        var time = new Time(23, 59, 59, 99);
+        var time = new TimePattern(23, 59, 59, 99);
 
         // Assert
         Assert.True(time.IsValid);
@@ -88,7 +88,7 @@ public class TimeTests
     public void IsValid_InvalidHour_ShouldReturnFalse()
     {
         // Arrange
-        var time = new Time(24, 30, 45, 50); // Hour 24 is invalid
+        var time = new TimePattern(24, 30, 45, 50); // Hour 24 is invalid
 
         // Assert
         Assert.False(time.IsValid);
@@ -99,7 +99,7 @@ public class TimeTests
     public void IsValid_InvalidMinute_ShouldReturnFalse()
     {
         // Arrange
-        var time = new Time(12, 60, 45, 50); // Minute 60 is invalid
+        var time = new TimePattern(12, 60, 45, 50); // Minute 60 is invalid
 
         // Assert
         Assert.False(time.IsValid);
@@ -110,7 +110,7 @@ public class TimeTests
     public void IsValid_InvalidSecond_ShouldReturnFalse()
     {
         // Arrange
-        var time = new Time(12, 30, 60, 50); // Second 60 is invalid
+        var time = new TimePattern(12, 30, 60, 50); // Second 60 is invalid
 
         // Assert
         Assert.False(time.IsValid);
@@ -121,7 +121,7 @@ public class TimeTests
     public void IsValid_InvalidHundredths_ShouldReturnFalse()
     {
         // Arrange
-        var time = new Time(12, 30, 45, 100); // Hundredths 100 is invalid
+        var time = new TimePattern(12, 30, 45, 100); // Hundredths 100 is invalid
 
         // Assert
         Assert.False(time.IsValid);
@@ -132,7 +132,7 @@ public class TimeTests
     public void IsSpecific_AllSpecificFields_ShouldReturnTrue()
     {
         // Arrange
-        var time = new Time(14, 30, 45, 50);
+        var time = new TimePattern(14, 30, 45, 50);
 
         // Assert
         Assert.True(time.IsSpecific);
@@ -146,7 +146,7 @@ public class TimeTests
     public void IsSpecific_WithWildcard_ShouldReturnFalse()
     {
         // Arrange
-        var time = new Time(Time.Wildcard, 30, 45, 50);
+        var time = new TimePattern(TimePattern.Wildcard, 30, 45, 50);
 
         // Assert
         Assert.False(time.IsSpecific);
@@ -158,7 +158,7 @@ public class TimeTests
     public void IsUnspecified_AllWildcards_ShouldReturnTrue()
     {
         // Arrange
-        var time = new Time(Time.Wildcard, Time.Wildcard, Time.Wildcard, Time.Wildcard);
+        var time = new TimePattern(TimePattern.Wildcard, TimePattern.Wildcard, TimePattern.Wildcard, TimePattern.Wildcard);
 
         // Assert
         Assert.True(time.IsUnspecified);
@@ -172,7 +172,7 @@ public class TimeTests
     public void ToTimeSpan_SpecificTime_ShouldConvert()
     {
         // Arrange
-        var time = new Time(14, 30, 45, 50);
+        var time = new TimePattern(14, 30, 45, 50);
 
         // Act
         var timeSpan = time.ToTimeSpan();
@@ -185,7 +185,7 @@ public class TimeTests
     public void ToTimeSpan_WithWildcard_ShouldThrow()
     {
         // Arrange
-        var time = new Time(Time.Wildcard, 30, 45, 50);
+        var time = new TimePattern(TimePattern.Wildcard, 30, 45, 50);
 
         // Act & Assert
         Assert.Throws<InvalidOperationException>(() => time.ToTimeSpan());
@@ -195,7 +195,7 @@ public class TimeTests
     public void ToTimeOnly_SpecificTime_ShouldConvert()
     {
         // Arrange
-        var time = new Time(14, 30, 45, 50);
+        var time = new TimePattern(14, 30, 45, 50);
 
         // Act
         var timeOnly = time.ToTimeOnly();
@@ -210,7 +210,7 @@ public class TimeTests
     public void ToString_SpecificTime_ShouldFormatCorrectly()
     {
         // Arrange
-        var time = new Time(14, 30, 45, 50);
+        var time = new TimePattern(14, 30, 45, 50);
 
         // Act
         var result = time.ToString();
@@ -223,7 +223,7 @@ public class TimeTests
     public void ToString_WithWildcard_ShouldShowWildcard()
     {
         // Arrange
-        var time = new Time(Time.Wildcard, 30, 45, 50);
+        var time = new TimePattern(TimePattern.Wildcard, 30, 45, 50);
 
         // Act
         var result = time.ToString();
@@ -236,8 +236,8 @@ public class TimeTests
     public void Equality_SameValues_ShouldBeEqual()
     {
         // Arrange
-        var time1 = new Time(14, 30, 45, 50);
-        var time2 = new Time(14, 30, 45, 50);
+        var time1 = new TimePattern(14, 30, 45, 50);
+        var time2 = new TimePattern(14, 30, 45, 50);
 
         // Assert
         Assert.Equal(time1, time2);
@@ -249,8 +249,8 @@ public class TimeTests
     public void Equality_DifferentValues_ShouldNotBeEqual()
     {
         // Arrange
-        var time1 = new Time(14, 30, 45, 50);
-        var time2 = new Time(14, 30, 46, 50);
+        var time1 = new TimePattern(14, 30, 45, 50);
+        var time2 = new TimePattern(14, 30, 46, 50);
 
         // Assert
         Assert.NotEqual(time1, time2);
@@ -262,8 +262,8 @@ public class TimeTests
     public void GetHashCode_SameValues_ShouldHaveSameHashCode()
     {
         // Arrange
-        var time1 = new Time(14, 30, 45, 50);
-        var time2 = new Time(14, 30, 45, 50);
+        var time1 = new TimePattern(14, 30, 45, 50);
+        var time2 = new TimePattern(14, 30, 45, 50);
 
         // Act & Assert
         Assert.Equal(time1.GetHashCode(), time2.GetHashCode());
@@ -276,12 +276,12 @@ public class TimeTests
     public void RoundTrip_ToTimeSpanAndBack_ShouldPreserveValue(byte hour, byte minute, byte second, byte hundredths)
     {
         // Arrange
-        var time = new Time(hour, minute, second, hundredths);
+        var time = new TimePattern(hour, minute, second, hundredths);
 
         // Act
         var timeSpan = time.ToTimeSpan();
         Assert.NotNull(timeSpan); // Should not be null for valid times
-        var reconstructed = new Time(timeSpan.Value);
+        var reconstructed = new TimePattern(timeSpan.Value);
 
         // Assert
         Assert.Equal(time, reconstructed);

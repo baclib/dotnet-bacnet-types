@@ -9,7 +9,7 @@ public class DateTests
     public void Constructor_WithValidFields_ShouldCreateDate()
     {
         // Act
-        var date = new Date(125, 12, 5, 4); // 2025-12-05, Thursday
+        var date = new DatePattern(125, 12, 5, 4); // 2025-12-05, Thursday
 
         // Assert
         Assert.Equal(125, date.Year);
@@ -22,10 +22,10 @@ public class DateTests
     public void Constructor_FromDateTime_ShouldConvertCorrectly()
     {
         // Arrange
-        var dateTime = new DateTime(2025, 12, 5); // Friday
+        var dateTime = new System.DateTime(2025, 12, 5); // Friday
 
         // Act
-        var date = new Date(dateTime);
+        var date = new DatePattern(dateTime);
 
         // Assert
         Assert.Equal(125, date.Year); // 2025 - 1900
@@ -41,7 +41,7 @@ public class DateTests
         var dateOnly = new DateOnly(2025, 6, 15);
 
         // Act
-        var date = new Date(dateOnly);
+        var date = new DatePattern(dateOnly);
 
         // Assert
         Assert.Equal(125, date.Year);
@@ -53,7 +53,7 @@ public class DateTests
     public void IsValid_AllValidFields_ShouldReturnTrue()
     {
         // Arrange
-        var date = new Date(125, 12, 5, 4);
+        var date = new DatePattern(125, 12, 5, 4);
 
         // Assert
         Assert.True(date.IsValid);
@@ -63,7 +63,7 @@ public class DateTests
     public void IsValid_InvalidMonth_ShouldReturnFalse()
     {
         // Arrange
-        var date = new Date(125, 15, 5, 4); // Invalid month
+        var date = new DatePattern(125, 15, 5, 4); // Invalid month
 
         // Assert
         Assert.False(date.IsValid);
@@ -74,7 +74,7 @@ public class DateTests
     public void IsValid_InvalidDay_ShouldReturnFalse()
     {
         // Arrange
-        var date = new Date(125, 12, 35, 4); // Invalid day (beyond special values)
+        var date = new DatePattern(125, 12, 35, 4); // Invalid day (beyond special values)
 
         // Assert
         Assert.False(date.IsValid);
@@ -85,7 +85,7 @@ public class DateTests
     public void IsSpecific_AllSpecificFields_ShouldReturnTrue()
     {
         // Arrange
-        var date = new Date(125, 12, 5, 4);
+        var date = new DatePattern(125, 12, 5, 4);
 
         // Assert
         Assert.True(date.IsSpecific);
@@ -99,7 +99,7 @@ public class DateTests
     public void IsSpecific_WithWildcard_ShouldReturnFalse()
     {
         // Arrange
-        var date = new Date(Date.Wildcard, 12, 5, 4);
+        var date = new DatePattern(DatePattern.Wildcard, 12, 5, 4);
 
         // Assert
         Assert.False(date.IsSpecific);
@@ -111,7 +111,7 @@ public class DateTests
     public void IsUnspecified_AllWildcards_ShouldReturnTrue()
     {
         // Arrange
-        var date = new Date(Date.Wildcard, Date.Wildcard, Date.Wildcard, Date.Wildcard);
+        var date = new DatePattern(DatePattern.Wildcard, DatePattern.Wildcard, DatePattern.Wildcard, DatePattern.Wildcard);
 
         // Assert
         Assert.True(date.IsUnspecified);
@@ -121,7 +121,7 @@ public class DateTests
     public void OddMonth_ShouldBeRecognized()
     {
         // Arrange
-        var date = new Date(125, Date.OddMonth, 15, 1);
+        var date = new DatePattern(125, DatePattern.OddMonth, 15, 1);
 
         // Assert
         Assert.True(date.IsMonthOdd);
@@ -133,7 +133,7 @@ public class DateTests
     public void EvenMonth_ShouldBeRecognized()
     {
         // Arrange
-        var date = new Date(125, Date.EvenMonth, 15, 1);
+        var date = new DatePattern(125, DatePattern.EvenMonth, 15, 1);
 
         // Assert
         Assert.True(date.IsMonthEven);
@@ -145,7 +145,7 @@ public class DateTests
     public void LastDay_ShouldBeRecognized()
     {
         // Arrange
-        var date = new Date(125, 12, Date.LastDay, 1);
+        var date = new DatePattern(125, 12, DatePattern.LastDay, 1);
 
         // Assert
         Assert.True(date.IsDayLast);
@@ -157,7 +157,7 @@ public class DateTests
     public void OddDay_ShouldBeRecognized()
     {
         // Arrange
-        var date = new Date(125, 12, Date.OddDay, 1);
+        var date = new DatePattern(125, 12, DatePattern.OddDay, 1);
 
         // Assert
         Assert.True(date.IsDayOdd);
@@ -169,7 +169,7 @@ public class DateTests
     public void EvenDay_ShouldBeRecognized()
     {
         // Arrange
-        var date = new Date(125, 12, Date.EvenDay, 1);
+        var date = new DatePattern(125, 12, DatePattern.EvenDay, 1);
 
         // Assert
         Assert.True(date.IsDayEven);
@@ -181,20 +181,20 @@ public class DateTests
     public void ToDateTime_SpecificDate_ShouldConvert()
     {
         // Arrange
-        var date = new Date(125, 12, 5, 5); // 2025-12-05
+        var date = new DatePattern(125, 12, 5, 5); // 2025-12-05
 
         // Act
         var dateTime = date.ToDateTime();
 
         // Assert
-        Assert.Equal(new DateTime(2025, 12, 5), dateTime);
+        Assert.Equal(new System.DateTime(2025, 12, 5), dateTime);
     }
 
     [Fact]
     public void ToDateTime_WithWildcard_ShouldThrow()
     {
         // Arrange
-        var date = new Date(Date.Wildcard, 12, 5, 1);
+        var date = new DatePattern(DatePattern.Wildcard, 12, 5, 1);
 
         // Act & Assert
         Assert.Throws<InvalidOperationException>(() => date.ToDateTime());
@@ -204,7 +204,7 @@ public class DateTests
     public void ToDateOnly_SpecificDate_ShouldConvert()
     {
         // Arrange
-        var date = new Date(125, 12, 5, 5);
+        var date = new DatePattern(125, 12, 5, 5);
 
         // Act
         var dateOnly = date.ToDateOnly();
@@ -219,7 +219,7 @@ public class DateTests
     public void ToString_SpecificDate_ShouldFormatCorrectly()
     {
         // Arrange
-        var date = new Date(125, 12, 5, 5);
+        var date = new DatePattern(125, 12, 5, 5);
 
         // Act
         var result = date.ToString();
@@ -232,7 +232,7 @@ public class DateTests
     public void ToString_WithWildcard_ShouldShowWildcard()
     {
         // Arrange
-        var date = new Date(Date.Wildcard, 12, 5, 1);
+        var date = new DatePattern(DatePattern.Wildcard, 12, 5, 1);
 
         // Act
         var result = date.ToString();
@@ -245,8 +245,8 @@ public class DateTests
     public void Equality_SameValues_ShouldBeEqual()
     {
         // Arrange
-        var date1 = new Date(125, 12, 5, 4);
-        var date2 = new Date(125, 12, 5, 4);
+        var date1 = new DatePattern(125, 12, 5, 4);
+        var date2 = new DatePattern(125, 12, 5, 4);
 
         // Assert
         Assert.Equal(date1, date2);
@@ -258,8 +258,8 @@ public class DateTests
     public void Equality_DifferentValues_ShouldNotBeEqual()
     {
         // Arrange
-        var date1 = new Date(125, 12, 5, 4);
-        var date2 = new Date(125, 12, 6, 4);
+        var date1 = new DatePattern(125, 12, 5, 4);
+        var date2 = new DatePattern(125, 12, 6, 4);
 
         // Assert
         Assert.NotEqual(date1, date2);
@@ -271,8 +271,8 @@ public class DateTests
     public void GetHashCode_SameValues_ShouldHaveSameHashCode()
     {
         // Arrange
-        var date1 = new Date(125, 12, 5, 4);
-        var date2 = new Date(125, 12, 5, 4);
+        var date1 = new DatePattern(125, 12, 5, 4);
+        var date2 = new DatePattern(125, 12, 5, 4);
 
         // Act & Assert
         Assert.Equal(date1.GetHashCode(), date2.GetHashCode());
