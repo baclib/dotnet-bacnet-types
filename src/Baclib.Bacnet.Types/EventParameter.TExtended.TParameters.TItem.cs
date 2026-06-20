@@ -115,7 +115,7 @@ public partial record class EventParameter
                     {
                         if (Choice != Option.Null)
                         {
-                            throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Null)} hat das Template erstellt");
+                            throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Null)}.");
                         }
                         return (Null)_choiceValue;
                     }
@@ -124,7 +124,7 @@ public partial record class EventParameter
                 /// <summary>
                 /// Create function for No parameter value.
                 /// </summary>
-                public static TItem NewNull(Null value)
+                public static TItem FromNull(Null value)
                 {
                     return new TItem(Option.Null, value);
                 }
@@ -138,7 +138,7 @@ public partial record class EventParameter
                     {
                         if (Choice != Option.Real)
                         {
-                            throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Real)} hat das Template erstellt");
+                            throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Real)}.");
                         }
                         return (float)_choiceValue;
                     }
@@ -147,7 +147,7 @@ public partial record class EventParameter
                 /// <summary>
                 /// Create function for A real (floating-point) parameter value.
                 /// </summary>
-                public static TItem NewReal(float value)
+                public static TItem FromReal(float value)
                 {
                     return new TItem(Option.Real, value);
                 }
@@ -161,7 +161,7 @@ public partial record class EventParameter
                     {
                         if (Choice != Option.Unsigned)
                         {
-                            throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Unsigned)} hat das Template erstellt");
+                            throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Unsigned)}.");
                         }
                         return (Unsigned)_choiceValue;
                     }
@@ -170,7 +170,7 @@ public partial record class EventParameter
                 /// <summary>
                 /// Create function for An unsigned integer parameter value.
                 /// </summary>
-                public static TItem NewUnsigned(Unsigned value)
+                public static TItem FromUnsigned(Unsigned value)
                 {
                     return new TItem(Option.Unsigned, value);
                 }
@@ -184,7 +184,7 @@ public partial record class EventParameter
                     {
                         if (Choice != Option.Boolean)
                         {
-                            throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Boolean)} hat das Template erstellt");
+                            throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Boolean)}.");
                         }
                         return (Boolean)_choiceValue;
                     }
@@ -193,7 +193,7 @@ public partial record class EventParameter
                 /// <summary>
                 /// Create function for A boolean parameter value.
                 /// </summary>
-                public static TItem NewBoolean(Boolean value)
+                public static TItem FromBoolean(Boolean value)
                 {
                     return new TItem(Option.Boolean, value);
                 }
@@ -207,7 +207,7 @@ public partial record class EventParameter
                     {
                         if (Choice != Option.Integer)
                         {
-                            throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Integer)} hat das Template erstellt");
+                            throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Integer)}.");
                         }
                         return (int)_choiceValue;
                     }
@@ -216,7 +216,7 @@ public partial record class EventParameter
                 /// <summary>
                 /// Create function for A signed integer parameter value.
                 /// </summary>
-                public static TItem NewInteger(int value)
+                public static TItem FromInteger(int value)
                 {
                     return new TItem(Option.Integer, value);
                 }
@@ -230,7 +230,7 @@ public partial record class EventParameter
                     {
                         if (Choice != Option.Double)
                         {
-                            throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Double)} hat das Template erstellt");
+                            throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Double)}.");
                         }
                         return (double)_choiceValue;
                     }
@@ -239,7 +239,7 @@ public partial record class EventParameter
                 /// <summary>
                 /// Create function for A double-precision floating-point parameter value.
                 /// </summary>
-                public static TItem NewDouble(double value)
+                public static TItem FromDouble(double value)
                 {
                     return new TItem(Option.Double, value);
                 }
@@ -253,7 +253,7 @@ public partial record class EventParameter
                     {
                         if (Choice != Option.Octetstring)
                         {
-                            throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Octetstring)} hat das Template erstellt");
+                            throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Octetstring)}.");
                         }
                         return (OctetString)_choiceValue;
                     }
@@ -262,7 +262,7 @@ public partial record class EventParameter
                 /// <summary>
                 /// Create function for An octet string parameter value.
                 /// </summary>
-                public static TItem NewOctetstring(OctetString value)
+                public static TItem FromOctetstring(OctetString value)
                 {
                     return new TItem(Option.Octetstring, value);
                 }
@@ -276,7 +276,7 @@ public partial record class EventParameter
                     {
                         if (Choice != Option.Characterstring)
                         {
-                            throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Characterstring)} hat das Template erstellt");
+                            throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Characterstring)}.");
                         }
                         return (CharacterString)_choiceValue;
                     }
@@ -285,7 +285,7 @@ public partial record class EventParameter
                 /// <summary>
                 /// Create function for A character string parameter value.
                 /// </summary>
-                public static TItem NewCharacterstring(CharacterString value)
+                public static TItem FromCharacterstring(CharacterString value)
                 {
                     return new TItem(Option.Characterstring, value);
                 }
@@ -299,7 +299,7 @@ public partial record class EventParameter
                     {
                         if (Choice != Option.Bitstring)
                         {
-                            throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Bitstring)} hat das Template erstellt");
+                            throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Bitstring)}.");
                         }
                         return (BitString)_choiceValue;
                     }
@@ -308,7 +308,7 @@ public partial record class EventParameter
                 /// <summary>
                 /// Create function for A bit string parameter value.
                 /// </summary>
-                public static TItem NewBitstring(BitString value)
+                public static TItem FromBitstring(BitString value)
                 {
                     return new TItem(Option.Bitstring, value);
                 }
@@ -322,7 +322,7 @@ public partial record class EventParameter
                     {
                         if (Choice != Option.Enumerated)
                         {
-                            throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Enumerated)} hat das Template erstellt");
+                            throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Enumerated)}.");
                         }
                         return (Enumerated)_choiceValue;
                     }
@@ -331,7 +331,7 @@ public partial record class EventParameter
                 /// <summary>
                 /// Create function for An enumerated parameter value.
                 /// </summary>
-                public static TItem NewEnumerated(Enumerated value)
+                public static TItem FromEnumerated(Enumerated value)
                 {
                     return new TItem(Option.Enumerated, value);
                 }
@@ -345,7 +345,7 @@ public partial record class EventParameter
                     {
                         if (Choice != Option.Date)
                         {
-                            throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Date)} hat das Template erstellt");
+                            throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Date)}.");
                         }
                         return (DatePattern)_choiceValue;
                     }
@@ -354,7 +354,7 @@ public partial record class EventParameter
                 /// <summary>
                 /// Create function for A date pattern parameter value.
                 /// </summary>
-                public static TItem NewDate(DatePattern value)
+                public static TItem FromDate(DatePattern value)
                 {
                     return new TItem(Option.Date, value);
                 }
@@ -368,7 +368,7 @@ public partial record class EventParameter
                     {
                         if (Choice != Option.Time)
                         {
-                            throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Time)} hat das Template erstellt");
+                            throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Time)}.");
                         }
                         return (TimePattern)_choiceValue;
                     }
@@ -377,7 +377,7 @@ public partial record class EventParameter
                 /// <summary>
                 /// Create function for A time pattern parameter value.
                 /// </summary>
-                public static TItem NewTime(TimePattern value)
+                public static TItem FromTime(TimePattern value)
                 {
                     return new TItem(Option.Time, value);
                 }
@@ -391,7 +391,7 @@ public partial record class EventParameter
                     {
                         if (Choice != Option.Objectidentifier)
                         {
-                            throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Objectidentifier)} hat das Template erstellt");
+                            throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Objectidentifier)}.");
                         }
                         return (ObjectIdentifier)_choiceValue;
                     }
@@ -400,7 +400,7 @@ public partial record class EventParameter
                 /// <summary>
                 /// Create function for An object identifier parameter value.
                 /// </summary>
-                public static TItem NewObjectidentifier(ObjectIdentifier value)
+                public static TItem FromObjectidentifier(ObjectIdentifier value)
                 {
                     return new TItem(Option.Objectidentifier, value);
                 }
@@ -414,7 +414,7 @@ public partial record class EventParameter
                     {
                         if (Choice != Option.Reference)
                         {
-                            throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Reference)} hat das Template erstellt");
+                            throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Reference)}.");
                         }
                         return (DeviceObjectPropertyReference)_choiceValue;
                     }
@@ -423,7 +423,7 @@ public partial record class EventParameter
                 /// <summary>
                 /// Create function for A device object property reference parameter value.
                 /// </summary>
-                public static TItem NewReference(DeviceObjectPropertyReference value)
+                public static TItem FromReference(DeviceObjectPropertyReference value)
                 {
                     return new TItem(Option.Reference, value);
                 }

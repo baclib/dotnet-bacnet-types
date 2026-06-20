@@ -54,7 +54,7 @@ public partial record class ShedLevel
         {
             if (Choice != Option.Percent)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Percent)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Percent)}.");
             }
             return (Unsigned)_choiceValue;
         }
@@ -63,7 +63,7 @@ public partial record class ShedLevel
     /// <summary>
     /// Create function for The percent of load to be shed.
     /// </summary>
-    public static ShedLevel NewPercent(Unsigned value)
+    public static ShedLevel FromPercent(Unsigned value)
     {
         return new ShedLevel(Option.Percent, value);
     }
@@ -77,7 +77,7 @@ public partial record class ShedLevel
         {
             if (Choice != Option.Level)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Level)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Level)}.");
             }
             return (Unsigned)_choiceValue;
         }
@@ -86,7 +86,7 @@ public partial record class ShedLevel
     /// <summary>
     /// Create function for The discrete level of load to be shed.
     /// </summary>
-    public static ShedLevel NewLevel(Unsigned value)
+    public static ShedLevel FromLevel(Unsigned value)
     {
         return new ShedLevel(Option.Level, value);
     }
@@ -100,7 +100,7 @@ public partial record class ShedLevel
         {
             if (Choice != Option.Amount)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Amount)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Amount)}.");
             }
             return (float)_choiceValue;
         }
@@ -109,7 +109,7 @@ public partial record class ShedLevel
     /// <summary>
     /// Create function for The absolute amount of load to be shed.
     /// </summary>
-    public static ShedLevel NewAmount(float value)
+    public static ShedLevel FromAmount(float value)
     {
         return new ShedLevel(Option.Amount, value);
     }

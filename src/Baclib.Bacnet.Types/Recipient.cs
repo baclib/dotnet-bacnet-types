@@ -49,7 +49,7 @@ public partial record class Recipient
         {
             if (Choice != Option.Device)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Device)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Device)}.");
             }
             return (ObjectIdentifier)_choiceValue;
         }
@@ -58,7 +58,7 @@ public partial record class Recipient
     /// <summary>
     /// Create function for The recipient is a BACnet device identified by object-identifier.
     /// </summary>
-    public static Recipient NewDevice(ObjectIdentifier value)
+    public static Recipient FromDevice(ObjectIdentifier value)
     {
         return new Recipient(Option.Device, value);
     }
@@ -72,7 +72,7 @@ public partial record class Recipient
         {
             if (Choice != Option.Address)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Address)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Address)}.");
             }
             return (Address)_choiceValue;
         }
@@ -81,7 +81,7 @@ public partial record class Recipient
     /// <summary>
     /// Create function for The recipient is specified by a BACnet address.
     /// </summary>
-    public static Recipient NewAddress(Address value)
+    public static Recipient FromAddress(Address value)
     {
         return new Recipient(Option.Address, value);
     }

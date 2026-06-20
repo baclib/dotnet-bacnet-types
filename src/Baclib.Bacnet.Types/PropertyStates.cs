@@ -344,7 +344,7 @@ public partial record class PropertyStates
         {
             if (Choice != Option.BooleanValue)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.BooleanValue)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.BooleanValue)}.");
             }
             return (Boolean)_choiceValue;
         }
@@ -353,7 +353,7 @@ public partial record class PropertyStates
     /// <summary>
     /// Create function for A boolean property state (true/false).
     /// </summary>
-    public static PropertyStates NewBooleanValue(Boolean value)
+    public static PropertyStates FromBooleanValue(Boolean value)
     {
         return new PropertyStates(Option.BooleanValue, value);
     }
@@ -367,7 +367,7 @@ public partial record class PropertyStates
         {
             if (Choice != Option.BinaryValue)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.BinaryValue)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.BinaryValue)}.");
             }
             return (BinaryPv)_choiceValue;
         }
@@ -376,7 +376,7 @@ public partial record class PropertyStates
     /// <summary>
     /// Create function for A binary present value property state.
     /// </summary>
-    public static PropertyStates NewBinaryValue(BinaryPv value)
+    public static PropertyStates FromBinaryValue(BinaryPv value)
     {
         return new PropertyStates(Option.BinaryValue, value);
     }
@@ -390,7 +390,7 @@ public partial record class PropertyStates
         {
             if (Choice != Option.EventType)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.EventType)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.EventType)}.");
             }
             return (EventType)_choiceValue;
         }
@@ -399,7 +399,7 @@ public partial record class PropertyStates
     /// <summary>
     /// Create function for The type of event for the property.
     /// </summary>
-    public static PropertyStates NewEventType(EventType value)
+    public static PropertyStates FromEventType(EventType value)
     {
         return new PropertyStates(Option.EventType, value);
     }
@@ -413,7 +413,7 @@ public partial record class PropertyStates
         {
             if (Choice != Option.Polarity)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Polarity)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Polarity)}.");
             }
             return (Polarity)_choiceValue;
         }
@@ -422,7 +422,7 @@ public partial record class PropertyStates
     /// <summary>
     /// Create function for The polarity state of the property.
     /// </summary>
-    public static PropertyStates NewPolarity(Polarity value)
+    public static PropertyStates FromPolarity(Polarity value)
     {
         return new PropertyStates(Option.Polarity, value);
     }
@@ -436,7 +436,7 @@ public partial record class PropertyStates
         {
             if (Choice != Option.ProgramChange)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ProgramChange)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ProgramChange)}.");
             }
             return (ProgramRequest)_choiceValue;
         }
@@ -445,7 +445,7 @@ public partial record class PropertyStates
     /// <summary>
     /// Create function for A program change request state.
     /// </summary>
-    public static PropertyStates NewProgramChange(ProgramRequest value)
+    public static PropertyStates FromProgramChange(ProgramRequest value)
     {
         return new PropertyStates(Option.ProgramChange, value);
     }
@@ -459,7 +459,7 @@ public partial record class PropertyStates
         {
             if (Choice != Option.ProgramState)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ProgramState)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ProgramState)}.");
             }
             return (ProgramState)_choiceValue;
         }
@@ -468,7 +468,7 @@ public partial record class PropertyStates
     /// <summary>
     /// Create function for The state of a program.
     /// </summary>
-    public static PropertyStates NewProgramState(ProgramState value)
+    public static PropertyStates FromProgramState(ProgramState value)
     {
         return new PropertyStates(Option.ProgramState, value);
     }
@@ -482,7 +482,7 @@ public partial record class PropertyStates
         {
             if (Choice != Option.ReasonForHalt)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ReasonForHalt)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ReasonForHalt)}.");
             }
             return (ProgramError)_choiceValue;
         }
@@ -491,7 +491,7 @@ public partial record class PropertyStates
     /// <summary>
     /// Create function for The reason for a program halt.
     /// </summary>
-    public static PropertyStates NewReasonForHalt(ProgramError value)
+    public static PropertyStates FromReasonForHalt(ProgramError value)
     {
         return new PropertyStates(Option.ReasonForHalt, value);
     }
@@ -505,7 +505,7 @@ public partial record class PropertyStates
         {
             if (Choice != Option.Reliability)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Reliability)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Reliability)}.");
             }
             return (Reliability)_choiceValue;
         }
@@ -514,7 +514,7 @@ public partial record class PropertyStates
     /// <summary>
     /// Create function for The reliability state of the property.
     /// </summary>
-    public static PropertyStates NewReliability(Reliability value)
+    public static PropertyStates FromReliability(Reliability value)
     {
         return new PropertyStates(Option.Reliability, value);
     }
@@ -528,7 +528,7 @@ public partial record class PropertyStates
         {
             if (Choice != Option.State)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.State)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.State)}.");
             }
             return (EventState)_choiceValue;
         }
@@ -537,7 +537,7 @@ public partial record class PropertyStates
     /// <summary>
     /// Create function for The event state of the property.
     /// </summary>
-    public static PropertyStates NewState(EventState value)
+    public static PropertyStates FromState(EventState value)
     {
         return new PropertyStates(Option.State, value);
     }
@@ -551,7 +551,7 @@ public partial record class PropertyStates
         {
             if (Choice != Option.SystemStatus)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.SystemStatus)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.SystemStatus)}.");
             }
             return (DeviceStatus)_choiceValue;
         }
@@ -560,7 +560,7 @@ public partial record class PropertyStates
     /// <summary>
     /// Create function for The system status of the device.
     /// </summary>
-    public static PropertyStates NewSystemStatus(DeviceStatus value)
+    public static PropertyStates FromSystemStatus(DeviceStatus value)
     {
         return new PropertyStates(Option.SystemStatus, value);
     }
@@ -574,7 +574,7 @@ public partial record class PropertyStates
         {
             if (Choice != Option.Units)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Units)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Units)}.");
             }
             return (EngineeringUnits)_choiceValue;
         }
@@ -583,7 +583,7 @@ public partial record class PropertyStates
     /// <summary>
     /// Create function for The engineering units of the property.
     /// </summary>
-    public static PropertyStates NewUnits(EngineeringUnits value)
+    public static PropertyStates FromUnits(EngineeringUnits value)
     {
         return new PropertyStates(Option.Units, value);
     }
@@ -597,7 +597,7 @@ public partial record class PropertyStates
         {
             if (Choice != Option.UnsignedValue)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.UnsignedValue)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.UnsignedValue)}.");
             }
             return (Unsigned)_choiceValue;
         }
@@ -606,7 +606,7 @@ public partial record class PropertyStates
     /// <summary>
     /// Create function for An unsigned integer value.
     /// </summary>
-    public static PropertyStates NewUnsignedValue(Unsigned value)
+    public static PropertyStates FromUnsignedValue(Unsigned value)
     {
         return new PropertyStates(Option.UnsignedValue, value);
     }
@@ -620,7 +620,7 @@ public partial record class PropertyStates
         {
             if (Choice != Option.LifeSafetyMode)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.LifeSafetyMode)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.LifeSafetyMode)}.");
             }
             return (LifeSafetyMode)_choiceValue;
         }
@@ -629,7 +629,7 @@ public partial record class PropertyStates
     /// <summary>
     /// Create function for The life safety mode state.
     /// </summary>
-    public static PropertyStates NewLifeSafetyMode(LifeSafetyMode value)
+    public static PropertyStates FromLifeSafetyMode(LifeSafetyMode value)
     {
         return new PropertyStates(Option.LifeSafetyMode, value);
     }
@@ -643,7 +643,7 @@ public partial record class PropertyStates
         {
             if (Choice != Option.LifeSafetyState)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.LifeSafetyState)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.LifeSafetyState)}.");
             }
             return (LifeSafetyState)_choiceValue;
         }
@@ -652,7 +652,7 @@ public partial record class PropertyStates
     /// <summary>
     /// Create function for The life safety state.
     /// </summary>
-    public static PropertyStates NewLifeSafetyState(LifeSafetyState value)
+    public static PropertyStates FromLifeSafetyState(LifeSafetyState value)
     {
         return new PropertyStates(Option.LifeSafetyState, value);
     }
@@ -666,7 +666,7 @@ public partial record class PropertyStates
         {
             if (Choice != Option.RestartReason)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.RestartReason)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.RestartReason)}.");
             }
             return (RestartReason)_choiceValue;
         }
@@ -675,7 +675,7 @@ public partial record class PropertyStates
     /// <summary>
     /// Create function for The reason for device restart.
     /// </summary>
-    public static PropertyStates NewRestartReason(RestartReason value)
+    public static PropertyStates FromRestartReason(RestartReason value)
     {
         return new PropertyStates(Option.RestartReason, value);
     }
@@ -689,7 +689,7 @@ public partial record class PropertyStates
         {
             if (Choice != Option.DoorAlarmState)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.DoorAlarmState)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.DoorAlarmState)}.");
             }
             return (DoorAlarmState)_choiceValue;
         }
@@ -698,7 +698,7 @@ public partial record class PropertyStates
     /// <summary>
     /// Create function for The alarm state of a door.
     /// </summary>
-    public static PropertyStates NewDoorAlarmState(DoorAlarmState value)
+    public static PropertyStates FromDoorAlarmState(DoorAlarmState value)
     {
         return new PropertyStates(Option.DoorAlarmState, value);
     }
@@ -712,7 +712,7 @@ public partial record class PropertyStates
         {
             if (Choice != Option.Action)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Action)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Action)}.");
             }
             return (Action)_choiceValue;
         }
@@ -721,7 +721,7 @@ public partial record class PropertyStates
     /// <summary>
     /// Create function for An action state.
     /// </summary>
-    public static PropertyStates NewAction(Action value)
+    public static PropertyStates FromAction(Action value)
     {
         return new PropertyStates(Option.Action, value);
     }
@@ -735,7 +735,7 @@ public partial record class PropertyStates
         {
             if (Choice != Option.DoorSecuredStatus)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.DoorSecuredStatus)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.DoorSecuredStatus)}.");
             }
             return (DoorSecuredStatus)_choiceValue;
         }
@@ -744,7 +744,7 @@ public partial record class PropertyStates
     /// <summary>
     /// Create function for The secured status of a door.
     /// </summary>
-    public static PropertyStates NewDoorSecuredStatus(DoorSecuredStatus value)
+    public static PropertyStates FromDoorSecuredStatus(DoorSecuredStatus value)
     {
         return new PropertyStates(Option.DoorSecuredStatus, value);
     }
@@ -758,7 +758,7 @@ public partial record class PropertyStates
         {
             if (Choice != Option.DoorStatus)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.DoorStatus)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.DoorStatus)}.");
             }
             return (DoorStatus)_choiceValue;
         }
@@ -767,7 +767,7 @@ public partial record class PropertyStates
     /// <summary>
     /// Create function for The status of a door.
     /// </summary>
-    public static PropertyStates NewDoorStatus(DoorStatus value)
+    public static PropertyStates FromDoorStatus(DoorStatus value)
     {
         return new PropertyStates(Option.DoorStatus, value);
     }
@@ -781,7 +781,7 @@ public partial record class PropertyStates
         {
             if (Choice != Option.DoorValue)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.DoorValue)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.DoorValue)}.");
             }
             return (DoorValue)_choiceValue;
         }
@@ -790,7 +790,7 @@ public partial record class PropertyStates
     /// <summary>
     /// Create function for The value state of a door.
     /// </summary>
-    public static PropertyStates NewDoorValue(DoorValue value)
+    public static PropertyStates FromDoorValue(DoorValue value)
     {
         return new PropertyStates(Option.DoorValue, value);
     }
@@ -804,7 +804,7 @@ public partial record class PropertyStates
         {
             if (Choice != Option.FileAccessMethod)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.FileAccessMethod)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.FileAccessMethod)}.");
             }
             return (FileAccessMethod)_choiceValue;
         }
@@ -813,7 +813,7 @@ public partial record class PropertyStates
     /// <summary>
     /// Create function for The file access method state.
     /// </summary>
-    public static PropertyStates NewFileAccessMethod(FileAccessMethod value)
+    public static PropertyStates FromFileAccessMethod(FileAccessMethod value)
     {
         return new PropertyStates(Option.FileAccessMethod, value);
     }
@@ -827,7 +827,7 @@ public partial record class PropertyStates
         {
             if (Choice != Option.LockStatus)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.LockStatus)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.LockStatus)}.");
             }
             return (LockStatus)_choiceValue;
         }
@@ -836,7 +836,7 @@ public partial record class PropertyStates
     /// <summary>
     /// Create function for The lock status state.
     /// </summary>
-    public static PropertyStates NewLockStatus(LockStatus value)
+    public static PropertyStates FromLockStatus(LockStatus value)
     {
         return new PropertyStates(Option.LockStatus, value);
     }
@@ -850,7 +850,7 @@ public partial record class PropertyStates
         {
             if (Choice != Option.LifeSafetyOperation)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.LifeSafetyOperation)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.LifeSafetyOperation)}.");
             }
             return (LifeSafetyOperation)_choiceValue;
         }
@@ -859,7 +859,7 @@ public partial record class PropertyStates
     /// <summary>
     /// Create function for The life safety operation state.
     /// </summary>
-    public static PropertyStates NewLifeSafetyOperation(LifeSafetyOperation value)
+    public static PropertyStates FromLifeSafetyOperation(LifeSafetyOperation value)
     {
         return new PropertyStates(Option.LifeSafetyOperation, value);
     }
@@ -873,7 +873,7 @@ public partial record class PropertyStates
         {
             if (Choice != Option.Maintenance)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Maintenance)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Maintenance)}.");
             }
             return (Maintenance)_choiceValue;
         }
@@ -882,7 +882,7 @@ public partial record class PropertyStates
     /// <summary>
     /// Create function for The maintenance state.
     /// </summary>
-    public static PropertyStates NewMaintenance(Maintenance value)
+    public static PropertyStates FromMaintenance(Maintenance value)
     {
         return new PropertyStates(Option.Maintenance, value);
     }
@@ -896,7 +896,7 @@ public partial record class PropertyStates
         {
             if (Choice != Option.NodeType)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.NodeType)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.NodeType)}.");
             }
             return (NodeType)_choiceValue;
         }
@@ -905,7 +905,7 @@ public partial record class PropertyStates
     /// <summary>
     /// Create function for The node type state.
     /// </summary>
-    public static PropertyStates NewNodeType(NodeType value)
+    public static PropertyStates FromNodeType(NodeType value)
     {
         return new PropertyStates(Option.NodeType, value);
     }
@@ -919,7 +919,7 @@ public partial record class PropertyStates
         {
             if (Choice != Option.NotifyType)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.NotifyType)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.NotifyType)}.");
             }
             return (NotifyType)_choiceValue;
         }
@@ -928,7 +928,7 @@ public partial record class PropertyStates
     /// <summary>
     /// Create function for The notification type state.
     /// </summary>
-    public static PropertyStates NewNotifyType(NotifyType value)
+    public static PropertyStates FromNotifyType(NotifyType value)
     {
         return new PropertyStates(Option.NotifyType, value);
     }
@@ -942,7 +942,7 @@ public partial record class PropertyStates
         {
             if (Choice != Option.ShedState)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ShedState)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ShedState)}.");
             }
             return (ShedState)_choiceValue;
         }
@@ -951,7 +951,7 @@ public partial record class PropertyStates
     /// <summary>
     /// Create function for The shed state.
     /// </summary>
-    public static PropertyStates NewShedState(ShedState value)
+    public static PropertyStates FromShedState(ShedState value)
     {
         return new PropertyStates(Option.ShedState, value);
     }
@@ -965,7 +965,7 @@ public partial record class PropertyStates
         {
             if (Choice != Option.SilencedState)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.SilencedState)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.SilencedState)}.");
             }
             return (SilencedState)_choiceValue;
         }
@@ -974,7 +974,7 @@ public partial record class PropertyStates
     /// <summary>
     /// Create function for The silenced state.
     /// </summary>
-    public static PropertyStates NewSilencedState(SilencedState value)
+    public static PropertyStates FromSilencedState(SilencedState value)
     {
         return new PropertyStates(Option.SilencedState, value);
     }
@@ -988,7 +988,7 @@ public partial record class PropertyStates
         {
             if (Choice != Option.AccessEvent)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.AccessEvent)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.AccessEvent)}.");
             }
             return (AccessEvent)_choiceValue;
         }
@@ -997,7 +997,7 @@ public partial record class PropertyStates
     /// <summary>
     /// Create function for The access event state.
     /// </summary>
-    public static PropertyStates NewAccessEvent(AccessEvent value)
+    public static PropertyStates FromAccessEvent(AccessEvent value)
     {
         return new PropertyStates(Option.AccessEvent, value);
     }
@@ -1011,7 +1011,7 @@ public partial record class PropertyStates
         {
             if (Choice != Option.ZoneOccupancyState)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ZoneOccupancyState)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ZoneOccupancyState)}.");
             }
             return (AccessZoneOccupancyState)_choiceValue;
         }
@@ -1020,7 +1020,7 @@ public partial record class PropertyStates
     /// <summary>
     /// Create function for The occupancy state of an access zone.
     /// </summary>
-    public static PropertyStates NewZoneOccupancyState(AccessZoneOccupancyState value)
+    public static PropertyStates FromZoneOccupancyState(AccessZoneOccupancyState value)
     {
         return new PropertyStates(Option.ZoneOccupancyState, value);
     }
@@ -1034,7 +1034,7 @@ public partial record class PropertyStates
         {
             if (Choice != Option.AccessCredentialDisableReason)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.AccessCredentialDisableReason)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.AccessCredentialDisableReason)}.");
             }
             return (AccessCredentialDisableReason)_choiceValue;
         }
@@ -1043,7 +1043,7 @@ public partial record class PropertyStates
     /// <summary>
     /// Create function for The reason for disabling an access credential.
     /// </summary>
-    public static PropertyStates NewAccessCredentialDisableReason(AccessCredentialDisableReason value)
+    public static PropertyStates FromAccessCredentialDisableReason(AccessCredentialDisableReason value)
     {
         return new PropertyStates(Option.AccessCredentialDisableReason, value);
     }
@@ -1057,7 +1057,7 @@ public partial record class PropertyStates
         {
             if (Choice != Option.AccessCredentialDisable)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.AccessCredentialDisable)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.AccessCredentialDisable)}.");
             }
             return (AccessCredentialDisable)_choiceValue;
         }
@@ -1066,7 +1066,7 @@ public partial record class PropertyStates
     /// <summary>
     /// Create function for The disable state of an access credential.
     /// </summary>
-    public static PropertyStates NewAccessCredentialDisable(AccessCredentialDisable value)
+    public static PropertyStates FromAccessCredentialDisable(AccessCredentialDisable value)
     {
         return new PropertyStates(Option.AccessCredentialDisable, value);
     }
@@ -1080,7 +1080,7 @@ public partial record class PropertyStates
         {
             if (Choice != Option.AuthenticationStatus)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.AuthenticationStatus)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.AuthenticationStatus)}.");
             }
             return (AuthenticationStatus)_choiceValue;
         }
@@ -1089,7 +1089,7 @@ public partial record class PropertyStates
     /// <summary>
     /// Create function for The authentication status state.
     /// </summary>
-    public static PropertyStates NewAuthenticationStatus(AuthenticationStatus value)
+    public static PropertyStates FromAuthenticationStatus(AuthenticationStatus value)
     {
         return new PropertyStates(Option.AuthenticationStatus, value);
     }
@@ -1103,7 +1103,7 @@ public partial record class PropertyStates
         {
             if (Choice != Option.BackupState)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.BackupState)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.BackupState)}.");
             }
             return (BackupState)_choiceValue;
         }
@@ -1112,7 +1112,7 @@ public partial record class PropertyStates
     /// <summary>
     /// Create function for The backup state.
     /// </summary>
-    public static PropertyStates NewBackupState(BackupState value)
+    public static PropertyStates FromBackupState(BackupState value)
     {
         return new PropertyStates(Option.BackupState, value);
     }
@@ -1126,7 +1126,7 @@ public partial record class PropertyStates
         {
             if (Choice != Option.WriteStatus)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.WriteStatus)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.WriteStatus)}.");
             }
             return (WriteStatus)_choiceValue;
         }
@@ -1135,7 +1135,7 @@ public partial record class PropertyStates
     /// <summary>
     /// Create function for The write status state.
     /// </summary>
-    public static PropertyStates NewWriteStatus(WriteStatus value)
+    public static PropertyStates FromWriteStatus(WriteStatus value)
     {
         return new PropertyStates(Option.WriteStatus, value);
     }
@@ -1149,7 +1149,7 @@ public partial record class PropertyStates
         {
             if (Choice != Option.LightingInProgress)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.LightingInProgress)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.LightingInProgress)}.");
             }
             return (LightingInProgress)_choiceValue;
         }
@@ -1158,7 +1158,7 @@ public partial record class PropertyStates
     /// <summary>
     /// Create function for The lighting in progress state.
     /// </summary>
-    public static PropertyStates NewLightingInProgress(LightingInProgress value)
+    public static PropertyStates FromLightingInProgress(LightingInProgress value)
     {
         return new PropertyStates(Option.LightingInProgress, value);
     }
@@ -1172,7 +1172,7 @@ public partial record class PropertyStates
         {
             if (Choice != Option.LightingOperation)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.LightingOperation)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.LightingOperation)}.");
             }
             return (LightingOperation)_choiceValue;
         }
@@ -1181,7 +1181,7 @@ public partial record class PropertyStates
     /// <summary>
     /// Create function for The lighting operation state.
     /// </summary>
-    public static PropertyStates NewLightingOperation(LightingOperation value)
+    public static PropertyStates FromLightingOperation(LightingOperation value)
     {
         return new PropertyStates(Option.LightingOperation, value);
     }
@@ -1195,7 +1195,7 @@ public partial record class PropertyStates
         {
             if (Choice != Option.LightingTransition)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.LightingTransition)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.LightingTransition)}.");
             }
             return (LightingTransition)_choiceValue;
         }
@@ -1204,7 +1204,7 @@ public partial record class PropertyStates
     /// <summary>
     /// Create function for The lighting transition state.
     /// </summary>
-    public static PropertyStates NewLightingTransition(LightingTransition value)
+    public static PropertyStates FromLightingTransition(LightingTransition value)
     {
         return new PropertyStates(Option.LightingTransition, value);
     }
@@ -1218,7 +1218,7 @@ public partial record class PropertyStates
         {
             if (Choice != Option.IntegerValue)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.IntegerValue)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.IntegerValue)}.");
             }
             return (int)_choiceValue;
         }
@@ -1227,7 +1227,7 @@ public partial record class PropertyStates
     /// <summary>
     /// Create function for An integer value state.
     /// </summary>
-    public static PropertyStates NewIntegerValue(int value)
+    public static PropertyStates FromIntegerValue(int value)
     {
         return new PropertyStates(Option.IntegerValue, value);
     }
@@ -1241,7 +1241,7 @@ public partial record class PropertyStates
         {
             if (Choice != Option.BinaryLightingValue)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.BinaryLightingValue)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.BinaryLightingValue)}.");
             }
             return (BinaryLightingPv)_choiceValue;
         }
@@ -1250,7 +1250,7 @@ public partial record class PropertyStates
     /// <summary>
     /// Create function for A binary lighting present value state.
     /// </summary>
-    public static PropertyStates NewBinaryLightingValue(BinaryLightingPv value)
+    public static PropertyStates FromBinaryLightingValue(BinaryLightingPv value)
     {
         return new PropertyStates(Option.BinaryLightingValue, value);
     }
@@ -1264,7 +1264,7 @@ public partial record class PropertyStates
         {
             if (Choice != Option.TimerState)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.TimerState)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.TimerState)}.");
             }
             return (TimerState)_choiceValue;
         }
@@ -1273,7 +1273,7 @@ public partial record class PropertyStates
     /// <summary>
     /// Create function for The timer state.
     /// </summary>
-    public static PropertyStates NewTimerState(TimerState value)
+    public static PropertyStates FromTimerState(TimerState value)
     {
         return new PropertyStates(Option.TimerState, value);
     }
@@ -1287,7 +1287,7 @@ public partial record class PropertyStates
         {
             if (Choice != Option.TimerTransition)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.TimerTransition)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.TimerTransition)}.");
             }
             return (TimerTransition)_choiceValue;
         }
@@ -1296,7 +1296,7 @@ public partial record class PropertyStates
     /// <summary>
     /// Create function for The timer transition state.
     /// </summary>
-    public static PropertyStates NewTimerTransition(TimerTransition value)
+    public static PropertyStates FromTimerTransition(TimerTransition value)
     {
         return new PropertyStates(Option.TimerTransition, value);
     }
@@ -1310,7 +1310,7 @@ public partial record class PropertyStates
         {
             if (Choice != Option.BacnetIpMode)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.BacnetIpMode)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.BacnetIpMode)}.");
             }
             return (IpMode)_choiceValue;
         }
@@ -1319,7 +1319,7 @@ public partial record class PropertyStates
     /// <summary>
     /// Create function for The BACnet/IP mode state.
     /// </summary>
-    public static PropertyStates NewBacnetIpMode(IpMode value)
+    public static PropertyStates FromBacnetIpMode(IpMode value)
     {
         return new PropertyStates(Option.BacnetIpMode, value);
     }
@@ -1333,7 +1333,7 @@ public partial record class PropertyStates
         {
             if (Choice != Option.NetworkPortCommand)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.NetworkPortCommand)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.NetworkPortCommand)}.");
             }
             return (NetworkPortCommand)_choiceValue;
         }
@@ -1342,7 +1342,7 @@ public partial record class PropertyStates
     /// <summary>
     /// Create function for The network port command state.
     /// </summary>
-    public static PropertyStates NewNetworkPortCommand(NetworkPortCommand value)
+    public static PropertyStates FromNetworkPortCommand(NetworkPortCommand value)
     {
         return new PropertyStates(Option.NetworkPortCommand, value);
     }
@@ -1356,7 +1356,7 @@ public partial record class PropertyStates
         {
             if (Choice != Option.NetworkType)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.NetworkType)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.NetworkType)}.");
             }
             return (NetworkType)_choiceValue;
         }
@@ -1365,7 +1365,7 @@ public partial record class PropertyStates
     /// <summary>
     /// Create function for The network type state.
     /// </summary>
-    public static PropertyStates NewNetworkType(NetworkType value)
+    public static PropertyStates FromNetworkType(NetworkType value)
     {
         return new PropertyStates(Option.NetworkType, value);
     }
@@ -1379,7 +1379,7 @@ public partial record class PropertyStates
         {
             if (Choice != Option.NetworkNumberQuality)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.NetworkNumberQuality)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.NetworkNumberQuality)}.");
             }
             return (NetworkNumberQuality)_choiceValue;
         }
@@ -1388,7 +1388,7 @@ public partial record class PropertyStates
     /// <summary>
     /// Create function for The network number quality state.
     /// </summary>
-    public static PropertyStates NewNetworkNumberQuality(NetworkNumberQuality value)
+    public static PropertyStates FromNetworkNumberQuality(NetworkNumberQuality value)
     {
         return new PropertyStates(Option.NetworkNumberQuality, value);
     }
@@ -1402,7 +1402,7 @@ public partial record class PropertyStates
         {
             if (Choice != Option.EscalatorOperationDirection)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.EscalatorOperationDirection)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.EscalatorOperationDirection)}.");
             }
             return (EscalatorOperationDirection)_choiceValue;
         }
@@ -1411,7 +1411,7 @@ public partial record class PropertyStates
     /// <summary>
     /// Create function for The operation direction of an escalator.
     /// </summary>
-    public static PropertyStates NewEscalatorOperationDirection(EscalatorOperationDirection value)
+    public static PropertyStates FromEscalatorOperationDirection(EscalatorOperationDirection value)
     {
         return new PropertyStates(Option.EscalatorOperationDirection, value);
     }
@@ -1425,7 +1425,7 @@ public partial record class PropertyStates
         {
             if (Choice != Option.EscalatorFault)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.EscalatorFault)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.EscalatorFault)}.");
             }
             return (EscalatorFault)_choiceValue;
         }
@@ -1434,7 +1434,7 @@ public partial record class PropertyStates
     /// <summary>
     /// Create function for The fault state of an escalator.
     /// </summary>
-    public static PropertyStates NewEscalatorFault(EscalatorFault value)
+    public static PropertyStates FromEscalatorFault(EscalatorFault value)
     {
         return new PropertyStates(Option.EscalatorFault, value);
     }
@@ -1448,7 +1448,7 @@ public partial record class PropertyStates
         {
             if (Choice != Option.EscalatorMode)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.EscalatorMode)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.EscalatorMode)}.");
             }
             return (EscalatorMode)_choiceValue;
         }
@@ -1457,7 +1457,7 @@ public partial record class PropertyStates
     /// <summary>
     /// Create function for The mode state of an escalator.
     /// </summary>
-    public static PropertyStates NewEscalatorMode(EscalatorMode value)
+    public static PropertyStates FromEscalatorMode(EscalatorMode value)
     {
         return new PropertyStates(Option.EscalatorMode, value);
     }
@@ -1471,7 +1471,7 @@ public partial record class PropertyStates
         {
             if (Choice != Option.LiftCarDirection)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.LiftCarDirection)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.LiftCarDirection)}.");
             }
             return (LiftCarDirection)_choiceValue;
         }
@@ -1480,7 +1480,7 @@ public partial record class PropertyStates
     /// <summary>
     /// Create function for The direction state of a lift car.
     /// </summary>
-    public static PropertyStates NewLiftCarDirection(LiftCarDirection value)
+    public static PropertyStates FromLiftCarDirection(LiftCarDirection value)
     {
         return new PropertyStates(Option.LiftCarDirection, value);
     }
@@ -1494,7 +1494,7 @@ public partial record class PropertyStates
         {
             if (Choice != Option.LiftCarDoorCommand)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.LiftCarDoorCommand)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.LiftCarDoorCommand)}.");
             }
             return (LiftCarDoorCommand)_choiceValue;
         }
@@ -1503,7 +1503,7 @@ public partial record class PropertyStates
     /// <summary>
     /// Create function for The door command state of a lift car.
     /// </summary>
-    public static PropertyStates NewLiftCarDoorCommand(LiftCarDoorCommand value)
+    public static PropertyStates FromLiftCarDoorCommand(LiftCarDoorCommand value)
     {
         return new PropertyStates(Option.LiftCarDoorCommand, value);
     }
@@ -1517,7 +1517,7 @@ public partial record class PropertyStates
         {
             if (Choice != Option.LiftCarDriveStatus)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.LiftCarDriveStatus)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.LiftCarDriveStatus)}.");
             }
             return (LiftCarDriveStatus)_choiceValue;
         }
@@ -1526,7 +1526,7 @@ public partial record class PropertyStates
     /// <summary>
     /// Create function for The drive status of a lift car.
     /// </summary>
-    public static PropertyStates NewLiftCarDriveStatus(LiftCarDriveStatus value)
+    public static PropertyStates FromLiftCarDriveStatus(LiftCarDriveStatus value)
     {
         return new PropertyStates(Option.LiftCarDriveStatus, value);
     }
@@ -1540,7 +1540,7 @@ public partial record class PropertyStates
         {
             if (Choice != Option.LiftCarMode)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.LiftCarMode)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.LiftCarMode)}.");
             }
             return (LiftCarMode)_choiceValue;
         }
@@ -1549,7 +1549,7 @@ public partial record class PropertyStates
     /// <summary>
     /// Create function for The mode state of a lift car.
     /// </summary>
-    public static PropertyStates NewLiftCarMode(LiftCarMode value)
+    public static PropertyStates FromLiftCarMode(LiftCarMode value)
     {
         return new PropertyStates(Option.LiftCarMode, value);
     }
@@ -1563,7 +1563,7 @@ public partial record class PropertyStates
         {
             if (Choice != Option.LiftGroupMode)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.LiftGroupMode)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.LiftGroupMode)}.");
             }
             return (LiftGroupMode)_choiceValue;
         }
@@ -1572,7 +1572,7 @@ public partial record class PropertyStates
     /// <summary>
     /// Create function for The mode state of a lift group.
     /// </summary>
-    public static PropertyStates NewLiftGroupMode(LiftGroupMode value)
+    public static PropertyStates FromLiftGroupMode(LiftGroupMode value)
     {
         return new PropertyStates(Option.LiftGroupMode, value);
     }
@@ -1586,7 +1586,7 @@ public partial record class PropertyStates
         {
             if (Choice != Option.LiftFault)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.LiftFault)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.LiftFault)}.");
             }
             return (LiftFault)_choiceValue;
         }
@@ -1595,7 +1595,7 @@ public partial record class PropertyStates
     /// <summary>
     /// Create function for The fault state of a lift.
     /// </summary>
-    public static PropertyStates NewLiftFault(LiftFault value)
+    public static PropertyStates FromLiftFault(LiftFault value)
     {
         return new PropertyStates(Option.LiftFault, value);
     }
@@ -1609,7 +1609,7 @@ public partial record class PropertyStates
         {
             if (Choice != Option.ProtocolLevel)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ProtocolLevel)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ProtocolLevel)}.");
             }
             return (ProtocolLevel)_choiceValue;
         }
@@ -1618,7 +1618,7 @@ public partial record class PropertyStates
     /// <summary>
     /// Create function for The protocol level state.
     /// </summary>
-    public static PropertyStates NewProtocolLevel(ProtocolLevel value)
+    public static PropertyStates FromProtocolLevel(ProtocolLevel value)
     {
         return new PropertyStates(Option.ProtocolLevel, value);
     }
@@ -1632,7 +1632,7 @@ public partial record class PropertyStates
         {
             if (Choice != Option.AuditLevel)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.AuditLevel)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.AuditLevel)}.");
             }
             return (AuditLevel)_choiceValue;
         }
@@ -1641,7 +1641,7 @@ public partial record class PropertyStates
     /// <summary>
     /// Create function for The audit level state.
     /// </summary>
-    public static PropertyStates NewAuditLevel(AuditLevel value)
+    public static PropertyStates FromAuditLevel(AuditLevel value)
     {
         return new PropertyStates(Option.AuditLevel, value);
     }
@@ -1655,7 +1655,7 @@ public partial record class PropertyStates
         {
             if (Choice != Option.AuditOperation)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.AuditOperation)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.AuditOperation)}.");
             }
             return (AuditOperation)_choiceValue;
         }
@@ -1664,7 +1664,7 @@ public partial record class PropertyStates
     /// <summary>
     /// Create function for The audit operation state.
     /// </summary>
-    public static PropertyStates NewAuditOperation(AuditOperation value)
+    public static PropertyStates FromAuditOperation(AuditOperation value)
     {
         return new PropertyStates(Option.AuditOperation, value);
     }
@@ -1678,7 +1678,7 @@ public partial record class PropertyStates
         {
             if (Choice != Option.ExtendedValue)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ExtendedValue)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ExtendedValue)}.");
             }
             return (Unsigned32)_choiceValue;
         }
@@ -1687,7 +1687,7 @@ public partial record class PropertyStates
     /// <summary>
     /// Create function for An extended unsigned integer value.
     /// </summary>
-    public static PropertyStates NewExtendedValue(Unsigned32 value)
+    public static PropertyStates FromExtendedValue(Unsigned32 value)
     {
         return new PropertyStates(Option.ExtendedValue, value);
     }
@@ -1701,7 +1701,7 @@ public partial record class PropertyStates
         {
             if (Choice != Option.ScConnectionState)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ScConnectionState)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ScConnectionState)}.");
             }
             return (ScConnectionState)_choiceValue;
         }
@@ -1710,7 +1710,7 @@ public partial record class PropertyStates
     /// <summary>
     /// Create function for The state of a secure connection.
     /// </summary>
-    public static PropertyStates NewScConnectionState(ScConnectionState value)
+    public static PropertyStates FromScConnectionState(ScConnectionState value)
     {
         return new PropertyStates(Option.ScConnectionState, value);
     }
@@ -1724,7 +1724,7 @@ public partial record class PropertyStates
         {
             if (Choice != Option.ScHubConnectorState)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ScHubConnectorState)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ScHubConnectorState)}.");
             }
             return (ScHubConnectorState)_choiceValue;
         }
@@ -1733,7 +1733,7 @@ public partial record class PropertyStates
     /// <summary>
     /// Create function for The state of a secure hub connector.
     /// </summary>
-    public static PropertyStates NewScHubConnectorState(ScHubConnectorState value)
+    public static PropertyStates FromScHubConnectorState(ScHubConnectorState value)
     {
         return new PropertyStates(Option.ScHubConnectorState, value);
     }

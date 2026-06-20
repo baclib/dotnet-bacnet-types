@@ -79,7 +79,7 @@ public partial record class FaultParameter
         {
             if (Choice != Option.None)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.None)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.None)}.");
             }
             return (Null)_choiceValue;
         }
@@ -88,7 +88,7 @@ public partial record class FaultParameter
     /// <summary>
     /// Create function for No fault parameter specified.
     /// </summary>
-    public static FaultParameter NewNone(Null value)
+    public static FaultParameter FromNone(Null value)
     {
         return new FaultParameter(Option.None, value);
     }
@@ -102,7 +102,7 @@ public partial record class FaultParameter
         {
             if (Choice != Option.FaultCharacterstring)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.FaultCharacterstring)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.FaultCharacterstring)}.");
             }
             return (TFaultCharacterstring)_choiceValue;
         }
@@ -111,7 +111,7 @@ public partial record class FaultParameter
     /// <summary>
     /// Create function for Fault parameters for character string value monitoring, triggered when a string matches one of the specified fault values.
     /// </summary>
-    public static FaultParameter NewFaultCharacterstring(TFaultCharacterstring value)
+    public static FaultParameter FromFaultCharacterstring(TFaultCharacterstring value)
     {
         return new FaultParameter(Option.FaultCharacterstring, value);
     }
@@ -125,7 +125,7 @@ public partial record class FaultParameter
         {
             if (Choice != Option.FaultExtended)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.FaultExtended)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.FaultExtended)}.");
             }
             return (TFaultExtended)_choiceValue;
         }
@@ -134,7 +134,7 @@ public partial record class FaultParameter
     /// <summary>
     /// Create function for Fault parameters for vendor-specific extended fault detection, allowing custom fault algorithms beyond standard BACnet fault types.
     /// </summary>
-    public static FaultParameter NewFaultExtended(TFaultExtended value)
+    public static FaultParameter FromFaultExtended(TFaultExtended value)
     {
         return new FaultParameter(Option.FaultExtended, value);
     }
@@ -148,7 +148,7 @@ public partial record class FaultParameter
         {
             if (Choice != Option.FaultLifeSafety)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.FaultLifeSafety)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.FaultLifeSafety)}.");
             }
             return (TFaultLifeSafety)_choiceValue;
         }
@@ -157,7 +157,7 @@ public partial record class FaultParameter
     /// <summary>
     /// Create function for Fault parameters for life safety state monitoring, triggered when a life safety object enters one of the specified fault states.
     /// </summary>
-    public static FaultParameter NewFaultLifeSafety(TFaultLifeSafety value)
+    public static FaultParameter FromFaultLifeSafety(TFaultLifeSafety value)
     {
         return new FaultParameter(Option.FaultLifeSafety, value);
     }
@@ -171,7 +171,7 @@ public partial record class FaultParameter
         {
             if (Choice != Option.FaultState)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.FaultState)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.FaultState)}.");
             }
             return (TFaultState)_choiceValue;
         }
@@ -180,7 +180,7 @@ public partial record class FaultParameter
     /// <summary>
     /// Create function for Fault parameters for property state monitoring, triggered when a state property matches one of the specified fault states.
     /// </summary>
-    public static FaultParameter NewFaultState(TFaultState value)
+    public static FaultParameter FromFaultState(TFaultState value)
     {
         return new FaultParameter(Option.FaultState, value);
     }
@@ -194,7 +194,7 @@ public partial record class FaultParameter
         {
             if (Choice != Option.FaultStatusFlags)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.FaultStatusFlags)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.FaultStatusFlags)}.");
             }
             return (TFaultStatusFlags)_choiceValue;
         }
@@ -203,7 +203,7 @@ public partial record class FaultParameter
     /// <summary>
     /// Create function for Fault parameters for status flags monitoring, triggered when specific status flags are set in a referenced property.
     /// </summary>
-    public static FaultParameter NewFaultStatusFlags(TFaultStatusFlags value)
+    public static FaultParameter FromFaultStatusFlags(TFaultStatusFlags value)
     {
         return new FaultParameter(Option.FaultStatusFlags, value);
     }
@@ -217,7 +217,7 @@ public partial record class FaultParameter
         {
             if (Choice != Option.FaultOutOfRange)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.FaultOutOfRange)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.FaultOutOfRange)}.");
             }
             return (TFaultOutOfRange)_choiceValue;
         }
@@ -226,7 +226,7 @@ public partial record class FaultParameter
     /// <summary>
     /// Create function for Fault parameters for out-of-range monitoring, triggered when a numeric value falls outside the specified normal range.
     /// </summary>
-    public static FaultParameter NewFaultOutOfRange(TFaultOutOfRange value)
+    public static FaultParameter FromFaultOutOfRange(TFaultOutOfRange value)
     {
         return new FaultParameter(Option.FaultOutOfRange, value);
     }
@@ -240,7 +240,7 @@ public partial record class FaultParameter
         {
             if (Choice != Option.FaultListed)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.FaultListed)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.FaultListed)}.");
             }
             return (TFaultListed)_choiceValue;
         }
@@ -249,7 +249,7 @@ public partial record class FaultParameter
     /// <summary>
     /// Create function for Fault parameters for list monitoring, triggered when a monitored value appears in a referenced fault list.
     /// </summary>
-    public static FaultParameter NewFaultListed(TFaultListed value)
+    public static FaultParameter FromFaultListed(TFaultListed value)
     {
         return new FaultParameter(Option.FaultListed, value);
     }

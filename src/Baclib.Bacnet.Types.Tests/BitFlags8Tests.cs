@@ -166,3 +166,4 @@ public class BitFlags8Tests
         Assert.True(bitFlags1 != bitFlags2);
     }
 }
+

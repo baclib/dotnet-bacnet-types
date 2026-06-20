@@ -49,7 +49,7 @@ public partial record class Scale
         {
             if (Choice != Option.FloatScale)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.FloatScale)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.FloatScale)}.");
             }
             return (float)_choiceValue;
         }
@@ -58,7 +58,7 @@ public partial record class Scale
     /// <summary>
     /// Create function for A floating-point scaling factor.
     /// </summary>
-    public static Scale NewFloatScale(float value)
+    public static Scale FromFloatScale(float value)
     {
         return new Scale(Option.FloatScale, value);
     }
@@ -72,7 +72,7 @@ public partial record class Scale
         {
             if (Choice != Option.IntegerScale)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.IntegerScale)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.IntegerScale)}.");
             }
             return (int)_choiceValue;
         }
@@ -81,7 +81,7 @@ public partial record class Scale
     /// <summary>
     /// Create function for An integer scaling factor.
     /// </summary>
-    public static Scale NewIntegerScale(int value)
+    public static Scale FromIntegerScale(int value)
     {
         return new Scale(Option.IntegerScale, value);
     }

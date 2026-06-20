@@ -49,7 +49,7 @@ public partial record class AtomicWriteFileAck
         {
             if (Choice != Option.FileStartPosition)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.FileStartPosition)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.FileStartPosition)}.");
             }
             return (int)_choiceValue;
         }
@@ -58,7 +58,7 @@ public partial record class AtomicWriteFileAck
     /// <summary>
     /// Create function for The starting byte position where data was written (for stream access).
     /// </summary>
-    public static AtomicWriteFileAck NewFileStartPosition(int value)
+    public static AtomicWriteFileAck FromFileStartPosition(int value)
     {
         return new AtomicWriteFileAck(Option.FileStartPosition, value);
     }
@@ -72,7 +72,7 @@ public partial record class AtomicWriteFileAck
         {
             if (Choice != Option.FileStartRecord)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.FileStartRecord)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.FileStartRecord)}.");
             }
             return (int)_choiceValue;
         }
@@ -81,7 +81,7 @@ public partial record class AtomicWriteFileAck
     /// <summary>
     /// Create function for The starting record number where data was written (for record access).
     /// </summary>
-    public static AtomicWriteFileAck NewFileStartRecord(int value)
+    public static AtomicWriteFileAck FromFileStartRecord(int value)
     {
         return new AtomicWriteFileAck(Option.FileStartRecord, value);
     }

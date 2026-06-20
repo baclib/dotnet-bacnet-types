@@ -49,7 +49,7 @@ public partial record class OptionalBinaryLightingPv
         {
             if (Choice != Option.Null)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Null)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Null)}.");
             }
             return (Null)_choiceValue;
         }
@@ -58,7 +58,7 @@ public partial record class OptionalBinaryLightingPv
     /// <summary>
     /// Create function for Indicates the absence of a binary lighting PV value.
     /// </summary>
-    public static OptionalBinaryLightingPv NewNull(Null value)
+    public static OptionalBinaryLightingPv FromNull(Null value)
     {
         return new OptionalBinaryLightingPv(Option.Null, value);
     }
@@ -72,7 +72,7 @@ public partial record class OptionalBinaryLightingPv
         {
             if (Choice != Option.BinaryLightingPv)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.BinaryLightingPv)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.BinaryLightingPv)}.");
             }
             return (BinaryLightingPv)_choiceValue;
         }
@@ -81,7 +81,7 @@ public partial record class OptionalBinaryLightingPv
     /// <summary>
     /// Create function for Specifies the BACnet binary lighting PV value when present.
     /// </summary>
-    public static OptionalBinaryLightingPv NewBinaryLightingPv(BinaryLightingPv value)
+    public static OptionalBinaryLightingPv FromBinaryLightingPv(BinaryLightingPv value)
     {
         return new OptionalBinaryLightingPv(Option.BinaryLightingPv, value);
     }

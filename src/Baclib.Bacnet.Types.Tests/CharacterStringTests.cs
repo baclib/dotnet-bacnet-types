@@ -349,3 +349,4 @@ public class CharacterStringTests
         Assert.Equal(charSet, reconstructed.CharSet);
     }
 }
+

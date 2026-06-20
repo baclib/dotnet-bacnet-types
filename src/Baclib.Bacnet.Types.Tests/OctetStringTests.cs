@@ -231,3 +231,4 @@ public class OctetStringTests
 
     // Note: Implicit/Explicit conversion tests would go here if they existed in the API
 }
+

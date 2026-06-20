@@ -49,7 +49,7 @@ public partial record class OptionalDateTimePattern
         {
             if (Choice != Option.Null)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Null)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Null)}.");
             }
             return (Null)_choiceValue;
         }
@@ -58,7 +58,7 @@ public partial record class OptionalDateTimePattern
     /// <summary>
     /// Create function for Indicates the absence of a date-time pattern value.
     /// </summary>
-    public static OptionalDateTimePattern NewNull(Null value)
+    public static OptionalDateTimePattern FromNull(Null value)
     {
         return new OptionalDateTimePattern(Option.Null, value);
     }
@@ -72,7 +72,7 @@ public partial record class OptionalDateTimePattern
         {
             if (Choice != Option.Datetimepattern)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Datetimepattern)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Datetimepattern)}.");
             }
             return (DateTimePattern)_choiceValue;
         }
@@ -81,7 +81,7 @@ public partial record class OptionalDateTimePattern
     /// <summary>
     /// Create function for Specifies the BACnet date-time pattern value when present.
     /// </summary>
-    public static OptionalDateTimePattern NewDatetimepattern(DateTimePattern value)
+    public static OptionalDateTimePattern FromDatetimepattern(DateTimePattern value)
     {
         return new OptionalDateTimePattern(Option.Datetimepattern, value);
     }

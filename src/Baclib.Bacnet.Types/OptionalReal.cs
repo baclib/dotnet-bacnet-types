@@ -49,7 +49,7 @@ public partial record class OptionalReal
         {
             if (Choice != Option.Null)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Null)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Null)}.");
             }
             return (Null)_choiceValue;
         }
@@ -58,7 +58,7 @@ public partial record class OptionalReal
     /// <summary>
     /// Create function for Indicates the absence of a real value.
     /// </summary>
-    public static OptionalReal NewNull(Null value)
+    public static OptionalReal FromNull(Null value)
     {
         return new OptionalReal(Option.Null, value);
     }
@@ -72,7 +72,7 @@ public partial record class OptionalReal
         {
             if (Choice != Option.Real)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Real)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Real)}.");
             }
             return (float)_choiceValue;
         }
@@ -81,7 +81,7 @@ public partial record class OptionalReal
     /// <summary>
     /// Create function for Specifies the BACnet real number value when present.
     /// </summary>
-    public static OptionalReal NewReal(float value)
+    public static OptionalReal FromReal(float value)
     {
         return new OptionalReal(Option.Real, value);
     }

@@ -49,7 +49,7 @@ public partial record class ProcessIdSelection
         {
             if (Choice != Option.ProcessIdentifier)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ProcessIdentifier)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ProcessIdentifier)}.");
             }
             return (Unsigned32)_choiceValue;
         }
@@ -58,7 +58,7 @@ public partial record class ProcessIdSelection
     /// <summary>
     /// Create function for A specific process identifier.
     /// </summary>
-    public static ProcessIdSelection NewProcessIdentifier(Unsigned32 value)
+    public static ProcessIdSelection FromProcessIdentifier(Unsigned32 value)
     {
         return new ProcessIdSelection(Option.ProcessIdentifier, value);
     }
@@ -72,7 +72,7 @@ public partial record class ProcessIdSelection
         {
             if (Choice != Option.NullValue)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.NullValue)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.NullValue)}.");
             }
             return (Null)_choiceValue;
         }
@@ -81,7 +81,7 @@ public partial record class ProcessIdSelection
     /// <summary>
     /// Create function for Indicates no process identifier is selected.
     /// </summary>
-    public static ProcessIdSelection NewNullValue(Null value)
+    public static ProcessIdSelection FromNullValue(Null value)
     {
         return new ProcessIdSelection(Option.NullValue, value);
     }

@@ -54,7 +54,7 @@ public partial record class ValueSource
         {
             if (Choice != Option.None)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.None)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.None)}.");
             }
             return (Null)_choiceValue;
         }
@@ -63,7 +63,7 @@ public partial record class ValueSource
     /// <summary>
     /// Create function for No value source specified.
     /// </summary>
-    public static ValueSource NewNone(Null value)
+    public static ValueSource FromNone(Null value)
     {
         return new ValueSource(Option.None, value);
     }
@@ -77,7 +77,7 @@ public partial record class ValueSource
         {
             if (Choice != Option.Object)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Object)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Object)}.");
             }
             return (DeviceObjectReference)_choiceValue;
         }
@@ -86,7 +86,7 @@ public partial record class ValueSource
     /// <summary>
     /// Create function for The value source is a device object reference.
     /// </summary>
-    public static ValueSource NewObject(DeviceObjectReference value)
+    public static ValueSource FromObject(DeviceObjectReference value)
     {
         return new ValueSource(Option.Object, value);
     }
@@ -100,7 +100,7 @@ public partial record class ValueSource
         {
             if (Choice != Option.Address)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Address)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Address)}.");
             }
             return (Address)_choiceValue;
         }
@@ -109,7 +109,7 @@ public partial record class ValueSource
     /// <summary>
     /// Create function for The value source is a network address.
     /// </summary>
-    public static ValueSource NewAddress(Address value)
+    public static ValueSource FromAddress(Address value)
     {
         return new ValueSource(Option.Address, value);
     }

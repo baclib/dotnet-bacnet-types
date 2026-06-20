@@ -88,7 +88,7 @@ public partial record class LogData
                 {
                     if (Choice != Option.BooleanValue)
                     {
-                        throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.BooleanValue)} hat das Template erstellt");
+                        throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.BooleanValue)}.");
                     }
                     return (Boolean)_choiceValue;
                 }
@@ -97,7 +97,7 @@ public partial record class LogData
             /// <summary>
             /// Create function for A boolean data value.
             /// </summary>
-            public static TItem NewBooleanValue(Boolean value)
+            public static TItem FromBooleanValue(Boolean value)
             {
                 return new TItem(Option.BooleanValue, value);
             }
@@ -111,7 +111,7 @@ public partial record class LogData
                 {
                     if (Choice != Option.RealValue)
                     {
-                        throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.RealValue)} hat das Template erstellt");
+                        throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.RealValue)}.");
                     }
                     return (float)_choiceValue;
                 }
@@ -120,7 +120,7 @@ public partial record class LogData
             /// <summary>
             /// Create function for A real (floating-point) data value.
             /// </summary>
-            public static TItem NewRealValue(float value)
+            public static TItem FromRealValue(float value)
             {
                 return new TItem(Option.RealValue, value);
             }
@@ -134,7 +134,7 @@ public partial record class LogData
                 {
                     if (Choice != Option.EnumeratedValue)
                     {
-                        throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.EnumeratedValue)} hat das Template erstellt");
+                        throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.EnumeratedValue)}.");
                     }
                     return (Enumerated)_choiceValue;
                 }
@@ -143,7 +143,7 @@ public partial record class LogData
             /// <summary>
             /// Create function for An enumerated data value.
             /// </summary>
-            public static TItem NewEnumeratedValue(Enumerated value)
+            public static TItem FromEnumeratedValue(Enumerated value)
             {
                 return new TItem(Option.EnumeratedValue, value);
             }
@@ -157,7 +157,7 @@ public partial record class LogData
                 {
                     if (Choice != Option.UnsignedValue)
                     {
-                        throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.UnsignedValue)} hat das Template erstellt");
+                        throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.UnsignedValue)}.");
                     }
                     return (Unsigned)_choiceValue;
                 }
@@ -166,7 +166,7 @@ public partial record class LogData
             /// <summary>
             /// Create function for An unsigned integer data value.
             /// </summary>
-            public static TItem NewUnsignedValue(Unsigned value)
+            public static TItem FromUnsignedValue(Unsigned value)
             {
                 return new TItem(Option.UnsignedValue, value);
             }
@@ -180,7 +180,7 @@ public partial record class LogData
                 {
                     if (Choice != Option.IntegerValue)
                     {
-                        throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.IntegerValue)} hat das Template erstellt");
+                        throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.IntegerValue)}.");
                     }
                     return (int)_choiceValue;
                 }
@@ -189,7 +189,7 @@ public partial record class LogData
             /// <summary>
             /// Create function for A signed integer data value.
             /// </summary>
-            public static TItem NewIntegerValue(int value)
+            public static TItem FromIntegerValue(int value)
             {
                 return new TItem(Option.IntegerValue, value);
             }
@@ -203,7 +203,7 @@ public partial record class LogData
                 {
                     if (Choice != Option.BitstringValue)
                     {
-                        throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.BitstringValue)} hat das Template erstellt");
+                        throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.BitstringValue)}.");
                     }
                     return (BitString)_choiceValue;
                 }
@@ -212,7 +212,7 @@ public partial record class LogData
             /// <summary>
             /// Create function for A bit string data value.
             /// </summary>
-            public static TItem NewBitstringValue(BitString value)
+            public static TItem FromBitstringValue(BitString value)
             {
                 return new TItem(Option.BitstringValue, value);
             }
@@ -226,7 +226,7 @@ public partial record class LogData
                 {
                     if (Choice != Option.NullValue)
                     {
-                        throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.NullValue)} hat das Template erstellt");
+                        throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.NullValue)}.");
                     }
                     return (Null)_choiceValue;
                 }
@@ -235,7 +235,7 @@ public partial record class LogData
             /// <summary>
             /// Create function for Indicates no data value was recorded.
             /// </summary>
-            public static TItem NewNullValue(Null value)
+            public static TItem FromNullValue(Null value)
             {
                 return new TItem(Option.NullValue, value);
             }
@@ -249,7 +249,7 @@ public partial record class LogData
                 {
                     if (Choice != Option.Failure)
                     {
-                        throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Failure)} hat das Template erstellt");
+                        throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Failure)}.");
                     }
                     return (Error)_choiceValue;
                 }
@@ -258,7 +258,7 @@ public partial record class LogData
             /// <summary>
             /// Create function for An error that occurred during data logging.
             /// </summary>
-            public static TItem NewFailure(Error value)
+            public static TItem FromFailure(Error value)
             {
                 return new TItem(Option.Failure, value);
             }
@@ -272,7 +272,7 @@ public partial record class LogData
                 {
                     if (Choice != Option.AnyValue)
                     {
-                        throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.AnyValue)} hat das Template erstellt");
+                        throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.AnyValue)}.");
                     }
                     return (Any)_choiceValue;
                 }
@@ -281,7 +281,7 @@ public partial record class LogData
             /// <summary>
             /// Create function for A data value of any BACnet data type.
             /// </summary>
-            public static TItem NewAnyValue(Any value)
+            public static TItem FromAnyValue(Any value)
             {
                 return new TItem(Option.AnyValue, value);
             }

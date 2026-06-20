@@ -51,7 +51,7 @@ public partial record class SpecialEvent
             {
                 if (Choice != Option.CalendarEntry)
                 {
-                    throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.CalendarEntry)} hat das Template erstellt");
+                    throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.CalendarEntry)}.");
                 }
                 return (CalendarEntry)_choiceValue;
             }
@@ -60,7 +60,7 @@ public partial record class SpecialEvent
         /// <summary>
         /// Create function for A specific calendar entry defining the event period.
         /// </summary>
-        public static TPeriod NewCalendarEntry(CalendarEntry value)
+        public static TPeriod FromCalendarEntry(CalendarEntry value)
         {
             return new TPeriod(Option.CalendarEntry, value);
         }
@@ -74,7 +74,7 @@ public partial record class SpecialEvent
             {
                 if (Choice != Option.CalendarReference)
                 {
-                    throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.CalendarReference)} hat das Template erstellt");
+                    throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.CalendarReference)}.");
                 }
                 return (ObjectIdentifier)_choiceValue;
             }
@@ -83,7 +83,7 @@ public partial record class SpecialEvent
         /// <summary>
         /// Create function for A reference to a calendar object defining the event period.
         /// </summary>
-        public static TPeriod NewCalendarReference(ObjectIdentifier value)
+        public static TPeriod FromCalendarReference(ObjectIdentifier value)
         {
             return new TPeriod(Option.CalendarReference, value);
         }

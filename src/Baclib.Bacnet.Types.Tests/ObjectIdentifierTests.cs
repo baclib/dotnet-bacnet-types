@@ -196,3 +196,4 @@ public class ObjectIdentifierTests
         Assert.Equal(objId, reconstructed);
     }
 }
+

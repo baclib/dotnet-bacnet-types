@@ -3,68 +3,47 @@
 
 namespace Baclib.Bacnet.Types;
 
-/// <summary>
-/// Represents the sequence BACnet-Confirmed-Request-PDU as defined in ANSI/ASHRAE 135-2024 Clause 21.
-/// </summary>
-public partial record class ConfirmedRequestPdu
+public sealed record class ConfirmedRequestPdu
 {
-    /// <summary>
-    /// The PDU type identifier (0 for BACnet-Confirmed-Request-PDU).
-    /// </summary>
-    public required TPduType PduType { get; init; }
-    
-    /// <summary>
-    /// Indicates whether this is a segmented message.
-    /// </summary>
-    public required Boolean SegmentedMessage { get; init; }
-    
-    /// <summary>
-    /// Indicates whether more segments follow this one.
-    /// </summary>
-    public required Boolean MoreFollows { get; init; }
-    
-    /// <summary>
-    /// Indicates whether the sender can accept a segmented response.
-    /// </summary>
-    public required Boolean SegmentedResponseAccepted { get; init; }
-    
-    /// <summary>
-    /// Reserved field, must be zero.
-    /// </summary>
-    public required TReserved Reserved { get; init; }
-    
-    /// <summary>
-    /// The maximum number of segments the sender can accept in a response.
-    /// </summary>
-    public required TMaxSegmentsAccepted MaxSegmentsAccepted { get; init; }
-    
-    /// <summary>
-    /// The maximum APDU length the sender can accept.
-    /// </summary>
-    public required TMaxApduLengthAccepted MaxApduLengthAccepted { get; init; }
-    
-    /// <summary>
-    /// The invoke ID for matching requests with responses.
-    /// </summary>
-    public required TInvokeId InvokeId { get; init; }
-    
-    /// <summary>
-    /// The sequence number for segmented messages. Optional.
-    /// </summary>
-    public Optional<TSequenceNumber> SequenceNumber { get; init; }
+    public Pdu.Option Type => Pdu.Option.ConfirmedRequestPdu;
 
-    /// <summary>
-    /// The proposed window size for segmented messages. Optional.
-    /// </summary>
-    public Optional<TProposedWindowSize> ProposedWindowSize { get; init; }
+    public enum TMaxSegmentsAccepted
+    {
+        Unspecified = 0,
+        UpTo2 = 1,
+        UpTo4 = 2,
+        UpTo8 = 3,
+        UpTo16 = 4,
+        UpTo32 = 5,
+        UpTo64 = 6,
+        MoreThan64 = 7
+    }
 
-    /// <summary>
-    /// The confirmed service being requested.
-    /// </summary>
-    public required ConfirmedServiceChoice ServiceChoice { get; init; }
-    
-    /// <summary>
-    /// The service request parameters. Optional.
-    /// </summary>
-    public Optional<ConfirmedServiceRequest> ServiceRequest { get; init; }
+    public enum TMaxApduLengthAccepted
+    {
+        UpTo50 = 0,
+        UpTo128 = 1,
+        UpTo206 = 2,
+        UpTo480 = 3,
+        UpTo1024 = 4,
+        UpTo1476 = 6
+    }
+
+    public bool IsSegmentedRequest { get; init; }
+
+    public bool MoreSegmentsFollow { get; init; }
+
+    public bool AcceptsSegmentedResponses { get; init; }
+
+    public TMaxSegmentsAccepted MaxSegmentsAccepted { get; init; }
+
+    public TMaxApduLengthAccepted MaxApduLengthAccepted { get; init; }
+
+    public byte InvokeId { get; init; }
+
+    public byte SequenceNumber { get; init; }
+
+    public byte ProposedWindowSize { get; init; }
+
+    public ConfirmedServiceChoice ServiceChoice { get; init; }
 }

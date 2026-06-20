@@ -49,7 +49,7 @@ public partial record class OptionalInteger
         {
             if (Choice != Option.Null)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Null)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Null)}.");
             }
             return (Null)_choiceValue;
         }
@@ -58,7 +58,7 @@ public partial record class OptionalInteger
     /// <summary>
     /// Create function for Indicates the absence of an integer value.
     /// </summary>
-    public static OptionalInteger NewNull(Null value)
+    public static OptionalInteger FromNull(Null value)
     {
         return new OptionalInteger(Option.Null, value);
     }
@@ -72,7 +72,7 @@ public partial record class OptionalInteger
         {
             if (Choice != Option.Integer)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Integer)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Integer)}.");
             }
             return (int)_choiceValue;
         }
@@ -81,7 +81,7 @@ public partial record class OptionalInteger
     /// <summary>
     /// Create function for Specifies the BACnet integer value when present.
     /// </summary>
-    public static OptionalInteger NewInteger(int value)
+    public static OptionalInteger FromInteger(int value)
     {
         return new OptionalInteger(Option.Integer, value);
     }

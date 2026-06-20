@@ -278,3 +278,4 @@ public class DateTests
         Assert.Equal(date1.GetHashCode(), date2.GetHashCode());
     }
 }
+

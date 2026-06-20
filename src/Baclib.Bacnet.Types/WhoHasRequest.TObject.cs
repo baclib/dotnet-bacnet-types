@@ -51,7 +51,7 @@ public partial record class WhoHasRequest
             {
                 if (Choice != Option.ObjectIdentifier)
                 {
-                    throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ObjectIdentifier)} hat das Template erstellt");
+                    throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ObjectIdentifier)}.");
                 }
                 return (ObjectIdentifier)_choiceValue;
             }
@@ -60,7 +60,7 @@ public partial record class WhoHasRequest
         /// <summary>
         /// Create function for The object identifier to search for.
         /// </summary>
-        public static TObject NewObjectIdentifier(ObjectIdentifier value)
+        public static TObject FromObjectIdentifier(ObjectIdentifier value)
         {
             return new TObject(Option.ObjectIdentifier, value);
         }
@@ -74,7 +74,7 @@ public partial record class WhoHasRequest
             {
                 if (Choice != Option.ObjectName)
                 {
-                    throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ObjectName)} hat das Template erstellt");
+                    throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ObjectName)}.");
                 }
                 return (CharacterString)_choiceValue;
             }
@@ -83,7 +83,7 @@ public partial record class WhoHasRequest
         /// <summary>
         /// Create function for The object name to search for.
         /// </summary>
-        public static TObject NewObjectName(CharacterString value)
+        public static TObject FromObjectName(CharacterString value)
         {
             return new TObject(Option.ObjectName, value);
         }

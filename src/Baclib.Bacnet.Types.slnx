@@ -1,5 +1,6 @@
 <Solution>
-  <Project Path="Baclib.Bacnet.Serialization.Asn1/Baclib.Bacnet.Serialization.Asn1.csproj" Id="f4ec49bb-9ac1-4a08-a21e-45fcfcda74a2" />
+  <Project Path="Baclib.Bacnet.Serialization.Native.Tests/Baclib.Bacnet.Serialization.Native.Tests.csproj" Id="c1e77242-6446-4429-86f9-3560d4be575a" />
+  <Project Path="Baclib.Bacnet.Serialization.Native/Baclib.Bacnet.Serialization.Native.csproj" />
   <Project Path="Baclib.Bacnet.Types.Tests/Baclib.Bacnet.Types.Tests.csproj" />
   <Project Path="Baclib.Bacnet.Types/Baclib.Bacnet.Types.csproj" />
   <Project Path="Generator/Generator.esproj">

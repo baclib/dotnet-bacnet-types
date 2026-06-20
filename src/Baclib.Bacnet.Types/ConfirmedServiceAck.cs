@@ -109,7 +109,7 @@ public partial record class ConfirmedServiceAck
         {
             if (Choice != Option.GetAlarmSummary)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.GetAlarmSummary)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.GetAlarmSummary)}.");
             }
             return (GetAlarmSummaryAck)_choiceValue;
         }
@@ -118,7 +118,7 @@ public partial record class ConfirmedServiceAck
     /// <summary>
     /// Create function for Acknowledgment for Get Alarm Summary.
     /// </summary>
-    public static ConfirmedServiceAck NewGetAlarmSummary(GetAlarmSummaryAck value)
+    public static ConfirmedServiceAck FromGetAlarmSummary(GetAlarmSummaryAck value)
     {
         return new ConfirmedServiceAck(Option.GetAlarmSummary, value);
     }
@@ -132,7 +132,7 @@ public partial record class ConfirmedServiceAck
         {
             if (Choice != Option.GetEnrollmentSummary)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.GetEnrollmentSummary)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.GetEnrollmentSummary)}.");
             }
             return (GetEnrollmentSummaryAck)_choiceValue;
         }
@@ -141,7 +141,7 @@ public partial record class ConfirmedServiceAck
     /// <summary>
     /// Create function for Acknowledgment for Get Enrollment Summary.
     /// </summary>
-    public static ConfirmedServiceAck NewGetEnrollmentSummary(GetEnrollmentSummaryAck value)
+    public static ConfirmedServiceAck FromGetEnrollmentSummary(GetEnrollmentSummaryAck value)
     {
         return new ConfirmedServiceAck(Option.GetEnrollmentSummary, value);
     }
@@ -155,7 +155,7 @@ public partial record class ConfirmedServiceAck
         {
             if (Choice != Option.GetEventInformation)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.GetEventInformation)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.GetEventInformation)}.");
             }
             return (GetEventInformationAck)_choiceValue;
         }
@@ -164,7 +164,7 @@ public partial record class ConfirmedServiceAck
     /// <summary>
     /// Create function for Acknowledgment for Get Event Information.
     /// </summary>
-    public static ConfirmedServiceAck NewGetEventInformation(GetEventInformationAck value)
+    public static ConfirmedServiceAck FromGetEventInformation(GetEventInformationAck value)
     {
         return new ConfirmedServiceAck(Option.GetEventInformation, value);
     }
@@ -178,7 +178,7 @@ public partial record class ConfirmedServiceAck
         {
             if (Choice != Option.AtomicReadFile)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.AtomicReadFile)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.AtomicReadFile)}.");
             }
             return (AtomicReadFileAck)_choiceValue;
         }
@@ -187,7 +187,7 @@ public partial record class ConfirmedServiceAck
     /// <summary>
     /// Create function for Acknowledgment for Atomic Read File.
     /// </summary>
-    public static ConfirmedServiceAck NewAtomicReadFile(AtomicReadFileAck value)
+    public static ConfirmedServiceAck FromAtomicReadFile(AtomicReadFileAck value)
     {
         return new ConfirmedServiceAck(Option.AtomicReadFile, value);
     }
@@ -201,7 +201,7 @@ public partial record class ConfirmedServiceAck
         {
             if (Choice != Option.AtomicWriteFile)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.AtomicWriteFile)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.AtomicWriteFile)}.");
             }
             return (AtomicWriteFileAck)_choiceValue;
         }
@@ -210,7 +210,7 @@ public partial record class ConfirmedServiceAck
     /// <summary>
     /// Create function for Acknowledgment for Atomic Write File.
     /// </summary>
-    public static ConfirmedServiceAck NewAtomicWriteFile(AtomicWriteFileAck value)
+    public static ConfirmedServiceAck FromAtomicWriteFile(AtomicWriteFileAck value)
     {
         return new ConfirmedServiceAck(Option.AtomicWriteFile, value);
     }
@@ -224,7 +224,7 @@ public partial record class ConfirmedServiceAck
         {
             if (Choice != Option.CreateObject)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.CreateObject)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.CreateObject)}.");
             }
             return (CreateObjectAck)_choiceValue;
         }
@@ -233,7 +233,7 @@ public partial record class ConfirmedServiceAck
     /// <summary>
     /// Create function for Acknowledgment for Create Object.
     /// </summary>
-    public static ConfirmedServiceAck NewCreateObject(CreateObjectAck value)
+    public static ConfirmedServiceAck FromCreateObject(CreateObjectAck value)
     {
         return new ConfirmedServiceAck(Option.CreateObject, value);
     }
@@ -247,7 +247,7 @@ public partial record class ConfirmedServiceAck
         {
             if (Choice != Option.ReadProperty)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ReadProperty)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ReadProperty)}.");
             }
             return (ReadPropertyAck)_choiceValue;
         }
@@ -256,7 +256,7 @@ public partial record class ConfirmedServiceAck
     /// <summary>
     /// Create function for Acknowledgment for Read Property.
     /// </summary>
-    public static ConfirmedServiceAck NewReadProperty(ReadPropertyAck value)
+    public static ConfirmedServiceAck FromReadProperty(ReadPropertyAck value)
     {
         return new ConfirmedServiceAck(Option.ReadProperty, value);
     }
@@ -270,7 +270,7 @@ public partial record class ConfirmedServiceAck
         {
             if (Choice != Option.ReadPropertyMultiple)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ReadPropertyMultiple)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ReadPropertyMultiple)}.");
             }
             return (ReadPropertyMultipleAck)_choiceValue;
         }
@@ -279,7 +279,7 @@ public partial record class ConfirmedServiceAck
     /// <summary>
     /// Create function for Acknowledgment for Read Property Multiple.
     /// </summary>
-    public static ConfirmedServiceAck NewReadPropertyMultiple(ReadPropertyMultipleAck value)
+    public static ConfirmedServiceAck FromReadPropertyMultiple(ReadPropertyMultipleAck value)
     {
         return new ConfirmedServiceAck(Option.ReadPropertyMultiple, value);
     }
@@ -293,7 +293,7 @@ public partial record class ConfirmedServiceAck
         {
             if (Choice != Option.ReadRange)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ReadRange)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ReadRange)}.");
             }
             return (ReadRangeAck)_choiceValue;
         }
@@ -302,7 +302,7 @@ public partial record class ConfirmedServiceAck
     /// <summary>
     /// Create function for Acknowledgment for Read Range.
     /// </summary>
-    public static ConfirmedServiceAck NewReadRange(ReadRangeAck value)
+    public static ConfirmedServiceAck FromReadRange(ReadRangeAck value)
     {
         return new ConfirmedServiceAck(Option.ReadRange, value);
     }
@@ -316,7 +316,7 @@ public partial record class ConfirmedServiceAck
         {
             if (Choice != Option.AuditLogQuery)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.AuditLogQuery)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.AuditLogQuery)}.");
             }
             return (AuditLogQueryAck)_choiceValue;
         }
@@ -325,7 +325,7 @@ public partial record class ConfirmedServiceAck
     /// <summary>
     /// Create function for Acknowledgment for Audit Log Query.
     /// </summary>
-    public static ConfirmedServiceAck NewAuditLogQuery(AuditLogQueryAck value)
+    public static ConfirmedServiceAck FromAuditLogQuery(AuditLogQueryAck value)
     {
         return new ConfirmedServiceAck(Option.AuditLogQuery, value);
     }
@@ -339,7 +339,7 @@ public partial record class ConfirmedServiceAck
         {
             if (Choice != Option.ConfirmedPrivateTransfer)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ConfirmedPrivateTransfer)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ConfirmedPrivateTransfer)}.");
             }
             return (ConfirmedPrivateTransferAck)_choiceValue;
         }
@@ -348,7 +348,7 @@ public partial record class ConfirmedServiceAck
     /// <summary>
     /// Create function for Acknowledgment for Confirmed Private Transfer.
     /// </summary>
-    public static ConfirmedServiceAck NewConfirmedPrivateTransfer(ConfirmedPrivateTransferAck value)
+    public static ConfirmedServiceAck FromConfirmedPrivateTransfer(ConfirmedPrivateTransferAck value)
     {
         return new ConfirmedServiceAck(Option.ConfirmedPrivateTransfer, value);
     }
@@ -362,7 +362,7 @@ public partial record class ConfirmedServiceAck
         {
             if (Choice != Option.AuthRequest)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.AuthRequest)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.AuthRequest)}.");
             }
             return (AuthRequestAck)_choiceValue;
         }
@@ -371,7 +371,7 @@ public partial record class ConfirmedServiceAck
     /// <summary>
     /// Create function for Acknowledgment for Authentication Request.
     /// </summary>
-    public static ConfirmedServiceAck NewAuthRequest(AuthRequestAck value)
+    public static ConfirmedServiceAck FromAuthRequest(AuthRequestAck value)
     {
         return new ConfirmedServiceAck(Option.AuthRequest, value);
     }
@@ -385,7 +385,7 @@ public partial record class ConfirmedServiceAck
         {
             if (Choice != Option.VtOpen)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.VtOpen)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.VtOpen)}.");
             }
             return (VtOpenAck)_choiceValue;
         }
@@ -394,7 +394,7 @@ public partial record class ConfirmedServiceAck
     /// <summary>
     /// Create function for Acknowledgment for VT Open.
     /// </summary>
-    public static ConfirmedServiceAck NewVtOpen(VtOpenAck value)
+    public static ConfirmedServiceAck FromVtOpen(VtOpenAck value)
     {
         return new ConfirmedServiceAck(Option.VtOpen, value);
     }
@@ -408,7 +408,7 @@ public partial record class ConfirmedServiceAck
         {
             if (Choice != Option.VtData)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.VtData)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.VtData)}.");
             }
             return (VtDataAck)_choiceValue;
         }
@@ -417,7 +417,7 @@ public partial record class ConfirmedServiceAck
     /// <summary>
     /// Create function for Acknowledgment for VT Data.
     /// </summary>
-    public static ConfirmedServiceAck NewVtData(VtDataAck value)
+    public static ConfirmedServiceAck FromVtData(VtDataAck value)
     {
         return new ConfirmedServiceAck(Option.VtData, value);
     }

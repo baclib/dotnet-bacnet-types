@@ -44,7 +44,7 @@ public partial record class AuthRequestAck
         {
             if (Choice != Option.TokenResponse)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.TokenResponse)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.TokenResponse)}.");
             }
             return (AccessToken)_choiceValue;
         }
@@ -53,7 +53,7 @@ public partial record class AuthRequestAck
     /// <summary>
     /// Create function for The access token returned in response to the authentication request.
     /// </summary>
-    public static AuthRequestAck NewTokenResponse(AccessToken value)
+    public static AuthRequestAck FromTokenResponse(AccessToken value)
     {
         return new AuthRequestAck(Option.TokenResponse, value);
     }

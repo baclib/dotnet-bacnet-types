@@ -49,7 +49,7 @@ public partial record class OptionalUnsigned
         {
             if (Choice != Option.Null)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Null)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Null)}.");
             }
             return (Null)_choiceValue;
         }
@@ -58,7 +58,7 @@ public partial record class OptionalUnsigned
     /// <summary>
     /// Create function for Indicates the absence of an unsigned value.
     /// </summary>
-    public static OptionalUnsigned NewNull(Null value)
+    public static OptionalUnsigned FromNull(Null value)
     {
         return new OptionalUnsigned(Option.Null, value);
     }
@@ -72,7 +72,7 @@ public partial record class OptionalUnsigned
         {
             if (Choice != Option.Unsigned)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Unsigned)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Unsigned)}.");
             }
             return (Unsigned)_choiceValue;
         }
@@ -81,7 +81,7 @@ public partial record class OptionalUnsigned
     /// <summary>
     /// Create function for Specifies the unsigned integer value when present.
     /// </summary>
-    public static OptionalUnsigned NewUnsigned(Unsigned value)
+    public static OptionalUnsigned FromUnsigned(Unsigned value)
     {
         return new OptionalUnsigned(Option.Unsigned, value);
     }

@@ -51,7 +51,7 @@ public partial record class PropertyAccessResult
             {
                 if (Choice != Option.PropertyValue)
                 {
-                    throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.PropertyValue)} hat das Template erstellt");
+                    throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.PropertyValue)}.");
                 }
                 return (Any)_choiceValue;
             }
@@ -60,7 +60,7 @@ public partial record class PropertyAccessResult
         /// <summary>
         /// Create function for The value of the property accessed.
         /// </summary>
-        public static TAccessResult NewPropertyValue(Any value)
+        public static TAccessResult FromPropertyValue(Any value)
         {
             return new TAccessResult(Option.PropertyValue, value);
         }
@@ -74,7 +74,7 @@ public partial record class PropertyAccessResult
             {
                 if (Choice != Option.PropertyAccessError)
                 {
-                    throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.PropertyAccessError)} hat das Template erstellt");
+                    throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.PropertyAccessError)}.");
                 }
                 return (Error)_choiceValue;
             }
@@ -83,7 +83,7 @@ public partial record class PropertyAccessResult
         /// <summary>
         /// Create function for Error encountered while accessing the property.
         /// </summary>
-        public static TAccessResult NewPropertyAccessError(Error value)
+        public static TAccessResult FromPropertyAccessError(Error value)
         {
             return new TAccessResult(Option.PropertyAccessError, value);
         }

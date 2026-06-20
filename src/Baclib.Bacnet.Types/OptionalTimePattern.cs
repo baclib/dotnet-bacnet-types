@@ -49,7 +49,7 @@ public partial record class OptionalTimePattern
         {
             if (Choice != Option.Null)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Null)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Null)}.");
             }
             return (Null)_choiceValue;
         }
@@ -58,7 +58,7 @@ public partial record class OptionalTimePattern
     /// <summary>
     /// Create function for Indicates the absence of a time pattern value.
     /// </summary>
-    public static OptionalTimePattern NewNull(Null value)
+    public static OptionalTimePattern FromNull(Null value)
     {
         return new OptionalTimePattern(Option.Null, value);
     }
@@ -72,7 +72,7 @@ public partial record class OptionalTimePattern
         {
             if (Choice != Option.Timeepattern)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Timeepattern)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Timeepattern)}.");
             }
             return (TimePattern)_choiceValue;
         }
@@ -81,7 +81,7 @@ public partial record class OptionalTimePattern
     /// <summary>
     /// Create function for Specifies the BACnet time pattern value when present.
     /// </summary>
-    public static OptionalTimePattern NewTimeepattern(TimePattern value)
+    public static OptionalTimePattern FromTimeepattern(TimePattern value)
     {
         return new OptionalTimePattern(Option.Timeepattern, value);
     }

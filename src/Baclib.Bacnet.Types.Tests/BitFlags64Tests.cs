@@ -178,3 +178,4 @@ public class BitFlags64Tests
         Assert.True(bitFlags1 != bitFlags2);
     }
 }
+

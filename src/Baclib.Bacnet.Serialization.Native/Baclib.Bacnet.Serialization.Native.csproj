@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="ApciCodecs\**" />
+    <EmbeddedResource Remove="ApciCodecs\**" />
+    <None Remove="ApciCodecs\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Baclib.Bacnet.Types\Baclib.Bacnet.Types.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Baclib.Bacnet.Types" />
+  </ItemGroup>
+
+</Project>

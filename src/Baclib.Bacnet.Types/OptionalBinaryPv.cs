@@ -49,7 +49,7 @@ public partial record class OptionalBinaryPv
         {
             if (Choice != Option.Null)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Null)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Null)}.");
             }
             return (Null)_choiceValue;
         }
@@ -58,7 +58,7 @@ public partial record class OptionalBinaryPv
     /// <summary>
     /// Create function for Indicates the absence of a binary PV value.
     /// </summary>
-    public static OptionalBinaryPv NewNull(Null value)
+    public static OptionalBinaryPv FromNull(Null value)
     {
         return new OptionalBinaryPv(Option.Null, value);
     }
@@ -72,7 +72,7 @@ public partial record class OptionalBinaryPv
         {
             if (Choice != Option.BinaryPv)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.BinaryPv)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.BinaryPv)}.");
             }
             return (BinaryPv)_choiceValue;
         }
@@ -81,7 +81,7 @@ public partial record class OptionalBinaryPv
     /// <summary>
     /// Create function for Specifies the BACnet binary PV value when present.
     /// </summary>
-    public static OptionalBinaryPv NewBinaryPv(BinaryPv value)
+    public static OptionalBinaryPv FromBinaryPv(BinaryPv value)
     {
         return new OptionalBinaryPv(Option.BinaryPv, value);
     }

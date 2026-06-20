@@ -44,7 +44,7 @@ public partial record class AuthRequestRequest
         {
             if (Choice != Option.TokenRequest)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.TokenRequest)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.TokenRequest)}.");
             }
             return (TTokenRequest)_choiceValue;
         }
@@ -53,7 +53,7 @@ public partial record class AuthRequestRequest
     /// <summary>
     /// Create function for A request for an access token.
     /// </summary>
-    public static AuthRequestRequest NewTokenRequest(TTokenRequest value)
+    public static AuthRequestRequest FromTokenRequest(TTokenRequest value)
     {
         return new AuthRequestRequest(Option.TokenRequest, value);
     }

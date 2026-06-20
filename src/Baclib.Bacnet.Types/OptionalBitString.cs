@@ -49,7 +49,7 @@ public partial record class OptionalBitString
         {
             if (Choice != Option.Null)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Null)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Null)}.");
             }
             return (Null)_choiceValue;
         }
@@ -58,7 +58,7 @@ public partial record class OptionalBitString
     /// <summary>
     /// Create function for Indicates the absence of a bit string value.
     /// </summary>
-    public static OptionalBitString NewNull(Null value)
+    public static OptionalBitString FromNull(Null value)
     {
         return new OptionalBitString(Option.Null, value);
     }
@@ -72,7 +72,7 @@ public partial record class OptionalBitString
         {
             if (Choice != Option.Bitstring)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Bitstring)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Bitstring)}.");
             }
             return (BitString)_choiceValue;
         }
@@ -81,7 +81,7 @@ public partial record class OptionalBitString
     /// <summary>
     /// Create function for Specifies the BACnet bit string value when present.
     /// </summary>
-    public static OptionalBitString NewBitstring(BitString value)
+    public static OptionalBitString FromBitstring(BitString value)
     {
         return new OptionalBitString(Option.Bitstring, value);
     }

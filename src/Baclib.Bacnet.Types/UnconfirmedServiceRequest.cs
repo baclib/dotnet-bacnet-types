@@ -114,7 +114,7 @@ public partial record class UnconfirmedServiceRequest
         {
             if (Choice != Option.IAm)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.IAm)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.IAm)}.");
             }
             return (IAmRequest)_choiceValue;
         }
@@ -123,7 +123,7 @@ public partial record class UnconfirmedServiceRequest
     /// <summary>
     /// Create function for I-Am service request.
     /// </summary>
-    public static UnconfirmedServiceRequest NewIAm(IAmRequest value)
+    public static UnconfirmedServiceRequest FromIAm(IAmRequest value)
     {
         return new UnconfirmedServiceRequest(Option.IAm, value);
     }
@@ -137,7 +137,7 @@ public partial record class UnconfirmedServiceRequest
         {
             if (Choice != Option.IHave)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.IHave)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.IHave)}.");
             }
             return (IHaveRequest)_choiceValue;
         }
@@ -146,7 +146,7 @@ public partial record class UnconfirmedServiceRequest
     /// <summary>
     /// Create function for I-Have service request.
     /// </summary>
-    public static UnconfirmedServiceRequest NewIHave(IHaveRequest value)
+    public static UnconfirmedServiceRequest FromIHave(IHaveRequest value)
     {
         return new UnconfirmedServiceRequest(Option.IHave, value);
     }
@@ -160,7 +160,7 @@ public partial record class UnconfirmedServiceRequest
         {
             if (Choice != Option.UnconfirmedCovNotification)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.UnconfirmedCovNotification)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.UnconfirmedCovNotification)}.");
             }
             return (UnconfirmedCovNotificationRequest)_choiceValue;
         }
@@ -169,7 +169,7 @@ public partial record class UnconfirmedServiceRequest
     /// <summary>
     /// Create function for Unconfirmed COV notification request.
     /// </summary>
-    public static UnconfirmedServiceRequest NewUnconfirmedCovNotification(UnconfirmedCovNotificationRequest value)
+    public static UnconfirmedServiceRequest FromUnconfirmedCovNotification(UnconfirmedCovNotificationRequest value)
     {
         return new UnconfirmedServiceRequest(Option.UnconfirmedCovNotification, value);
     }
@@ -183,7 +183,7 @@ public partial record class UnconfirmedServiceRequest
         {
             if (Choice != Option.UnconfirmedEventNotification)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.UnconfirmedEventNotification)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.UnconfirmedEventNotification)}.");
             }
             return (UnconfirmedEventNotificationRequest)_choiceValue;
         }
@@ -192,7 +192,7 @@ public partial record class UnconfirmedServiceRequest
     /// <summary>
     /// Create function for Unconfirmed event notification request.
     /// </summary>
-    public static UnconfirmedServiceRequest NewUnconfirmedEventNotification(UnconfirmedEventNotificationRequest value)
+    public static UnconfirmedServiceRequest FromUnconfirmedEventNotification(UnconfirmedEventNotificationRequest value)
     {
         return new UnconfirmedServiceRequest(Option.UnconfirmedEventNotification, value);
     }
@@ -206,7 +206,7 @@ public partial record class UnconfirmedServiceRequest
         {
             if (Choice != Option.UnconfirmedPrivateTransfer)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.UnconfirmedPrivateTransfer)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.UnconfirmedPrivateTransfer)}.");
             }
             return (UnconfirmedPrivateTransferRequest)_choiceValue;
         }
@@ -215,7 +215,7 @@ public partial record class UnconfirmedServiceRequest
     /// <summary>
     /// Create function for Unconfirmed private transfer request.
     /// </summary>
-    public static UnconfirmedServiceRequest NewUnconfirmedPrivateTransfer(UnconfirmedPrivateTransferRequest value)
+    public static UnconfirmedServiceRequest FromUnconfirmedPrivateTransfer(UnconfirmedPrivateTransferRequest value)
     {
         return new UnconfirmedServiceRequest(Option.UnconfirmedPrivateTransfer, value);
     }
@@ -229,7 +229,7 @@ public partial record class UnconfirmedServiceRequest
         {
             if (Choice != Option.UnconfirmedTextMessage)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.UnconfirmedTextMessage)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.UnconfirmedTextMessage)}.");
             }
             return (UnconfirmedTextMessageRequest)_choiceValue;
         }
@@ -238,7 +238,7 @@ public partial record class UnconfirmedServiceRequest
     /// <summary>
     /// Create function for Unconfirmed text message request.
     /// </summary>
-    public static UnconfirmedServiceRequest NewUnconfirmedTextMessage(UnconfirmedTextMessageRequest value)
+    public static UnconfirmedServiceRequest FromUnconfirmedTextMessage(UnconfirmedTextMessageRequest value)
     {
         return new UnconfirmedServiceRequest(Option.UnconfirmedTextMessage, value);
     }
@@ -252,7 +252,7 @@ public partial record class UnconfirmedServiceRequest
         {
             if (Choice != Option.TimeSynchronization)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.TimeSynchronization)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.TimeSynchronization)}.");
             }
             return (TimeSynchronizationRequest)_choiceValue;
         }
@@ -261,7 +261,7 @@ public partial record class UnconfirmedServiceRequest
     /// <summary>
     /// Create function for Time synchronization request.
     /// </summary>
-    public static UnconfirmedServiceRequest NewTimeSynchronization(TimeSynchronizationRequest value)
+    public static UnconfirmedServiceRequest FromTimeSynchronization(TimeSynchronizationRequest value)
     {
         return new UnconfirmedServiceRequest(Option.TimeSynchronization, value);
     }
@@ -275,7 +275,7 @@ public partial record class UnconfirmedServiceRequest
         {
             if (Choice != Option.WhoHas)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.WhoHas)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.WhoHas)}.");
             }
             return (WhoHasRequest)_choiceValue;
         }
@@ -284,7 +284,7 @@ public partial record class UnconfirmedServiceRequest
     /// <summary>
     /// Create function for Who-Has service request.
     /// </summary>
-    public static UnconfirmedServiceRequest NewWhoHas(WhoHasRequest value)
+    public static UnconfirmedServiceRequest FromWhoHas(WhoHasRequest value)
     {
         return new UnconfirmedServiceRequest(Option.WhoHas, value);
     }
@@ -298,7 +298,7 @@ public partial record class UnconfirmedServiceRequest
         {
             if (Choice != Option.WhoIs)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.WhoIs)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.WhoIs)}.");
             }
             return (WhoIsRequest)_choiceValue;
         }
@@ -307,7 +307,7 @@ public partial record class UnconfirmedServiceRequest
     /// <summary>
     /// Create function for Who-Is service request.
     /// </summary>
-    public static UnconfirmedServiceRequest NewWhoIs(WhoIsRequest value)
+    public static UnconfirmedServiceRequest FromWhoIs(WhoIsRequest value)
     {
         return new UnconfirmedServiceRequest(Option.WhoIs, value);
     }
@@ -321,7 +321,7 @@ public partial record class UnconfirmedServiceRequest
         {
             if (Choice != Option.UtcTimeSynchronization)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.UtcTimeSynchronization)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.UtcTimeSynchronization)}.");
             }
             return (UtcTimeSynchronizationRequest)_choiceValue;
         }
@@ -330,7 +330,7 @@ public partial record class UnconfirmedServiceRequest
     /// <summary>
     /// Create function for UTC time synchronization request.
     /// </summary>
-    public static UnconfirmedServiceRequest NewUtcTimeSynchronization(UtcTimeSynchronizationRequest value)
+    public static UnconfirmedServiceRequest FromUtcTimeSynchronization(UtcTimeSynchronizationRequest value)
     {
         return new UnconfirmedServiceRequest(Option.UtcTimeSynchronization, value);
     }
@@ -344,7 +344,7 @@ public partial record class UnconfirmedServiceRequest
         {
             if (Choice != Option.WriteGroup)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.WriteGroup)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.WriteGroup)}.");
             }
             return (WriteGroupRequest)_choiceValue;
         }
@@ -353,7 +353,7 @@ public partial record class UnconfirmedServiceRequest
     /// <summary>
     /// Create function for Write group request.
     /// </summary>
-    public static UnconfirmedServiceRequest NewWriteGroup(WriteGroupRequest value)
+    public static UnconfirmedServiceRequest FromWriteGroup(WriteGroupRequest value)
     {
         return new UnconfirmedServiceRequest(Option.WriteGroup, value);
     }
@@ -367,7 +367,7 @@ public partial record class UnconfirmedServiceRequest
         {
             if (Choice != Option.UnconfirmedCovNotificationMultiple)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.UnconfirmedCovNotificationMultiple)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.UnconfirmedCovNotificationMultiple)}.");
             }
             return (UnconfirmedCovNotificationMultipleRequest)_choiceValue;
         }
@@ -376,7 +376,7 @@ public partial record class UnconfirmedServiceRequest
     /// <summary>
     /// Create function for Unconfirmed COV notification multiple request.
     /// </summary>
-    public static UnconfirmedServiceRequest NewUnconfirmedCovNotificationMultiple(UnconfirmedCovNotificationMultipleRequest value)
+    public static UnconfirmedServiceRequest FromUnconfirmedCovNotificationMultiple(UnconfirmedCovNotificationMultipleRequest value)
     {
         return new UnconfirmedServiceRequest(Option.UnconfirmedCovNotificationMultiple, value);
     }
@@ -390,7 +390,7 @@ public partial record class UnconfirmedServiceRequest
         {
             if (Choice != Option.UnconfirmedAuditNotification)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.UnconfirmedAuditNotification)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.UnconfirmedAuditNotification)}.");
             }
             return (UnconfirmedAuditNotificationRequest)_choiceValue;
         }
@@ -399,7 +399,7 @@ public partial record class UnconfirmedServiceRequest
     /// <summary>
     /// Create function for Unconfirmed audit notification request.
     /// </summary>
-    public static UnconfirmedServiceRequest NewUnconfirmedAuditNotification(UnconfirmedAuditNotificationRequest value)
+    public static UnconfirmedServiceRequest FromUnconfirmedAuditNotification(UnconfirmedAuditNotificationRequest value)
     {
         return new UnconfirmedServiceRequest(Option.UnconfirmedAuditNotification, value);
     }
@@ -413,7 +413,7 @@ public partial record class UnconfirmedServiceRequest
         {
             if (Choice != Option.WhoAmI)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.WhoAmI)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.WhoAmI)}.");
             }
             return (WhoAmIRequest)_choiceValue;
         }
@@ -422,7 +422,7 @@ public partial record class UnconfirmedServiceRequest
     /// <summary>
     /// Create function for Who-Am-I service request.
     /// </summary>
-    public static UnconfirmedServiceRequest NewWhoAmI(WhoAmIRequest value)
+    public static UnconfirmedServiceRequest FromWhoAmI(WhoAmIRequest value)
     {
         return new UnconfirmedServiceRequest(Option.WhoAmI, value);
     }
@@ -436,7 +436,7 @@ public partial record class UnconfirmedServiceRequest
         {
             if (Choice != Option.YouAre)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.YouAre)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.YouAre)}.");
             }
             return (YouAreRequest)_choiceValue;
         }
@@ -445,7 +445,7 @@ public partial record class UnconfirmedServiceRequest
     /// <summary>
     /// Create function for You-Are service request.
     /// </summary>
-    public static UnconfirmedServiceRequest NewYouAre(YouAreRequest value)
+    public static UnconfirmedServiceRequest FromYouAre(YouAreRequest value)
     {
         return new UnconfirmedServiceRequest(Option.YouAre, value);
     }

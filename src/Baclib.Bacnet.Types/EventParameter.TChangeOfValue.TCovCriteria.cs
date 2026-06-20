@@ -53,7 +53,7 @@ public partial record class EventParameter
                 {
                     if (Choice != Option.Bitmask)
                     {
-                        throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Bitmask)} hat das Template erstellt");
+                        throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Bitmask)}.");
                     }
                     return (BitString)_choiceValue;
                 }
@@ -62,7 +62,7 @@ public partial record class EventParameter
             /// <summary>
             /// Create function for A bit mask for detecting changes in specific bits.
             /// </summary>
-            public static TCovCriteria NewBitmask(BitString value)
+            public static TCovCriteria FromBitmask(BitString value)
             {
                 return new TCovCriteria(Option.Bitmask, value);
             }
@@ -76,7 +76,7 @@ public partial record class EventParameter
                 {
                     if (Choice != Option.ReferencedPropertyIncrement)
                     {
-                        throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ReferencedPropertyIncrement)} hat das Template erstellt");
+                        throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ReferencedPropertyIncrement)}.");
                     }
                     return (float)_choiceValue;
                 }
@@ -85,7 +85,7 @@ public partial record class EventParameter
             /// <summary>
             /// Create function for The minimum change in value required to trigger the event.
             /// </summary>
-            public static TCovCriteria NewReferencedPropertyIncrement(float value)
+            public static TCovCriteria FromReferencedPropertyIncrement(float value)
             {
                 return new TCovCriteria(Option.ReferencedPropertyIncrement, value);
             }

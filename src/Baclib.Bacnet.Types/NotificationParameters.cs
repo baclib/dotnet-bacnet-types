@@ -139,7 +139,7 @@ public partial record class NotificationParameters
         {
             if (Choice != Option.ChangeOfBitstring)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ChangeOfBitstring)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ChangeOfBitstring)}.");
             }
             return (TChangeOfBitstring)_choiceValue;
         }
@@ -148,7 +148,7 @@ public partial record class NotificationParameters
     /// <summary>
     /// Create function for Notification parameters for a change-of-bitstring event, triggered when a bit string value changes.
     /// </summary>
-    public static NotificationParameters NewChangeOfBitstring(TChangeOfBitstring value)
+    public static NotificationParameters FromChangeOfBitstring(TChangeOfBitstring value)
     {
         return new NotificationParameters(Option.ChangeOfBitstring, value);
     }
@@ -162,7 +162,7 @@ public partial record class NotificationParameters
         {
             if (Choice != Option.ChangeOfState)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ChangeOfState)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ChangeOfState)}.");
             }
             return (TChangeOfState)_choiceValue;
         }
@@ -171,7 +171,7 @@ public partial record class NotificationParameters
     /// <summary>
     /// Create function for Notification parameters for a change-of-state event, triggered when an object transitions to a new state.
     /// </summary>
-    public static NotificationParameters NewChangeOfState(TChangeOfState value)
+    public static NotificationParameters FromChangeOfState(TChangeOfState value)
     {
         return new NotificationParameters(Option.ChangeOfState, value);
     }
@@ -185,7 +185,7 @@ public partial record class NotificationParameters
         {
             if (Choice != Option.ChangeOfValue)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ChangeOfValue)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ChangeOfValue)}.");
             }
             return (TChangeOfValue)_choiceValue;
         }
@@ -194,7 +194,7 @@ public partial record class NotificationParameters
     /// <summary>
     /// Create function for Notification parameters for a change-of-value event, triggered when a monitored value changes significantly.
     /// </summary>
-    public static NotificationParameters NewChangeOfValue(TChangeOfValue value)
+    public static NotificationParameters FromChangeOfValue(TChangeOfValue value)
     {
         return new NotificationParameters(Option.ChangeOfValue, value);
     }
@@ -208,7 +208,7 @@ public partial record class NotificationParameters
         {
             if (Choice != Option.CommandFailure)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.CommandFailure)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.CommandFailure)}.");
             }
             return (TCommandFailure)_choiceValue;
         }
@@ -217,7 +217,7 @@ public partial record class NotificationParameters
     /// <summary>
     /// Create function for Notification parameters for a command-failure event, triggered when a command does not achieve the expected result.
     /// </summary>
-    public static NotificationParameters NewCommandFailure(TCommandFailure value)
+    public static NotificationParameters FromCommandFailure(TCommandFailure value)
     {
         return new NotificationParameters(Option.CommandFailure, value);
     }
@@ -231,7 +231,7 @@ public partial record class NotificationParameters
         {
             if (Choice != Option.FloatingLimit)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.FloatingLimit)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.FloatingLimit)}.");
             }
             return (TFloatingLimit)_choiceValue;
         }
@@ -240,7 +240,7 @@ public partial record class NotificationParameters
     /// <summary>
     /// Create function for Notification parameters for a floating-limit event, triggered when a value deviates from a setpoint by more than a specified error limit.
     /// </summary>
-    public static NotificationParameters NewFloatingLimit(TFloatingLimit value)
+    public static NotificationParameters FromFloatingLimit(TFloatingLimit value)
     {
         return new NotificationParameters(Option.FloatingLimit, value);
     }
@@ -254,7 +254,7 @@ public partial record class NotificationParameters
         {
             if (Choice != Option.OutOfRange)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.OutOfRange)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.OutOfRange)}.");
             }
             return (TOutOfRange)_choiceValue;
         }
@@ -263,7 +263,7 @@ public partial record class NotificationParameters
     /// <summary>
     /// Create function for Notification parameters for an out-of-range event, triggered when a real value exceeds a defined limit.
     /// </summary>
-    public static NotificationParameters NewOutOfRange(TOutOfRange value)
+    public static NotificationParameters FromOutOfRange(TOutOfRange value)
     {
         return new NotificationParameters(Option.OutOfRange, value);
     }
@@ -277,7 +277,7 @@ public partial record class NotificationParameters
         {
             if (Choice != Option.ComplexEventType)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ComplexEventType)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ComplexEventType)}.");
             }
             return (TComplexEventType)_choiceValue;
         }
@@ -286,7 +286,7 @@ public partial record class NotificationParameters
     /// <summary>
     /// Create function for Notification parameters for a complex event type, containing a series of property-value pairs for vendor-specific or advanced event scenarios.
     /// </summary>
-    public static NotificationParameters NewComplexEventType(TComplexEventType value)
+    public static NotificationParameters FromComplexEventType(TComplexEventType value)
     {
         return new NotificationParameters(Option.ComplexEventType, value);
     }
@@ -300,7 +300,7 @@ public partial record class NotificationParameters
         {
             if (Choice != Option.ChangeOfLifeSafety)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ChangeOfLifeSafety)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ChangeOfLifeSafety)}.");
             }
             return (TChangeOfLifeSafety)_choiceValue;
         }
@@ -309,7 +309,7 @@ public partial record class NotificationParameters
     /// <summary>
     /// Create function for Notification parameters for a change-of-life-safety event, triggered when a life safety system changes state or mode.
     /// </summary>
-    public static NotificationParameters NewChangeOfLifeSafety(TChangeOfLifeSafety value)
+    public static NotificationParameters FromChangeOfLifeSafety(TChangeOfLifeSafety value)
     {
         return new NotificationParameters(Option.ChangeOfLifeSafety, value);
     }
@@ -323,7 +323,7 @@ public partial record class NotificationParameters
         {
             if (Choice != Option.Extended)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Extended)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Extended)}.");
             }
             return (TExtended)_choiceValue;
         }
@@ -332,7 +332,7 @@ public partial record class NotificationParameters
     /// <summary>
     /// Create function for Notification parameters for vendor-specific extended events, allowing custom event types beyond the standard BACnet event definitions.
     /// </summary>
-    public static NotificationParameters NewExtended(TExtended value)
+    public static NotificationParameters FromExtended(TExtended value)
     {
         return new NotificationParameters(Option.Extended, value);
     }
@@ -346,7 +346,7 @@ public partial record class NotificationParameters
         {
             if (Choice != Option.BufferReady)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.BufferReady)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.BufferReady)}.");
             }
             return (TBufferReady)_choiceValue;
         }
@@ -355,7 +355,7 @@ public partial record class NotificationParameters
     /// <summary>
     /// Create function for Notification parameters for a buffer-ready event, triggered when a data buffer reaches a threshold and is ready for retrieval.
     /// </summary>
-    public static NotificationParameters NewBufferReady(TBufferReady value)
+    public static NotificationParameters FromBufferReady(TBufferReady value)
     {
         return new NotificationParameters(Option.BufferReady, value);
     }
@@ -369,7 +369,7 @@ public partial record class NotificationParameters
         {
             if (Choice != Option.UnsignedRange)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.UnsignedRange)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.UnsignedRange)}.");
             }
             return (TUnsignedRange)_choiceValue;
         }
@@ -378,7 +378,7 @@ public partial record class NotificationParameters
     /// <summary>
     /// Create function for Notification parameters for an unsigned-range event, triggered when an unsigned integer value exceeds a defined limit.
     /// </summary>
-    public static NotificationParameters NewUnsignedRange(TUnsignedRange value)
+    public static NotificationParameters FromUnsignedRange(TUnsignedRange value)
     {
         return new NotificationParameters(Option.UnsignedRange, value);
     }
@@ -392,7 +392,7 @@ public partial record class NotificationParameters
         {
             if (Choice != Option.AccessEvent)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.AccessEvent)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.AccessEvent)}.");
             }
             return (TAccessEvent)_choiceValue;
         }
@@ -401,7 +401,7 @@ public partial record class NotificationParameters
     /// <summary>
     /// Create function for Notification parameters for an access-event, triggered by physical access control events such as door access attempts.
     /// </summary>
-    public static NotificationParameters NewAccessEvent(TAccessEvent value)
+    public static NotificationParameters FromAccessEvent(TAccessEvent value)
     {
         return new NotificationParameters(Option.AccessEvent, value);
     }
@@ -415,7 +415,7 @@ public partial record class NotificationParameters
         {
             if (Choice != Option.DoubleOutOfRange)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.DoubleOutOfRange)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.DoubleOutOfRange)}.");
             }
             return (TDoubleOutOfRange)_choiceValue;
         }
@@ -424,7 +424,7 @@ public partial record class NotificationParameters
     /// <summary>
     /// Create function for Notification parameters for a double-out-of-range event, triggered when a double-precision value exceeds a defined limit.
     /// </summary>
-    public static NotificationParameters NewDoubleOutOfRange(TDoubleOutOfRange value)
+    public static NotificationParameters FromDoubleOutOfRange(TDoubleOutOfRange value)
     {
         return new NotificationParameters(Option.DoubleOutOfRange, value);
     }
@@ -438,7 +438,7 @@ public partial record class NotificationParameters
         {
             if (Choice != Option.SignedOutOfRange)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.SignedOutOfRange)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.SignedOutOfRange)}.");
             }
             return (TSignedOutOfRange)_choiceValue;
         }
@@ -447,7 +447,7 @@ public partial record class NotificationParameters
     /// <summary>
     /// Create function for Notification parameters for a signed-out-of-range event, triggered when a signed integer value exceeds a defined limit.
     /// </summary>
-    public static NotificationParameters NewSignedOutOfRange(TSignedOutOfRange value)
+    public static NotificationParameters FromSignedOutOfRange(TSignedOutOfRange value)
     {
         return new NotificationParameters(Option.SignedOutOfRange, value);
     }
@@ -461,7 +461,7 @@ public partial record class NotificationParameters
         {
             if (Choice != Option.UnsignedOutOfRange)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.UnsignedOutOfRange)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.UnsignedOutOfRange)}.");
             }
             return (TUnsignedOutOfRange)_choiceValue;
         }
@@ -470,7 +470,7 @@ public partial record class NotificationParameters
     /// <summary>
     /// Create function for Notification parameters for an unsigned-out-of-range event, triggered when an unsigned integer value exceeds a defined limit.
     /// </summary>
-    public static NotificationParameters NewUnsignedOutOfRange(TUnsignedOutOfRange value)
+    public static NotificationParameters FromUnsignedOutOfRange(TUnsignedOutOfRange value)
     {
         return new NotificationParameters(Option.UnsignedOutOfRange, value);
     }
@@ -484,7 +484,7 @@ public partial record class NotificationParameters
         {
             if (Choice != Option.ChangeOfCharacterstring)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ChangeOfCharacterstring)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ChangeOfCharacterstring)}.");
             }
             return (TChangeOfCharacterstring)_choiceValue;
         }
@@ -493,7 +493,7 @@ public partial record class NotificationParameters
     /// <summary>
     /// Create function for Notification parameters for a change-of-characterstring event, triggered when a character string value changes to a specified alarm value.
     /// </summary>
-    public static NotificationParameters NewChangeOfCharacterstring(TChangeOfCharacterstring value)
+    public static NotificationParameters FromChangeOfCharacterstring(TChangeOfCharacterstring value)
     {
         return new NotificationParameters(Option.ChangeOfCharacterstring, value);
     }
@@ -507,7 +507,7 @@ public partial record class NotificationParameters
         {
             if (Choice != Option.ChangeOfStatusFlags)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ChangeOfStatusFlags)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ChangeOfStatusFlags)}.");
             }
             return (TChangeOfStatusFlags)_choiceValue;
         }
@@ -516,7 +516,7 @@ public partial record class NotificationParameters
     /// <summary>
     /// Create function for Notification parameters for a change-of-status-flags event, triggered when object status flags change.
     /// </summary>
-    public static NotificationParameters NewChangeOfStatusFlags(TChangeOfStatusFlags value)
+    public static NotificationParameters FromChangeOfStatusFlags(TChangeOfStatusFlags value)
     {
         return new NotificationParameters(Option.ChangeOfStatusFlags, value);
     }
@@ -530,7 +530,7 @@ public partial record class NotificationParameters
         {
             if (Choice != Option.ChangeOfReliability)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ChangeOfReliability)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ChangeOfReliability)}.");
             }
             return (TChangeOfReliability)_choiceValue;
         }
@@ -539,7 +539,7 @@ public partial record class NotificationParameters
     /// <summary>
     /// Create function for Notification parameters for a change-of-reliability event, triggered when an object&#x27;s reliability status changes.
     /// </summary>
-    public static NotificationParameters NewChangeOfReliability(TChangeOfReliability value)
+    public static NotificationParameters FromChangeOfReliability(TChangeOfReliability value)
     {
         return new NotificationParameters(Option.ChangeOfReliability, value);
     }
@@ -553,7 +553,7 @@ public partial record class NotificationParameters
         {
             if (Choice != Option.ChangeOfDiscreteValue)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ChangeOfDiscreteValue)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ChangeOfDiscreteValue)}.");
             }
             return (TChangeOfDiscreteValue)_choiceValue;
         }
@@ -562,7 +562,7 @@ public partial record class NotificationParameters
     /// <summary>
     /// Create function for Notification parameters for a change-of-discrete-value event, triggered when a discrete value changes to a new state.
     /// </summary>
-    public static NotificationParameters NewChangeOfDiscreteValue(TChangeOfDiscreteValue value)
+    public static NotificationParameters FromChangeOfDiscreteValue(TChangeOfDiscreteValue value)
     {
         return new NotificationParameters(Option.ChangeOfDiscreteValue, value);
     }
@@ -576,7 +576,7 @@ public partial record class NotificationParameters
         {
             if (Choice != Option.ChangeOfTimer)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ChangeOfTimer)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ChangeOfTimer)}.");
             }
             return (TChangeOfTimer)_choiceValue;
         }
@@ -585,7 +585,7 @@ public partial record class NotificationParameters
     /// <summary>
     /// Create function for Notification parameters for a change-of-timer event, triggered when a timer object transitions to a new state.
     /// </summary>
-    public static NotificationParameters NewChangeOfTimer(TChangeOfTimer value)
+    public static NotificationParameters FromChangeOfTimer(TChangeOfTimer value)
     {
         return new NotificationParameters(Option.ChangeOfTimer, value);
     }

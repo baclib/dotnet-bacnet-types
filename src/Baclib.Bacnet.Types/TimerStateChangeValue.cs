@@ -124,7 +124,7 @@ public partial record class TimerStateChangeValue
         {
             if (Choice != Option.Null)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Null)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Null)}.");
             }
             return (Null)_choiceValue;
         }
@@ -133,7 +133,7 @@ public partial record class TimerStateChangeValue
     /// <summary>
     /// Create function for No value specified.
     /// </summary>
-    public static TimerStateChangeValue NewNull(Null value)
+    public static TimerStateChangeValue FromNull(Null value)
     {
         return new TimerStateChangeValue(Option.Null, value);
     }
@@ -147,7 +147,7 @@ public partial record class TimerStateChangeValue
         {
             if (Choice != Option.Boolean)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Boolean)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Boolean)}.");
             }
             return (Boolean)_choiceValue;
         }
@@ -156,7 +156,7 @@ public partial record class TimerStateChangeValue
     /// <summary>
     /// Create function for A boolean value.
     /// </summary>
-    public static TimerStateChangeValue NewBoolean(Boolean value)
+    public static TimerStateChangeValue FromBoolean(Boolean value)
     {
         return new TimerStateChangeValue(Option.Boolean, value);
     }
@@ -170,7 +170,7 @@ public partial record class TimerStateChangeValue
         {
             if (Choice != Option.Unsigned)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Unsigned)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Unsigned)}.");
             }
             return (Unsigned)_choiceValue;
         }
@@ -179,7 +179,7 @@ public partial record class TimerStateChangeValue
     /// <summary>
     /// Create function for An unsigned integer value.
     /// </summary>
-    public static TimerStateChangeValue NewUnsigned(Unsigned value)
+    public static TimerStateChangeValue FromUnsigned(Unsigned value)
     {
         return new TimerStateChangeValue(Option.Unsigned, value);
     }
@@ -193,7 +193,7 @@ public partial record class TimerStateChangeValue
         {
             if (Choice != Option.Integer)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Integer)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Integer)}.");
             }
             return (int)_choiceValue;
         }
@@ -202,7 +202,7 @@ public partial record class TimerStateChangeValue
     /// <summary>
     /// Create function for A signed integer value.
     /// </summary>
-    public static TimerStateChangeValue NewInteger(int value)
+    public static TimerStateChangeValue FromInteger(int value)
     {
         return new TimerStateChangeValue(Option.Integer, value);
     }
@@ -216,7 +216,7 @@ public partial record class TimerStateChangeValue
         {
             if (Choice != Option.Real)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Real)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Real)}.");
             }
             return (float)_choiceValue;
         }
@@ -225,7 +225,7 @@ public partial record class TimerStateChangeValue
     /// <summary>
     /// Create function for A real (floating-point) value.
     /// </summary>
-    public static TimerStateChangeValue NewReal(float value)
+    public static TimerStateChangeValue FromReal(float value)
     {
         return new TimerStateChangeValue(Option.Real, value);
     }
@@ -239,7 +239,7 @@ public partial record class TimerStateChangeValue
         {
             if (Choice != Option.Double)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Double)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Double)}.");
             }
             return (double)_choiceValue;
         }
@@ -248,7 +248,7 @@ public partial record class TimerStateChangeValue
     /// <summary>
     /// Create function for A double-precision floating-point value.
     /// </summary>
-    public static TimerStateChangeValue NewDouble(double value)
+    public static TimerStateChangeValue FromDouble(double value)
     {
         return new TimerStateChangeValue(Option.Double, value);
     }
@@ -262,7 +262,7 @@ public partial record class TimerStateChangeValue
         {
             if (Choice != Option.Octetstring)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Octetstring)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Octetstring)}.");
             }
             return (OctetString)_choiceValue;
         }
@@ -271,7 +271,7 @@ public partial record class TimerStateChangeValue
     /// <summary>
     /// Create function for An octet string value.
     /// </summary>
-    public static TimerStateChangeValue NewOctetstring(OctetString value)
+    public static TimerStateChangeValue FromOctetstring(OctetString value)
     {
         return new TimerStateChangeValue(Option.Octetstring, value);
     }
@@ -285,7 +285,7 @@ public partial record class TimerStateChangeValue
         {
             if (Choice != Option.Characterstring)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Characterstring)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Characterstring)}.");
             }
             return (CharacterString)_choiceValue;
         }
@@ -294,7 +294,7 @@ public partial record class TimerStateChangeValue
     /// <summary>
     /// Create function for A character string value.
     /// </summary>
-    public static TimerStateChangeValue NewCharacterstring(CharacterString value)
+    public static TimerStateChangeValue FromCharacterstring(CharacterString value)
     {
         return new TimerStateChangeValue(Option.Characterstring, value);
     }
@@ -308,7 +308,7 @@ public partial record class TimerStateChangeValue
         {
             if (Choice != Option.Bitstring)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Bitstring)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Bitstring)}.");
             }
             return (BitString)_choiceValue;
         }
@@ -317,7 +317,7 @@ public partial record class TimerStateChangeValue
     /// <summary>
     /// Create function for A bit string value.
     /// </summary>
-    public static TimerStateChangeValue NewBitstring(BitString value)
+    public static TimerStateChangeValue FromBitstring(BitString value)
     {
         return new TimerStateChangeValue(Option.Bitstring, value);
     }
@@ -331,7 +331,7 @@ public partial record class TimerStateChangeValue
         {
             if (Choice != Option.Enumerated)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Enumerated)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Enumerated)}.");
             }
             return (Enumerated)_choiceValue;
         }
@@ -340,7 +340,7 @@ public partial record class TimerStateChangeValue
     /// <summary>
     /// Create function for An enumerated value.
     /// </summary>
-    public static TimerStateChangeValue NewEnumerated(Enumerated value)
+    public static TimerStateChangeValue FromEnumerated(Enumerated value)
     {
         return new TimerStateChangeValue(Option.Enumerated, value);
     }
@@ -354,7 +354,7 @@ public partial record class TimerStateChangeValue
         {
             if (Choice != Option.Date)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Date)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Date)}.");
             }
             return (DatePattern)_choiceValue;
         }
@@ -363,7 +363,7 @@ public partial record class TimerStateChangeValue
     /// <summary>
     /// Create function for A date pattern value.
     /// </summary>
-    public static TimerStateChangeValue NewDate(DatePattern value)
+    public static TimerStateChangeValue FromDate(DatePattern value)
     {
         return new TimerStateChangeValue(Option.Date, value);
     }
@@ -377,7 +377,7 @@ public partial record class TimerStateChangeValue
         {
             if (Choice != Option.Time)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Time)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Time)}.");
             }
             return (TimePattern)_choiceValue;
         }
@@ -386,7 +386,7 @@ public partial record class TimerStateChangeValue
     /// <summary>
     /// Create function for A time pattern value.
     /// </summary>
-    public static TimerStateChangeValue NewTime(TimePattern value)
+    public static TimerStateChangeValue FromTime(TimePattern value)
     {
         return new TimerStateChangeValue(Option.Time, value);
     }
@@ -400,7 +400,7 @@ public partial record class TimerStateChangeValue
         {
             if (Choice != Option.Objectidentifier)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Objectidentifier)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Objectidentifier)}.");
             }
             return (ObjectIdentifier)_choiceValue;
         }
@@ -409,7 +409,7 @@ public partial record class TimerStateChangeValue
     /// <summary>
     /// Create function for An object identifier value.
     /// </summary>
-    public static TimerStateChangeValue NewObjectidentifier(ObjectIdentifier value)
+    public static TimerStateChangeValue FromObjectidentifier(ObjectIdentifier value)
     {
         return new TimerStateChangeValue(Option.Objectidentifier, value);
     }
@@ -423,7 +423,7 @@ public partial record class TimerStateChangeValue
         {
             if (Choice != Option.NoValue)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.NoValue)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.NoValue)}.");
             }
             return (Null)_choiceValue;
         }
@@ -432,7 +432,7 @@ public partial record class TimerStateChangeValue
     /// <summary>
     /// Create function for No value present (context-specific).
     /// </summary>
-    public static TimerStateChangeValue NewNoValue(Null value)
+    public static TimerStateChangeValue FromNoValue(Null value)
     {
         return new TimerStateChangeValue(Option.NoValue, value);
     }
@@ -446,7 +446,7 @@ public partial record class TimerStateChangeValue
         {
             if (Choice != Option.ConstructedValue)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ConstructedValue)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ConstructedValue)}.");
             }
             return (Any)_choiceValue;
         }
@@ -455,7 +455,7 @@ public partial record class TimerStateChangeValue
     /// <summary>
     /// Create function for A constructed value (context-specific).
     /// </summary>
-    public static TimerStateChangeValue NewConstructedValue(Any value)
+    public static TimerStateChangeValue FromConstructedValue(Any value)
     {
         return new TimerStateChangeValue(Option.ConstructedValue, value);
     }
@@ -469,7 +469,7 @@ public partial record class TimerStateChangeValue
         {
             if (Choice != Option.Datetime)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Datetime)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Datetime)}.");
             }
             return (DateTime)_choiceValue;
         }
@@ -478,7 +478,7 @@ public partial record class TimerStateChangeValue
     /// <summary>
     /// Create function for A date and time value (context-specific).
     /// </summary>
-    public static TimerStateChangeValue NewDatetime(DateTime value)
+    public static TimerStateChangeValue FromDatetime(DateTime value)
     {
         return new TimerStateChangeValue(Option.Datetime, value);
     }
@@ -492,7 +492,7 @@ public partial record class TimerStateChangeValue
         {
             if (Choice != Option.LightingCommand)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.LightingCommand)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.LightingCommand)}.");
             }
             return (LightingCommand)_choiceValue;
         }
@@ -501,7 +501,7 @@ public partial record class TimerStateChangeValue
     /// <summary>
     /// Create function for A lighting command value (context-specific).
     /// </summary>
-    public static TimerStateChangeValue NewLightingCommand(LightingCommand value)
+    public static TimerStateChangeValue FromLightingCommand(LightingCommand value)
     {
         return new TimerStateChangeValue(Option.LightingCommand, value);
     }

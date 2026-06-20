@@ -49,7 +49,7 @@ public partial record class SubscribeCovPropertyMultipleError
         {
             if (Choice != Option.ErrorType)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ErrorType)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ErrorType)}.");
             }
             return (Error)_choiceValue;
         }
@@ -58,7 +58,7 @@ public partial record class SubscribeCovPropertyMultipleError
     /// <summary>
     /// Create function for The type of error that occurred.
     /// </summary>
-    public static SubscribeCovPropertyMultipleError NewErrorType(Error value)
+    public static SubscribeCovPropertyMultipleError FromErrorType(Error value)
     {
         return new SubscribeCovPropertyMultipleError(Option.ErrorType, value);
     }
@@ -72,7 +72,7 @@ public partial record class SubscribeCovPropertyMultipleError
         {
             if (Choice != Option.FirstFailedSubscription)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.FirstFailedSubscription)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.FirstFailedSubscription)}.");
             }
             return (TFirstFailedSubscription)_choiceValue;
         }
@@ -81,7 +81,7 @@ public partial record class SubscribeCovPropertyMultipleError
     /// <summary>
     /// Create function for Details of the first failed subscription, including object, property, and error type.
     /// </summary>
-    public static SubscribeCovPropertyMultipleError NewFirstFailedSubscription(TFirstFailedSubscription value)
+    public static SubscribeCovPropertyMultipleError FromFirstFailedSubscription(TFirstFailedSubscription value)
     {
         return new SubscribeCovPropertyMultipleError(Option.FirstFailedSubscription, value);
     }

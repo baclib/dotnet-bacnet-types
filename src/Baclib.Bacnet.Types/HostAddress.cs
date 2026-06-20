@@ -54,7 +54,7 @@ public partial record class HostAddress
         {
             if (Choice != Option.None)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.None)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.None)}.");
             }
             return (Null)_choiceValue;
         }
@@ -63,7 +63,7 @@ public partial record class HostAddress
     /// <summary>
     /// Create function for No host address specified.
     /// </summary>
-    public static HostAddress NewNone(Null value)
+    public static HostAddress FromNone(Null value)
     {
         return new HostAddress(Option.None, value);
     }
@@ -77,7 +77,7 @@ public partial record class HostAddress
         {
             if (Choice != Option.IpAddress)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.IpAddress)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.IpAddress)}.");
             }
             return (OctetString)_choiceValue;
         }
@@ -86,7 +86,7 @@ public partial record class HostAddress
     /// <summary>
     /// Create function for An IP address represented as an octet string (IPv4 or IPv6).
     /// </summary>
-    public static HostAddress NewIpAddress(OctetString value)
+    public static HostAddress FromIpAddress(OctetString value)
     {
         return new HostAddress(Option.IpAddress, value);
     }
@@ -100,7 +100,7 @@ public partial record class HostAddress
         {
             if (Choice != Option.Name)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Name)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Name)}.");
             }
             return (CharacterString)_choiceValue;
         }
@@ -109,7 +109,7 @@ public partial record class HostAddress
     /// <summary>
     /// Create function for A hostname or domain name as a character string.
     /// </summary>
-    public static HostAddress NewName(CharacterString value)
+    public static HostAddress FromName(CharacterString value)
     {
         return new HostAddress(Option.Name, value);
     }

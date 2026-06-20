@@ -63,7 +63,7 @@ public partial record class FaultParameter
                 {
                     if (Choice != Option.Real)
                     {
-                        throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Real)} hat das Template erstellt");
+                        throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Real)}.");
                     }
                     return (float)_choiceValue;
                 }
@@ -72,7 +72,7 @@ public partial record class FaultParameter
             /// <summary>
             /// Create function for Maximum normal value as a real number.
             /// </summary>
-            public static TMaxNormalValue NewReal(float value)
+            public static TMaxNormalValue FromReal(float value)
             {
                 return new TMaxNormalValue(Option.Real, value);
             }
@@ -86,7 +86,7 @@ public partial record class FaultParameter
                 {
                     if (Choice != Option.Unsigned)
                     {
-                        throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Unsigned)} hat das Template erstellt");
+                        throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Unsigned)}.");
                     }
                     return (Unsigned)_choiceValue;
                 }
@@ -95,7 +95,7 @@ public partial record class FaultParameter
             /// <summary>
             /// Create function for Maximum normal value as an unsigned integer.
             /// </summary>
-            public static TMaxNormalValue NewUnsigned(Unsigned value)
+            public static TMaxNormalValue FromUnsigned(Unsigned value)
             {
                 return new TMaxNormalValue(Option.Unsigned, value);
             }
@@ -109,7 +109,7 @@ public partial record class FaultParameter
                 {
                     if (Choice != Option.Double)
                     {
-                        throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Double)} hat das Template erstellt");
+                        throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Double)}.");
                     }
                     return (double)_choiceValue;
                 }
@@ -118,7 +118,7 @@ public partial record class FaultParameter
             /// <summary>
             /// Create function for Maximum normal value as a double-precision number.
             /// </summary>
-            public static TMaxNormalValue NewDouble(double value)
+            public static TMaxNormalValue FromDouble(double value)
             {
                 return new TMaxNormalValue(Option.Double, value);
             }
@@ -132,7 +132,7 @@ public partial record class FaultParameter
                 {
                     if (Choice != Option.Integer)
                     {
-                        throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Integer)} hat das Template erstellt");
+                        throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Integer)}.");
                     }
                     return (int)_choiceValue;
                 }
@@ -141,7 +141,7 @@ public partial record class FaultParameter
             /// <summary>
             /// Create function for Maximum normal value as a signed integer.
             /// </summary>
-            public static TMaxNormalValue NewInteger(int value)
+            public static TMaxNormalValue FromInteger(int value)
             {
                 return new TMaxNormalValue(Option.Integer, value);
             }

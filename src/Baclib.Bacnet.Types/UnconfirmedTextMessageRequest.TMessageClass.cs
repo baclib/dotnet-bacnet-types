@@ -51,7 +51,7 @@ public partial record class UnconfirmedTextMessageRequest
             {
                 if (Choice != Option.Numeric)
                 {
-                    throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Numeric)} hat das Template erstellt");
+                    throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Numeric)}.");
                 }
                 return (Unsigned)_choiceValue;
             }
@@ -60,7 +60,7 @@ public partial record class UnconfirmedTextMessageRequest
         /// <summary>
         /// Create function for A numeric message class identifier.
         /// </summary>
-        public static TMessageClass NewNumeric(Unsigned value)
+        public static TMessageClass FromNumeric(Unsigned value)
         {
             return new TMessageClass(Option.Numeric, value);
         }
@@ -74,7 +74,7 @@ public partial record class UnconfirmedTextMessageRequest
             {
                 if (Choice != Option.Character)
                 {
-                    throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Character)} hat das Template erstellt");
+                    throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Character)}.");
                 }
                 return (CharacterString)_choiceValue;
             }
@@ -83,7 +83,7 @@ public partial record class UnconfirmedTextMessageRequest
         /// <summary>
         /// Create function for A character string message class identifier.
         /// </summary>
-        public static TMessageClass NewCharacter(CharacterString value)
+        public static TMessageClass FromCharacter(CharacterString value)
         {
             return new TMessageClass(Option.Character, value);
         }

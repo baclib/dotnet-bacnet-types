@@ -287,3 +287,4 @@ public class TimeTests
         Assert.Equal(time, reconstructed);
     }
 }
+

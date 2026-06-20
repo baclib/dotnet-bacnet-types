@@ -64,3 +64,4 @@ public class NullTests
         Assert.Equal(null1.GetHashCode(), null2.GetHashCode());
     }
 }
+

@@ -53,7 +53,7 @@ public partial record class NotificationParameters
                 {
                     if (Choice != Option.ChangedBits)
                     {
-                        throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ChangedBits)} hat das Template erstellt");
+                        throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ChangedBits)}.");
                     }
                     return (BitString)_choiceValue;
                 }
@@ -62,7 +62,7 @@ public partial record class NotificationParameters
             /// <summary>
             /// Create function for The bits that have changed in a bit string value.
             /// </summary>
-            public static TNewValue NewChangedBits(BitString value)
+            public static TNewValue FromChangedBits(BitString value)
             {
                 return new TNewValue(Option.ChangedBits, value);
             }
@@ -76,7 +76,7 @@ public partial record class NotificationParameters
                 {
                     if (Choice != Option.ChangedValue)
                     {
-                        throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ChangedValue)} hat das Template erstellt");
+                        throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ChangedValue)}.");
                     }
                     return (float)_choiceValue;
                 }
@@ -85,7 +85,7 @@ public partial record class NotificationParameters
             /// <summary>
             /// Create function for The new numeric value that triggered the notification.
             /// </summary>
-            public static TNewValue NewChangedValue(float value)
+            public static TNewValue FromChangedValue(float value)
             {
                 return new TNewValue(Option.ChangedValue, value);
             }

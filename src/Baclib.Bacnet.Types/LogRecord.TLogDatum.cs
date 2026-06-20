@@ -96,7 +96,7 @@ public partial record class LogRecord
             {
                 if (Choice != Option.LogStatus)
                 {
-                    throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.LogStatus)} hat das Template erstellt");
+                    throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.LogStatus)}.");
                 }
                 return (LogStatus)_choiceValue;
             }
@@ -105,7 +105,7 @@ public partial record class LogRecord
         /// <summary>
         /// Create function for A log status bit string indicating the state of the log.
         /// </summary>
-        public static TLogDatum NewLogStatus(LogStatus value)
+        public static TLogDatum FromLogStatus(LogStatus value)
         {
             return new TLogDatum(Option.LogStatus, value);
         }
@@ -119,7 +119,7 @@ public partial record class LogRecord
             {
                 if (Choice != Option.BooleanValue)
                 {
-                    throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.BooleanValue)} hat das Template erstellt");
+                    throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.BooleanValue)}.");
                 }
                 return (Boolean)_choiceValue;
             }
@@ -128,7 +128,7 @@ public partial record class LogRecord
         /// <summary>
         /// Create function for A logged boolean value.
         /// </summary>
-        public static TLogDatum NewBooleanValue(Boolean value)
+        public static TLogDatum FromBooleanValue(Boolean value)
         {
             return new TLogDatum(Option.BooleanValue, value);
         }
@@ -142,7 +142,7 @@ public partial record class LogRecord
             {
                 if (Choice != Option.RealValue)
                 {
-                    throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.RealValue)} hat das Template erstellt");
+                    throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.RealValue)}.");
                 }
                 return (float)_choiceValue;
             }
@@ -151,7 +151,7 @@ public partial record class LogRecord
         /// <summary>
         /// Create function for A logged real (floating-point) value.
         /// </summary>
-        public static TLogDatum NewRealValue(float value)
+        public static TLogDatum FromRealValue(float value)
         {
             return new TLogDatum(Option.RealValue, value);
         }
@@ -165,7 +165,7 @@ public partial record class LogRecord
             {
                 if (Choice != Option.EnumeratedValue)
                 {
-                    throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.EnumeratedValue)} hat das Template erstellt");
+                    throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.EnumeratedValue)}.");
                 }
                 return (Enumerated)_choiceValue;
             }
@@ -174,7 +174,7 @@ public partial record class LogRecord
         /// <summary>
         /// Create function for A logged enumerated value.
         /// </summary>
-        public static TLogDatum NewEnumeratedValue(Enumerated value)
+        public static TLogDatum FromEnumeratedValue(Enumerated value)
         {
             return new TLogDatum(Option.EnumeratedValue, value);
         }
@@ -188,7 +188,7 @@ public partial record class LogRecord
             {
                 if (Choice != Option.UnsignedValue)
                 {
-                    throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.UnsignedValue)} hat das Template erstellt");
+                    throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.UnsignedValue)}.");
                 }
                 return (Unsigned)_choiceValue;
             }
@@ -197,7 +197,7 @@ public partial record class LogRecord
         /// <summary>
         /// Create function for A logged unsigned integer value.
         /// </summary>
-        public static TLogDatum NewUnsignedValue(Unsigned value)
+        public static TLogDatum FromUnsignedValue(Unsigned value)
         {
             return new TLogDatum(Option.UnsignedValue, value);
         }
@@ -211,7 +211,7 @@ public partial record class LogRecord
             {
                 if (Choice != Option.IntegerValue)
                 {
-                    throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.IntegerValue)} hat das Template erstellt");
+                    throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.IntegerValue)}.");
                 }
                 return (int)_choiceValue;
             }
@@ -220,7 +220,7 @@ public partial record class LogRecord
         /// <summary>
         /// Create function for A logged signed integer value.
         /// </summary>
-        public static TLogDatum NewIntegerValue(int value)
+        public static TLogDatum FromIntegerValue(int value)
         {
             return new TLogDatum(Option.IntegerValue, value);
         }
@@ -234,7 +234,7 @@ public partial record class LogRecord
             {
                 if (Choice != Option.BitstringValue)
                 {
-                    throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.BitstringValue)} hat das Template erstellt");
+                    throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.BitstringValue)}.");
                 }
                 return (BitString)_choiceValue;
             }
@@ -243,7 +243,7 @@ public partial record class LogRecord
         /// <summary>
         /// Create function for A logged bit string value.
         /// </summary>
-        public static TLogDatum NewBitstringValue(BitString value)
+        public static TLogDatum FromBitstringValue(BitString value)
         {
             return new TLogDatum(Option.BitstringValue, value);
         }
@@ -257,7 +257,7 @@ public partial record class LogRecord
             {
                 if (Choice != Option.NullValue)
                 {
-                    throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.NullValue)} hat das Template erstellt");
+                    throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.NullValue)}.");
                 }
                 return (Null)_choiceValue;
             }
@@ -266,7 +266,7 @@ public partial record class LogRecord
         /// <summary>
         /// Create function for Indicates no value was logged at this timestamp.
         /// </summary>
-        public static TLogDatum NewNullValue(Null value)
+        public static TLogDatum FromNullValue(Null value)
         {
             return new TLogDatum(Option.NullValue, value);
         }
@@ -280,7 +280,7 @@ public partial record class LogRecord
             {
                 if (Choice != Option.Failure)
                 {
-                    throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Failure)} hat das Template erstellt");
+                    throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Failure)}.");
                 }
                 return (Error)_choiceValue;
             }
@@ -289,7 +289,7 @@ public partial record class LogRecord
         /// <summary>
         /// Create function for An error that occurred during logging.
         /// </summary>
-        public static TLogDatum NewFailure(Error value)
+        public static TLogDatum FromFailure(Error value)
         {
             return new TLogDatum(Option.Failure, value);
         }
@@ -303,7 +303,7 @@ public partial record class LogRecord
             {
                 if (Choice != Option.TimeChange)
                 {
-                    throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.TimeChange)} hat das Template erstellt");
+                    throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.TimeChange)}.");
                 }
                 return (float)_choiceValue;
             }
@@ -312,7 +312,7 @@ public partial record class LogRecord
         /// <summary>
         /// Create function for Indicates a time change event, with the value representing the time adjustment in seconds.
         /// </summary>
-        public static TLogDatum NewTimeChange(float value)
+        public static TLogDatum FromTimeChange(float value)
         {
             return new TLogDatum(Option.TimeChange, value);
         }
@@ -326,7 +326,7 @@ public partial record class LogRecord
             {
                 if (Choice != Option.AnyValue)
                 {
-                    throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.AnyValue)} hat das Template erstellt");
+                    throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.AnyValue)}.");
                 }
                 return (Any)_choiceValue;
             }
@@ -335,7 +335,7 @@ public partial record class LogRecord
         /// <summary>
         /// Create function for A logged value of any BACnet data type.
         /// </summary>
-        public static TLogDatum NewAnyValue(Any value)
+        public static TLogDatum FromAnyValue(Any value)
         {
             return new TLogDatum(Option.AnyValue, value);
         }

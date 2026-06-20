@@ -180,3 +180,4 @@ public class BitFlags16Tests
         Assert.True(bitFlags1 != bitFlags2);
     }
 }
+

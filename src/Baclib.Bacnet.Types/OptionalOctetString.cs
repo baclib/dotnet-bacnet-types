@@ -49,7 +49,7 @@ public partial record class OptionalOctetString
         {
             if (Choice != Option.Null)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Null)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Null)}.");
             }
             return (Null)_choiceValue;
         }
@@ -58,7 +58,7 @@ public partial record class OptionalOctetString
     /// <summary>
     /// Create function for Indicates the absence of an octet string value.
     /// </summary>
-    public static OptionalOctetString NewNull(Null value)
+    public static OptionalOctetString FromNull(Null value)
     {
         return new OptionalOctetString(Option.Null, value);
     }
@@ -72,7 +72,7 @@ public partial record class OptionalOctetString
         {
             if (Choice != Option.Octetstring)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Octetstring)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Octetstring)}.");
             }
             return (OctetString)_choiceValue;
         }
@@ -81,7 +81,7 @@ public partial record class OptionalOctetString
     /// <summary>
     /// Create function for Specifies the BACnet octet string value when present.
     /// </summary>
-    public static OptionalOctetString NewOctetstring(OctetString value)
+    public static OptionalOctetString FromOctetstring(OctetString value)
     {
         return new OptionalOctetString(Option.Octetstring, value);
     }

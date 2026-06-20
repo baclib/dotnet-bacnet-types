@@ -49,7 +49,7 @@ public partial record class OptionalDate
         {
             if (Choice != Option.Null)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Null)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Null)}.");
             }
             return (Null)_choiceValue;
         }
@@ -58,7 +58,7 @@ public partial record class OptionalDate
     /// <summary>
     /// Create function for Indicates the absence of a date value.
     /// </summary>
-    public static OptionalDate NewNull(Null value)
+    public static OptionalDate FromNull(Null value)
     {
         return new OptionalDate(Option.Null, value);
     }
@@ -72,7 +72,7 @@ public partial record class OptionalDate
         {
             if (Choice != Option.Date)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Date)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Date)}.");
             }
             return (Date)_choiceValue;
         }
@@ -81,7 +81,7 @@ public partial record class OptionalDate
     /// <summary>
     /// Create function for Specifies the BACnet date value when present.
     /// </summary>
-    public static OptionalDate NewDate(Date value)
+    public static OptionalDate FromDate(Date value)
     {
         return new OptionalDate(Option.Date, value);
     }

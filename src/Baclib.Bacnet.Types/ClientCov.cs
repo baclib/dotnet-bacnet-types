@@ -49,7 +49,7 @@ public partial record class ClientCov
         {
             if (Choice != Option.RealIncrement)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.RealIncrement)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.RealIncrement)}.");
             }
             return (float)_choiceValue;
         }
@@ -58,7 +58,7 @@ public partial record class ClientCov
     /// <summary>
     /// Create function for A specific real value increment for COV detection.
     /// </summary>
-    public static ClientCov NewRealIncrement(float value)
+    public static ClientCov FromRealIncrement(float value)
     {
         return new ClientCov(Option.RealIncrement, value);
     }
@@ -72,7 +72,7 @@ public partial record class ClientCov
         {
             if (Choice != Option.DefaultIncrement)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.DefaultIncrement)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.DefaultIncrement)}.");
             }
             return (Null)_choiceValue;
         }
@@ -81,7 +81,7 @@ public partial record class ClientCov
     /// <summary>
     /// Create function for Use the default increment value.
     /// </summary>
-    public static ClientCov NewDefaultIncrement(Null value)
+    public static ClientCov FromDefaultIncrement(Null value)
     {
         return new ClientCov(Option.DefaultIncrement, value);
     }

@@ -79,7 +79,7 @@ public partial record class Pdu
         {
             if (Choice != Option.ConfirmedRequestPdu)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ConfirmedRequestPdu)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ConfirmedRequestPdu)}.");
             }
             return (ConfirmedRequestPdu)_choiceValue;
         }
@@ -88,7 +88,7 @@ public partial record class Pdu
     /// <summary>
     /// Create function for A confirmed request PDU that expects an acknowledgment.
     /// </summary>
-    public static Pdu NewConfirmedRequestPdu(ConfirmedRequestPdu value)
+    public static Pdu FromConfirmedRequestPdu(ConfirmedRequestPdu value)
     {
         return new Pdu(Option.ConfirmedRequestPdu, value);
     }
@@ -102,7 +102,7 @@ public partial record class Pdu
         {
             if (Choice != Option.UnconfirmedRequestPdu)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.UnconfirmedRequestPdu)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.UnconfirmedRequestPdu)}.");
             }
             return (UnconfirmedRequestPdu)_choiceValue;
         }
@@ -111,7 +111,7 @@ public partial record class Pdu
     /// <summary>
     /// Create function for An unconfirmed request PDU that does not expect an acknowledgment.
     /// </summary>
-    public static Pdu NewUnconfirmedRequestPdu(UnconfirmedRequestPdu value)
+    public static Pdu FromUnconfirmedRequestPdu(UnconfirmedRequestPdu value)
     {
         return new Pdu(Option.UnconfirmedRequestPdu, value);
     }
@@ -125,7 +125,7 @@ public partial record class Pdu
         {
             if (Choice != Option.SimpleAckPdu)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.SimpleAckPdu)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.SimpleAckPdu)}.");
             }
             return (SimpleAckPdu)_choiceValue;
         }
@@ -134,7 +134,7 @@ public partial record class Pdu
     /// <summary>
     /// Create function for A simple acknowledgment PDU for a confirmed request.
     /// </summary>
-    public static Pdu NewSimpleAckPdu(SimpleAckPdu value)
+    public static Pdu FromSimpleAckPdu(SimpleAckPdu value)
     {
         return new Pdu(Option.SimpleAckPdu, value);
     }
@@ -148,7 +148,7 @@ public partial record class Pdu
         {
             if (Choice != Option.ComplexAckPdu)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ComplexAckPdu)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ComplexAckPdu)}.");
             }
             return (ComplexAckPdu)_choiceValue;
         }
@@ -157,7 +157,7 @@ public partial record class Pdu
     /// <summary>
     /// Create function for A complex acknowledgment PDU that can include response data.
     /// </summary>
-    public static Pdu NewComplexAckPdu(ComplexAckPdu value)
+    public static Pdu FromComplexAckPdu(ComplexAckPdu value)
     {
         return new Pdu(Option.ComplexAckPdu, value);
     }
@@ -171,7 +171,7 @@ public partial record class Pdu
         {
             if (Choice != Option.SegmentAckPdu)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.SegmentAckPdu)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.SegmentAckPdu)}.");
             }
             return (SegmentAckPdu)_choiceValue;
         }
@@ -180,7 +180,7 @@ public partial record class Pdu
     /// <summary>
     /// Create function for A segment acknowledgment PDU used with segmented messages.
     /// </summary>
-    public static Pdu NewSegmentAckPdu(SegmentAckPdu value)
+    public static Pdu FromSegmentAckPdu(SegmentAckPdu value)
     {
         return new Pdu(Option.SegmentAckPdu, value);
     }
@@ -194,7 +194,7 @@ public partial record class Pdu
         {
             if (Choice != Option.ErrorPdu)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ErrorPdu)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ErrorPdu)}.");
             }
             return (ErrorPdu)_choiceValue;
         }
@@ -203,7 +203,7 @@ public partial record class Pdu
     /// <summary>
     /// Create function for An error PDU indicating a service error response.
     /// </summary>
-    public static Pdu NewErrorPdu(ErrorPdu value)
+    public static Pdu FromErrorPdu(ErrorPdu value)
     {
         return new Pdu(Option.ErrorPdu, value);
     }
@@ -217,7 +217,7 @@ public partial record class Pdu
         {
             if (Choice != Option.RejectPdu)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.RejectPdu)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.RejectPdu)}.");
             }
             return (RejectPdu)_choiceValue;
         }
@@ -226,7 +226,7 @@ public partial record class Pdu
     /// <summary>
     /// Create function for A reject PDU indicating a request was rejected.
     /// </summary>
-    public static Pdu NewRejectPdu(RejectPdu value)
+    public static Pdu FromRejectPdu(RejectPdu value)
     {
         return new Pdu(Option.RejectPdu, value);
     }
@@ -240,7 +240,7 @@ public partial record class Pdu
         {
             if (Choice != Option.AbortPdu)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.AbortPdu)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.AbortPdu)}.");
             }
             return (AbortPdu)_choiceValue;
         }
@@ -249,7 +249,7 @@ public partial record class Pdu
     /// <summary>
     /// Create function for An abort PDU indicating a transaction was aborted.
     /// </summary>
-    public static Pdu NewAbortPdu(AbortPdu value)
+    public static Pdu FromAbortPdu(AbortPdu value)
     {
         return new Pdu(Option.AbortPdu, value);
     }

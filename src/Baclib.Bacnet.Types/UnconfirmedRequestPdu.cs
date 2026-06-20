@@ -3,28 +3,11 @@
 
 namespace Baclib.Bacnet.Types;
 
-/// <summary>
-/// Represents the sequence BACnet-Unconfirmed-Request-PDU as defined in ANSI/ASHRAE 135-2024 Clause 21.
-/// </summary>
-public partial record class UnconfirmedRequestPdu
+public sealed record class UnconfirmedRequestPdu
 {
-    /// <summary>
-    /// Identifies the type of the PDU.
-    /// </summary>
-    public required TPduType PduType { get; init; }
-    
-    /// <summary>
-    /// Reserved for future use; shall be set to zero.
-    /// </summary>
-    public required TReserved Reserved { get; init; }
-    
-    /// <summary>
-    /// Specifies the unconfirmed service being requested.
-    /// </summary>
-    public required UnconfirmedServiceChoice ServiceChoice { get; init; }
-    
-    /// <summary>
-    /// The actual unconfirmed service request data.
-    /// </summary>
-    public required UnconfirmedServiceRequest ServiceRequest { get; init; }
-    }
+    public Pdu.Option Type => Pdu.Option.UnconfirmedRequestPdu;
+
+    public UnconfirmedServiceChoice ServiceChoice { get; init; }
+
+    public ReadOnlyMemory<byte> ServiceRequest { get; init; } = ReadOnlyMemory<byte>.Empty;
+}

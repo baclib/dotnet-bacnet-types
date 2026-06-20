@@ -49,7 +49,7 @@ public partial record class OptionalPriorityFilter
         {
             if (Choice != Option.Null)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Null)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Null)}.");
             }
             return (Null)_choiceValue;
         }
@@ -58,7 +58,7 @@ public partial record class OptionalPriorityFilter
     /// <summary>
     /// Create function for Indicates the absence of a priority filter value.
     /// </summary>
-    public static OptionalPriorityFilter NewNull(Null value)
+    public static OptionalPriorityFilter FromNull(Null value)
     {
         return new OptionalPriorityFilter(Option.Null, value);
     }
@@ -72,7 +72,7 @@ public partial record class OptionalPriorityFilter
         {
             if (Choice != Option.Filter)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Filter)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Filter)}.");
             }
             return (PriorityFilter)_choiceValue;
         }
@@ -81,7 +81,7 @@ public partial record class OptionalPriorityFilter
     /// <summary>
     /// Create function for Specifies the BACnet priority filter value when present.
     /// </summary>
-    public static OptionalPriorityFilter NewFilter(PriorityFilter value)
+    public static OptionalPriorityFilter FromFilter(PriorityFilter value)
     {
         return new OptionalPriorityFilter(Option.Filter, value);
     }

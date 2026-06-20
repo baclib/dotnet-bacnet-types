@@ -54,7 +54,7 @@ public partial record class CalendarEntry
         {
             if (Choice != Option.Date)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Date)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Date)}.");
             }
             return (DatePattern)_choiceValue;
         }
@@ -63,7 +63,7 @@ public partial record class CalendarEntry
     /// <summary>
     /// Create function for A specific date or date pattern.
     /// </summary>
-    public static CalendarEntry NewDate(DatePattern value)
+    public static CalendarEntry FromDate(DatePattern value)
     {
         return new CalendarEntry(Option.Date, value);
     }
@@ -77,7 +77,7 @@ public partial record class CalendarEntry
         {
             if (Choice != Option.DateRange)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.DateRange)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.DateRange)}.");
             }
             return (DateRange)_choiceValue;
         }
@@ -86,7 +86,7 @@ public partial record class CalendarEntry
     /// <summary>
     /// Create function for A range defined by a start date and an end date.
     /// </summary>
-    public static CalendarEntry NewDateRange(DateRange value)
+    public static CalendarEntry FromDateRange(DateRange value)
     {
         return new CalendarEntry(Option.DateRange, value);
     }
@@ -100,7 +100,7 @@ public partial record class CalendarEntry
         {
             if (Choice != Option.Weeknday)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Weeknday)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Weeknday)}.");
             }
             return (WeekNDay)_choiceValue;
         }
@@ -109,7 +109,7 @@ public partial record class CalendarEntry
     /// <summary>
     /// Create function for A combination of month, week, and day.
     /// </summary>
-    public static CalendarEntry NewWeeknday(WeekNDay value)
+    public static CalendarEntry FromWeeknday(WeekNDay value)
     {
         return new CalendarEntry(Option.Weeknday, value);
     }

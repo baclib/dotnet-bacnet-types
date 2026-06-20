@@ -53,7 +53,7 @@ public partial record class ReadAccessResult
                 {
                     if (Choice != Option.PropertyValue)
                     {
-                        throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.PropertyValue)} hat das Template erstellt");
+                        throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.PropertyValue)}.");
                     }
                     return (Any)_choiceValue;
                 }
@@ -62,7 +62,7 @@ public partial record class ReadAccessResult
             /// <summary>
             /// Create function for The value of the property read.
             /// </summary>
-            public static TReadResult NewPropertyValue(Any value)
+            public static TReadResult FromPropertyValue(Any value)
             {
                 return new TReadResult(Option.PropertyValue, value);
             }
@@ -76,7 +76,7 @@ public partial record class ReadAccessResult
                 {
                     if (Choice != Option.PropertyAccessError)
                     {
-                        throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.PropertyAccessError)} hat das Template erstellt");
+                        throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.PropertyAccessError)}.");
                     }
                     return (Error)_choiceValue;
                 }
@@ -85,7 +85,7 @@ public partial record class ReadAccessResult
             /// <summary>
             /// Create function for Error encountered while accessing the property.
             /// </summary>
-            public static TReadResult NewPropertyAccessError(Error value)
+            public static TReadResult FromPropertyAccessError(Error value)
             {
                 return new TReadResult(Option.PropertyAccessError, value);
             }

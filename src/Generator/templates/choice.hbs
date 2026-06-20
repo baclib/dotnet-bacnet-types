@@ -48,7 +48,7 @@ public partial record class {{className}}
         {
             if (Choice != Option.{{name}})
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.{{name}})} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.{{name}})}.");
             }
             return ({{type}})_choiceValue;
         }
@@ -59,7 +59,7 @@ public partial record class {{className}}
     /// Create function for {{description}}
     /// </summary>
     {{/if}}
-    public static {{../className}} New{{name}}({{type}} value)
+    public static {{../className}} From{{name}}({{type}} value)
     {
         return new {{../className}}(Option.{{name}}, value);
     }{{#unless @last}}

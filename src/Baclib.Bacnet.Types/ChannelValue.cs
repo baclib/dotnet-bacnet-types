@@ -119,7 +119,7 @@ public partial record class ChannelValue
         {
             if (Choice != Option.Null)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Null)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Null)}.");
             }
             return (Null)_choiceValue;
         }
@@ -128,7 +128,7 @@ public partial record class ChannelValue
     /// <summary>
     /// Create function for No value.
     /// </summary>
-    public static ChannelValue NewNull(Null value)
+    public static ChannelValue FromNull(Null value)
     {
         return new ChannelValue(Option.Null, value);
     }
@@ -142,7 +142,7 @@ public partial record class ChannelValue
         {
             if (Choice != Option.Real)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Real)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Real)}.");
             }
             return (float)_choiceValue;
         }
@@ -151,7 +151,7 @@ public partial record class ChannelValue
     /// <summary>
     /// Create function for A real (floating-point) value.
     /// </summary>
-    public static ChannelValue NewReal(float value)
+    public static ChannelValue FromReal(float value)
     {
         return new ChannelValue(Option.Real, value);
     }
@@ -165,7 +165,7 @@ public partial record class ChannelValue
         {
             if (Choice != Option.Enumerated)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Enumerated)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Enumerated)}.");
             }
             return (Enumerated)_choiceValue;
         }
@@ -174,7 +174,7 @@ public partial record class ChannelValue
     /// <summary>
     /// Create function for An enumerated value.
     /// </summary>
-    public static ChannelValue NewEnumerated(Enumerated value)
+    public static ChannelValue FromEnumerated(Enumerated value)
     {
         return new ChannelValue(Option.Enumerated, value);
     }
@@ -188,7 +188,7 @@ public partial record class ChannelValue
         {
             if (Choice != Option.Unsigned)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Unsigned)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Unsigned)}.");
             }
             return (Unsigned)_choiceValue;
         }
@@ -197,7 +197,7 @@ public partial record class ChannelValue
     /// <summary>
     /// Create function for An unsigned integer value.
     /// </summary>
-    public static ChannelValue NewUnsigned(Unsigned value)
+    public static ChannelValue FromUnsigned(Unsigned value)
     {
         return new ChannelValue(Option.Unsigned, value);
     }
@@ -211,7 +211,7 @@ public partial record class ChannelValue
         {
             if (Choice != Option.Boolean)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Boolean)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Boolean)}.");
             }
             return (Boolean)_choiceValue;
         }
@@ -220,7 +220,7 @@ public partial record class ChannelValue
     /// <summary>
     /// Create function for A boolean value.
     /// </summary>
-    public static ChannelValue NewBoolean(Boolean value)
+    public static ChannelValue FromBoolean(Boolean value)
     {
         return new ChannelValue(Option.Boolean, value);
     }
@@ -234,7 +234,7 @@ public partial record class ChannelValue
         {
             if (Choice != Option.Integer)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Integer)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Integer)}.");
             }
             return (int)_choiceValue;
         }
@@ -243,7 +243,7 @@ public partial record class ChannelValue
     /// <summary>
     /// Create function for A signed integer value.
     /// </summary>
-    public static ChannelValue NewInteger(int value)
+    public static ChannelValue FromInteger(int value)
     {
         return new ChannelValue(Option.Integer, value);
     }
@@ -257,7 +257,7 @@ public partial record class ChannelValue
         {
             if (Choice != Option.Double)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Double)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Double)}.");
             }
             return (double)_choiceValue;
         }
@@ -266,7 +266,7 @@ public partial record class ChannelValue
     /// <summary>
     /// Create function for A double-precision floating-point value.
     /// </summary>
-    public static ChannelValue NewDouble(double value)
+    public static ChannelValue FromDouble(double value)
     {
         return new ChannelValue(Option.Double, value);
     }
@@ -280,7 +280,7 @@ public partial record class ChannelValue
         {
             if (Choice != Option.Time)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Time)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Time)}.");
             }
             return (Time)_choiceValue;
         }
@@ -289,7 +289,7 @@ public partial record class ChannelValue
     /// <summary>
     /// Create function for A time value.
     /// </summary>
-    public static ChannelValue NewTime(Time value)
+    public static ChannelValue FromTime(Time value)
     {
         return new ChannelValue(Option.Time, value);
     }
@@ -303,7 +303,7 @@ public partial record class ChannelValue
         {
             if (Choice != Option.Characterstring)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Characterstring)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Characterstring)}.");
             }
             return (CharacterString)_choiceValue;
         }
@@ -312,7 +312,7 @@ public partial record class ChannelValue
     /// <summary>
     /// Create function for A character string value.
     /// </summary>
-    public static ChannelValue NewCharacterstring(CharacterString value)
+    public static ChannelValue FromCharacterstring(CharacterString value)
     {
         return new ChannelValue(Option.Characterstring, value);
     }
@@ -326,7 +326,7 @@ public partial record class ChannelValue
         {
             if (Choice != Option.Octetstring)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Octetstring)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Octetstring)}.");
             }
             return (OctetString)_choiceValue;
         }
@@ -335,7 +335,7 @@ public partial record class ChannelValue
     /// <summary>
     /// Create function for An octet string value.
     /// </summary>
-    public static ChannelValue NewOctetstring(OctetString value)
+    public static ChannelValue FromOctetstring(OctetString value)
     {
         return new ChannelValue(Option.Octetstring, value);
     }
@@ -349,7 +349,7 @@ public partial record class ChannelValue
         {
             if (Choice != Option.Bitstring)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Bitstring)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Bitstring)}.");
             }
             return (BitString)_choiceValue;
         }
@@ -358,7 +358,7 @@ public partial record class ChannelValue
     /// <summary>
     /// Create function for A bit string value.
     /// </summary>
-    public static ChannelValue NewBitstring(BitString value)
+    public static ChannelValue FromBitstring(BitString value)
     {
         return new ChannelValue(Option.Bitstring, value);
     }
@@ -372,7 +372,7 @@ public partial record class ChannelValue
         {
             if (Choice != Option.Date)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Date)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Date)}.");
             }
             return (Date)_choiceValue;
         }
@@ -381,7 +381,7 @@ public partial record class ChannelValue
     /// <summary>
     /// Create function for A date value.
     /// </summary>
-    public static ChannelValue NewDate(Date value)
+    public static ChannelValue FromDate(Date value)
     {
         return new ChannelValue(Option.Date, value);
     }
@@ -395,7 +395,7 @@ public partial record class ChannelValue
         {
             if (Choice != Option.Objectidentifier)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Objectidentifier)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Objectidentifier)}.");
             }
             return (ObjectIdentifier)_choiceValue;
         }
@@ -404,7 +404,7 @@ public partial record class ChannelValue
     /// <summary>
     /// Create function for An object identifier value.
     /// </summary>
-    public static ChannelValue NewObjectidentifier(ObjectIdentifier value)
+    public static ChannelValue FromObjectidentifier(ObjectIdentifier value)
     {
         return new ChannelValue(Option.Objectidentifier, value);
     }
@@ -418,7 +418,7 @@ public partial record class ChannelValue
         {
             if (Choice != Option.LightingCommand)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.LightingCommand)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.LightingCommand)}.");
             }
             return (LightingCommand)_choiceValue;
         }
@@ -427,7 +427,7 @@ public partial record class ChannelValue
     /// <summary>
     /// Create function for A lighting command value.
     /// </summary>
-    public static ChannelValue NewLightingCommand(LightingCommand value)
+    public static ChannelValue FromLightingCommand(LightingCommand value)
     {
         return new ChannelValue(Option.LightingCommand, value);
     }
@@ -441,7 +441,7 @@ public partial record class ChannelValue
         {
             if (Choice != Option.Xycolor)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Xycolor)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Xycolor)}.");
             }
             return (XyColor)_choiceValue;
         }
@@ -450,7 +450,7 @@ public partial record class ChannelValue
     /// <summary>
     /// Create function for An XY color space value.
     /// </summary>
-    public static ChannelValue NewXycolor(XyColor value)
+    public static ChannelValue FromXycolor(XyColor value)
     {
         return new ChannelValue(Option.Xycolor, value);
     }
@@ -464,7 +464,7 @@ public partial record class ChannelValue
         {
             if (Choice != Option.ColorCommand)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ColorCommand)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ColorCommand)}.");
             }
             return (ColorCommand)_choiceValue;
         }
@@ -473,7 +473,7 @@ public partial record class ChannelValue
     /// <summary>
     /// Create function for A color command value.
     /// </summary>
-    public static ChannelValue NewColorCommand(ColorCommand value)
+    public static ChannelValue FromColorCommand(ColorCommand value)
     {
         return new ChannelValue(Option.ColorCommand, value);
     }

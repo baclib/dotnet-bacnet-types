@@ -134,7 +134,7 @@ public partial record class EventParameter
         {
             if (Choice != Option.ChangeOfBitstring)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ChangeOfBitstring)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ChangeOfBitstring)}.");
             }
             return (TChangeOfBitstring)_choiceValue;
         }
@@ -143,7 +143,7 @@ public partial record class EventParameter
     /// <summary>
     /// Create function for Event parameters for change-of-bitstring detection, triggered when a bit string value changes according to the specified criteria.
     /// </summary>
-    public static EventParameter NewChangeOfBitstring(TChangeOfBitstring value)
+    public static EventParameter FromChangeOfBitstring(TChangeOfBitstring value)
     {
         return new EventParameter(Option.ChangeOfBitstring, value);
     }
@@ -157,7 +157,7 @@ public partial record class EventParameter
         {
             if (Choice != Option.ChangeOfState)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ChangeOfState)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ChangeOfState)}.");
             }
             return (TChangeOfState)_choiceValue;
         }
@@ -166,7 +166,7 @@ public partial record class EventParameter
     /// <summary>
     /// Create function for Event parameters for change-of-state detection, triggered when a state property changes to one of the specified values.
     /// </summary>
-    public static EventParameter NewChangeOfState(TChangeOfState value)
+    public static EventParameter FromChangeOfState(TChangeOfState value)
     {
         return new EventParameter(Option.ChangeOfState, value);
     }
@@ -180,7 +180,7 @@ public partial record class EventParameter
         {
             if (Choice != Option.ChangeOfValue)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ChangeOfValue)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ChangeOfValue)}.");
             }
             return (TChangeOfValue)_choiceValue;
         }
@@ -189,7 +189,7 @@ public partial record class EventParameter
     /// <summary>
     /// Create function for Event parameters for change-of-value detection, triggered when a value changes significantly based on the specified criteria.
     /// </summary>
-    public static EventParameter NewChangeOfValue(TChangeOfValue value)
+    public static EventParameter FromChangeOfValue(TChangeOfValue value)
     {
         return new EventParameter(Option.ChangeOfValue, value);
     }
@@ -203,7 +203,7 @@ public partial record class EventParameter
         {
             if (Choice != Option.CommandFailure)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.CommandFailure)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.CommandFailure)}.");
             }
             return (TCommandFailure)_choiceValue;
         }
@@ -212,7 +212,7 @@ public partial record class EventParameter
     /// <summary>
     /// Create function for Event parameters for command-failure detection, triggered when a command does not achieve the expected result.
     /// </summary>
-    public static EventParameter NewCommandFailure(TCommandFailure value)
+    public static EventParameter FromCommandFailure(TCommandFailure value)
     {
         return new EventParameter(Option.CommandFailure, value);
     }
@@ -226,7 +226,7 @@ public partial record class EventParameter
         {
             if (Choice != Option.FloatingLimit)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.FloatingLimit)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.FloatingLimit)}.");
             }
             return (TFloatingLimit)_choiceValue;
         }
@@ -235,7 +235,7 @@ public partial record class EventParameter
     /// <summary>
     /// Create function for Event parameters for floating-limit detection, triggered when a value deviates from a setpoint by more than the specified limits.
     /// </summary>
-    public static EventParameter NewFloatingLimit(TFloatingLimit value)
+    public static EventParameter FromFloatingLimit(TFloatingLimit value)
     {
         return new EventParameter(Option.FloatingLimit, value);
     }
@@ -249,7 +249,7 @@ public partial record class EventParameter
         {
             if (Choice != Option.OutOfRange)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.OutOfRange)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.OutOfRange)}.");
             }
             return (TOutOfRange)_choiceValue;
         }
@@ -258,7 +258,7 @@ public partial record class EventParameter
     /// <summary>
     /// Create function for Event parameters for out-of-range detection, triggered when a real value exceeds the specified low or high limits.
     /// </summary>
-    public static EventParameter NewOutOfRange(TOutOfRange value)
+    public static EventParameter FromOutOfRange(TOutOfRange value)
     {
         return new EventParameter(Option.OutOfRange, value);
     }
@@ -272,7 +272,7 @@ public partial record class EventParameter
         {
             if (Choice != Option.ChangeOfLifeSafety)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ChangeOfLifeSafety)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ChangeOfLifeSafety)}.");
             }
             return (TChangeOfLifeSafety)_choiceValue;
         }
@@ -281,7 +281,7 @@ public partial record class EventParameter
     /// <summary>
     /// Create function for Event parameters for change-of-life-safety detection, triggered when a life safety value changes to one of the specified alarm values or modes.
     /// </summary>
-    public static EventParameter NewChangeOfLifeSafety(TChangeOfLifeSafety value)
+    public static EventParameter FromChangeOfLifeSafety(TChangeOfLifeSafety value)
     {
         return new EventParameter(Option.ChangeOfLifeSafety, value);
     }
@@ -295,7 +295,7 @@ public partial record class EventParameter
         {
             if (Choice != Option.Extended)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Extended)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Extended)}.");
             }
             return (TExtended)_choiceValue;
         }
@@ -304,7 +304,7 @@ public partial record class EventParameter
     /// <summary>
     /// Create function for Event parameters for vendor-specific extended event types, allowing proprietary event detection using vendor-defined parameters.
     /// </summary>
-    public static EventParameter NewExtended(TExtended value)
+    public static EventParameter FromExtended(TExtended value)
     {
         return new EventParameter(Option.Extended, value);
     }
@@ -318,7 +318,7 @@ public partial record class EventParameter
         {
             if (Choice != Option.BufferReady)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.BufferReady)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.BufferReady)}.");
             }
             return (TBufferReady)_choiceValue;
         }
@@ -327,7 +327,7 @@ public partial record class EventParameter
     /// <summary>
     /// Create function for Event parameters for buffer-ready detection, triggered when buffer storage reaches the specified notification thresholds or when a previous notification has not been confirmed.
     /// </summary>
-    public static EventParameter NewBufferReady(TBufferReady value)
+    public static EventParameter FromBufferReady(TBufferReady value)
     {
         return new EventParameter(Option.BufferReady, value);
     }
@@ -341,7 +341,7 @@ public partial record class EventParameter
         {
             if (Choice != Option.UnsignedRange)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.UnsignedRange)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.UnsignedRange)}.");
             }
             return (TUnsignedRange)_choiceValue;
         }
@@ -350,7 +350,7 @@ public partial record class EventParameter
     /// <summary>
     /// Create function for Event parameters for unsigned-range detection, triggered when an unsigned integer value exceeds the specified low or high limits.
     /// </summary>
-    public static EventParameter NewUnsignedRange(TUnsignedRange value)
+    public static EventParameter FromUnsignedRange(TUnsignedRange value)
     {
         return new EventParameter(Option.UnsignedRange, value);
     }
@@ -364,7 +364,7 @@ public partial record class EventParameter
         {
             if (Choice != Option.AccessEvent)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.AccessEvent)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.AccessEvent)}.");
             }
             return (TAccessEvent)_choiceValue;
         }
@@ -373,7 +373,7 @@ public partial record class EventParameter
     /// <summary>
     /// Create function for Event parameters for access-event detection, triggered when physical access events occur that match the specified criteria.
     /// </summary>
-    public static EventParameter NewAccessEvent(TAccessEvent value)
+    public static EventParameter FromAccessEvent(TAccessEvent value)
     {
         return new EventParameter(Option.AccessEvent, value);
     }
@@ -387,7 +387,7 @@ public partial record class EventParameter
         {
             if (Choice != Option.DoubleOutOfRange)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.DoubleOutOfRange)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.DoubleOutOfRange)}.");
             }
             return (TDoubleOutOfRange)_choiceValue;
         }
@@ -396,7 +396,7 @@ public partial record class EventParameter
     /// <summary>
     /// Create function for Event parameters for double-out-of-range detection, triggered when a double-precision floating-point value exceeds the specified low or high limits.
     /// </summary>
-    public static EventParameter NewDoubleOutOfRange(TDoubleOutOfRange value)
+    public static EventParameter FromDoubleOutOfRange(TDoubleOutOfRange value)
     {
         return new EventParameter(Option.DoubleOutOfRange, value);
     }
@@ -410,7 +410,7 @@ public partial record class EventParameter
         {
             if (Choice != Option.SignedOutOfRange)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.SignedOutOfRange)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.SignedOutOfRange)}.");
             }
             return (TSignedOutOfRange)_choiceValue;
         }
@@ -419,7 +419,7 @@ public partial record class EventParameter
     /// <summary>
     /// Create function for Event parameters for signed-out-of-range detection, triggered when a signed integer value exceeds the specified low or high limits.
     /// </summary>
-    public static EventParameter NewSignedOutOfRange(TSignedOutOfRange value)
+    public static EventParameter FromSignedOutOfRange(TSignedOutOfRange value)
     {
         return new EventParameter(Option.SignedOutOfRange, value);
     }
@@ -433,7 +433,7 @@ public partial record class EventParameter
         {
             if (Choice != Option.UnsignedOutOfRange)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.UnsignedOutOfRange)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.UnsignedOutOfRange)}.");
             }
             return (TUnsignedOutOfRange)_choiceValue;
         }
@@ -442,7 +442,7 @@ public partial record class EventParameter
     /// <summary>
     /// Create function for Event parameters for unsigned-out-of-range detection, triggered when an unsigned integer value exceeds the specified low or high limits.
     /// </summary>
-    public static EventParameter NewUnsignedOutOfRange(TUnsignedOutOfRange value)
+    public static EventParameter FromUnsignedOutOfRange(TUnsignedOutOfRange value)
     {
         return new EventParameter(Option.UnsignedOutOfRange, value);
     }
@@ -456,7 +456,7 @@ public partial record class EventParameter
         {
             if (Choice != Option.ChangeOfCharacterstring)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ChangeOfCharacterstring)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ChangeOfCharacterstring)}.");
             }
             return (TChangeOfCharacterstring)_choiceValue;
         }
@@ -465,7 +465,7 @@ public partial record class EventParameter
     /// <summary>
     /// Create function for Event parameters for change-of-characterstring detection, triggered when a character string value changes to one of the specified alarm values.
     /// </summary>
-    public static EventParameter NewChangeOfCharacterstring(TChangeOfCharacterstring value)
+    public static EventParameter FromChangeOfCharacterstring(TChangeOfCharacterstring value)
     {
         return new EventParameter(Option.ChangeOfCharacterstring, value);
     }
@@ -479,7 +479,7 @@ public partial record class EventParameter
         {
             if (Choice != Option.ChangeOfStatusFlags)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ChangeOfStatusFlags)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ChangeOfStatusFlags)}.");
             }
             return (TChangeOfStatusFlags)_choiceValue;
         }
@@ -488,7 +488,7 @@ public partial record class EventParameter
     /// <summary>
     /// Create function for Event parameters for change-of-status-flags detection, triggered when the specified status flags change state.
     /// </summary>
-    public static EventParameter NewChangeOfStatusFlags(TChangeOfStatusFlags value)
+    public static EventParameter FromChangeOfStatusFlags(TChangeOfStatusFlags value)
     {
         return new EventParameter(Option.ChangeOfStatusFlags, value);
     }
@@ -502,7 +502,7 @@ public partial record class EventParameter
         {
             if (Choice != Option.None)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.None)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.None)}.");
             }
             return (Null)_choiceValue;
         }
@@ -511,7 +511,7 @@ public partial record class EventParameter
     /// <summary>
     /// Create function for Indicates no event parameters are defined.
     /// </summary>
-    public static EventParameter NewNone(Null value)
+    public static EventParameter FromNone(Null value)
     {
         return new EventParameter(Option.None, value);
     }
@@ -525,7 +525,7 @@ public partial record class EventParameter
         {
             if (Choice != Option.ChangeOfDiscreteValue)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ChangeOfDiscreteValue)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ChangeOfDiscreteValue)}.");
             }
             return (TChangeOfDiscreteValue)_choiceValue;
         }
@@ -534,7 +534,7 @@ public partial record class EventParameter
     /// <summary>
     /// Create function for Event parameters for change-of-discrete-value detection, triggered when a discrete-valued property changes to a new value.
     /// </summary>
-    public static EventParameter NewChangeOfDiscreteValue(TChangeOfDiscreteValue value)
+    public static EventParameter FromChangeOfDiscreteValue(TChangeOfDiscreteValue value)
     {
         return new EventParameter(Option.ChangeOfDiscreteValue, value);
     }
@@ -548,7 +548,7 @@ public partial record class EventParameter
         {
             if (Choice != Option.ChangeOfTimer)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ChangeOfTimer)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ChangeOfTimer)}.");
             }
             return (TChangeOfTimer)_choiceValue;
         }
@@ -557,7 +557,7 @@ public partial record class EventParameter
     /// <summary>
     /// Create function for Event parameters for change-of-timer detection, triggered when a timer state changes to one of the specified alarm values.
     /// </summary>
-    public static EventParameter NewChangeOfTimer(TChangeOfTimer value)
+    public static EventParameter FromChangeOfTimer(TChangeOfTimer value)
     {
         return new EventParameter(Option.ChangeOfTimer, value);
     }

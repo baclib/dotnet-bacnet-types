@@ -51,7 +51,7 @@ public partial record class AtomicReadFileRequest
             {
                 if (Choice != Option.StreamAccess)
                 {
-                    throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.StreamAccess)} hat das Template erstellt");
+                    throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.StreamAccess)}.");
                 }
                 return (TStreamAccess)_choiceValue;
             }
@@ -60,7 +60,7 @@ public partial record class AtomicReadFileRequest
         /// <summary>
         /// Create function for Read data from the file as a stream of bytes.
         /// </summary>
-        public static TAccessMethod NewStreamAccess(TStreamAccess value)
+        public static TAccessMethod FromStreamAccess(TStreamAccess value)
         {
             return new TAccessMethod(Option.StreamAccess, value);
         }
@@ -74,7 +74,7 @@ public partial record class AtomicReadFileRequest
             {
                 if (Choice != Option.RecordAccess)
                 {
-                    throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.RecordAccess)} hat das Template erstellt");
+                    throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.RecordAccess)}.");
                 }
                 return (TRecordAccess)_choiceValue;
             }
@@ -83,7 +83,7 @@ public partial record class AtomicReadFileRequest
         /// <summary>
         /// Create function for Read data from the file as a series of records.
         /// </summary>
-        public static TAccessMethod NewRecordAccess(TRecordAccess value)
+        public static TAccessMethod FromRecordAccess(TRecordAccess value)
         {
             return new TAccessMethod(Option.RecordAccess, value);
         }

@@ -56,7 +56,7 @@ public partial record class EventLogRecord
             {
                 if (Choice != Option.LogStatus)
                 {
-                    throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.LogStatus)} hat das Template erstellt");
+                    throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.LogStatus)}.");
                 }
                 return (LogStatus)_choiceValue;
             }
@@ -65,7 +65,7 @@ public partial record class EventLogRecord
         /// <summary>
         /// Create function for A log status indicator.
         /// </summary>
-        public static TLogDatum NewLogStatus(LogStatus value)
+        public static TLogDatum FromLogStatus(LogStatus value)
         {
             return new TLogDatum(Option.LogStatus, value);
         }
@@ -79,7 +79,7 @@ public partial record class EventLogRecord
             {
                 if (Choice != Option.Notification)
                 {
-                    throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Notification)} hat das Template erstellt");
+                    throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Notification)}.");
                 }
                 return (ConfirmedEventNotificationRequest)_choiceValue;
             }
@@ -88,7 +88,7 @@ public partial record class EventLogRecord
         /// <summary>
         /// Create function for A confirmed event notification.
         /// </summary>
-        public static TLogDatum NewNotification(ConfirmedEventNotificationRequest value)
+        public static TLogDatum FromNotification(ConfirmedEventNotificationRequest value)
         {
             return new TLogDatum(Option.Notification, value);
         }
@@ -102,7 +102,7 @@ public partial record class EventLogRecord
             {
                 if (Choice != Option.TimeChange)
                 {
-                    throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.TimeChange)} hat das Template erstellt");
+                    throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.TimeChange)}.");
                 }
                 return (float)_choiceValue;
             }
@@ -111,7 +111,7 @@ public partial record class EventLogRecord
         /// <summary>
         /// Create function for A time change value in seconds.
         /// </summary>
-        public static TLogDatum NewTimeChange(float value)
+        public static TLogDatum FromTimeChange(float value)
         {
             return new TLogDatum(Option.TimeChange, value);
         }

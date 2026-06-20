@@ -49,7 +49,7 @@ public partial record class OptionalDouble
         {
             if (Choice != Option.Null)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Null)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Null)}.");
             }
             return (Null)_choiceValue;
         }
@@ -58,7 +58,7 @@ public partial record class OptionalDouble
     /// <summary>
     /// Create function for Indicates the absence of a double value.
     /// </summary>
-    public static OptionalDouble NewNull(Null value)
+    public static OptionalDouble FromNull(Null value)
     {
         return new OptionalDouble(Option.Null, value);
     }
@@ -72,7 +72,7 @@ public partial record class OptionalDouble
         {
             if (Choice != Option.Double)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Double)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Double)}.");
             }
             return (double)_choiceValue;
         }
@@ -81,7 +81,7 @@ public partial record class OptionalDouble
     /// <summary>
     /// Create function for Specifies the BACnet double value when present.
     /// </summary>
-    public static OptionalDouble NewDouble(double value)
+    public static OptionalDouble FromDouble(double value)
     {
         return new OptionalDouble(Option.Double, value);
     }

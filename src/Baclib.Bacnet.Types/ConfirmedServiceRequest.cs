@@ -194,7 +194,7 @@ public partial record class ConfirmedServiceRequest
         {
             if (Choice != Option.AcknowledgeAlarm)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.AcknowledgeAlarm)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.AcknowledgeAlarm)}.");
             }
             return (AcknowledgeAlarmRequest)_choiceValue;
         }
@@ -203,7 +203,7 @@ public partial record class ConfirmedServiceRequest
     /// <summary>
     /// Create function for Request to acknowledge an alarm.
     /// </summary>
-    public static ConfirmedServiceRequest NewAcknowledgeAlarm(AcknowledgeAlarmRequest value)
+    public static ConfirmedServiceRequest FromAcknowledgeAlarm(AcknowledgeAlarmRequest value)
     {
         return new ConfirmedServiceRequest(Option.AcknowledgeAlarm, value);
     }
@@ -217,7 +217,7 @@ public partial record class ConfirmedServiceRequest
         {
             if (Choice != Option.ConfirmedCovNotification)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ConfirmedCovNotification)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ConfirmedCovNotification)}.");
             }
             return (ConfirmedCovNotificationRequest)_choiceValue;
         }
@@ -226,7 +226,7 @@ public partial record class ConfirmedServiceRequest
     /// <summary>
     /// Create function for Request for confirmed COV notification.
     /// </summary>
-    public static ConfirmedServiceRequest NewConfirmedCovNotification(ConfirmedCovNotificationRequest value)
+    public static ConfirmedServiceRequest FromConfirmedCovNotification(ConfirmedCovNotificationRequest value)
     {
         return new ConfirmedServiceRequest(Option.ConfirmedCovNotification, value);
     }
@@ -240,7 +240,7 @@ public partial record class ConfirmedServiceRequest
         {
             if (Choice != Option.ConfirmedCovNotificationMultiple)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ConfirmedCovNotificationMultiple)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ConfirmedCovNotificationMultiple)}.");
             }
             return (ConfirmedCovNotificationMultipleRequest)_choiceValue;
         }
@@ -249,7 +249,7 @@ public partial record class ConfirmedServiceRequest
     /// <summary>
     /// Create function for Request for confirmed COV notification multiple.
     /// </summary>
-    public static ConfirmedServiceRequest NewConfirmedCovNotificationMultiple(ConfirmedCovNotificationMultipleRequest value)
+    public static ConfirmedServiceRequest FromConfirmedCovNotificationMultiple(ConfirmedCovNotificationMultipleRequest value)
     {
         return new ConfirmedServiceRequest(Option.ConfirmedCovNotificationMultiple, value);
     }
@@ -263,7 +263,7 @@ public partial record class ConfirmedServiceRequest
         {
             if (Choice != Option.ConfirmedEventNotification)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ConfirmedEventNotification)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ConfirmedEventNotification)}.");
             }
             return (ConfirmedEventNotificationRequest)_choiceValue;
         }
@@ -272,7 +272,7 @@ public partial record class ConfirmedServiceRequest
     /// <summary>
     /// Create function for Request for confirmed event notification.
     /// </summary>
-    public static ConfirmedServiceRequest NewConfirmedEventNotification(ConfirmedEventNotificationRequest value)
+    public static ConfirmedServiceRequest FromConfirmedEventNotification(ConfirmedEventNotificationRequest value)
     {
         return new ConfirmedServiceRequest(Option.ConfirmedEventNotification, value);
     }
@@ -286,7 +286,7 @@ public partial record class ConfirmedServiceRequest
         {
             if (Choice != Option.GetEnrollmentSummary)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.GetEnrollmentSummary)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.GetEnrollmentSummary)}.");
             }
             return (GetEnrollmentSummaryRequest)_choiceValue;
         }
@@ -295,7 +295,7 @@ public partial record class ConfirmedServiceRequest
     /// <summary>
     /// Create function for Request for enrollment summary.
     /// </summary>
-    public static ConfirmedServiceRequest NewGetEnrollmentSummary(GetEnrollmentSummaryRequest value)
+    public static ConfirmedServiceRequest FromGetEnrollmentSummary(GetEnrollmentSummaryRequest value)
     {
         return new ConfirmedServiceRequest(Option.GetEnrollmentSummary, value);
     }
@@ -309,7 +309,7 @@ public partial record class ConfirmedServiceRequest
         {
             if (Choice != Option.GetEventInformation)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.GetEventInformation)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.GetEventInformation)}.");
             }
             return (GetEventInformationRequest)_choiceValue;
         }
@@ -318,7 +318,7 @@ public partial record class ConfirmedServiceRequest
     /// <summary>
     /// Create function for Request for event information.
     /// </summary>
-    public static ConfirmedServiceRequest NewGetEventInformation(GetEventInformationRequest value)
+    public static ConfirmedServiceRequest FromGetEventInformation(GetEventInformationRequest value)
     {
         return new ConfirmedServiceRequest(Option.GetEventInformation, value);
     }
@@ -332,7 +332,7 @@ public partial record class ConfirmedServiceRequest
         {
             if (Choice != Option.LifeSafetyOperation)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.LifeSafetyOperation)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.LifeSafetyOperation)}.");
             }
             return (LifeSafetyOperationRequest)_choiceValue;
         }
@@ -341,7 +341,7 @@ public partial record class ConfirmedServiceRequest
     /// <summary>
     /// Create function for Request for life safety operation.
     /// </summary>
-    public static ConfirmedServiceRequest NewLifeSafetyOperation(LifeSafetyOperationRequest value)
+    public static ConfirmedServiceRequest FromLifeSafetyOperation(LifeSafetyOperationRequest value)
     {
         return new ConfirmedServiceRequest(Option.LifeSafetyOperation, value);
     }
@@ -355,7 +355,7 @@ public partial record class ConfirmedServiceRequest
         {
             if (Choice != Option.SubscribeCov)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.SubscribeCov)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.SubscribeCov)}.");
             }
             return (SubscribeCovRequest)_choiceValue;
         }
@@ -364,7 +364,7 @@ public partial record class ConfirmedServiceRequest
     /// <summary>
     /// Create function for Request to subscribe for COV notifications.
     /// </summary>
-    public static ConfirmedServiceRequest NewSubscribeCov(SubscribeCovRequest value)
+    public static ConfirmedServiceRequest FromSubscribeCov(SubscribeCovRequest value)
     {
         return new ConfirmedServiceRequest(Option.SubscribeCov, value);
     }
@@ -378,7 +378,7 @@ public partial record class ConfirmedServiceRequest
         {
             if (Choice != Option.SubscribeCovProperty)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.SubscribeCovProperty)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.SubscribeCovProperty)}.");
             }
             return (SubscribeCovPropertyRequest)_choiceValue;
         }
@@ -387,7 +387,7 @@ public partial record class ConfirmedServiceRequest
     /// <summary>
     /// Create function for Request to subscribe for COV on a specific property.
     /// </summary>
-    public static ConfirmedServiceRequest NewSubscribeCovProperty(SubscribeCovPropertyRequest value)
+    public static ConfirmedServiceRequest FromSubscribeCovProperty(SubscribeCovPropertyRequest value)
     {
         return new ConfirmedServiceRequest(Option.SubscribeCovProperty, value);
     }
@@ -401,7 +401,7 @@ public partial record class ConfirmedServiceRequest
         {
             if (Choice != Option.SubscribeCovPropertyMultiple)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.SubscribeCovPropertyMultiple)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.SubscribeCovPropertyMultiple)}.");
             }
             return (SubscribeCovPropertyMultipleRequest)_choiceValue;
         }
@@ -410,7 +410,7 @@ public partial record class ConfirmedServiceRequest
     /// <summary>
     /// Create function for Request to subscribe for multiple COV properties.
     /// </summary>
-    public static ConfirmedServiceRequest NewSubscribeCovPropertyMultiple(SubscribeCovPropertyMultipleRequest value)
+    public static ConfirmedServiceRequest FromSubscribeCovPropertyMultiple(SubscribeCovPropertyMultipleRequest value)
     {
         return new ConfirmedServiceRequest(Option.SubscribeCovPropertyMultiple, value);
     }
@@ -424,7 +424,7 @@ public partial record class ConfirmedServiceRequest
         {
             if (Choice != Option.ConfirmedAuditNotification)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ConfirmedAuditNotification)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ConfirmedAuditNotification)}.");
             }
             return (ConfirmedAuditNotificationRequest)_choiceValue;
         }
@@ -433,7 +433,7 @@ public partial record class ConfirmedServiceRequest
     /// <summary>
     /// Create function for Request for confirmed audit notification.
     /// </summary>
-    public static ConfirmedServiceRequest NewConfirmedAuditNotification(ConfirmedAuditNotificationRequest value)
+    public static ConfirmedServiceRequest FromConfirmedAuditNotification(ConfirmedAuditNotificationRequest value)
     {
         return new ConfirmedServiceRequest(Option.ConfirmedAuditNotification, value);
     }
@@ -447,7 +447,7 @@ public partial record class ConfirmedServiceRequest
         {
             if (Choice != Option.AtomicReadFile)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.AtomicReadFile)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.AtomicReadFile)}.");
             }
             return (AtomicReadFileRequest)_choiceValue;
         }
@@ -456,7 +456,7 @@ public partial record class ConfirmedServiceRequest
     /// <summary>
     /// Create function for Request to read a file atomically.
     /// </summary>
-    public static ConfirmedServiceRequest NewAtomicReadFile(AtomicReadFileRequest value)
+    public static ConfirmedServiceRequest FromAtomicReadFile(AtomicReadFileRequest value)
     {
         return new ConfirmedServiceRequest(Option.AtomicReadFile, value);
     }
@@ -470,7 +470,7 @@ public partial record class ConfirmedServiceRequest
         {
             if (Choice != Option.AtomicWriteFile)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.AtomicWriteFile)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.AtomicWriteFile)}.");
             }
             return (AtomicWriteFileRequest)_choiceValue;
         }
@@ -479,7 +479,7 @@ public partial record class ConfirmedServiceRequest
     /// <summary>
     /// Create function for Request to write a file atomically.
     /// </summary>
-    public static ConfirmedServiceRequest NewAtomicWriteFile(AtomicWriteFileRequest value)
+    public static ConfirmedServiceRequest FromAtomicWriteFile(AtomicWriteFileRequest value)
     {
         return new ConfirmedServiceRequest(Option.AtomicWriteFile, value);
     }
@@ -493,7 +493,7 @@ public partial record class ConfirmedServiceRequest
         {
             if (Choice != Option.AddListElement)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.AddListElement)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.AddListElement)}.");
             }
             return (AddListElementRequest)_choiceValue;
         }
@@ -502,7 +502,7 @@ public partial record class ConfirmedServiceRequest
     /// <summary>
     /// Create function for Request to add elements to a list property.
     /// </summary>
-    public static ConfirmedServiceRequest NewAddListElement(AddListElementRequest value)
+    public static ConfirmedServiceRequest FromAddListElement(AddListElementRequest value)
     {
         return new ConfirmedServiceRequest(Option.AddListElement, value);
     }
@@ -516,7 +516,7 @@ public partial record class ConfirmedServiceRequest
         {
             if (Choice != Option.RemoveListElement)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.RemoveListElement)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.RemoveListElement)}.");
             }
             return (RemoveListElementRequest)_choiceValue;
         }
@@ -525,7 +525,7 @@ public partial record class ConfirmedServiceRequest
     /// <summary>
     /// Create function for Request to remove elements from a list property.
     /// </summary>
-    public static ConfirmedServiceRequest NewRemoveListElement(RemoveListElementRequest value)
+    public static ConfirmedServiceRequest FromRemoveListElement(RemoveListElementRequest value)
     {
         return new ConfirmedServiceRequest(Option.RemoveListElement, value);
     }
@@ -539,7 +539,7 @@ public partial record class ConfirmedServiceRequest
         {
             if (Choice != Option.CreateObject)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.CreateObject)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.CreateObject)}.");
             }
             return (CreateObjectRequest)_choiceValue;
         }
@@ -548,7 +548,7 @@ public partial record class ConfirmedServiceRequest
     /// <summary>
     /// Create function for Request to create an object.
     /// </summary>
-    public static ConfirmedServiceRequest NewCreateObject(CreateObjectRequest value)
+    public static ConfirmedServiceRequest FromCreateObject(CreateObjectRequest value)
     {
         return new ConfirmedServiceRequest(Option.CreateObject, value);
     }
@@ -562,7 +562,7 @@ public partial record class ConfirmedServiceRequest
         {
             if (Choice != Option.DeleteObject)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.DeleteObject)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.DeleteObject)}.");
             }
             return (DeleteObjectRequest)_choiceValue;
         }
@@ -571,7 +571,7 @@ public partial record class ConfirmedServiceRequest
     /// <summary>
     /// Create function for Request to delete an object.
     /// </summary>
-    public static ConfirmedServiceRequest NewDeleteObject(DeleteObjectRequest value)
+    public static ConfirmedServiceRequest FromDeleteObject(DeleteObjectRequest value)
     {
         return new ConfirmedServiceRequest(Option.DeleteObject, value);
     }
@@ -585,7 +585,7 @@ public partial record class ConfirmedServiceRequest
         {
             if (Choice != Option.ReadProperty)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ReadProperty)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ReadProperty)}.");
             }
             return (ReadPropertyRequest)_choiceValue;
         }
@@ -594,7 +594,7 @@ public partial record class ConfirmedServiceRequest
     /// <summary>
     /// Create function for Request to read a property.
     /// </summary>
-    public static ConfirmedServiceRequest NewReadProperty(ReadPropertyRequest value)
+    public static ConfirmedServiceRequest FromReadProperty(ReadPropertyRequest value)
     {
         return new ConfirmedServiceRequest(Option.ReadProperty, value);
     }
@@ -608,7 +608,7 @@ public partial record class ConfirmedServiceRequest
         {
             if (Choice != Option.ReadPropertyMultiple)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ReadPropertyMultiple)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ReadPropertyMultiple)}.");
             }
             return (ReadPropertyMultipleRequest)_choiceValue;
         }
@@ -617,7 +617,7 @@ public partial record class ConfirmedServiceRequest
     /// <summary>
     /// Create function for Request to read multiple properties.
     /// </summary>
-    public static ConfirmedServiceRequest NewReadPropertyMultiple(ReadPropertyMultipleRequest value)
+    public static ConfirmedServiceRequest FromReadPropertyMultiple(ReadPropertyMultipleRequest value)
     {
         return new ConfirmedServiceRequest(Option.ReadPropertyMultiple, value);
     }
@@ -631,7 +631,7 @@ public partial record class ConfirmedServiceRequest
         {
             if (Choice != Option.ReadRange)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ReadRange)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ReadRange)}.");
             }
             return (ReadRangeRequest)_choiceValue;
         }
@@ -640,7 +640,7 @@ public partial record class ConfirmedServiceRequest
     /// <summary>
     /// Create function for Request to read a range from a list or log.
     /// </summary>
-    public static ConfirmedServiceRequest NewReadRange(ReadRangeRequest value)
+    public static ConfirmedServiceRequest FromReadRange(ReadRangeRequest value)
     {
         return new ConfirmedServiceRequest(Option.ReadRange, value);
     }
@@ -654,7 +654,7 @@ public partial record class ConfirmedServiceRequest
         {
             if (Choice != Option.WriteProperty)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.WriteProperty)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.WriteProperty)}.");
             }
             return (WritePropertyRequest)_choiceValue;
         }
@@ -663,7 +663,7 @@ public partial record class ConfirmedServiceRequest
     /// <summary>
     /// Create function for Request to write a property.
     /// </summary>
-    public static ConfirmedServiceRequest NewWriteProperty(WritePropertyRequest value)
+    public static ConfirmedServiceRequest FromWriteProperty(WritePropertyRequest value)
     {
         return new ConfirmedServiceRequest(Option.WriteProperty, value);
     }
@@ -677,7 +677,7 @@ public partial record class ConfirmedServiceRequest
         {
             if (Choice != Option.WritePropertyMultiple)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.WritePropertyMultiple)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.WritePropertyMultiple)}.");
             }
             return (WritePropertyMultipleRequest)_choiceValue;
         }
@@ -686,7 +686,7 @@ public partial record class ConfirmedServiceRequest
     /// <summary>
     /// Create function for Request to write multiple properties.
     /// </summary>
-    public static ConfirmedServiceRequest NewWritePropertyMultiple(WritePropertyMultipleRequest value)
+    public static ConfirmedServiceRequest FromWritePropertyMultiple(WritePropertyMultipleRequest value)
     {
         return new ConfirmedServiceRequest(Option.WritePropertyMultiple, value);
     }
@@ -700,7 +700,7 @@ public partial record class ConfirmedServiceRequest
         {
             if (Choice != Option.AuditLogQuery)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.AuditLogQuery)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.AuditLogQuery)}.");
             }
             return (AuditLogQueryRequest)_choiceValue;
         }
@@ -709,7 +709,7 @@ public partial record class ConfirmedServiceRequest
     /// <summary>
     /// Create function for Request to query the audit log.
     /// </summary>
-    public static ConfirmedServiceRequest NewAuditLogQuery(AuditLogQueryRequest value)
+    public static ConfirmedServiceRequest FromAuditLogQuery(AuditLogQueryRequest value)
     {
         return new ConfirmedServiceRequest(Option.AuditLogQuery, value);
     }
@@ -723,7 +723,7 @@ public partial record class ConfirmedServiceRequest
         {
             if (Choice != Option.DeviceCommunicationControl)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.DeviceCommunicationControl)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.DeviceCommunicationControl)}.");
             }
             return (DeviceCommunicationControlRequest)_choiceValue;
         }
@@ -732,7 +732,7 @@ public partial record class ConfirmedServiceRequest
     /// <summary>
     /// Create function for Request to control device communications.
     /// </summary>
-    public static ConfirmedServiceRequest NewDeviceCommunicationControl(DeviceCommunicationControlRequest value)
+    public static ConfirmedServiceRequest FromDeviceCommunicationControl(DeviceCommunicationControlRequest value)
     {
         return new ConfirmedServiceRequest(Option.DeviceCommunicationControl, value);
     }
@@ -746,7 +746,7 @@ public partial record class ConfirmedServiceRequest
         {
             if (Choice != Option.ConfirmedPrivateTransfer)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ConfirmedPrivateTransfer)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ConfirmedPrivateTransfer)}.");
             }
             return (ConfirmedPrivateTransferRequest)_choiceValue;
         }
@@ -755,7 +755,7 @@ public partial record class ConfirmedServiceRequest
     /// <summary>
     /// Create function for Request for confirmed private transfer.
     /// </summary>
-    public static ConfirmedServiceRequest NewConfirmedPrivateTransfer(ConfirmedPrivateTransferRequest value)
+    public static ConfirmedServiceRequest FromConfirmedPrivateTransfer(ConfirmedPrivateTransferRequest value)
     {
         return new ConfirmedServiceRequest(Option.ConfirmedPrivateTransfer, value);
     }
@@ -769,7 +769,7 @@ public partial record class ConfirmedServiceRequest
         {
             if (Choice != Option.ConfirmedTextMessage)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ConfirmedTextMessage)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ConfirmedTextMessage)}.");
             }
             return (ConfirmedTextMessageRequest)_choiceValue;
         }
@@ -778,7 +778,7 @@ public partial record class ConfirmedServiceRequest
     /// <summary>
     /// Create function for Request for a confirmed text message.
     /// </summary>
-    public static ConfirmedServiceRequest NewConfirmedTextMessage(ConfirmedTextMessageRequest value)
+    public static ConfirmedServiceRequest FromConfirmedTextMessage(ConfirmedTextMessageRequest value)
     {
         return new ConfirmedServiceRequest(Option.ConfirmedTextMessage, value);
     }
@@ -792,7 +792,7 @@ public partial record class ConfirmedServiceRequest
         {
             if (Choice != Option.ReinitializeDevice)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ReinitializeDevice)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ReinitializeDevice)}.");
             }
             return (ReinitializeDeviceRequest)_choiceValue;
         }
@@ -801,7 +801,7 @@ public partial record class ConfirmedServiceRequest
     /// <summary>
     /// Create function for Request to reinitialize a device.
     /// </summary>
-    public static ConfirmedServiceRequest NewReinitializeDevice(ReinitializeDeviceRequest value)
+    public static ConfirmedServiceRequest FromReinitializeDevice(ReinitializeDeviceRequest value)
     {
         return new ConfirmedServiceRequest(Option.ReinitializeDevice, value);
     }
@@ -815,7 +815,7 @@ public partial record class ConfirmedServiceRequest
         {
             if (Choice != Option.AuthRequest)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.AuthRequest)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.AuthRequest)}.");
             }
             return (AuthRequestRequest)_choiceValue;
         }
@@ -824,7 +824,7 @@ public partial record class ConfirmedServiceRequest
     /// <summary>
     /// Create function for Request for authentication services.
     /// </summary>
-    public static ConfirmedServiceRequest NewAuthRequest(AuthRequestRequest value)
+    public static ConfirmedServiceRequest FromAuthRequest(AuthRequestRequest value)
     {
         return new ConfirmedServiceRequest(Option.AuthRequest, value);
     }
@@ -838,7 +838,7 @@ public partial record class ConfirmedServiceRequest
         {
             if (Choice != Option.VtOpen)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.VtOpen)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.VtOpen)}.");
             }
             return (VtOpenRequest)_choiceValue;
         }
@@ -847,7 +847,7 @@ public partial record class ConfirmedServiceRequest
     /// <summary>
     /// Create function for Request to open a virtual terminal session.
     /// </summary>
-    public static ConfirmedServiceRequest NewVtOpen(VtOpenRequest value)
+    public static ConfirmedServiceRequest FromVtOpen(VtOpenRequest value)
     {
         return new ConfirmedServiceRequest(Option.VtOpen, value);
     }
@@ -861,7 +861,7 @@ public partial record class ConfirmedServiceRequest
         {
             if (Choice != Option.VtClose)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.VtClose)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.VtClose)}.");
             }
             return (VtCloseRequest)_choiceValue;
         }
@@ -870,7 +870,7 @@ public partial record class ConfirmedServiceRequest
     /// <summary>
     /// Create function for Request to close a virtual terminal session.
     /// </summary>
-    public static ConfirmedServiceRequest NewVtClose(VtCloseRequest value)
+    public static ConfirmedServiceRequest FromVtClose(VtCloseRequest value)
     {
         return new ConfirmedServiceRequest(Option.VtClose, value);
     }
@@ -884,7 +884,7 @@ public partial record class ConfirmedServiceRequest
         {
             if (Choice != Option.VtData)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.VtData)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.VtData)}.");
             }
             return (VtDataRequest)_choiceValue;
         }
@@ -893,7 +893,7 @@ public partial record class ConfirmedServiceRequest
     /// <summary>
     /// Create function for Request to transfer virtual terminal data.
     /// </summary>
-    public static ConfirmedServiceRequest NewVtData(VtDataRequest value)
+    public static ConfirmedServiceRequest FromVtData(VtDataRequest value)
     {
         return new ConfirmedServiceRequest(Option.VtData, value);
     }

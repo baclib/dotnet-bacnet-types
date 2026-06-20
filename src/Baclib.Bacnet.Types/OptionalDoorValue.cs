@@ -49,7 +49,7 @@ public partial record class OptionalDoorValue
         {
             if (Choice != Option.Null)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Null)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Null)}.");
             }
             return (Null)_choiceValue;
         }
@@ -58,7 +58,7 @@ public partial record class OptionalDoorValue
     /// <summary>
     /// Create function for Indicates the absence of a door value.
     /// </summary>
-    public static OptionalDoorValue NewNull(Null value)
+    public static OptionalDoorValue FromNull(Null value)
     {
         return new OptionalDoorValue(Option.Null, value);
     }
@@ -72,7 +72,7 @@ public partial record class OptionalDoorValue
         {
             if (Choice != Option.DoorValue)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.DoorValue)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.DoorValue)}.");
             }
             return (DoorValue)_choiceValue;
         }
@@ -81,7 +81,7 @@ public partial record class OptionalDoorValue
     /// <summary>
     /// Create function for Specifies the BACnet door value when present.
     /// </summary>
-    public static OptionalDoorValue NewDoorValue(DoorValue value)
+    public static OptionalDoorValue FromDoorValue(DoorValue value)
     {
         return new OptionalDoorValue(Option.DoorValue, value);
     }

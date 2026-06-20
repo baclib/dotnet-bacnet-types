@@ -304,3 +304,4 @@ public class CharacterEncoderTests
         public System.Text.Encoding GetJisEncodingPublic() => JisX0208Encoding;
     }
 }
+

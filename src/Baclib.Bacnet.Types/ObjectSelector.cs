@@ -54,7 +54,7 @@ public partial record class ObjectSelector
         {
             if (Choice != Option.None)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.None)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.None)}.");
             }
             return (Null)_choiceValue;
         }
@@ -63,7 +63,7 @@ public partial record class ObjectSelector
     /// <summary>
     /// Create function for No object is selected.
     /// </summary>
-    public static ObjectSelector NewNone(Null value)
+    public static ObjectSelector FromNone(Null value)
     {
         return new ObjectSelector(Option.None, value);
     }
@@ -77,7 +77,7 @@ public partial record class ObjectSelector
         {
             if (Choice != Option.Object)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Object)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Object)}.");
             }
             return (ObjectIdentifier)_choiceValue;
         }
@@ -86,7 +86,7 @@ public partial record class ObjectSelector
     /// <summary>
     /// Create function for Selects a specific object by its identifier.
     /// </summary>
-    public static ObjectSelector NewObject(ObjectIdentifier value)
+    public static ObjectSelector FromObject(ObjectIdentifier value)
     {
         return new ObjectSelector(Option.Object, value);
     }
@@ -100,7 +100,7 @@ public partial record class ObjectSelector
         {
             if (Choice != Option.ObjectType)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ObjectType)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ObjectType)}.");
             }
             return (ObjectType)_choiceValue;
         }
@@ -109,7 +109,7 @@ public partial record class ObjectSelector
     /// <summary>
     /// Create function for Selects all objects of a given type.
     /// </summary>
-    public static ObjectSelector NewObjectType(ObjectType value)
+    public static ObjectSelector FromObjectType(ObjectType value)
     {
         return new ObjectSelector(Option.ObjectType, value);
     }

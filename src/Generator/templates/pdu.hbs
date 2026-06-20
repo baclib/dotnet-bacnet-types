@@ -1,0 +1,100 @@
+// SPDX-FileCopyrightText: Copyright 2024-2026, The BAClib Initiative and Contributors
+// SPDX-License-Identifier: EPL-2.0
+
+namespace {{namespace}};
+
+public sealed record class {{className}}
+{
+    public Pdu.Option Type => Pdu.Option.{{className}};
+
+    {{#if (eq fullname "confirmed-request-pdu")}}
+    public enum TMaxSegmentsAccepted
+    {
+        Unspecified = 0,
+        UpTo2 = 1,
+        UpTo4 = 2,
+        UpTo8 = 3,
+        UpTo16 = 4,
+        UpTo32 = 5,
+        UpTo64 = 6,
+        MoreThan64 = 7
+    }
+
+    public enum TMaxApduLengthAccepted
+    {
+        UpTo50 = 0,
+        UpTo128 = 1,
+        UpTo206 = 2,
+        UpTo480 = 3,
+        UpTo1024 = 4,
+        UpTo1476 = 6
+    }
+
+    public bool IsSegmentedRequest { get; init; }
+
+    public bool MoreSegmentsFollow { get; init; }
+
+    public bool AcceptsSegmentedResponses { get; init; }
+
+    public TMaxSegmentsAccepted MaxSegmentsAccepted { get; init; }
+
+    public TMaxApduLengthAccepted MaxApduLengthAccepted { get; init; }
+
+    public byte InvokeId { get; init; }
+
+    public byte SequenceNumber { get; init; }
+
+    public byte ProposedWindowSize { get; init; }
+
+    public ConfirmedServiceChoice ServiceChoice { get; init; }
+    {{/if}}
+    {{#if (eq fullname "unconfirmed-request-pdu")}}
+    public UnconfirmedServiceChoice ServiceChoice { get; init; }
+    {{/if}}
+    {{#if (eq fullname "simple-ack-pdu")}}
+    public byte OriginalInvokeId { get; init; }
+
+    public ConfirmedServiceChoice ServiceAckChoice { get; init; }
+    {{/if}}
+    {{#if (eq fullname "complex-ack-pdu")}}
+    public bool IsSegmentedResponse { get; init; }
+
+    public bool MoreSegmentsFollow { get; init; }
+
+    public byte OriginalInvokeId { get; init; }
+
+    public byte SequenceNumber { get; init; }
+
+    public byte ProposedWindowSize { get; init; }
+
+    public ConfirmedServiceChoice ServiceAckChoice { get; init; }
+    {{/if}}
+    {{#if (eq fullname "segment-ack-pdu")}}
+    public bool IsNak { get; init; }
+
+    public bool IsSentByServer { get; init; }
+
+    public byte OriginalInvokeId { get; init; }
+
+    public byte SequenceNumber { get; init; }
+
+    public byte ActualWindowSize { get; init; }
+    {{/if}}
+    {{#if (eq fullname "error-pdu")}}
+    public byte OriginalInvokeId { get; init; }
+
+    public ConfirmedServiceChoice ErrorChoice { get; init; }
+    {{/if}}
+    {{#if (eq fullname "reject-pdu")}}
+    public byte OriginalInvokeId { get; init; }
+
+    public RejectReason RejectReason { get; init; }
+    {{/if}}
+    {{#if (eq fullname "abort-pdu")}}
+    public bool IsSentByServer { get; init; }
+
+    public byte OriginalInvokeId { get; init; }
+
+    public AbortReason AbortReason { get; init; }
+    {{/if}}
+}

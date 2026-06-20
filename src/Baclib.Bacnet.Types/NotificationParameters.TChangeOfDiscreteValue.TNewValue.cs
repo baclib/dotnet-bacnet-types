@@ -93,7 +93,7 @@ public partial record class NotificationParameters
                 {
                     if (Choice != Option.Boolean)
                     {
-                        throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Boolean)} hat das Template erstellt");
+                        throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Boolean)}.");
                     }
                     return (Boolean)_choiceValue;
                 }
@@ -102,7 +102,7 @@ public partial record class NotificationParameters
             /// <summary>
             /// Create function for A boolean discrete value.
             /// </summary>
-            public static TNewValue NewBoolean(Boolean value)
+            public static TNewValue FromBoolean(Boolean value)
             {
                 return new TNewValue(Option.Boolean, value);
             }
@@ -116,7 +116,7 @@ public partial record class NotificationParameters
                 {
                     if (Choice != Option.Unsigned)
                     {
-                        throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Unsigned)} hat das Template erstellt");
+                        throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Unsigned)}.");
                     }
                     return (Unsigned)_choiceValue;
                 }
@@ -125,7 +125,7 @@ public partial record class NotificationParameters
             /// <summary>
             /// Create function for An unsigned integer discrete value.
             /// </summary>
-            public static TNewValue NewUnsigned(Unsigned value)
+            public static TNewValue FromUnsigned(Unsigned value)
             {
                 return new TNewValue(Option.Unsigned, value);
             }
@@ -139,7 +139,7 @@ public partial record class NotificationParameters
                 {
                     if (Choice != Option.Integer)
                     {
-                        throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Integer)} hat das Template erstellt");
+                        throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Integer)}.");
                     }
                     return (int)_choiceValue;
                 }
@@ -148,7 +148,7 @@ public partial record class NotificationParameters
             /// <summary>
             /// Create function for A signed integer discrete value.
             /// </summary>
-            public static TNewValue NewInteger(int value)
+            public static TNewValue FromInteger(int value)
             {
                 return new TNewValue(Option.Integer, value);
             }
@@ -162,7 +162,7 @@ public partial record class NotificationParameters
                 {
                     if (Choice != Option.Enumerated)
                     {
-                        throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Enumerated)} hat das Template erstellt");
+                        throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Enumerated)}.");
                     }
                     return (Enumerated)_choiceValue;
                 }
@@ -171,7 +171,7 @@ public partial record class NotificationParameters
             /// <summary>
             /// Create function for An enumerated discrete value.
             /// </summary>
-            public static TNewValue NewEnumerated(Enumerated value)
+            public static TNewValue FromEnumerated(Enumerated value)
             {
                 return new TNewValue(Option.Enumerated, value);
             }
@@ -185,7 +185,7 @@ public partial record class NotificationParameters
                 {
                     if (Choice != Option.Characterstring)
                     {
-                        throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Characterstring)} hat das Template erstellt");
+                        throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Characterstring)}.");
                     }
                     return (CharacterString)_choiceValue;
                 }
@@ -194,7 +194,7 @@ public partial record class NotificationParameters
             /// <summary>
             /// Create function for A character string discrete value.
             /// </summary>
-            public static TNewValue NewCharacterstring(CharacterString value)
+            public static TNewValue FromCharacterstring(CharacterString value)
             {
                 return new TNewValue(Option.Characterstring, value);
             }
@@ -208,7 +208,7 @@ public partial record class NotificationParameters
                 {
                     if (Choice != Option.Octetstring)
                     {
-                        throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Octetstring)} hat das Template erstellt");
+                        throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Octetstring)}.");
                     }
                     return (OctetString)_choiceValue;
                 }
@@ -217,7 +217,7 @@ public partial record class NotificationParameters
             /// <summary>
             /// Create function for An octet string discrete value.
             /// </summary>
-            public static TNewValue NewOctetstring(OctetString value)
+            public static TNewValue FromOctetstring(OctetString value)
             {
                 return new TNewValue(Option.Octetstring, value);
             }
@@ -231,7 +231,7 @@ public partial record class NotificationParameters
                 {
                     if (Choice != Option.Date)
                     {
-                        throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Date)} hat das Template erstellt");
+                        throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Date)}.");
                     }
                     return (Date)_choiceValue;
                 }
@@ -240,7 +240,7 @@ public partial record class NotificationParameters
             /// <summary>
             /// Create function for A date discrete value.
             /// </summary>
-            public static TNewValue NewDate(Date value)
+            public static TNewValue FromDate(Date value)
             {
                 return new TNewValue(Option.Date, value);
             }
@@ -254,7 +254,7 @@ public partial record class NotificationParameters
                 {
                     if (Choice != Option.Time)
                     {
-                        throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Time)} hat das Template erstellt");
+                        throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Time)}.");
                     }
                     return (Time)_choiceValue;
                 }
@@ -263,7 +263,7 @@ public partial record class NotificationParameters
             /// <summary>
             /// Create function for A time discrete value.
             /// </summary>
-            public static TNewValue NewTime(Time value)
+            public static TNewValue FromTime(Time value)
             {
                 return new TNewValue(Option.Time, value);
             }
@@ -277,7 +277,7 @@ public partial record class NotificationParameters
                 {
                     if (Choice != Option.Objectidentifier)
                     {
-                        throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Objectidentifier)} hat das Template erstellt");
+                        throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Objectidentifier)}.");
                     }
                     return (ObjectIdentifier)_choiceValue;
                 }
@@ -286,7 +286,7 @@ public partial record class NotificationParameters
             /// <summary>
             /// Create function for An object identifier discrete value.
             /// </summary>
-            public static TNewValue NewObjectidentifier(ObjectIdentifier value)
+            public static TNewValue FromObjectidentifier(ObjectIdentifier value)
             {
                 return new TNewValue(Option.Objectidentifier, value);
             }
@@ -300,7 +300,7 @@ public partial record class NotificationParameters
                 {
                     if (Choice != Option.Datetime)
                     {
-                        throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Datetime)} hat das Template erstellt");
+                        throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Datetime)}.");
                     }
                     return (DateTime)_choiceValue;
                 }
@@ -309,7 +309,7 @@ public partial record class NotificationParameters
             /// <summary>
             /// Create function for A date-time discrete value.
             /// </summary>
-            public static TNewValue NewDatetime(DateTime value)
+            public static TNewValue FromDatetime(DateTime value)
             {
                 return new TNewValue(Option.Datetime, value);
             }

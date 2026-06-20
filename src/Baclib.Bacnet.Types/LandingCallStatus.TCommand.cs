@@ -51,7 +51,7 @@ public partial record class LandingCallStatus
             {
                 if (Choice != Option.Direction)
                 {
-                    throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Direction)} hat das Template erstellt");
+                    throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Direction)}.");
                 }
                 return (LiftCarDirection)_choiceValue;
             }
@@ -60,7 +60,7 @@ public partial record class LandingCallStatus
         /// <summary>
         /// Create function for The direction requested for the lift car (up or down).
         /// </summary>
-        public static TCommand NewDirection(LiftCarDirection value)
+        public static TCommand FromDirection(LiftCarDirection value)
         {
             return new TCommand(Option.Direction, value);
         }
@@ -74,7 +74,7 @@ public partial record class LandingCallStatus
             {
                 if (Choice != Option.Destination)
                 {
-                    throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Destination)} hat das Template erstellt");
+                    throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Destination)}.");
                 }
                 return (Unsigned8)_choiceValue;
             }
@@ -83,7 +83,7 @@ public partial record class LandingCallStatus
         /// <summary>
         /// Create function for The destination floor number for the call.
         /// </summary>
-        public static TCommand NewDestination(Unsigned8 value)
+        public static TCommand FromDestination(Unsigned8 value)
         {
             return new TCommand(Option.Destination, value);
         }

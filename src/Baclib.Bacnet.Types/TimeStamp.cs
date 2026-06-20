@@ -54,7 +54,7 @@ public partial record class TimeStamp
         {
             if (Choice != Option.Time)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Time)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Time)}.");
             }
             return (Time)_choiceValue;
         }
@@ -63,7 +63,7 @@ public partial record class TimeStamp
     /// <summary>
     /// Create function for A time value as the timestamp.
     /// </summary>
-    public static TimeStamp NewTime(Time value)
+    public static TimeStamp FromTime(Time value)
     {
         return new TimeStamp(Option.Time, value);
     }
@@ -77,7 +77,7 @@ public partial record class TimeStamp
         {
             if (Choice != Option.SequenceNumber)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.SequenceNumber)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.SequenceNumber)}.");
             }
             return (TSequenceNumber)_choiceValue;
         }
@@ -86,7 +86,7 @@ public partial record class TimeStamp
     /// <summary>
     /// Create function for A sequence number as the timestamp.
     /// </summary>
-    public static TimeStamp NewSequenceNumber(TSequenceNumber value)
+    public static TimeStamp FromSequenceNumber(TSequenceNumber value)
     {
         return new TimeStamp(Option.SequenceNumber, value);
     }
@@ -100,7 +100,7 @@ public partial record class TimeStamp
         {
             if (Choice != Option.Datetime)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Datetime)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Datetime)}.");
             }
             return (DateTime)_choiceValue;
         }
@@ -109,7 +109,7 @@ public partial record class TimeStamp
     /// <summary>
     /// Create function for A date and time value as the timestamp.
     /// </summary>
-    public static TimeStamp NewDatetime(DateTime value)
+    public static TimeStamp FromDatetime(DateTime value)
     {
         return new TimeStamp(Option.Datetime, value);
     }

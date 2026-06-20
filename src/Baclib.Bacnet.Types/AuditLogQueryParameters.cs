@@ -49,7 +49,7 @@ public partial record class AuditLogQueryParameters
         {
             if (Choice != Option.ByTarget)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ByTarget)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ByTarget)}.");
             }
             return (TByTarget)_choiceValue;
         }
@@ -58,7 +58,7 @@ public partial record class AuditLogQueryParameters
     /// <summary>
     /// Create function for Query audit log records based on the target device and object.
     /// </summary>
-    public static AuditLogQueryParameters NewByTarget(TByTarget value)
+    public static AuditLogQueryParameters FromByTarget(TByTarget value)
     {
         return new AuditLogQueryParameters(Option.ByTarget, value);
     }
@@ -72,7 +72,7 @@ public partial record class AuditLogQueryParameters
         {
             if (Choice != Option.BySource)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.BySource)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.BySource)}.");
             }
             return (TBySource)_choiceValue;
         }
@@ -81,7 +81,7 @@ public partial record class AuditLogQueryParameters
     /// <summary>
     /// Create function for Query audit log records based on the source device and object.
     /// </summary>
-    public static AuditLogQueryParameters NewBySource(TBySource value)
+    public static AuditLogQueryParameters FromBySource(TBySource value)
     {
         return new AuditLogQueryParameters(Option.BySource, value);
     }

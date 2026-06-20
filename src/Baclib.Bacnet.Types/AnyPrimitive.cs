@@ -104,7 +104,7 @@ public partial record class AnyPrimitive
         {
             if (Choice != Option.Null)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Null)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Null)}.");
             }
             return (Null)_choiceValue;
         }
@@ -113,7 +113,7 @@ public partial record class AnyPrimitive
     /// <summary>
     /// Create function for A null value.
     /// </summary>
-    public static AnyPrimitive NewNull(Null value)
+    public static AnyPrimitive FromNull(Null value)
     {
         return new AnyPrimitive(Option.Null, value);
     }
@@ -127,7 +127,7 @@ public partial record class AnyPrimitive
         {
             if (Choice != Option.Boolean)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Boolean)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Boolean)}.");
             }
             return (Boolean)_choiceValue;
         }
@@ -136,7 +136,7 @@ public partial record class AnyPrimitive
     /// <summary>
     /// Create function for A boolean value.
     /// </summary>
-    public static AnyPrimitive NewBoolean(Boolean value)
+    public static AnyPrimitive FromBoolean(Boolean value)
     {
         return new AnyPrimitive(Option.Boolean, value);
     }
@@ -150,7 +150,7 @@ public partial record class AnyPrimitive
         {
             if (Choice != Option.Unsigned)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Unsigned)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Unsigned)}.");
             }
             return (Unsigned)_choiceValue;
         }
@@ -159,7 +159,7 @@ public partial record class AnyPrimitive
     /// <summary>
     /// Create function for An unsigned integer value.
     /// </summary>
-    public static AnyPrimitive NewUnsigned(Unsigned value)
+    public static AnyPrimitive FromUnsigned(Unsigned value)
     {
         return new AnyPrimitive(Option.Unsigned, value);
     }
@@ -173,7 +173,7 @@ public partial record class AnyPrimitive
         {
             if (Choice != Option.Integer)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Integer)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Integer)}.");
             }
             return (int)_choiceValue;
         }
@@ -182,7 +182,7 @@ public partial record class AnyPrimitive
     /// <summary>
     /// Create function for A signed integer value.
     /// </summary>
-    public static AnyPrimitive NewInteger(int value)
+    public static AnyPrimitive FromInteger(int value)
     {
         return new AnyPrimitive(Option.Integer, value);
     }
@@ -196,7 +196,7 @@ public partial record class AnyPrimitive
         {
             if (Choice != Option.Real)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Real)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Real)}.");
             }
             return (float)_choiceValue;
         }
@@ -205,7 +205,7 @@ public partial record class AnyPrimitive
     /// <summary>
     /// Create function for A real (floating-point) value.
     /// </summary>
-    public static AnyPrimitive NewReal(float value)
+    public static AnyPrimitive FromReal(float value)
     {
         return new AnyPrimitive(Option.Real, value);
     }
@@ -219,7 +219,7 @@ public partial record class AnyPrimitive
         {
             if (Choice != Option.Double)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Double)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Double)}.");
             }
             return (double)_choiceValue;
         }
@@ -228,7 +228,7 @@ public partial record class AnyPrimitive
     /// <summary>
     /// Create function for A double-precision floating-point value.
     /// </summary>
-    public static AnyPrimitive NewDouble(double value)
+    public static AnyPrimitive FromDouble(double value)
     {
         return new AnyPrimitive(Option.Double, value);
     }
@@ -242,7 +242,7 @@ public partial record class AnyPrimitive
         {
             if (Choice != Option.OctetString)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.OctetString)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.OctetString)}.");
             }
             return (OctetString)_choiceValue;
         }
@@ -251,7 +251,7 @@ public partial record class AnyPrimitive
     /// <summary>
     /// Create function for An octet string value.
     /// </summary>
-    public static AnyPrimitive NewOctetString(OctetString value)
+    public static AnyPrimitive FromOctetString(OctetString value)
     {
         return new AnyPrimitive(Option.OctetString, value);
     }
@@ -265,7 +265,7 @@ public partial record class AnyPrimitive
         {
             if (Choice != Option.CharacterString)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.CharacterString)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.CharacterString)}.");
             }
             return (CharacterString)_choiceValue;
         }
@@ -274,7 +274,7 @@ public partial record class AnyPrimitive
     /// <summary>
     /// Create function for A character string value.
     /// </summary>
-    public static AnyPrimitive NewCharacterString(CharacterString value)
+    public static AnyPrimitive FromCharacterString(CharacterString value)
     {
         return new AnyPrimitive(Option.CharacterString, value);
     }
@@ -288,7 +288,7 @@ public partial record class AnyPrimitive
         {
             if (Choice != Option.BitString)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.BitString)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.BitString)}.");
             }
             return (BitString)_choiceValue;
         }
@@ -297,7 +297,7 @@ public partial record class AnyPrimitive
     /// <summary>
     /// Create function for A bit string value.
     /// </summary>
-    public static AnyPrimitive NewBitString(BitString value)
+    public static AnyPrimitive FromBitString(BitString value)
     {
         return new AnyPrimitive(Option.BitString, value);
     }
@@ -311,7 +311,7 @@ public partial record class AnyPrimitive
         {
             if (Choice != Option.Enumerated)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Enumerated)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Enumerated)}.");
             }
             return (Enumerated)_choiceValue;
         }
@@ -320,7 +320,7 @@ public partial record class AnyPrimitive
     /// <summary>
     /// Create function for An enumerated value.
     /// </summary>
-    public static AnyPrimitive NewEnumerated(Enumerated value)
+    public static AnyPrimitive FromEnumerated(Enumerated value)
     {
         return new AnyPrimitive(Option.Enumerated, value);
     }
@@ -334,7 +334,7 @@ public partial record class AnyPrimitive
         {
             if (Choice != Option.DatePattern)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.DatePattern)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.DatePattern)}.");
             }
             return (DatePattern)_choiceValue;
         }
@@ -343,7 +343,7 @@ public partial record class AnyPrimitive
     /// <summary>
     /// Create function for A date pattern value for matching dates.
     /// </summary>
-    public static AnyPrimitive NewDatePattern(DatePattern value)
+    public static AnyPrimitive FromDatePattern(DatePattern value)
     {
         return new AnyPrimitive(Option.DatePattern, value);
     }
@@ -357,7 +357,7 @@ public partial record class AnyPrimitive
         {
             if (Choice != Option.TimePattern)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.TimePattern)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.TimePattern)}.");
             }
             return (TimePattern)_choiceValue;
         }
@@ -366,7 +366,7 @@ public partial record class AnyPrimitive
     /// <summary>
     /// Create function for A time pattern value for matching times.
     /// </summary>
-    public static AnyPrimitive NewTimePattern(TimePattern value)
+    public static AnyPrimitive FromTimePattern(TimePattern value)
     {
         return new AnyPrimitive(Option.TimePattern, value);
     }
@@ -380,7 +380,7 @@ public partial record class AnyPrimitive
         {
             if (Choice != Option.ObjectIdentifier)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ObjectIdentifier)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ObjectIdentifier)}.");
             }
             return (ObjectIdentifier)_choiceValue;
         }
@@ -389,7 +389,7 @@ public partial record class AnyPrimitive
     /// <summary>
     /// Create function for An object identifier value.
     /// </summary>
-    public static AnyPrimitive NewObjectIdentifier(ObjectIdentifier value)
+    public static AnyPrimitive FromObjectIdentifier(ObjectIdentifier value)
     {
         return new AnyPrimitive(Option.ObjectIdentifier, value);
     }

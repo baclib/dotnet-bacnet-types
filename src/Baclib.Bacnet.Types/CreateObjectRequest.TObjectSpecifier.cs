@@ -51,7 +51,7 @@ public partial record class CreateObjectRequest
             {
                 if (Choice != Option.ObjectType)
                 {
-                    throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ObjectType)} hat das Template erstellt");
+                    throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ObjectType)}.");
                 }
                 return (ObjectType)_choiceValue;
             }
@@ -60,7 +60,7 @@ public partial record class CreateObjectRequest
         /// <summary>
         /// Create function for Specifies the type of object to create, letting the device assign the instance number.
         /// </summary>
-        public static TObjectSpecifier NewObjectType(ObjectType value)
+        public static TObjectSpecifier FromObjectType(ObjectType value)
         {
             return new TObjectSpecifier(Option.ObjectType, value);
         }
@@ -74,7 +74,7 @@ public partial record class CreateObjectRequest
             {
                 if (Choice != Option.ObjectIdentifier)
                 {
-                    throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ObjectIdentifier)} hat das Template erstellt");
+                    throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ObjectIdentifier)}.");
                 }
                 return (ObjectIdentifier)_choiceValue;
             }
@@ -83,7 +83,7 @@ public partial record class CreateObjectRequest
         /// <summary>
         /// Create function for Specifies the complete object identifier including both type and instance number.
         /// </summary>
-        public static TObjectSpecifier NewObjectIdentifier(ObjectIdentifier value)
+        public static TObjectSpecifier FromObjectIdentifier(ObjectIdentifier value)
         {
             return new TObjectSpecifier(Option.ObjectIdentifier, value);
         }

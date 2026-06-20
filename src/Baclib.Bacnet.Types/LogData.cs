@@ -54,7 +54,7 @@ public partial record class LogData
         {
             if (Choice != Option.Status)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Status)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Status)}.");
             }
             return (LogStatus)_choiceValue;
         }
@@ -63,7 +63,7 @@ public partial record class LogData
     /// <summary>
     /// Create function for A log status bit string indicating the operational state of the log.
     /// </summary>
-    public static LogData NewStatus(LogStatus value)
+    public static LogData FromStatus(LogStatus value)
     {
         return new LogData(Option.Status, value);
     }
@@ -77,7 +77,7 @@ public partial record class LogData
         {
             if (Choice != Option.Series)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Series)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Series)}.");
             }
             return (TSeries)_choiceValue;
         }
@@ -86,7 +86,7 @@ public partial record class LogData
     /// <summary>
     /// Create function for A series of logged data values, which can be of various types.
     /// </summary>
-    public static LogData NewSeries(TSeries value)
+    public static LogData FromSeries(TSeries value)
     {
         return new LogData(Option.Series, value);
     }
@@ -100,7 +100,7 @@ public partial record class LogData
         {
             if (Choice != Option.TimeChange)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.TimeChange)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.TimeChange)}.");
             }
             return (float)_choiceValue;
         }
@@ -109,7 +109,7 @@ public partial record class LogData
     /// <summary>
     /// Create function for Indicates a time change event, with the value representing the time adjustment in seconds.
     /// </summary>
-    public static LogData NewTimeChange(float value)
+    public static LogData FromTimeChange(float value)
     {
         return new LogData(Option.TimeChange, value);
     }

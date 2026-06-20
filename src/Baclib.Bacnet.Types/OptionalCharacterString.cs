@@ -49,7 +49,7 @@ public partial record class OptionalCharacterString
         {
             if (Choice != Option.Null)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Null)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Null)}.");
             }
             return (Null)_choiceValue;
         }
@@ -58,7 +58,7 @@ public partial record class OptionalCharacterString
     /// <summary>
     /// Create function for Indicates the absence of a character string value.
     /// </summary>
-    public static OptionalCharacterString NewNull(Null value)
+    public static OptionalCharacterString FromNull(Null value)
     {
         return new OptionalCharacterString(Option.Null, value);
     }
@@ -72,7 +72,7 @@ public partial record class OptionalCharacterString
         {
             if (Choice != Option.Characterstring)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Characterstring)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Characterstring)}.");
             }
             return (CharacterString)_choiceValue;
         }
@@ -81,7 +81,7 @@ public partial record class OptionalCharacterString
     /// <summary>
     /// Create function for Specifies the BACnet character string value when present.
     /// </summary>
-    public static OptionalCharacterString NewCharacterstring(CharacterString value)
+    public static OptionalCharacterString FromCharacterstring(CharacterString value)
     {
         return new OptionalCharacterString(Option.Characterstring, value);
     }

@@ -17,10 +17,22 @@ const partials = Object.freeze([
     'choice', 'sequence', 'sequence-of'
 ]);
 
+
+const pduTypes = Object.freeze([
+    'confirmed-request-pdu',
+    'unconfirmed-request-pdu',
+    'simple-ack-pdu',
+    'complex-ack-pdu',
+    'segment-ack-pdu',
+    'error-pdu',
+    'reject-pdu',
+    'abort-pdu'
+]);
+
 const refinedTypes = Object.freeze([
     'any', 'choice', 'sequence', 'sequence-of',
     'null',
-    'octet-string', 'character-string', 'bit-string', , 'bit-string-8', 'bit-string-16', 'bit-string-32', 'bit-string-64',
+    'octet-string', 'character-string', 'bit-string', 'bit-string-8', 'bit-string-16', 'bit-string-32', 'bit-string-64',
     'date-pattern', 'time-pattern',
     'object-identifier',
     'week-n-day'
@@ -273,6 +285,10 @@ export class CsharpTransformer {
         const templatePath = path.join(this.templatesDir, 'levels.hbs');
         for (const fileObject of this.fileObjects) {
             this.render(templatePath, fileObject).then(content => {
+                if (content.trim() === '') {
+                    console.warn(`Generated empty content for ${fileObject.fullname}, skipping file creation.`);
+                    return;
+                }
                 writeFileSync(path.join(this.directory, fileObject.fileName), content);
             });
         }
@@ -290,6 +306,12 @@ export class CsharpTransformer {
      * Register Handlebars helpers
      */
     registerHelpers() {
+        Handlebars.registerHelper('eq', function (left, right) {
+            return left === right;
+        });
+        Handlebars.registerHelper('ifString', function (value, options) {
+            return value === 'string' ? options.fn(this) : options.inverse(this);
+        });
         Handlebars.registerHelper('nest', function (data, options) {
             const content = options.fn(this);
             if (data.classHierarchy.length === 0) {
@@ -348,10 +370,17 @@ export class CsharpTransformer {
      * @returns {Promise<string>} Rendered template
      */
     async render(templatePath, data) {
+
+
+        const parts = data.fullname.split('.');
+        if (parts.length > 1 && pduTypes.includes(parts[0])) {
+            return ''
+        }
+
+
         const globalAliasPath = path.join(path.dirname(templatePath), 'global-alias.hbs');
         if (fixedAliases.hasOwnProperty(data.fullname)) {
             data.aliasBase = fixedAliases[data.fullname];
-
             if (data.fullname.startsWith('enum')) {
                 data.enumBase = data.aliasBase;
                 templatePath = path.join(path.dirname(templatePath), 'enumerated-n.hbs');
@@ -363,6 +392,10 @@ export class CsharpTransformer {
         }
         else if (refinedTypes.includes(data.fullname)) {
             templatePath = path.join(path.dirname(templatePath), 'predefined.hbs');
+        }
+        else if (pduTypes.includes(data.fullname)) {
+            //console.log(`PDU type: ${JSON.stringify(data, null, 2)}`);
+            templatePath = path.join(path.dirname(templatePath), 'pdu.hbs');
         }
         else if (!partials.includes(data.baseType)) {
             if (data.baseType) {

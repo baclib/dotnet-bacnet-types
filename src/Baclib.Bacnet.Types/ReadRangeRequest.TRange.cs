@@ -56,7 +56,7 @@ public partial record class ReadRangeRequest
             {
                 if (Choice != Option.ByPosition)
                 {
-                    throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ByPosition)} hat das Template erstellt");
+                    throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ByPosition)}.");
                 }
                 return (TByPosition)_choiceValue;
             }
@@ -65,7 +65,7 @@ public partial record class ReadRangeRequest
         /// <summary>
         /// Create function for Read range by position.
         /// </summary>
-        public static TRange NewByPosition(TByPosition value)
+        public static TRange FromByPosition(TByPosition value)
         {
             return new TRange(Option.ByPosition, value);
         }
@@ -79,7 +79,7 @@ public partial record class ReadRangeRequest
             {
                 if (Choice != Option.BySequenceNumber)
                 {
-                    throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.BySequenceNumber)} hat das Template erstellt");
+                    throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.BySequenceNumber)}.");
                 }
                 return (TBySequenceNumber)_choiceValue;
             }
@@ -88,7 +88,7 @@ public partial record class ReadRangeRequest
         /// <summary>
         /// Create function for Read range by sequence number.
         /// </summary>
-        public static TRange NewBySequenceNumber(TBySequenceNumber value)
+        public static TRange FromBySequenceNumber(TBySequenceNumber value)
         {
             return new TRange(Option.BySequenceNumber, value);
         }
@@ -102,7 +102,7 @@ public partial record class ReadRangeRequest
             {
                 if (Choice != Option.ByTime)
                 {
-                    throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ByTime)} hat das Template erstellt");
+                    throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ByTime)}.");
                 }
                 return (TByTime)_choiceValue;
             }
@@ -111,7 +111,7 @@ public partial record class ReadRangeRequest
         /// <summary>
         /// Create function for Read range by time.
         /// </summary>
-        public static TRange NewByTime(TByTime value)
+        public static TRange FromByTime(TByTime value)
         {
             return new TRange(Option.ByTime, value);
         }

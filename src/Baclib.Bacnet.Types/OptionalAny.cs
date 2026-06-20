@@ -49,7 +49,7 @@ public partial record class OptionalAny
         {
             if (Choice != Option.Null)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Null)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Null)}.");
             }
             return (Null)_choiceValue;
         }
@@ -58,7 +58,7 @@ public partial record class OptionalAny
     /// <summary>
     /// Create function for Indicates the absence of a value.
     /// </summary>
-    public static OptionalAny NewNull(Null value)
+    public static OptionalAny FromNull(Null value)
     {
         return new OptionalAny(Option.Null, value);
     }
@@ -72,7 +72,7 @@ public partial record class OptionalAny
         {
             if (Choice != Option.Any)
             {
-                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Any)} hat das Template erstellt");
+                throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Any)}.");
             }
             return (Any)_choiceValue;
         }
@@ -81,7 +81,7 @@ public partial record class OptionalAny
     /// <summary>
     /// Create function for Specifies a BACnet value of any type when present.
     /// </summary>
-    public static OptionalAny NewAny(Any value)
+    public static OptionalAny FromAny(Any value)
     {
         return new OptionalAny(Option.Any, value);
     }

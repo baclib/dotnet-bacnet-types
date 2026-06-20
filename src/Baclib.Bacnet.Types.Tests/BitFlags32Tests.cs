@@ -267,3 +267,4 @@ public class BitFlags32Tests
         Assert.Equal("1001", statusFlags.ToString()); // LSB first: bits 0,1,2,3 = 1,0,0,1
     }
 }
+

@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026, The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
-using Baclib.Bacnet.Serialization.Asn1;
+using Baclib.Bacnet.Serialization.Native;
 
 namespace Baclib.Bacnet.Types.Tests;
 
@@ -71,3 +71,4 @@ public class Asn1SerializerSmokeTests
         Assert.False(decoded);
     }
 }
+
