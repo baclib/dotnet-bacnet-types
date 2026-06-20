@@ -1,8 +1,6 @@
 // SPDX-FileCopyrightText: Copyright 2024-2025 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: BSD-2-Clause
 
-using Baclib.Bacnet.Types;
-using System.Buffers.Binary;
 using System.Runtime.CompilerServices;
 
 namespace Baclib.Bacnet.Serialization.Native;

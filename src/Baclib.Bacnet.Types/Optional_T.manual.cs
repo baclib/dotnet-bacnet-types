@@ -1,4 +1,4 @@
-﻿namespace Baclib.Bacnet.Types;
+﻿namespace Baclib.Bacnet.Types.Application;
 
 public readonly record struct Optional<T>
 {

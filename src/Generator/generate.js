@@ -100,7 +100,7 @@ export class CsharpTransformer {
         const className = classHierarchy.pop();
         const typeData = {
             fullname: context.fullname,
-            namespace: 'Baclib.Bacnet.Types',
+            namespace: 'Baclib.Bacnet.Types.Application',
             fileName,
             bacnetName: context.thisAlias ?? context.thisName,
             className,

@@ -13,11 +13,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Baclib.Bacnet.Types\Baclib.Bacnet.Types.csproj" />
+    <ProjectReference Include="..\Baclib.Bacnet.Types\Baclib.Bacnet.Types.Application.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Using Include="Baclib.Bacnet.Types" />
+    <Using Include="Baclib.Bacnet.Types.Application" />
   </ItemGroup>
 
 </Project>

@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026, The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
-namespace Baclib.Bacnet.Types;
+namespace Baclib.Bacnet.Types.Application;
 
 /// <summary>
 /// Represent a basic enumeration with a maximum size of n bytes.

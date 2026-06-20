@@ -1,7 +1,7 @@
 ﻿// SPDX-FileCopyrightText: Copyright 2024-2026, The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
-namespace Baclib.Bacnet.Types;
+namespace Baclib.Bacnet.Types.Application;
 
 /// <summary>
 /// Represents a BACnet BitString primitive data type as defined in ANSI/ASHRAE 135-2024 Clause 20.2.10.

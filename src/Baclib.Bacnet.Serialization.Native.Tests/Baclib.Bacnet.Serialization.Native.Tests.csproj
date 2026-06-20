@@ -17,12 +17,12 @@
   <ItemGroup>
     <Using Include="Baclib.Bacnet.Serialization.Native" />
     <Using Include="Baclib.Bacnet.Serialization.Native.Codecs" />
-    <Using Include="Baclib.Bacnet.Types" />
+    <Using Include="Baclib.Bacnet.Types.Application" />
     <Using Include="Xunit" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Baclib.Bacnet.Types\Baclib.Bacnet.Types.csproj" />
+    <ProjectReference Include="..\Baclib.Bacnet.Types\Baclib.Bacnet.Types.Application.csproj" />
     <ProjectReference Include="..\Baclib.Bacnet.Serialization.Native\Baclib.Bacnet.Serialization.Native.csproj" />
   </ItemGroup>
 
