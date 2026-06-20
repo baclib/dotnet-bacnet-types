@@ -1,7 +1,7 @@
 <Solution>
   <Project Path="Baclib.Bacnet.Serialization.Native.Tests/Baclib.Bacnet.Serialization.Native.Tests.csproj" Id="c1e77242-6446-4429-86f9-3560d4be575a" />
   <Project Path="Baclib.Bacnet.Serialization.Native/Baclib.Bacnet.Serialization.Native.csproj" />
-  <Project Path="Baclib.Bacnet.Types/Baclib.Bacnet.Types.Application.csproj" />
+  <Project Path="Baclib.Bacnet.Types.Application/Baclib.Bacnet.Types.Application.csproj" />
   <Project Path="Generator/Generator.esproj">
     <Build />
     <Deploy />
