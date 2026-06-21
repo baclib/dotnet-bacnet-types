@@ -13,7 +13,7 @@ namespace Baclib.Bacnet.Serialization.Native;
 /// It supports all BACnet primitive types, constructed types, and context-specific encoding.
 /// The writer maintains an internal position index that advances as data is written.
 /// </remarks>
-public ref struct AsduEncoder
+public ref struct NativeWriter
 {
     /// <summary>
     /// Backing buffer used for encoded output.
@@ -54,11 +54,11 @@ public ref struct AsduEncoder
     private int _index = 0;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="AsduEncoder"/> class with the specified buffer size.
+    /// Initializes a new instance of the <see cref="NativeWriter"/> class with the specified buffer size.
     /// </summary>
     /// <param name="size">The size of the buffer to allocate.</param>
     /// <exception cref="ArgumentOutOfRangeException">Thrown when size is negative.</exception>
-    public AsduEncoder(int size)
+    public NativeWriter(int size)
     {
         if (size < 0)
         {
