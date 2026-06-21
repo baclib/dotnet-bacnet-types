@@ -42,6 +42,16 @@ public ref struct NativeReader(ReadOnlySpan<byte> asdu)
     /// </summary>
     public readonly bool End => _index >= _asdu.Length;
 
+
+
+
+    public readonly bool PeekTag(byte tagNumber) => false;
+
+    public readonly bool PeekOpeningTag(byte tagNumber) => false;
+
+
+
+
     #region Decode required tag
 
     /// <summary>
@@ -177,7 +187,7 @@ public ref struct NativeReader(ReadOnlySpan<byte> asdu)
     /// <param name="tagClass">The expected tag class.</param>
     /// <param name="tagNumber">The expected tag number.</param>
     /// <returns>A span over the decoded payload bytes.</returns>
-    public ReadOnlySpan<byte> Decode(AsduTagClass tagClass, byte tagNumber)
+    public ReadOnlySpan<byte> Read(AsduTagClass tagClass, byte tagNumber)
     {
         var dataLength = DecodeTag(tagClass, tagNumber);
         var bytes = _asdu.Slice(_index, dataLength);
@@ -190,14 +200,14 @@ public ref struct NativeReader(ReadOnlySpan<byte> asdu)
     /// </summary>
     /// <param name="tagNumber">The expected application tag number.</param>
     /// <returns>A span over the decoded payload bytes.</returns>
-    public ReadOnlySpan<byte> Decode(ApplicationTagNumber tagNumber) => Decode(AsduTagClass.Application, (byte)tagNumber);
+    public ReadOnlySpan<byte> Read(ApplicationTagNumber tagNumber) => Read(AsduTagClass.Application, (byte)tagNumber);
 
     /// <summary>
     /// Decodes a required context tag and returns its payload bytes.
     /// </summary>
     /// <param name="tagNumber">The expected context tag number.</param>
     /// <returns>A span over the decoded payload bytes.</returns>
-    public ReadOnlySpan<byte> Decode(byte tagNumber) => Decode(AsduTagClass.Context, tagNumber);
+    public ReadOnlySpan<byte> Read(byte tagNumber) => Read(AsduTagClass.Context, tagNumber);
 
     #endregion
 
@@ -210,7 +220,7 @@ public ref struct NativeReader(ReadOnlySpan<byte> asdu)
     /// <param name="tagNumber">The expected tag number.</param>
     /// <param name="bytes">When found, receives a span over the decoded payload bytes.</param>
     /// <returns><see langword="true"/> when the tag is present; otherwise, <see langword="false"/>.</returns>
-    public bool DecodeOptional(AsduTagClass tagClass, byte tagNumber, out ReadOnlySpan<byte> bytes)
+    public bool ReadOptional(AsduTagClass tagClass, byte tagNumber, out ReadOnlySpan<byte> bytes)
     {
         if (!DecodeTagOptional(tagClass, tagNumber, out int dataLength))
         {
@@ -229,7 +239,7 @@ public ref struct NativeReader(ReadOnlySpan<byte> asdu)
     /// <param name="tagNumber">The expected application tag number.</param>
     /// <param name="bytes">When found, receives a span over the decoded payload bytes.</param>
     /// <returns><see langword="true"/> when the tag is present; otherwise, <see langword="false"/>.</returns>
-    public bool DecodeOptional(ApplicationTagNumber tagNumber, out ReadOnlySpan<byte> bytes) => DecodeOptional(AsduTagClass.Application, (byte)tagNumber, out bytes);
+    public bool ReadOptional(ApplicationTagNumber tagNumber, out ReadOnlySpan<byte> bytes) => ReadOptional(AsduTagClass.Application, (byte)tagNumber, out bytes);
 
     /// <summary>
     /// Tries to decode an optional context tag and returns its payload bytes.
@@ -237,7 +247,7 @@ public ref struct NativeReader(ReadOnlySpan<byte> asdu)
     /// <param name="tagNumber">The expected context tag number.</param>
     /// <param name="bytes">When found, receives a span over the decoded payload bytes.</param>
     /// <returns><see langword="true"/> when the tag is present; otherwise, <see langword="false"/>.</returns>
-    public bool DecodeOptional(byte tagNumber, out ReadOnlySpan<byte> bytes) => DecodeOptional(AsduTagClass.Context, tagNumber, out bytes);
+    public bool ReadOptional(byte tagNumber, out ReadOnlySpan<byte> bytes) => ReadOptional(AsduTagClass.Context, tagNumber, out bytes);
 
     #endregion
 

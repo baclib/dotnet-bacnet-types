@@ -3,59 +3,33 @@
 
 namespace Baclib.Bacnet.Serialization.Native.Codecs;
 
-public sealed class ObjectIdentifierCodec : INativeCodec<ObjectIdentifier>
+public sealed class ObjectIdentifierCodec : NativeCodecBase<ObjectIdentifier>
 {
-    private ObjectIdentifierCodec()
+    private ObjectIdentifierCodec() : base(ApplicationTagNumber.ObjectIdentifier)
     {
     }
 
     public static readonly ObjectIdentifierCodec Instance = new();
 
-    public int GetEncodedSize(in ObjectIdentifier value) => AsduLength.Sum(ApplicationTagNumber.ObjectIdentifier, AsduLength.ObjectIdentifier);
+    protected override int CalculateValueSize(in ObjectIdentifier value) => AsduLength.ObjectIdentifier;
 
-    public int GetEncodedSize(byte tagNumber, in ObjectIdentifier value) => AsduLength.Sum(tagNumber, AsduLength.ObjectIdentifier);
-
-    public void Encode(ref AsduEncoder encoder, in ObjectIdentifier value)
+    protected override void EncodeValueBytes(ref NativeWriter encoder, byte tagNumber, AsduTagClass tagClass, in ObjectIdentifier value)
     {
-        var bytes = encoder.Encode(ApplicationTagNumber.ObjectIdentifier, AsduLength.ObjectIdentifier);
-        AsduEncoder.WriteObjectIdentifier(bytes, value);
+        var bytes = encoder.Encode(tagClass, tagNumber, AsduLength.ObjectIdentifier);
+        NativeWriter.WriteObjectIdentifier(bytes, value);
     }
 
-    public void Encode(ref AsduEncoder encoder, byte tagNumber, in ObjectIdentifier value)
+    protected override ObjectIdentifier DecodeValueBytes(ref NativeReader decoder, byte tagNumber, AsduTagClass tagClass)
     {
-        var bytes = encoder.Encode(tagNumber, AsduLength.ObjectIdentifier);
-        AsduEncoder.WriteObjectIdentifier(bytes, value);
-    }
-
-    public ObjectIdentifier Decode(ref NativeReader decoder)
-    {
-        var bytes = decoder.Decode(ApplicationTagNumber.ObjectIdentifier, AsduLength.ObjectIdentifier);
+        var bytes = decoder.Decode(tagClass, tagNumber, AsduLength.ObjectIdentifier);
         return NativePrimitives.ReadObjectIdentifier(bytes);
     }
 
-    public ObjectIdentifier Decode(ref NativeReader decoder, byte tagNumber)
+    protected override Optional<ObjectIdentifier> DecodeValueBytesOptional(ref NativeReader decoder, byte tagNumber, AsduTagClass tagClass)
     {
-        var bytes = decoder.Decode(tagNumber, AsduLength.ObjectIdentifier);
-        return NativePrimitives.ReadObjectIdentifier(bytes);
-    }
-
-    public Optional<ObjectIdentifier> DecodeOptional(ref NativeReader decoder)
-    {
-        var bytes = decoder.DecodeOptional(ApplicationTagNumber.ObjectIdentifier, AsduLength.ObjectIdentifier);
+        var bytes = decoder.DecodeOptional(tagClass, tagNumber, AsduLength.ObjectIdentifier);
         if (!bytes.IsEmpty)
-        {
             return NativePrimitives.ReadObjectIdentifier(bytes);
-        }
-        return default;
-    }
-
-    public Optional<ObjectIdentifier> DecodeOptional(ref NativeReader decoder, byte tagNumber)
-    {
-        var bytes = decoder.DecodeOptional(tagNumber, AsduLength.ObjectIdentifier);
-        if (!bytes.IsEmpty)
-        {
-            return NativePrimitives.ReadObjectIdentifier(bytes);
-        }
         return default;
     }
 }

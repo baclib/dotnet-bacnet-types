@@ -3,30 +3,24 @@
 
 namespace Baclib.Bacnet.Serialization.Native.Codecs;
 
-public sealed class BitString16Codec : INativeCodec<BitString16>
+public sealed class BitString16Codec : NativeCodecBase<BitString16>
 {
-    private BitString16Codec()
+    private BitString16Codec() : base(ApplicationTagNumber.BitString)
     {
     }
 
     public static readonly BitString16Codec Instance = new();
 
-    public int GetEncodedSize(in BitString16 value) => AsduLength.Sum(ApplicationTagNumber.BitString, AsduLength.BitString16);
+    protected override int CalculateValueSize(in BitString16 value) => AsduLength.BitString16;
 
-    public int GetEncodedSize(byte tagNumber, in BitString16 value) => AsduLength.Sum(tagNumber, AsduLength.BitString16);
-
-    private static void Encode(ref AsduEncoder encoder, byte tagNumber, AsduTagClass tagClass, in BitString16 value)
+    protected override void EncodeValueBytes(ref NativeWriter encoder, byte tagNumber, AsduTagClass tagClass, in BitString16 value)
     {
         var bytes = encoder.Encode(tagClass, tagNumber, AsduLength.BitString16);
         var unusedBits = (byte)(16 - value.Count);
-        AsduEncoder.WriteBitStringFromFlags16(bytes, value.Flags, unusedBits);
+        NativeWriter.WriteBitStringFromFlags16(bytes, value.Flags, unusedBits);
     }
 
-    public void Encode(ref AsduEncoder encoder, in BitString16 value) => Encode(ref encoder, (byte)ApplicationTagNumber.BitString, AsduTagClass.Application, in value);
-
-    public void Encode(ref AsduEncoder encoder, byte tagNumber, in BitString16 value) => Encode(ref encoder, tagNumber, AsduTagClass.Context, in value);
-
-    private static BitString16 Decode(ref NativeReader decoder, byte tagNumber, AsduTagClass tagClass)
+    protected override BitString16 DecodeValueBytes(ref NativeReader decoder, byte tagNumber, AsduTagClass tagClass)
     {
         var bytes = tagClass == AsduTagClass.Application
             ? decoder.Decode(ApplicationTagNumber.BitString, AsduLength.BitString16)
@@ -37,11 +31,7 @@ public sealed class BitString16Codec : INativeCodec<BitString16>
         return new BitString16(flags, count);
     }
 
-    public BitString16 Decode(ref NativeReader decoder) => Decode(ref decoder, (byte)ApplicationTagNumber.BitString, AsduTagClass.Application);
-
-    public BitString16 Decode(ref NativeReader decoder, byte tagNumber) => Decode(ref decoder, tagNumber, AsduTagClass.Context);
-
-    private static Optional<BitString16> DecodeOptional(ref NativeReader decoder, byte tagNumber, AsduTagClass tagClass)
+    protected override Optional<BitString16> DecodeValueBytesOptional(ref NativeReader decoder, byte tagNumber, AsduTagClass tagClass)
     {
         var bytes = decoder.DecodeOptional(tagClass, tagNumber, AsduLength.BitString16);
         if (!bytes.IsEmpty)
@@ -51,12 +41,7 @@ public sealed class BitString16Codec : INativeCodec<BitString16>
             var flags = NativePrimitives.ReadBitFlags16(bytes);
             return new BitString16(flags, count);
         }
-
         return default;
     }
-
-    public Optional<BitString16> DecodeOptional(ref NativeReader decoder) => DecodeOptional(ref decoder, (byte)ApplicationTagNumber.BitString, AsduTagClass.Application);
-
-    public Optional<BitString16> DecodeOptional(ref NativeReader decoder, byte tagNumber) => DecodeOptional(ref decoder, tagNumber, AsduTagClass.Context);
 }
 

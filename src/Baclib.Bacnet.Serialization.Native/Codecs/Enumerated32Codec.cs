@@ -3,47 +3,42 @@
 
 namespace Baclib.Bacnet.Serialization.Native.Codecs;
 
-public sealed class Enumerated32Codec : INativeCodec<Enumerated32>
+public sealed class Enumerated32Codec : NativeCodecBase<Enumerated32>
 {
-    private Enumerated32Codec()
+    private Enumerated32Codec() : base(ApplicationTagNumber.Unsigned)
     {
     }
 
     public static readonly Enumerated32Codec Instance = new();
 
-    public int GetEncodedSize(in Enumerated32 value) => AsduLength.Sum(ApplicationTagNumber.Unsigned, AsduLength.FromUnsigned32((uint)value));
+    protected override int CalculateValueSize(in Enumerated32 value) => AsduLength.FromUnsigned32((uint)value);
 
-    public int GetEncodedSize(byte tagNumber, in Enumerated32 value) => AsduLength.Sum(tagNumber, AsduLength.FromUnsigned32((uint)value));
-
-    private static void Encode(ref AsduEncoder encoder, byte tagNumber, AsduTagClass tagClass, in Enumerated32 value)
+    protected override void EncodeValueBytes(ref NativeWriter encoder, byte tagNumber, AsduTagClass tagClass, in Enumerated32 value)
     {
         var length = AsduLength.FromUnsigned32((uint)value);
         var bytes = encoder.Encode(tagClass, tagNumber, length);
         switch (length)
         {
             case AsduLength.Enumerated8:
-                AsduEncoder.WriteEnumerated8(bytes, (Enumerated8)value);
+                NativeWriter.WriteEnumerated8(bytes, (Enumerated8)value);
                 break;
             case AsduLength.Enumerated16:
-                AsduEncoder.WriteEnumerated16(bytes, (Enumerated16)value);
+                NativeWriter.WriteEnumerated16(bytes, (Enumerated16)value);
                 break;
             case AsduLength.Enumerated24:
-                AsduEncoder.WriteEnumerated24(bytes, value);
+                NativeWriter.WriteEnumerated24(bytes, value);
                 break;
             case AsduLength.Enumerated32:
-                AsduEncoder.WriteEnumerated32(bytes, value);
+                NativeWriter.WriteEnumerated32(bytes, value);
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(value), "Invalid length for unsigned 32-bit integer.");
         }
     }
 
-    public void Encode(ref AsduEncoder encoder, in Enumerated32 value) => Encode(ref encoder, (byte)ApplicationTagNumber.Unsigned, AsduTagClass.Application, in value);
-
-    public void Encode(ref AsduEncoder encoder, byte tagNumber, in Enumerated32 value) => Encode(ref encoder, tagNumber, AsduTagClass.Context, in value);
-
-    private static Enumerated32 ReadEnumerated32(ref ReadOnlySpan<byte> bytes)
+    protected override Enumerated32 DecodeValueBytes(ref NativeReader decoder, byte tagNumber, AsduTagClass tagClass)
     {
+        var bytes = decoder.Read(tagClass, tagNumber);
         return bytes.Length switch
         {
             AsduLength.Unsigned8 => (Enumerated32)NativePrimitives.ReadEnumerated8(bytes),
@@ -54,28 +49,25 @@ public sealed class Enumerated32Codec : INativeCodec<Enumerated32>
         };
     }
 
-    private static Enumerated32 Decode(ref NativeReader decoder, byte tagNumber, AsduTagClass tagClass)
+    protected override Optional<Enumerated32> DecodeValueBytesOptional(ref NativeReader decoder, byte tagNumber, AsduTagClass tagClass)
     {
-        var bytes = decoder.Decode(tagClass, tagNumber);
-        return ReadEnumerated32(ref bytes);
-    }
-
-    public Enumerated32 Decode(ref NativeReader decoder) => Decode(ref decoder, (byte)ApplicationTagNumber.Unsigned, AsduTagClass.Application);
-
-    public Enumerated32 Decode(ref NativeReader decoder, byte tagNumber) => Decode(ref decoder, tagNumber, AsduTagClass.Context);
-
-    private static Optional<Enumerated32> DecodeOptional(ref NativeReader decoder, byte tagNumber, AsduTagClass tagClass)
-    {
-        if (decoder.DecodeOptional(tagClass, tagNumber, out var bytes))
+        if (decoder.ReadOptional(tagClass, tagNumber, out var bytes))
         {
-            return ReadEnumerated32(ref bytes);
+            return bytes.Length switch
+            {
+                AsduLength.Unsigned8 => (Enumerated32)NativePrimitives.ReadEnumerated8(bytes),
+                AsduLength.Unsigned16 => (Enumerated32)NativePrimitives.ReadEnumerated16(bytes),
+                AsduLength.Unsigned24 => NativePrimitives.ReadEnumerated24(bytes),
+                AsduLength.Unsigned32 => NativePrimitives.ReadEnumerated32(bytes),
+                _ => throw new AsduException()
+            };
         }
-
         return default;
     }
 
-    public Optional<Enumerated32> DecodeOptional(ref NativeReader decoder) => DecodeOptional(ref decoder, (byte)ApplicationTagNumber.Enumerated, AsduTagClass.Application);
-
-    public Optional<Enumerated32> DecodeOptional(ref NativeReader decoder, byte tagNumber) => DecodeOptional(ref decoder, tagNumber, AsduTagClass.Context);
+    // Override to use ApplicationTagNumber.Enumerated for optional decoding (original behavior)
+    // This supports the DecodeOptional flavor which uses tag 9 instead of tag 2
+    public override Optional<Enumerated32> DecodeOptional(ref NativeReader decoder)
+        => DecodeValueBytesOptional(ref decoder, (byte)ApplicationTagNumber.Enumerated, AsduTagClass.Application);
 }
 

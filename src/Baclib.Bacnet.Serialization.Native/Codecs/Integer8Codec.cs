@@ -3,57 +3,39 @@
 
 namespace Baclib.Bacnet.Serialization.Native.Codecs;
 
-public sealed class Integer8Codec : INativeCodec<sbyte>
+public sealed class Integer8Codec : NativeCodecBase<sbyte>
 {
-    private Integer8Codec()
+    private Integer8Codec() : base(ApplicationTagNumber.Signed)
     {
     }
 
     public static readonly Integer8Codec Instance = new();
 
-    public int GetEncodedSize(in sbyte value) => AsduLength.Sum(ApplicationTagNumber.Signed, AsduLength.FromInteger8(value));
+    protected override int CalculateValueSize(in sbyte value) => AsduLength.FromInteger8(value);
 
-    public int GetEncodedSize(byte tagNumber, in sbyte value) => AsduLength.Sum(tagNumber, AsduLength.FromInteger8(value));
-
-    private static void Encode(ref AsduEncoder encoder, byte tagNumber, AsduTagClass tagClass, in sbyte value)
+    protected override void EncodeValueBytes(ref NativeWriter encoder, byte tagNumber, AsduTagClass tagClass, in sbyte value)
     {
         var bytes = encoder.Encode(tagClass, tagNumber, AsduLength.Signed8);
-        AsduEncoder.WriteInteger8(bytes, value);
+        NativeWriter.WriteInteger8(bytes, value);
     }
 
-    public void Encode(ref AsduEncoder encoder, in sbyte value) => Encode(ref encoder, (byte)ApplicationTagNumber.Signed, AsduTagClass.Application, in value);
-
-    public void Encode(ref AsduEncoder encoder, byte tagNumber, in sbyte value) => Encode(ref encoder, tagNumber, AsduTagClass.Context, in value);
-
-    private static sbyte Decode(ref NativeReader decoder, byte tagNumber, AsduTagClass tagClass)
+    protected override sbyte DecodeValueBytes(ref NativeReader decoder, byte tagNumber, AsduTagClass tagClass)
     {
-        var bytes = decoder.Decode(tagClass, tagNumber);
+        var bytes = decoder.Read(tagClass, tagNumber);
         if (bytes.Length != AsduLength.Signed8)
-        {
             throw new AsduException();
-        }
         return NativePrimitives.ReadInteger8(bytes);
     }
 
-    public sbyte Decode(ref NativeReader decoder) => Decode(ref decoder, (byte)ApplicationTagNumber.Signed, AsduTagClass.Application);
-
-    public sbyte Decode(ref NativeReader decoder, byte tagNumber) => Decode(ref decoder, tagNumber, AsduTagClass.Context);
-
-    private static Optional<sbyte> DecodeOptional(ref NativeReader decoder, byte tagNumber, AsduTagClass tagClass)
+    protected override Optional<sbyte> DecodeValueBytesOptional(ref NativeReader decoder, byte tagNumber, AsduTagClass tagClass)
     {
-        if (decoder.DecodeOptional(tagClass, tagNumber, out var bytes))
+        if (decoder.ReadOptional(tagClass, tagNumber, out var bytes))
         {
             if (bytes.Length != AsduLength.Signed8)
-            {
                 throw new AsduException();
-            }
             return NativePrimitives.ReadInteger8(bytes);
         }
         return default;
     }
-
-    public Optional<sbyte> DecodeOptional(ref NativeReader decoder) => DecodeOptional(ref decoder, (byte)ApplicationTagNumber.Signed, AsduTagClass.Application);
-
-    public Optional<sbyte> DecodeOptional(ref NativeReader decoder, byte tagNumber) => DecodeOptional(ref decoder, tagNumber, AsduTagClass.Context);
 }
 

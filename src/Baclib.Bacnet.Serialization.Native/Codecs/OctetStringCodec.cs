@@ -3,49 +3,33 @@
 
 namespace Baclib.Bacnet.Serialization.Native.Codecs;
 
-public sealed class OctetStringCodec : INativeCodec<OctetString>
+public sealed class OctetStringCodec : NativeCodecBase<OctetString>
 {
-    private OctetStringCodec()
+    private OctetStringCodec() : base(ApplicationTagNumber.OctetString)
     {
     }
 
     public static readonly OctetStringCodec Instance = new();
 
-    public int GetEncodedSize(in OctetString value) => AsduLength.Sum(ApplicationTagNumber.OctetString, value.Length);
+    protected override int CalculateValueSize(in OctetString value) => value.Length;
 
-    public int GetEncodedSize(byte tagNumber, in OctetString value) => AsduLength.Sum(tagNumber, value.Length);
-
-    private static void Encode(ref AsduEncoder encoder, byte tagNumber, AsduTagClass tagClass, in OctetString value)
+    protected override void EncodeValueBytes(ref NativeWriter encoder, byte tagNumber, AsduTagClass tagClass, in OctetString value)
     {
         var bytes = encoder.Encode(tagClass, tagNumber, value.Length);
-        AsduEncoder.WriteOctetString(bytes, value);
+        NativeWriter.WriteOctetString(bytes, value);
     }
 
-    public void Encode(ref AsduEncoder encoder, in OctetString value) => Encode(ref encoder, (byte)ApplicationTagNumber.OctetString, AsduTagClass.Application, in value);
-
-    public void Encode(ref AsduEncoder encoder, byte tagNumber, in OctetString value) => Encode(ref encoder, tagNumber, AsduTagClass.Context, in value);
-
-    private static OctetString Decode(ref NativeReader decoder, byte tagNumber, AsduTagClass tagClass)
+    protected override OctetString DecodeValueBytes(ref NativeReader decoder, byte tagNumber, AsduTagClass tagClass)
     {
-        var bytes = decoder.Decode(tagClass, tagNumber);
+        var bytes = decoder.Read(tagClass, tagNumber);
         return new OctetString(bytes);
     }
 
-    public OctetString Decode(ref NativeReader decoder) => Decode(ref decoder, (byte)ApplicationTagNumber.OctetString, AsduTagClass.Application);
-
-    public OctetString Decode(ref NativeReader decoder, byte tagNumber) => Decode(ref decoder, tagNumber, AsduTagClass.Context);
-
-    private static Optional<OctetString> DecodeOptional(ref NativeReader decoder, byte tagNumber, AsduTagClass tagClass)
+    protected override Optional<OctetString> DecodeValueBytesOptional(ref NativeReader decoder, byte tagNumber, AsduTagClass tagClass)
     {
-        if (decoder.DecodeOptional(tagClass, tagNumber, out var bytes))
-        {
+        if (decoder.ReadOptional(tagClass, tagNumber, out var bytes))
             return new OctetString(bytes);
-        }
         return default;
     }
-
-    public Optional<OctetString> DecodeOptional(ref NativeReader decoder) => DecodeOptional(ref decoder, (byte)ApplicationTagNumber.OctetString, AsduTagClass.Application);
-
-    public Optional<OctetString> DecodeOptional(ref NativeReader decoder, byte tagNumber) => DecodeOptional(ref decoder, tagNumber, AsduTagClass.Context);
 }
 

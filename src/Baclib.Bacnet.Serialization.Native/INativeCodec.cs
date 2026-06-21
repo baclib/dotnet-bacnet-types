@@ -8,6 +8,10 @@ namespace Baclib.Bacnet.Serialization.Native;
 
 public interface INativeCodec
 {
+    /// <summary>
+    /// Gets a value indicating whether the codec supports the BACnet application-tagged form.
+    /// </summary>
+    bool IsApplicationTagged { get; }
 };
 
 
@@ -32,13 +36,13 @@ public interface INativeCodec<T> : INativeCodec
 	/// <summary>
 	/// Writes the ASN.1 encoding of <paramref name="value"/> to <paramref name="encoder"/>.
 	/// </summary>
-	void Encode(ref AsduEncoder encoder, in T value);
+	void Encode(ref NativeWriter encoder, in T value);
 
 	/// <summary>
 	/// Writes the ASN.1 encoding of <paramref name="value"/> as a context-tagged value to <paramref name="encoder"/>.
 	/// </summary>
 	/// <param name="tagNumber">The context tag number.</param>
-	void Encode(ref AsduEncoder encoder, byte tagNumber, in T value);
+	void Encode(ref NativeWriter encoder, byte tagNumber, in T value);
 
 	/// <summary>
 	/// Decodes a value from the current reader position.

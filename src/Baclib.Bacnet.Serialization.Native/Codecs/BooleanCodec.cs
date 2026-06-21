@@ -3,74 +3,83 @@
 
 namespace Baclib.Bacnet.Serialization.Native.Codecs;
 
-public sealed class BooleanCodec : INativeCodec<bool>
+public sealed class BooleanCodec : NativeCodecBase<bool>
 {
-    private BooleanCodec()
+    private BooleanCodec() : base(ApplicationTagNumber.Boolean)
     {
     }
 
     public static readonly BooleanCodec Instance = new();
 
-    public int GetEncodedSize(in bool value) => AsduLength.Boolean;
+    protected override int CalculateValueSize(in bool value) => AsduLength.Boolean;
 
-    public int GetEncodedSize(byte tagNumber, in bool value) => AsduLength.Sum(tagNumber, AsduLength.Boolean);
-
-    public void Encode(ref AsduEncoder encoder, in bool value)
+    protected override void EncodeValueBytes(ref NativeWriter encoder, byte tagNumber, AsduTagClass tagClass, in bool value)
     {
-        encoder.Encode(ApplicationTagNumber.Boolean, value ? 1 : 0);
-    }
-
-    public void Encode(ref AsduEncoder encoder, byte tagNumber, in bool value)
-    {
-        var bytes = encoder.Encode(tagNumber, AsduLength.Boolean);
-        AsduEncoder.WriteBoolean(bytes, value);
-    }
-
-    private static bool Convert(int value)
-    {
-        return value switch
+        if (tagClass == AsduTagClass.Application)
         {
-            0 => false,
-            1 => true,
-            _ => throw new AsduException($"Invalid boolean value: {value}")
-        };
-    }
-
-    public bool Decode(ref NativeReader decoder)
-    {
-        var value = decoder.DecodeTag(ApplicationTagNumber.Boolean);
-        return Convert(value);
-    }
-
-    public bool Decode(ref NativeReader decoder, byte tagNumber)
-    {
-        var bytes = decoder.Decode(tagNumber, AsduLength.Boolean);
-        if (bytes.Length != 1)
-        {
-            throw new AsduException($"Invalid boolean length: {bytes.Length}");
+            encoder.Encode(ApplicationTagNumber.Boolean, value ? 1 : 0);
         }
-        return Convert(bytes[0]);
-    }
-
-    public Optional<bool> DecodeOptional(ref NativeReader decoder)
-    {
-        if (decoder.DecodeOptionalTag(ApplicationTagNumber.Boolean, out var value))
+        else
         {
-            return Convert(value);
+            var bytes = encoder.Encode(tagNumber, AsduLength.Boolean);
+            NativeWriter.WriteBoolean(bytes, value);
         }
-        return default;
     }
 
-    public Optional<bool> DecodeOptional(ref NativeReader decoder, byte tagNumber)
+    protected override bool DecodeValueBytes(ref NativeReader decoder, byte tagNumber, AsduTagClass tagClass)
     {
-        var bytes = decoder.DecodeOptional(tagNumber, AsduLength.Boolean);
-        if (!bytes.IsEmpty)
+        if (tagClass == AsduTagClass.Application)
         {
-            if (bytes.Length != 1)
+            var value = decoder.DecodeTag(ApplicationTagNumber.Boolean);
+            return value switch
             {
+                0 => false,
+                1 => true,
+                _ => throw new AsduException($"Invalid boolean value: {value}")
+            };
+        }
+        else
+        {
+            var bytes = decoder.Decode(tagNumber, AsduLength.Boolean);
+            if (bytes.Length != 1)
                 throw new AsduException($"Invalid boolean length: {bytes.Length}");
+            return bytes[0] switch
+            {
+                0 => false,
+                1 => true,
+                _ => throw new AsduException($"Invalid boolean value: {bytes[0]}")
+            };
+        }
+    }
+
+    protected override Optional<bool> DecodeValueBytesOptional(ref NativeReader decoder, byte tagNumber, AsduTagClass tagClass)
+    {
+        if (tagClass == AsduTagClass.Application)
+        {
+            if (decoder.DecodeOptionalTag(ApplicationTagNumber.Boolean, out var value))
+            {
+                return value switch
+                {
+                    0 => false,
+                    1 => true,
+                    _ => throw new AsduException($"Invalid boolean value: {value}")
+                };
             }
-            return Convert(bytes[0]);
+        }
+        else
+        {
+            var bytes = decoder.DecodeOptional(tagNumber, AsduLength.Boolean);
+            if (!bytes.IsEmpty)
+            {
+                if (bytes.Length != 1)
+                    throw new AsduException($"Invalid boolean length: {bytes.Length}");
+                return bytes[0] switch
+                {
+                    0 => false,
+                    1 => true,
+                    _ => throw new AsduException($"Invalid boolean value: {bytes[0]}")
+                };
+            }
         }
         return default;
     }

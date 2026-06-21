@@ -3,37 +3,31 @@
 
 namespace Baclib.Bacnet.Serialization.Native.Codecs;
 
-public sealed class Integer16Codec : INativeCodec<short>
+public sealed class Integer16Codec : NativeCodecBase<short>
 {
-    private Integer16Codec()
+    private Integer16Codec() : base(ApplicationTagNumber.Signed)
     {
     }
 
     public static readonly Integer16Codec Instance = new();
 
-    public int GetEncodedSize(in short value) => AsduLength.Sum(ApplicationTagNumber.Signed, AsduLength.FromInteger16(value));
+    protected override int CalculateValueSize(in short value) => AsduLength.FromInteger16(value);
 
-    public int GetEncodedSize(byte tagNumber, in short value) => AsduLength.Sum(tagNumber, AsduLength.FromInteger16(value));
-
-    private static void Encode(ref AsduEncoder encoder, byte tagNumber, AsduTagClass tagClass, in short value)
+    protected override void EncodeValueBytes(ref NativeWriter encoder, byte tagNumber, AsduTagClass tagClass, in short value)
     {
         var length = AsduLength.FromInteger16(value);
         var bytes = encoder.Encode(tagClass, tagNumber, length);
         if (length == AsduLength.Signed8)
         {
-            AsduEncoder.WriteInteger8(bytes, (sbyte)value);
+            NativeWriter.WriteInteger8(bytes, (sbyte)value);
             return;
         }
-
-        AsduEncoder.WriteInteger16(bytes, value);
+        NativeWriter.WriteInteger16(bytes, value);
     }
 
-    public void Encode(ref AsduEncoder encoder, in short value) => Encode(ref encoder, (byte)ApplicationTagNumber.Signed, AsduTagClass.Application, in value);
-
-    public void Encode(ref AsduEncoder encoder, byte tagNumber, in short value) => Encode(ref encoder, tagNumber, AsduTagClass.Context, in value);
-
-    private static short ReadInteger16(ref ReadOnlySpan<byte> bytes)
+    protected override short DecodeValueBytes(ref NativeReader decoder, byte tagNumber, AsduTagClass tagClass)
     {
+        var bytes = decoder.Read(tagClass, tagNumber);
         return bytes.Length switch
         {
             AsduLength.Signed8 => NativePrimitives.ReadInteger8(bytes),
@@ -42,27 +36,18 @@ public sealed class Integer16Codec : INativeCodec<short>
         };
     }
 
-    private static short Decode(ref NativeReader decoder, byte tagNumber, AsduTagClass tagClass)
+    protected override Optional<short> DecodeValueBytesOptional(ref NativeReader decoder, byte tagNumber, AsduTagClass tagClass)
     {
-        var bytes = decoder.Decode(tagClass, tagNumber);
-        return ReadInteger16(ref bytes);
-    }
-
-    public short Decode(ref NativeReader decoder) => Decode(ref decoder, (byte)ApplicationTagNumber.Signed, AsduTagClass.Application);
-
-    public short Decode(ref NativeReader decoder, byte tagNumber) => Decode(ref decoder, tagNumber, AsduTagClass.Context);
-
-    private static Optional<short> DecodeOptional(ref NativeReader decoder, byte tagNumber, AsduTagClass tagClass)
-    {
-        if (decoder.DecodeOptional(tagClass, tagNumber, out var bytes))
+        if (decoder.ReadOptional(tagClass, tagNumber, out var bytes))
         {
-            return ReadInteger16(ref bytes);
+            return bytes.Length switch
+            {
+                AsduLength.Signed8 => NativePrimitives.ReadInteger8(bytes),
+                AsduLength.Signed16 => NativePrimitives.ReadInteger16(bytes),
+                _ => throw new AsduException()
+            };
         }
         return default;
     }
-
-    public Optional<short> DecodeOptional(ref NativeReader decoder) => DecodeOptional(ref decoder, (byte)ApplicationTagNumber.Signed, AsduTagClass.Application);
-
-    public Optional<short> DecodeOptional(ref NativeReader decoder, byte tagNumber) => DecodeOptional(ref decoder, tagNumber, AsduTagClass.Context);
 }
 

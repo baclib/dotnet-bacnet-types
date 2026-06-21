@@ -3,30 +3,24 @@
 
 namespace Baclib.Bacnet.Serialization.Native.Codecs;
 
-public sealed class BitString8Codec : INativeCodec<BitString8>
+public sealed class BitString8Codec : NativeCodecBase<BitString8>
 {
-    private BitString8Codec()
+    private BitString8Codec() : base(ApplicationTagNumber.BitString)
     {
     }
 
     public static readonly BitString8Codec Instance = new();
 
-    public int GetEncodedSize(in BitString8 value) => AsduLength.Sum(ApplicationTagNumber.BitString, AsduLength.BitString8);
+    protected override int CalculateValueSize(in BitString8 value) => AsduLength.BitString8;
 
-    public int GetEncodedSize(byte tagNumber, in BitString8 value) => AsduLength.Sum(tagNumber, AsduLength.BitString8);
-
-    private static void Encode(ref AsduEncoder encoder, byte tagNumber, AsduTagClass tagClass, in BitString8 value)
+    protected override void EncodeValueBytes(ref NativeWriter encoder, byte tagNumber, AsduTagClass tagClass, in BitString8 value)
     {
         var bytes = encoder.Encode(tagClass, tagNumber, AsduLength.BitString8);
         var unusedBits = (byte)(8 - value.Count);
-        AsduEncoder.WriteBitStringFromFlags8(bytes, value.Flags, unusedBits);
+        NativeWriter.WriteBitStringFromFlags8(bytes, value.Flags, unusedBits);
     }
 
-    public void Encode(ref AsduEncoder encoder, in BitString8 value) => Encode(ref encoder, (byte)ApplicationTagNumber.BitString, AsduTagClass.Application, in value);
-
-    public void Encode(ref AsduEncoder encoder, byte tagNumber, in BitString8 value) => Encode(ref encoder, tagNumber, AsduTagClass.Context, in value);
-
-    private static BitString8 Decode(ref NativeReader decoder, byte tagNumber, AsduTagClass tagClass)
+    protected override BitString8 DecodeValueBytes(ref NativeReader decoder, byte tagNumber, AsduTagClass tagClass)
     {
         var bytes = tagClass == AsduTagClass.Application
             ? decoder.Decode(ApplicationTagNumber.BitString, AsduLength.BitString8)
@@ -37,11 +31,7 @@ public sealed class BitString8Codec : INativeCodec<BitString8>
         return new BitString8(flags, count);
     }
 
-    public BitString8 Decode(ref NativeReader decoder) => Decode(ref decoder, (byte)ApplicationTagNumber.BitString, AsduTagClass.Application);
-
-    public BitString8 Decode(ref NativeReader decoder, byte tagNumber) => Decode(ref decoder, tagNumber, AsduTagClass.Context);
-
-    private static Optional<BitString8> DecodeOptional(ref NativeReader decoder, byte tagNumber, AsduTagClass tagClass)
+    protected override Optional<BitString8> DecodeValueBytesOptional(ref NativeReader decoder, byte tagNumber, AsduTagClass tagClass)
     {
         var bytes = decoder.DecodeOptional(tagClass, tagNumber, AsduLength.BitString8);
         if (!bytes.IsEmpty)
@@ -51,12 +41,7 @@ public sealed class BitString8Codec : INativeCodec<BitString8>
             var flags = NativePrimitives.ReadBitFlags8(bytes);
             return new BitString8(flags, count);
         }
-
         return default;
     }
-
-    public Optional<BitString8> DecodeOptional(ref NativeReader decoder) => DecodeOptional(ref decoder, (byte)ApplicationTagNumber.BitString, AsduTagClass.Application);
-
-    public Optional<BitString8> DecodeOptional(ref NativeReader decoder, byte tagNumber) => DecodeOptional(ref decoder, tagNumber, AsduTagClass.Context);
 }
 

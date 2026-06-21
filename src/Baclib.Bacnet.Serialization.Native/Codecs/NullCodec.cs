@@ -3,42 +3,32 @@
 
 namespace Baclib.Bacnet.Serialization.Native.Codecs;
 
-public sealed class NullCodec : INativeCodec<Null>
+public sealed class NullCodec : NativeCodecBase<Null>
 {
-    private NullCodec()
+    private NullCodec() : base(ApplicationTagNumber.Null)
     {
     }
 
     public static NullCodec Instance { get; } = new();
 
-    public int GetEncodedSize(in Null value) => AsduLength.Sum(ApplicationTagNumber.Null, AsduLength.Null);
+    protected override int CalculateValueSize(in Null value) => AsduLength.Null;
 
-    public int GetEncodedSize(byte tagNumber, in Null value) => AsduLength.Sum(tagNumber, AsduLength.Null);
-
-    public void Encode(ref AsduEncoder encoder, in Null _) => encoder.Encode(ApplicationTagNumber.Null, AsduLength.Null);
-
-    public void Encode(ref AsduEncoder encoder, byte tagNumber, in Null _) => encoder.Encode(tagNumber, AsduLength.Null);
-
-    public Null Decode(ref NativeReader decoder)
+    protected override void EncodeValueBytes(ref NativeWriter encoder, byte tagNumber, AsduTagClass tagClass, in Null value)
     {
-        decoder.Decode(ApplicationTagNumber.Null, AsduLength.Null);
+        encoder.Encode(tagClass, tagNumber, AsduLength.Null);
+    }
+
+    protected override Null DecodeValueBytes(ref NativeReader decoder, byte tagNumber, AsduTagClass tagClass)
+    {
+        decoder.Read(tagClass, tagNumber);
         return Null.Value;
     }
 
-    public Null Decode(ref NativeReader decoder, byte tagNumber)
+    protected override Optional<Null> DecodeValueBytesOptional(ref NativeReader decoder, byte tagNumber, AsduTagClass tagClass)
     {
-        decoder.Decode(tagNumber, AsduLength.Null);
-        return Null.Value;
-    }
-
-    public Optional<Null> DecodeOptional(ref NativeReader decoder)
-    {
-        return decoder.DecodeOptional(ApplicationTagNumber.Null, out _) ? Null.Value : Optional<Null>.None;
-    }
-
-    public Optional<Null> DecodeOptional(ref NativeReader decoder, byte tagNumber)
-    {
-        return decoder.DecodeOptional(tagNumber, out _) ? Null.Value : Optional<Null>.None;
+        if (decoder.ReadOptional(tagClass, tagNumber, out _))
+            return Null.Value;
+        return default;
     }
 }
 

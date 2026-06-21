@@ -3,59 +3,33 @@
 
 namespace Baclib.Bacnet.Serialization.Native.Codecs;
 
-public sealed class TimePatternCodec : INativeCodec<TimePattern>
+public sealed class TimePatternCodec : NativeCodecBase<TimePattern>
 {
-    private TimePatternCodec()
+    private TimePatternCodec() : base(ApplicationTagNumber.Time)
     {
     }
 
     public static readonly TimePatternCodec Instance = new();
 
-    public int GetEncodedSize(in TimePattern value) => AsduLength.Sum(ApplicationTagNumber.Time, AsduLength.Time);
+    protected override int CalculateValueSize(in TimePattern value) => AsduLength.Time;
 
-    public int GetEncodedSize(byte tagNumber, in TimePattern value) => AsduLength.Sum(tagNumber, AsduLength.Time);
-
-    public void Encode(ref AsduEncoder encoder, in TimePattern value)
+    protected override void EncodeValueBytes(ref NativeWriter encoder, byte tagNumber, AsduTagClass tagClass, in TimePattern value)
     {
-        var bytes = encoder.Encode(ApplicationTagNumber.Time, AsduLength.Time);
-        //NativePrimitives.WriteTime(bytes, value);
+        var bytes = encoder.Encode(tagClass, tagNumber, AsduLength.Time);
+        // NativePrimitives.WriteTime(bytes, value);
     }
 
-    public void Encode(ref AsduEncoder encoder, byte tagNumber, in TimePattern value)
+    protected override TimePattern DecodeValueBytes(ref NativeReader decoder, byte tagNumber, AsduTagClass tagClass)
     {
-        var bytes = encoder.Encode(tagNumber, AsduLength.Time);
-        //NativePrimitives.WriteTime(bytes, value);
-    }
-
-    public TimePattern Decode(ref NativeReader decoder)
-    {
-        var bytes = decoder.Decode(ApplicationTagNumber.Time, AsduLength.Time);
+        var bytes = decoder.Decode(tagClass, tagNumber, AsduLength.Time);
         return NativePrimitives.ReadTimePattern(bytes);
     }
 
-    public TimePattern Decode(ref NativeReader decoder, byte tagNumber)
+    protected override Optional<TimePattern> DecodeValueBytesOptional(ref NativeReader decoder, byte tagNumber, AsduTagClass tagClass)
     {
-        var bytes = decoder.Decode(tagNumber, AsduLength.Time);
-        return NativePrimitives.ReadTimePattern(bytes);
-    }
-
-    public Optional<TimePattern> DecodeOptional(ref NativeReader decoder)
-    {
-        var bytes = decoder.DecodeOptional(ApplicationTagNumber.Time, AsduLength.Time);
+        var bytes = decoder.DecodeOptional(tagClass, tagNumber, AsduLength.Time);
         if (!bytes.IsEmpty)
-        {
             return NativePrimitives.ReadTimePattern(bytes);
-        }
-        return default;
-    }
-
-    public Optional<TimePattern> DecodeOptional(ref NativeReader decoder, byte tagNumber)
-    {
-        var bytes = decoder.DecodeOptional(tagNumber, AsduLength.Time);
-        if (!bytes.IsEmpty)
-        {
-            return NativePrimitives.ReadTimePattern(bytes);
-        }
         return default;
     }
 }

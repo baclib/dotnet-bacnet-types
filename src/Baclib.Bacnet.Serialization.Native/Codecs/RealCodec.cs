@@ -3,71 +3,38 @@
 
 namespace Baclib.Bacnet.Serialization.Native.Codecs;
 
-public sealed class RealCodec : INativeCodec, INativeCodec<float>
+public sealed class RealCodec : NativeCodecBase<float>
 {
-    private RealCodec()
+    private RealCodec() : base(ApplicationTagNumber.Real)
     {
     }
 
     public static readonly RealCodec Instance = new();
 
-    public int GetEncodedSize(in float value) => AsduLength.Sum(ApplicationTagNumber.Real, AsduLength.Real);
+    protected override int CalculateValueSize(in float value) => AsduLength.Real;
 
-    public int GetEncodedSize(byte tagNumber, in float value) => AsduLength.Sum(tagNumber, AsduLength.Real);
-
-    private static void Encode(ref AsduEncoder encoder, byte tagNumber, AsduTagClass tagClass, in float value)
+    protected override void EncodeValueBytes(ref NativeWriter encoder, byte tagNumber, AsduTagClass tagClass, in float value)
     {
         var bytes = encoder.Encode(tagClass, tagNumber, AsduLength.Real);
-        AsduEncoder.WriteReal(bytes, value);
+        NativeWriter.WriteReal(bytes, value);
     }
 
-    public void Encode(ref AsduEncoder encoder, in float value) => Encode(ref encoder, (byte)ApplicationTagNumber.Real, AsduTagClass.Application, in value);
-
-    public void Encode(ref AsduEncoder encoder, byte tagNumber, in float value) => Encode(ref encoder, tagNumber, AsduTagClass.Context, in value);
-
-    private static float Decode(ref NativeReader decoder, byte tagNumber, AsduTagClass tagClass)
+    protected override float DecodeValueBytes(ref NativeReader decoder, byte tagNumber, AsduTagClass tagClass)
     {
-        var bytes = decoder.Decode(tagClass, tagNumber);
+        var bytes = decoder.Read(tagClass, tagNumber);
         if (bytes.Length != AsduLength.Real)
-        {
             throw new AsduException();
-        }
-
         return NativePrimitives.ReadReal(bytes);
     }
 
-    public float Decode(ref NativeReader decoder) => Decode(ref decoder, (byte)ApplicationTagNumber.Real, AsduTagClass.Application);
-
-    public float Decode(ref NativeReader decoder, byte tagNumber) => Decode(ref decoder, tagNumber, AsduTagClass.Context);
-
-    private static Optional<float> DecodeOptional(ref NativeReader decoder, byte tagNumber, AsduTagClass tagClass)
+    protected override Optional<float> DecodeValueBytesOptional(ref NativeReader decoder, byte tagNumber, AsduTagClass tagClass)
     {
-        if (decoder.DecodeOptional(tagClass, tagNumber, out var bytes))
+        if (decoder.ReadOptional(tagClass, tagNumber, out var bytes))
         {
             if (bytes.Length != AsduLength.Real)
-            {
                 throw new AsduException();
-            }
-
             return NativePrimitives.ReadReal(bytes);
         }
-
         return default;
     }
-
-    public Optional<float> DecodeOptional(ref NativeReader decoder) => DecodeOptional(ref decoder, (byte)ApplicationTagNumber.Real, AsduTagClass.Application);
-
-    public Optional<float> DecodeOptional(ref NativeReader decoder, byte tagNumber) => DecodeOptional(ref decoder, tagNumber, AsduTagClass.Context);
-
-    /*
-    object INativeCodec.Decode(ref NativeReader decoder)
-    {
-        return Decode(ref decoder);
-    }
-
-    object INativeCodec.Decode(ref NativeReader decoder, byte tagNumber)
-    {
-        return Decode(ref decoder, tagNumber);
-    }
-    */
 }
