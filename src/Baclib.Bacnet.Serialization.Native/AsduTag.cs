@@ -1,12 +1,7 @@
-// SPDX-FileCopyrightText: Copyright 2024-2025, The BAClib Initiative and Contributors
+// SPDX-FileCopyrightText: Copyright 2024-2026, The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
-using Baclib.Bacnet.Serialization.Native;
-using System;
-using System.Buffers.Binary;
-using System.Reflection;
 using System.Runtime.CompilerServices;
-//using System.Formats.Asn1;
 
 namespace Baclib.Bacnet.Serialization.Native;
 
@@ -45,6 +40,18 @@ public readonly record struct AsduTag
         _initialOctet |= (byte)(dataLength < 5 ? dataLength : 5);
         _dataLength = dataLength;
     }
+
+
+    public ReadOnlySpan<byte> GetContents(ref NativeReader reader)
+    {
+        throw new NotImplementedException();
+    }
+
+
+    public bool IsPrimitive => (_initialOctet & 7) < 6;
+
+    public bool IsConstructed => (_initialOctet & 7) < 5;
+
 
     public byte InitialOctet => _initialOctet;
 

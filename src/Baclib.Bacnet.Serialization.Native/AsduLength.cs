@@ -19,6 +19,7 @@ public abstract class AsduLength
     public const int Null = 0;
     public const int Boolean = 1;
 
+    public const int WeekNDay = 3;
 
     /// <summary>
     /// The number of bytes required to encode an unsigned 8-bit integer (always 1 byte).
@@ -254,6 +255,13 @@ public abstract class AsduLength
 
 
 
+    public static int FromEnumerated<T>(T value) where T : unmanaged, Enum => value switch
+    {
+        < 0x100 => 1,
+        < 0x10000 => 2,
+        < 0x1000000 => 3,
+        _ => Unsigned32
+    };
 
 
     /// <summary>

@@ -8,8 +8,11 @@
 
   <ItemGroup>
     <Compile Remove="ApciCodecs\**" />
+    <Compile Remove="AsduCodecsXyz\**" />
     <EmbeddedResource Remove="ApciCodecs\**" />
+    <EmbeddedResource Remove="AsduCodecsXyz\**" />
     <None Remove="ApciCodecs\**" />
+    <None Remove="AsduCodecsXyz\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -18,6 +21,12 @@
 
   <ItemGroup>
     <Using Include="Baclib.Bacnet.Types.Application" />
+    <Using Include="Baclib.Bacnet.Types.Application.DatePattern">
+      <Alias>Date</Alias>
+    </Using>
+    <Using Include="Baclib.Bacnet.Types.Application.TimePattern">
+      <Alias>Time</Alias>
+    </Using>
   </ItemGroup>
 
 </Project>

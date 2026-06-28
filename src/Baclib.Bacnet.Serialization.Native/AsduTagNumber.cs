@@ -52,10 +52,10 @@ public readonly record struct AsduTagNumber(byte Value)
     public static readonly AsduTagNumber ApplicationEnumerated = new(ApplicationTagNumber.Enumerated);
 
     /// <summary>Tag number for BACnet Date (10).</summary>
-    public static readonly AsduTagNumber ApplicationDate = new(ApplicationTagNumber.Date);
+    public static readonly AsduTagNumber ApplicationDate = new(ApplicationTagNumber.DatePattern);
 
     /// <summary>Tag number for BACnet Time (11).</summary>
-    public static readonly AsduTagNumber ApplicationTime = new(ApplicationTagNumber.Time);
+    public static readonly AsduTagNumber ApplicationTime = new(ApplicationTagNumber.TimePattern);
 
     /// <summary>Tag number for BACnet Object Identifier (12).</summary>
     public static readonly AsduTagNumber ApplicationObjectIdentifier = new(ApplicationTagNumber.ObjectIdentifier);

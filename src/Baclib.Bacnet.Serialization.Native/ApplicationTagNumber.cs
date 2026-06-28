@@ -62,12 +62,12 @@ public enum ApplicationTagNumber : byte
     /// <summary>
     /// Date value (tag number 10).
     /// </summary>
-    Date = 10,
+    DatePattern = 10,
 
     /// <summary>
     /// Time value (tag number 11).
     /// </summary>
-    Time = 11,
+    TimePattern = 11,
 
     /// <summary>
     /// Object identifier value (tag number 12).

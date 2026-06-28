@@ -620,6 +620,25 @@ public static class NativePrimitives
     /// <returns>An <see cref="Enumerated64"/> value representing the decoded 64-bit enumerated value from the input bytes.</returns>
     public static Enumerated64 ReadEnumerated64(ReadOnlySpan<byte> bytes) => (Enumerated64)ReadUnsigned64(bytes);
 
+
+
+
+
+
+
+
+
+
+
+
+    public static T ReadEnumerated<T>(ReadOnlySpan<byte> source)
+        where T : struct, Enum
+    {
+        throw new NotImplementedException();
+    }
+
+
+
     /// <summary>
     /// Reads a BACnet DatePattern Value.
     /// </summary>

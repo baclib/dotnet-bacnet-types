@@ -1,5 +1,5 @@
 // SPDX-FileCopyrightText: Copyright 2024-2025 The BAClib Initiative and Contributors
-// SPDX-License-Identifier: BSD-2-Clause
+// SPDX-License-Identifier: EPL-2.0
 
 using System.Runtime.CompilerServices;
 
@@ -19,6 +19,22 @@ public ref struct NativeWriter
     /// Backing buffer used for encoded output.
     /// </summary>
     private readonly byte[] _buffer;
+
+
+
+
+
+    public Span<byte> WriteBlank(ApplicationTagNumber tagNumber, int dataLength)
+    {
+        throw new NotImplementedException("This method is a placeholder and should be implemented according to the specific tag encoding requirements.");
+    }
+
+    public Span<byte> WriteBlank(byte tagNumber, int dataLength)
+    {
+        throw new NotImplementedException("This method is a placeholder and should be implemented according to the specific tag encoding requirements.");
+    }
+
+
 
     #region State and buffer views
 

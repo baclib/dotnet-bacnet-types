@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: EPL-2.0
 
 using System.Collections.Immutable;
+using System.Formats.Asn1;
 using System.Runtime.CompilerServices;
 
 namespace Baclib.Bacnet.Serialization.Native;
@@ -45,10 +46,149 @@ public ref struct NativeReader(ReadOnlySpan<byte> asdu)
 
 
 
+
+    public readonly bool PeekTag(ApplicationTagNumber tagNumber) => false;
+
     public readonly bool PeekTag(byte tagNumber) => false;
 
     public readonly bool PeekOpeningTag(byte tagNumber) => false;
 
+
+
+
+    public readonly ApplicationTagNumber PeekApplicationTagNumber() => ApplicationTagNumber.Null;
+
+    public readonly bool PeekPrimitiveTag(ApplicationTagNumber tagNumber) => false;
+
+    public readonly bool PeekPrimitiveTag(byte tagNumber) => false;
+
+
+
+
+
+
+
+    public ReadOnlySpan<byte> ReadBytes(ApplicationTagNumber tagNumber)
+    {
+        throw new AsduException();
+    }
+
+    public ReadOnlySpan<byte> ReadBytes(byte tagNumber)
+    {
+        throw new AsduException();
+    }
+
+
+
+
+
+
+    public ReadOnlySpan<byte> ReadContents(AsduTag tag)
+    {
+        throw new AsduException();
+    }
+
+
+    public AsduTag ReadTag()
+    {
+        _index++;
+        return new AsduTag();
+    }
+
+    public AsduTag ReadPrimitiveTag()
+    {
+        var tag = ReadTag();
+        return tag.IsPrimitive ? tag : throw new FormatException();
+    }
+
+    public AsduTag ReadApplicationTag()
+    {
+        var tag = ReadPrimitiveTag();
+        return tag.Class == AsduTagClass.Application ? tag : throw new FormatException();
+    }
+
+
+    public byte ReadByte()
+    {
+        return _asdu[_index++];
+    }
+
+
+
+
+    public byte PeekContextTagNumber()
+    {
+        return 0;
+    }
+
+
+    public AsduTag ReadContextTag()
+    {
+        var tag = ReadPrimitiveTag();
+        return tag.Class == AsduTagClass.Context ? tag : throw new FormatException();
+    }
+
+    public AsduTag ReadConstructedTag()
+    {
+        var tag = ReadTag();
+        return tag.IsConstructed ? tag : throw new FormatException();
+    }
+
+    public AsduTag ReadOpeningTag()
+    {
+        var tag = ReadTag();
+        return tag.IsOpeningTag ? tag : throw new FormatException();
+    }
+
+    public AsduTag ReadClosingTag()
+    {
+        var tag = ReadTag();
+        return tag.IsClosingTag ? tag : throw new FormatException();
+    }
+
+    public void ReadClosingTag(byte tagNumber)
+    {
+        _index += NativePrimitives.ReadTag(_asdu[_index..], tagNumber, AsduTagType.Closing);
+    }
+
+
+    public void ReadOpeningTag(byte tagNumber)
+    {
+        _index += NativePrimitives.ReadTag(_asdu[_index..], tagNumber, AsduTagType.Opening);
+    }
+
+    public bool ReadClosingTagOptional(byte tagNumber)
+    {
+        return false;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public AsduTag ReadTag(AsduTagClass tagClass)
+    {
+        return new AsduTag();
+    }
+
+
+    public int ReadTag(AsduTagClass tagClass, byte tagNumber)
+    {
+        _index += NativePrimitives.ReadTag(_asdu[_index..], tagClass, tagNumber, out int dataLength);
+        return dataLength;
+    }
+
+    public int ReadTag(ApplicationTagNumber tagNumber) => ReadTag(AsduTagClass.Application, (byte)tagNumber);
+
+    public int ReadTag(byte tagNumber) => ReadTag(AsduTagClass.Context, tagNumber);
 
 
 
