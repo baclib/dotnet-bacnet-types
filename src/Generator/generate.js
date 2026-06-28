@@ -7,6 +7,7 @@ import { EOL } from 'os';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import Handlebars from 'handlebars';
+import { generateBitStringTypes } from './generate-bit-string-types.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -76,7 +77,8 @@ export class CsharpTransformer {
     constructor() {
         this.fileName = null;
         this.definitions = [];
-        this.directory = path.join(__dirname, '..', 'Baclib.Bacnet.Types');
+        this.directory = path.join(__dirname, '..', 'Baclib.Bacnet.Types.Application');
+        //this.directory = path.join(__dirname, '..', '..', 'local-working-files', 'types');
         this.templatesDir = path.join(__dirname, 'templates');
 
         this.predefinedTypesDir = path.join(__dirname, '..', 'csharp');
@@ -84,6 +86,7 @@ export class CsharpTransformer {
         // Initialize template engine properties
         this.typeMapper = null;
         this.templateCache = new Map();
+        this.seriesItemClassNames = new Map();
 
         this.fileObjects = [];
     }
@@ -95,7 +98,12 @@ export class CsharpTransformer {
     }
 
     getFileObject(context) {
-        const classHierarchy = context.fullname.split('.').map((part, index) => (index ? 'T' : '') + this.toPascalCase(part));
+        const parts = context.fullname.split('.');
+        const classHierarchy = parts.map((part, index) => {
+            const fullName = parts.slice(0, index + 1).join('.');
+            const defaultName = (index ? 'T' : '') + this.toPascalCase(part);
+            return this.seriesItemClassNames.get(fullName) ?? defaultName;
+        });
         const fileName = classHierarchy.join('.') + '.cs';
         const className = classHierarchy.pop();
         const typeData = {
@@ -109,10 +117,10 @@ export class CsharpTransformer {
             baseType: context.traits?.base ?? null,
             primitive: context.definition?.primitive ?? null,
             isAnonymous: !context.definition && Object.keys(context.traits).length !== 2,
-            isBitString: context.traits?.base === 'bit-string',
             isChoice: context.traits?.base === 'choice',
             isEnumerated: context.traits?.base === 'enumerated',
-            isSequence: context.traits?.base === 'sequence'
+            isSequence: context.traits?.base === 'sequence',
+            isTopLevel: classHierarchy.length === 0
         };
 
         if (typeof context.definition?.type === 'string') {
@@ -199,44 +207,59 @@ export class CsharpTransformer {
     }
 
     startTraits(context) {
+        if (this.isSeries(context)) {
+            const parts = context.fullname.split('.');
+            const defaultClassName = (parts.length > 1 ? 'T' : '') + this.toPascalCase(parts.at(-1));
+            const isAnonymousSeries = !context.definition && Object.keys(context.traits).length !== 2;
+            if (isAnonymousSeries) {
+                this.seriesItemClassNames.set(context.fullname, `${defaultClassName}Item`);
+            }
+        }
         context.userContext = [];
     }
 
     endTraits(context) {
 
         const fileObject = this.getFileObject(context);
+
+        // Dedicated bit-string generator handles these types.
+        if (context.traits?.base === 'bit-string') {
+            return;
+        }
+
         const isSeries = this.isSeries(context);
         if (isSeries) {
-            // series of ...
-            const seriesObject = this.getFileObject(context);
-            seriesObject.baseType = 'sequence-of';
-            seriesObject.isSeries = true;
-            seriesObject.hasSeriesSize = Number.isInteger(context.traits.series);
-            seriesObject.seriesSize = seriesObject.hasSeriesSize ? context.traits.series : null;
-            seriesObject.seriesType = seriesObject.isAnonymous ? 'TItem' : this.toPascalCase(context.traits.base);
-            this.fileObjects.push(seriesObject);
-            if (!fileObject.isAnonymous) {
-                return;
+            if (fileObject.isAnonymous) {
+                // Anonymous SEQUENCE OF element type becomes T<PropertyName>Item and is emitted as nested subtype.
+                fileObject.fileName = [...fileObject.classHierarchy, fileObject.className].join('.') + '.cs';
             }
-            // refine fileObject for series item
-            fileObject.fileName = fileObject.fileName.replace(/cs$/, 'TItem.cs');
-            fileObject.bacnetName = '???';
-            fileObject.className = 'TItem';
-            fileObject.classHierarchy.push(seriesObject.className);
+            else {
+                // Do not generate dummy sequence-of wrapper types for nested non-anonymous series.
+                if (!fileObject.isTopLevel) {
+                    return;
+                }
+
+                const seriesObject = this.getFileObject(context);
+                seriesObject.baseType = 'sequence-of';
+                seriesObject.isSeries = true;
+                seriesObject.hasSeriesSize = Number.isInteger(context.traits.series);
+                seriesObject.seriesSize = seriesObject.hasSeriesSize ? context.traits.series : null;
+                seriesObject.seriesType = this.mapToNative(this.toPascalCase(context.traits.base));
+                this.fileObjects.push(seriesObject);
+
+                // For top-level SEQUENCE OF with anonymous element definitions, emit nested TItem type.
+                if (fileObject.isTopLevel) {
+                    fileObject.fileName = fileObject.fileName.replace(/cs$/, 'TItem.cs');
+                    fileObject.bacnetName = 'item';
+                    fileObject.className = 'TItem';
+                    fileObject.classHierarchy.push(seriesObject.className);
+                    fileObject.seriesType = seriesObject.seriesType;
+                }
+            }
+
         }
 
         fileObject.items = context.userContext;
-
-        if (fileObject.baseType === 'bit-string') {
-            fileObject.hasRange = Object.hasOwn(context.traits, 'length');
-            if (fileObject.hasRange) {
-                fileObject.minimum = context.traits.length.minimum;
-                fileObject.maximum = context.traits.length.maximum;
-            }
-            else {
-                fileObject.length = Math.max(...fileObject.items.map(item => item.position)) + 1;
-            }
-        }
 
         if (fileObject.baseType === 'enumerated') {
             const maximum = Number.isInteger(context.traits.maximum) ? context.traits.maximum : Math.max(...fileObject.items.map(item => item.constant));
@@ -257,20 +280,71 @@ export class CsharpTransformer {
     startItem(context) {
     }
 
+/*
+AtomicReadFileAck.TAccessMethod.TRecordAccess.cs
+AuthorizationScope.cs
+AtomicWriteFileRequest.TAccessMethod.TRecordAccess.cs
+FaultParameter.TFaultCharacterstring.cs
+EventParameter.TChangeOfBitstring.cs
+EventParameter.TChangeOfCharacterstring.cs
+GetEventInformationAck.TListOfEventSummariesItem.cs
+*/
+
+
     endItem(context) {
         const traits = context.ancestors.at(-1).traits;
         const base = traits.base;
-        if (!['bit-string', 'choice', 'enumerated', 'sequence'].includes(base)) {
+        if (base === 'bit-string') {
+            // Bit-string item members are handled by generate-bit-string-types.js.
+            return;
+        }
+
+        if (!['choice', 'enumerated', 'sequence'].includes(base)) {
             throw new Error('Unexpected item type in endItem');
         }
         const { type, ...itemData } = context.item;
         itemData.name = this.toPascalCase(context.item.name);
-        itemData.array = type?.series ?? false;
         if (type !== undefined) {
-            if (['bit-string', 'enumerated'].includes(base)) {
+            if (base === 'enumerated') {
                 throw new Error(`Type not allowed in ${base} item`);
             }
-            itemData.type = typeof type === 'string' ? this.mapToNative(this.toPascalCase(type)) : `T${itemData.name}`;
+
+            let resolvedType;
+            let isSeries = false;
+
+            if (typeof type === 'string') {
+                resolvedType = this.mapToNative(this.toPascalCase(type));
+            }
+            else {
+                isSeries = Boolean(type.series);
+                if (isSeries && typeof type.base === 'string' && partials.includes(type.base)) {
+                    // Series of partial-base types are represented by generated nested series types:
+                    // - non-anonymous: T<PropertyName>
+                    // - anonymous inline element definition: T<PropertyName>Item
+                    const keys = Object.keys(type);
+                    const hasInlineDefinition = keys.some(k => !['base', 'series'].includes(k));
+                    resolvedType = hasInlineDefinition
+                        ? `T${itemData.name}Item`
+                        : this.mapToNative(this.toPascalCase(type.base));
+                }
+                else if (typeof type.series === 'string') {
+                    // Parser may encode the element type name in the series marker.
+                    resolvedType = this.mapToNative(this.toPascalCase(type.series));
+                }
+                else if (typeof type.base === 'string' && !partials.includes(type.base)) {
+                    // Referenced named type, e.g. { base: "property-value", series: true }
+                    resolvedType = this.mapToNative(this.toPascalCase(type.base));
+                }
+                else {
+                    // Anonymous inline type (non-series).
+                    resolvedType = `T${itemData.name}`;
+                }
+            }
+
+            itemData.type = resolvedType;
+            itemData.array = isSeries;
+            itemData.isSeries = isSeries;
+            itemData.seriesType = isSeries ? resolvedType : null;
         }
         context.userContext.push(itemData);
     }
@@ -284,13 +358,12 @@ export class CsharpTransformer {
         }
         const templatePath = path.join(this.templatesDir, 'levels.hbs');
         for (const fileObject of this.fileObjects) {
-            this.render(templatePath, fileObject).then(content => {
-                if (content.trim() === '') {
-                    console.warn(`Generated empty content for ${fileObject.fullname}, skipping file creation.`);
-                    return;
-                }
-                writeFileSync(path.join(this.directory, fileObject.fileName), content);
-            });
+            const content = await this.render(templatePath, fileObject);
+            if (content.trim() === '') {
+                //console.warn(`Generated empty content for ${fileObject.fullname}, skipping file creation.`);
+                continue;
+            }
+            writeFileSync(path.join(this.directory, fileObject.fileName), content);
         }
     }
 
@@ -308,6 +381,26 @@ export class CsharpTransformer {
     registerHelpers() {
         Handlebars.registerHelper('eq', function (left, right) {
             return left === right;
+        });
+        Handlebars.registerHelper('isReferenceType', function (typeName) {
+            const valueTypes = new Set([
+                'bool', 'byte', 'sbyte', 'short', 'ushort',
+                'int', 'uint', 'long', 'ulong', 'nint', 'nuint',
+                'float', 'double', 'decimal', 'char'
+            ]);
+
+            if (typeof typeName !== 'string') {
+                return true;
+            }
+
+            const trimmed = typeName.trim();
+
+            // Nullable value types are represented as T? and can be null.
+            if (trimmed.endsWith('?')) {
+                return true;
+            }
+
+            return !valueTypes.has(trimmed);
         });
         Handlebars.registerHelper('ifString', function (value, options) {
             return value === 'string' ? options.fn(this) : options.inverse(this);
@@ -370,13 +463,20 @@ export class CsharpTransformer {
      * @returns {Promise<string>} Rendered template
      */
     async render(templatePath, data) {
-
-
         const parts = data.fullname.split('.');
         if (parts.length > 1 && pduTypes.includes(parts[0])) {
             return ''
         }
 
+        // Nested SEQUENCE OF wrappers are legacy dummy types and should not be emitted.
+        if (data.baseType === 'sequence-of' && !data.isTopLevel) {
+            return '';
+        }
+
+        if (['pdu', 'confirmed-request-pdu', 'unconfirmed-request-pdu', 'simple-ack-pdu', 'complex-ack-pdu', 'segment-ack-pdu',
+            'error-pdu', 'reject-pdu', 'abort-pdu'].includes(data.fullname)) {
+            return '';
+        }
 
         const globalAliasPath = path.join(path.dirname(templatePath), 'global-alias.hbs');
         if (fixedAliases.hasOwnProperty(data.fullname)) {
@@ -384,7 +484,7 @@ export class CsharpTransformer {
             if (data.fullname.startsWith('enum')) {
                 data.enumBase = data.aliasBase;
                 templatePath = path.join(path.dirname(templatePath), 'enumerated-n.hbs');
-                console.log(JSON.stringify(data, null, 2));
+                //console.log(JSON.stringify(data, null, 2));
             }
             else {
                 templatePath = globalAliasPath;
@@ -433,6 +533,10 @@ import { traverseDefinitions } from '@baclib/generic-bacnet-types/src/traverse.j
 
 const transformer = new CsharpTransformer();
 await traverseDefinitions(transformer);
+await generateBitStringTypes({
+    outputDirectory: transformer.directory,
+    cleanupMode: 'none'
+});
 
 /**
  * Static codec specifications for all primitive BACnet types.
@@ -665,7 +769,8 @@ const codecSpecs = new Map([
 export class Asn1CodecTransformer {
 
     constructor() {
-        this.directory = path.join(__dirname, '..', 'Baclib.Bacnet.Serialization.Asn1', 'Codecs');
+        //this.directory = path.join(__dirname, '..', 'Baclib.Bacnet.Serialization.Asn1', 'Codecs');
+        this.directory = path.join(__dirname, '..', '..', 'local-working-files', 'codecs');
         this.templatesDir = path.join(__dirname, 'templates', 'codecs');
         this.templateCache = new Map();
         this.codecObjects = [];
@@ -749,5 +854,7 @@ export class Asn1CodecTransformer {
     }
 }
 
-const codecTransformer = new Asn1CodecTransformer();
-await traverseDefinitions(codecTransformer);
+if (process.env.GENERATE_CODECS === 'true') {
+    const codecTransformer = new Asn1CodecTransformer();
+    await traverseDefinitions(codecTransformer);
+}
