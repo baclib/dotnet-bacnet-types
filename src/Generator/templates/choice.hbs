@@ -25,13 +25,11 @@ public partial record class {{className}}
     /// </summary>
     public Option Choice { get; }
 
-    private object _choiceValue
-    {
-        get;
-    }
+    private readonly object _choiceValue;
 
     private {{className}}(Option choice, object value)
     {
+        ArgumentNullException.ThrowIfNull(value);
         Choice = choice;
         _choiceValue = value;
     }
@@ -53,10 +51,25 @@ public partial record class {{className}}
             return ({{type}})_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.{{name}}"/>.
+    /// </summary>
+    public bool TryGet{{name}}(out {{type}} value)
+    {
+        if (Choice == Option.{{name}})
+        {
+            value = ({{type}})_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     {{#if description}}
     /// <summary>
-    /// Create function for {{description}}
+    /// Creates a choice with the <see cref="Option.{{name}}"/> option.
     /// </summary>
     {{/if}}
     public static {{../className}} From{{name}}({{type}} value)

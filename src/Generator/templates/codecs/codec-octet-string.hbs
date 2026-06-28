@@ -29,8 +29,7 @@ public sealed class {{className}}Asn1Codec : Asn1Codec<{{csharpType}}>
 
     private static {{csharpType}} Decode(ref AsduDecoder decoder, byte tagNumber, AsduTagClass tagClass)
     {
-        var bytes = decoder.Decode(tagClass, tagNumber);
-        return new {{csharpType}}(bytes);
+        return new OctetString(source.ToArray());
     }
 
     public override {{csharpType}} Decode(ref AsduDecoder decoder) => Decode(ref decoder, (byte)ApplicationTagNumber.{{tagName}}, AsduTagClass.Application);

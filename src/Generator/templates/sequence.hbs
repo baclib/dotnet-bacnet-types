@@ -4,16 +4,24 @@
 public partial record class {{className}}
 {
 {{#each items}}
-    {{#if description}}
+{{#if description}}
     /// <summary>
     /// {{description}}
     /// </summary>
-    {{/if}}
-    {{#if optional}}
+{{/if}}
+{{#if optional}}
+{{#if isSeries}}
+    public Optional<SequenceOf<{{seriesType}}>> {{name}} { get; init; }
+{{else}}
     public Optional<{{type}}> {{name}} { get; init; }
-    {{else}}
+{{/if}}
+{{else}}
+{{#if isSeries}}
+    public required SequenceOf<{{seriesType}}> {{name}} { get; init; }
+{{else}}
     public required {{type}} {{name}} { get; init; }
-    {{/if}}{{#unless @last}}
-    {{/unless}}
+{{/if}}
+{{/if}}{{#unless @last}}
+{{/unless}}
 {{/each}}
 }

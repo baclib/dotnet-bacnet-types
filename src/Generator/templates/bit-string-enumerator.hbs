@@ -21,7 +21,7 @@ public struct Enumerator
 
     /// <summary>
     /// Current enumerator index. Starts at -1 before the first element; incremented by <see cref="MoveNext"/>.
-    /// Valid indices are 0..(<see cref="{{typeName}}.Count"/> - 1).
+    /// Valid indices are 0..(<see cref="{{typeName}}.Length"/> - 1).
     /// </summary>
     private int _index;
 
@@ -45,7 +45,7 @@ public struct Enumerator
     public bool MoveNext()
     {
         _index++;
-        return _index < _bits.Count;
+        return _index < _bits.Length;
     }
 
     /// <summary>
@@ -60,7 +60,7 @@ public struct Enumerator
 /// </summary>
 IEnumerator<bool> IEnumerable<bool>.GetEnumerator()
 {
-    for (int i = 0; i < Count; i++)
+    for (int i = 0; i < Length; i++)
     {
         yield return this[i];
     }

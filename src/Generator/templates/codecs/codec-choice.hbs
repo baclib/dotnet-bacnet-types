@@ -1,0 +1,128 @@
+// SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
+// SPDX-License-Identifier: EPL-2.0
+
+namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
+
+public sealed class {{className}} :
+    IAsduElementCodec<{{typeRef}}>,
+    IAsduConstructedCodec<{{typeRef}}>
+{
+    public static bool Matches(ref NativeReader reader)
+    {
+{{#if applicationItems.length}}
+        var applicationTagNumber = reader.PeekApplicationTagNumber();
+        switch (applicationTagNumber)
+        {
+{{#each applicationItems}}
+            case ApplicationTagNumber.{{appTagName}}:
+{{/each}}
+                return true;
+            default:
+{{#if contextItems.length}}
+                break;
+{{else}}
+                return false;
+{{/if}}
+        }
+{{/if}}
+{{#if contextItems.length}}
+
+        var contextTagNumber = reader.PeekContextTagNumber();
+        switch (contextTagNumber)
+        {
+{{#each contextItems}}
+            case {{tagNumber}}:
+{{/each}}
+                return true;
+            default:
+                return false;
+        }
+{{/if}}
+    }
+
+    public static bool Matches(ref NativeReader reader, byte tagNumber)
+        => reader.PeekOpeningTag(tagNumber);
+
+    public static {{typeRef}} Decode(ref NativeReader reader)
+    {
+{{#if applicationItems.length}}
+{{#each applicationItems}}
+        // info
+        if (reader.PeekTag({{codecRef}}.TagNumber))
+        {
+            //var _{{variableName}} = Asdu.Decode<{{codecRef}}, {{typeName}}>(ref reader);
+            var _{{variableName}} = {{codecRef}}.Decode(ref reader);
+            return {{../typeRef}}.From{{name}}(_{{variableName}});
+        }
+{{/each}}
+
+{{/if}}
+{{#if contextItems.length}}
+        var tagNumber = reader.PeekContextTagNumber();
+        switch (tagNumber)
+        {
+{{#each contextItems}}
+            case {{tagNumber}}:
+                var _{{variableName}} = Asdu.Decode{{#if (eq kind "primitive")}}Primitive{{else}}Constructed{{/if}}<{{codecRef}}, {{typeName}}>(ref reader, {{tagNumber}});
+                return {{../typeRef}}.From{{name}}(_{{variableName}});
+{{/each}}
+        }
+{{/if}}
+        throw new FormatException(nameof(reader));
+    }
+
+    public static {{typeRef}} Decode(ref NativeReader reader, byte tagNumber)
+    {
+        reader.ReadOpeningTag(tagNumber);
+        var value = Decode(ref reader);
+        reader.ReadClosingTag(tagNumber);
+        return value;
+    }
+
+    public static void Encode(ref NativeWriter writer, in {{typeRef}} value)
+    {
+        switch (value.Choice)
+        {
+{{#each items}}
+            case {{../typeRef}}.Option.{{name}}:
+{{#if hasContextTag}}
+                Asdu.Encode{{#if (eq kind "primitive")}}Primitive{{else}}Constructed{{/if}}<{{codecRef}}, {{typeName}}>(ref writer, {{tagNumber}}, value.{{name}});
+{{else}}
+                //Asdu.Encode<{{codecRef}}, {{typeName}}>(ref writer, value.{{name}});
+                {{codecRef}}.Encode(ref writer, value.{{name}});
+{{/if}}
+                return;
+{{/each}}
+        }
+        throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported.");
+    }
+
+    public static void Encode(ref NativeWriter writer, byte tagNumber, in {{typeRef}} value)
+    {
+        writer.WriteOpeningTag(tagNumber);
+        Encode(ref writer, value);
+        writer.WriteClosingTag(tagNumber);
+    }
+
+    public static int GetLength(in {{typeRef}} value)
+    {
+        switch (value.Choice)
+        {
+{{#each items}}
+            case {{../typeRef}}.Option.{{name}}:
+{{#if hasContextTag}}
+                return Asdu.Get{{#if (eq kind "primitive")}}Primitive{{else}}Constructed{{/if}}Length<{{codecRef}}, {{typeName}}>({{tagNumber}}, value.{{name}});
+{{else}}
+                return Asdu.GetEncodedLength<{{codecRef}}, {{typeName}}>(value.{{name}});
+{{/if}}
+{{/each}}
+            default:
+                throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported.");
+        }
+    }
+
+    public static int GetLength(in {{typeRef}} value, byte tagNumber)
+    {
+        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
+    }
+}

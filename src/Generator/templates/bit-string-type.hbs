@@ -1,0 +1,19 @@
+/// <summary>
+/// Represents BACnet bit string {{bacnetName}}.
+/// </summary>
+public readonly partial record struct {{typeName}} : IBitString
+{
+{{> bitstring-length this}}
+
+    /// <summary>
+    /// Gets the underlying bit container.
+    /// </summary>
+    public {{storageType}} Flags { get; }
+
+{{> bitstring-constructor this}}
+{{> bitstring-bit-properties this}}
+
+{{> bitstring-indexer this}}
+
+{{> bitstring-helpers this}}
+}

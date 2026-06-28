@@ -1,0 +1,9 @@
+{{#if hasBits}}
+{{#each bits}}
+
+    /// <summary>
+    /// {{description}}
+    /// </summary>
+    public bool {{propertyName}} => this[{{position}}];
+{{/each}}
+{{/if}}

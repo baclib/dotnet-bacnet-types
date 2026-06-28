@@ -1,0 +1,67 @@
+// SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
+// SPDX-License-Identifier: EPL-2.0
+
+namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
+
+public sealed class {{className}} :
+    IAsduElementCodec<{{typeRef}}>,
+    IAsduConstructedCodec<{{typeRef}}>
+{
+    public static bool Matches(ref NativeReader reader)
+    {
+{{#if hasFirstRequiredItem}}
+        return {{firstRequiredItem.matchExpression}};
+{{else}}
+        return !reader.End;
+{{/if}}
+    }
+
+    public static {{typeRef}} Decode(ref NativeReader reader)
+    {
+{{#each items}}
+        var _{{variableName}} = {{{decodeExpression}}};
+{{/each}}
+
+        return new {{typeRef}}
+        {
+{{#each items}}
+            {{name}} = _{{variableName}}{{#unless @last}},{{/unless}}
+{{/each}}
+        };
+    }
+
+    public static {{typeRef}} Decode(ref NativeReader reader, byte tagNumber)
+    {
+        reader.ReadOpeningTag(tagNumber);
+        var value = Decode(ref reader);
+        reader.ReadClosingTag(tagNumber);
+        return value;
+    }
+
+    public static void Encode(ref NativeWriter writer, in {{typeRef}} value)
+    {
+{{#each items}}
+{{{encodeBody}}}
+{{/each}}
+    }
+
+    public static void Encode(ref NativeWriter writer, byte tagNumber, in {{typeRef}} value)
+    {
+        writer.WriteOpeningTag(tagNumber);
+        Encode(ref writer, value);
+        writer.WriteClosingTag(tagNumber);
+    }
+
+    public static int GetLength(in {{typeRef}} value)
+    {
+        return {{{lengthSumExpression}}};
+    }
+
+    public static int GetLength(in {{typeRef}} value, byte tagNumber)
+    {
+        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
+    }
+
+    public static bool Matches(ref NativeReader reader, byte tagNumber)
+        => reader.PeekOpeningTag((byte)tagNumber);
+}

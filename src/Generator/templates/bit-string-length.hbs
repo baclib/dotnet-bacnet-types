@@ -1,0 +1,42 @@
+{{#if isVariable}}
+    /// <summary>
+    /// Minimum permitted number of bits.
+    /// </summary>
+    public const int MinLength = {{minimum}};
+
+    /// <summary>
+    /// Maximum permitted number of bits.
+    /// </summary>
+    public const int MaxLength = {{maxLengthLiteral}};
+
+    private readonly {{countType}} _count;
+
+    /// <inheritdoc/>
+    int IReadOnlyCollection<bool>.Count => _count;
+
+    /// <inheritdoc/>
+    public int Length => _count;
+
+    /// <inheritdoc/>
+    public int MinCount => MinLength;
+
+    /// <inheritdoc/>
+    public int MaxCount => MaxLength;
+{{else}}
+    /// <summary>
+    /// Fixed number of bits for this type.
+    /// </summary>
+    public const int FixedLength = {{maximum}};
+
+    /// <inheritdoc/>
+    int IReadOnlyCollection<bool>.Count => FixedLength;
+
+    /// <inheritdoc/>
+    public int Length => FixedLength;
+
+    /// <inheritdoc/>
+    public int MinCount => FixedLength;
+
+    /// <inheritdoc/>
+    public int MaxCount => FixedLength;
+{{/if}}
