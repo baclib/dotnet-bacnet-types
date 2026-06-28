@@ -13,7 +13,7 @@ public class BitString16CodecTests
         // Application tag 8 (BitString), length 3: 0x83, data 0x10 0x00 (all 16 bits unused)
         var reader = new NativeReader([0x83, 0x10, 0x00, 0x00]);
         var result = BitString16Codec.Instance.Decode(ref reader);
-        Assert.Equal(0, result.Count);
+        Assert.Equal(0, result.Length);
     }
 
     [Fact]
@@ -23,7 +23,7 @@ public class BitString16CodecTests
         // Data: unused bits = 15, followed by wire bytes 0x80 0x00 (decodes to native flags 0x0001)
         var reader = new NativeReader([0x83, 0x0F, 0x80, 0x00]);
         var result = BitString16Codec.Instance.Decode(ref reader);
-        Assert.Equal(1, result.Count);
+        Assert.Equal(1, result.Length);
         Assert.Equal((ushort)0x0001, result.Flags);
     }
 
@@ -34,7 +34,7 @@ public class BitString16CodecTests
         // Data: unused bits = 0, followed by 2 bytes = 0xFF 0xFF
         var reader = new NativeReader([0x83, 0x00, 0xFF, 0xFF]);
         var result = BitString16Codec.Instance.Decode(ref reader);
-        Assert.Equal(16, result.Count);
+        Assert.Equal(16, result.Length);
         Assert.Equal(0xFFFFu, result.Flags);
     }
 
@@ -45,7 +45,7 @@ public class BitString16CodecTests
         // Data: unused bits = 0, followed by wire bytes 0x2C 0x48 (decodes to flags 0x1234)
         var reader = new NativeReader([0x3B, 0x00, 0x2C, 0x48]);
         var result = BitString16Codec.Instance.Decode(ref reader, tagNumber: 3);
-        Assert.Equal(16, result.Count);
+        Assert.Equal(16, result.Length);
         Assert.Equal(0x1234u, result.Flags);
     }
 
@@ -55,7 +55,7 @@ public class BitString16CodecTests
         var reader = new NativeReader([0x83, 0x04, 0xF0, 0x00]);
         Optional<BitString16> result = BitString16Codec.Instance.DecodeOptional(ref reader);
         Assert.True(result.HasValue);
-        Assert.Equal(12, result.Value.Count);
+        Assert.Equal(12, result.Value.Length);
     }
 
     [Fact]

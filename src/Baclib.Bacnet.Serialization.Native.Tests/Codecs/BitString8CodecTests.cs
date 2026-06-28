@@ -13,7 +13,7 @@ public class BitString8CodecTests
         // Application tag 8 (BitString), length 2: 0x82, data 0x08 0x00 (all 8 bits unused)
         var reader = new NativeReader([0x82, 0x08, 0x00]);
         var result = BitString8Codec.Instance.Decode(ref reader);
-        Assert.Equal(0, result.Count);
+        Assert.Equal(0, result.Length);
     }
 
     [Fact]
@@ -23,7 +23,7 @@ public class BitString8CodecTests
         // Data: unused bits = 7, followed by wire byte 0x80 (decodes to native flags 0x01)
         var reader = new NativeReader([0x82, 0x07, 0x80]);
         var result = BitString8Codec.Instance.Decode(ref reader);
-        Assert.Equal(1, result.Count);
+        Assert.Equal(1, result.Length);
         Assert.Equal(0x01u, result.Flags);
     }
 
@@ -34,7 +34,7 @@ public class BitString8CodecTests
         // Data: unused bits = 0, followed by 1 byte = 0xFF (all bits set)
         var reader = new NativeReader([0x82, 0x00, 0xFF]);
         var result = BitString8Codec.Instance.Decode(ref reader);
-        Assert.Equal(8, result.Count);
+        Assert.Equal(8, result.Length);
         Assert.Equal(0xFFu, result.Flags);
     }
 
@@ -45,7 +45,7 @@ public class BitString8CodecTests
         // Data: unused bits = 4, followed by wire byte 0xA0 (decodes to native flags 0x05)
         var reader = new NativeReader([0x82, 0x04, 0xA0]);
         var result = BitString8Codec.Instance.Decode(ref reader);
-        Assert.Equal(4, result.Count);
+        Assert.Equal(4, result.Length);
         Assert.Equal(0x05u, result.Flags);
     }
 
@@ -56,7 +56,7 @@ public class BitString8CodecTests
         // Data: unused bits = 0, followed by wire byte 0x55 (decodes to flags 0xAA)
         var reader = new NativeReader([0x2A, 0x00, 0x55]);
         var result = BitString8Codec.Instance.Decode(ref reader, tagNumber: 2);
-        Assert.Equal(8, result.Count);
+        Assert.Equal(8, result.Length);
         Assert.Equal(0xAAu, result.Flags);
     }
 
@@ -66,7 +66,7 @@ public class BitString8CodecTests
         var reader = new NativeReader([0x82, 0x06, 0xC0]);
         Optional<BitString8> result = BitString8Codec.Instance.DecodeOptional(ref reader);
         Assert.True(result.HasValue);
-        Assert.Equal(2, result.Value.Count);
+        Assert.Equal(2, result.Value.Length);
         Assert.Equal(0x03u, result.Value.Flags);
     }
 
@@ -86,7 +86,7 @@ public class BitString8CodecTests
         var reader = new NativeReader([0x0A, 0x02, 0x40]);
         Optional<BitString8> result = BitString8Codec.Instance.DecodeOptional(ref reader, tagNumber: 0);
         Assert.True(result.HasValue);
-        Assert.Equal(6, result.Value.Count);
+        Assert.Equal(6, result.Value.Length);
         Assert.Equal(0x02u, result.Value.Flags);
     }
 

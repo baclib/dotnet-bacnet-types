@@ -14,7 +14,7 @@ public class BitString32CodecTests
         // data 0x20 followed by 4 zeros (all 32 bits unused, unused bits = 32 = 0x20)
         var reader = new NativeReader([0x85, 0x05, 0x20, 0x00, 0x00, 0x00, 0x00]);
         var result = BitString32Codec.Instance.Decode(ref reader);
-        Assert.Equal(0, result.Count);
+        Assert.Equal(0, result.Length);
     }
 
     [Fact]
@@ -24,7 +24,7 @@ public class BitString32CodecTests
         // Data: unused bits = 31, followed by wire bytes 0x80 0x00 0x00 0x00 (decodes to native flags 0x00000001)
         var reader = new NativeReader([0x85, 0x05, 0x1F, 0x80, 0x00, 0x00, 0x00]);
         var result = BitString32Codec.Instance.Decode(ref reader);
-        Assert.Equal(1, result.Count);
+        Assert.Equal(1, result.Length);
         Assert.Equal(0x00000001u, result.Flags);
     }
 
@@ -35,7 +35,7 @@ public class BitString32CodecTests
         // Data: unused bits = 0, followed by 4 bytes = 0xFF 0xFF 0xFF 0xFF
         var reader = new NativeReader([0x85, 0x05, 0x00, 0xFF, 0xFF, 0xFF, 0xFF]);
         var result = BitString32Codec.Instance.Decode(ref reader);
-        Assert.Equal(32, result.Count);
+        Assert.Equal(32, result.Length);
         Assert.Equal(0xFFFFFFFFu, result.Flags);
     }
 
@@ -46,7 +46,7 @@ public class BitString32CodecTests
         // Data: unused bits = 0, followed by wire bytes 0x1E 0x6A 0x2C 0x48 (decodes to flags 0x12345678)
         var reader = new NativeReader([0x4D, 0x05, 0x00, 0x1E, 0x6A, 0x2C, 0x48]);
         var result = BitString32Codec.Instance.Decode(ref reader, tagNumber: 4);
-        Assert.Equal(32, result.Count);
+        Assert.Equal(32, result.Length);
         Assert.Equal(0x12345678u, result.Flags);
     }
 
@@ -56,7 +56,7 @@ public class BitString32CodecTests
         var reader = new NativeReader([0x85, 0x05, 0x08, 0xF0, 0x00, 0x00, 0x00]);
         Optional<BitString32> result = BitString32Codec.Instance.DecodeOptional(ref reader);
         Assert.True(result.HasValue);
-        Assert.Equal(24, result.Value.Count);
+        Assert.Equal(24, result.Value.Length);
     }
 
     [Fact]

@@ -14,7 +14,7 @@ public class BitString64CodecTests
         // data 0x40 (unused bits) followed by 8 data bytes (all zeros)
         var reader = new NativeReader([0x85, 0x09, 0x40, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]);
         var result = BitString64Codec.Instance.Decode(ref reader);
-        Assert.Equal(0, result.Count);
+        Assert.Equal(0, result.Length);
     }
 
     [Fact]
@@ -24,7 +24,7 @@ public class BitString64CodecTests
         // Data: unused bits = 63, followed by wire bytes starting with 0x80 (decodes to native flags 0x0000000000000001)
         var reader = new NativeReader([0x85, 0x09, 0x3F, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]);
         var result = BitString64Codec.Instance.Decode(ref reader);
-        Assert.Equal(1, result.Count);
+        Assert.Equal(1, result.Length);
         Assert.Equal(0x0000000000000001uL, result.Flags);
     }
 
@@ -35,7 +35,7 @@ public class BitString64CodecTests
         // Data: unused bits = 0, followed by 8 bytes = 0xFF (all bits set)
         var reader = new NativeReader([0x85, 0x09, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF]);
         var result = BitString64Codec.Instance.Decode(ref reader);
-        Assert.Equal(64, result.Count);
+        Assert.Equal(64, result.Length);
         Assert.Equal(0xFFFFFFFFFFFFFFFFuL, result.Flags);
     }
 
@@ -45,7 +45,7 @@ public class BitString64CodecTests
         var reader = new NativeReader([0x85, 0x09, 0x10, 0xF0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]);
         Optional<BitString64> result = BitString64Codec.Instance.DecodeOptional(ref reader);
         Assert.True(result.HasValue);
-        Assert.Equal(48, result.Value.Count);
+        Assert.Equal(48, result.Value.Length);
     }
 
     [Fact]
@@ -55,7 +55,7 @@ public class BitString64CodecTests
         // Data: unused bits = 0, followed by wire bytes that decode to flags 0x123456789ABCDEF0
         var reader = new NativeReader([0x5D, 0x09, 0x00, 0x0F, 0x7B, 0x3D, 0x59, 0x1E, 0x6A, 0x2C, 0x48]);
         var result = BitString64Codec.Instance.Decode(ref reader, tagNumber: 5);
-        Assert.Equal(64, result.Count);
+        Assert.Equal(64, result.Length);
         Assert.Equal(0x123456789ABCDEF0uL, result.Flags);
     }
 
@@ -66,7 +66,7 @@ public class BitString64CodecTests
         var reader = new NativeReader([0x3D, 0x09, 0x30, 0x0F, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]);
         Optional<BitString64> result = BitString64Codec.Instance.DecodeOptional(ref reader, tagNumber: 3);
         Assert.True(result.HasValue);
-        Assert.Equal(16, result.Value.Count);
+        Assert.Equal(16, result.Value.Length);
     }
 
     [Fact]
