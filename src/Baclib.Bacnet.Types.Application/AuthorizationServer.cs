@@ -12,7 +12,7 @@ public partial record class AuthorizationServer
     /// The identifier of the authorization server.
     /// </summary>
     public required Unsigned32 AuthServer { get; init; }
-    
+
     /// <summary>
     /// The first cryptographic signing key used to verify tokens from this server.
     /// </summary>

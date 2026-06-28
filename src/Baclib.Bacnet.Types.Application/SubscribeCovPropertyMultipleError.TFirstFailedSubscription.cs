@@ -14,15 +14,15 @@ public partial record class SubscribeCovPropertyMultipleError
         /// The identifier of the object for the failed subscription.
         /// </summary>
         public required ObjectIdentifier MonitoredObjectIdentifier { get; init; }
-        
+    
         /// <summary>
         /// The property reference for the failed subscription.
         /// </summary>
         public required PropertyReference MonitoredPropertyReference { get; init; }
-        
+    
         /// <summary>
         /// The error type for the failed subscription.
         /// </summary>
         public required Error ErrorType { get; init; }
-        }
+    }
 }

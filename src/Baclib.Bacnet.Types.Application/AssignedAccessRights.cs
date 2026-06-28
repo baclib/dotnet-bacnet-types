@@ -12,9 +12,9 @@ public partial record class AssignedAccessRights
     /// Reference to the access rights object.
     /// </summary>
     public required DeviceObjectReference Reference { get; init; }
-    
+
     /// <summary>
     /// Indicates whether these access rights are enabled.
     /// </summary>
     public required Boolean Enable { get; init; }
-    }
+}

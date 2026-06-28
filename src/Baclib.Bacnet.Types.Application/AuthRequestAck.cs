@@ -24,13 +24,11 @@ public partial record class AuthRequestAck
     /// </summary>
     public Option Choice { get; }
 
-    private object _choiceValue
-    {
-        get;
-    }
+    private readonly object _choiceValue;
 
     private AuthRequestAck(Option choice, object value)
     {
+        ArgumentNullException.ThrowIfNull(value);
         Choice = choice;
         _choiceValue = value;
     }
@@ -49,9 +47,24 @@ public partial record class AuthRequestAck
             return (AccessToken)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.TokenResponse"/>.
+    /// </summary>
+    public bool TryGetTokenResponse(out AccessToken value)
+    {
+        if (Choice == Option.TokenResponse)
+        {
+            value = (AccessToken)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for The access token returned in response to the authentication request.
+    /// Creates a choice with the <see cref="Option.TokenResponse"/> option.
     /// </summary>
     public static AuthRequestAck FromTokenResponse(AccessToken value)
     {

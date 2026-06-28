@@ -59,13 +59,11 @@ public partial record class FaultParameter
     /// </summary>
     public Option Choice { get; }
 
-    private object _choiceValue
-    {
-        get;
-    }
+    private readonly object _choiceValue;
 
     private FaultParameter(Option choice, object value)
     {
+        ArgumentNullException.ThrowIfNull(value);
         Choice = choice;
         _choiceValue = value;
     }
@@ -84,9 +82,24 @@ public partial record class FaultParameter
             return (Null)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.None"/>.
+    /// </summary>
+    public bool TryGetNone(out Null value)
+    {
+        if (Choice == Option.None)
+        {
+            value = (Null)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for No fault parameter specified.
+    /// Creates a choice with the <see cref="Option.None"/> option.
     /// </summary>
     public static FaultParameter FromNone(Null value)
     {
@@ -107,9 +120,24 @@ public partial record class FaultParameter
             return (TFaultCharacterstring)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.FaultCharacterstring"/>.
+    /// </summary>
+    public bool TryGetFaultCharacterstring(out TFaultCharacterstring value)
+    {
+        if (Choice == Option.FaultCharacterstring)
+        {
+            value = (TFaultCharacterstring)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Fault parameters for character string value monitoring, triggered when a string matches one of the specified fault values.
+    /// Creates a choice with the <see cref="Option.FaultCharacterstring"/> option.
     /// </summary>
     public static FaultParameter FromFaultCharacterstring(TFaultCharacterstring value)
     {
@@ -130,9 +158,24 @@ public partial record class FaultParameter
             return (TFaultExtended)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.FaultExtended"/>.
+    /// </summary>
+    public bool TryGetFaultExtended(out TFaultExtended value)
+    {
+        if (Choice == Option.FaultExtended)
+        {
+            value = (TFaultExtended)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Fault parameters for vendor-specific extended fault detection, allowing custom fault algorithms beyond standard BACnet fault types.
+    /// Creates a choice with the <see cref="Option.FaultExtended"/> option.
     /// </summary>
     public static FaultParameter FromFaultExtended(TFaultExtended value)
     {
@@ -153,9 +196,24 @@ public partial record class FaultParameter
             return (TFaultLifeSafety)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.FaultLifeSafety"/>.
+    /// </summary>
+    public bool TryGetFaultLifeSafety(out TFaultLifeSafety value)
+    {
+        if (Choice == Option.FaultLifeSafety)
+        {
+            value = (TFaultLifeSafety)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Fault parameters for life safety state monitoring, triggered when a life safety object enters one of the specified fault states.
+    /// Creates a choice with the <see cref="Option.FaultLifeSafety"/> option.
     /// </summary>
     public static FaultParameter FromFaultLifeSafety(TFaultLifeSafety value)
     {
@@ -176,9 +234,24 @@ public partial record class FaultParameter
             return (TFaultState)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.FaultState"/>.
+    /// </summary>
+    public bool TryGetFaultState(out TFaultState value)
+    {
+        if (Choice == Option.FaultState)
+        {
+            value = (TFaultState)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Fault parameters for property state monitoring, triggered when a state property matches one of the specified fault states.
+    /// Creates a choice with the <see cref="Option.FaultState"/> option.
     /// </summary>
     public static FaultParameter FromFaultState(TFaultState value)
     {
@@ -199,9 +272,24 @@ public partial record class FaultParameter
             return (TFaultStatusFlags)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.FaultStatusFlags"/>.
+    /// </summary>
+    public bool TryGetFaultStatusFlags(out TFaultStatusFlags value)
+    {
+        if (Choice == Option.FaultStatusFlags)
+        {
+            value = (TFaultStatusFlags)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Fault parameters for status flags monitoring, triggered when specific status flags are set in a referenced property.
+    /// Creates a choice with the <see cref="Option.FaultStatusFlags"/> option.
     /// </summary>
     public static FaultParameter FromFaultStatusFlags(TFaultStatusFlags value)
     {
@@ -222,9 +310,24 @@ public partial record class FaultParameter
             return (TFaultOutOfRange)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.FaultOutOfRange"/>.
+    /// </summary>
+    public bool TryGetFaultOutOfRange(out TFaultOutOfRange value)
+    {
+        if (Choice == Option.FaultOutOfRange)
+        {
+            value = (TFaultOutOfRange)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Fault parameters for out-of-range monitoring, triggered when a numeric value falls outside the specified normal range.
+    /// Creates a choice with the <see cref="Option.FaultOutOfRange"/> option.
     /// </summary>
     public static FaultParameter FromFaultOutOfRange(TFaultOutOfRange value)
     {
@@ -245,9 +348,24 @@ public partial record class FaultParameter
             return (TFaultListed)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.FaultListed"/>.
+    /// </summary>
+    public bool TryGetFaultListed(out TFaultListed value)
+    {
+        if (Choice == Option.FaultListed)
+        {
+            value = (TFaultListed)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Fault parameters for list monitoring, triggered when a monitored value appears in a referenced fault list.
+    /// Creates a choice with the <see cref="Option.FaultListed"/> option.
     /// </summary>
     public static FaultParameter FromFaultListed(TFaultListed value)
     {

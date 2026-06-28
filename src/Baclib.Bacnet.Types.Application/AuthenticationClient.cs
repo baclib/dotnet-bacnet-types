@@ -12,9 +12,9 @@ public partial record class AuthenticationClient
     /// Indicates whether the client has been successfully authenticated.
     /// </summary>
     public required Boolean Authenticated { get; init; }
-    
+
     /// <summary>
     /// The device identifier of the client.
     /// </summary>
     public required Unsigned32 Device { get; init; }
-    }
+}

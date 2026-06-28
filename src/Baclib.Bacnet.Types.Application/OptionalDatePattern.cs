@@ -29,13 +29,11 @@ public partial record class OptionalDatePattern
     /// </summary>
     public Option Choice { get; }
 
-    private object _choiceValue
-    {
-        get;
-    }
+    private readonly object _choiceValue;
 
     private OptionalDatePattern(Option choice, object value)
     {
+        ArgumentNullException.ThrowIfNull(value);
         Choice = choice;
         _choiceValue = value;
     }
@@ -54,9 +52,24 @@ public partial record class OptionalDatePattern
             return (Null)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.Null"/>.
+    /// </summary>
+    public bool TryGetNull(out Null value)
+    {
+        if (Choice == Option.Null)
+        {
+            value = (Null)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Indicates the absence of a date pattern value.
+    /// Creates a choice with the <see cref="Option.Null"/> option.
     /// </summary>
     public static OptionalDatePattern FromNull(Null value)
     {
@@ -77,9 +90,24 @@ public partial record class OptionalDatePattern
             return (DatePattern)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.Datepattern"/>.
+    /// </summary>
+    public bool TryGetDatepattern(out DatePattern value)
+    {
+        if (Choice == Option.Datepattern)
+        {
+            value = (DatePattern)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Specifies the BACnet date pattern value when present.
+    /// Creates a choice with the <see cref="Option.Datepattern"/> option.
     /// </summary>
     public static OptionalDatePattern FromDatepattern(DatePattern value)
     {

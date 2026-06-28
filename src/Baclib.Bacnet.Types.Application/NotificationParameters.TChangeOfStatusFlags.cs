@@ -19,5 +19,5 @@ public partial record class NotificationParameters
         /// The status flags that have changed.
         /// </summary>
         public required StatusFlags ReferencedFlags { get; init; }
-        }
+    }
 }

@@ -14,10 +14,10 @@ public partial record class WhoHasRequest
         /// The lower limit of the device instance range.
         /// </summary>
         public required TDeviceInstanceRangeLowLimit DeviceInstanceRangeLowLimit { get; init; }
-        
+    
         /// <summary>
         /// The upper limit of the device instance range.
         /// </summary>
         public required TDeviceInstanceRangeHighLimit DeviceInstanceRangeHighLimit { get; init; }
-        }
+    }
 }

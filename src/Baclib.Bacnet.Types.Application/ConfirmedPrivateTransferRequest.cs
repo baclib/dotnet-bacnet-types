@@ -12,12 +12,12 @@ public partial record class ConfirmedPrivateTransferRequest
     /// The vendor identification code.
     /// </summary>
     public required Unsigned16 VendorId { get; init; }
-    
+
     /// <summary>
     /// The vendor-specific service number.
     /// </summary>
     public required Unsigned ServiceNumber { get; init; }
-    
+
     /// <summary>
     /// Optional vendor-specific service parameters.
     /// </summary>

@@ -12,17 +12,17 @@ public partial record class ConfirmedPrivateTransferError
     /// The error class and code describing the failure.
     /// </summary>
     public required Error ErrorType { get; init; }
-    
+
     /// <summary>
     /// The vendor identification code.
     /// </summary>
     public required Unsigned16 VendorId { get; init; }
-    
+
     /// <summary>
     /// The vendor-specific service number that failed.
     /// </summary>
     public required Unsigned ServiceNumber { get; init; }
-    
+
     /// <summary>
     /// Optional vendor-specific error parameters.
     /// </summary>

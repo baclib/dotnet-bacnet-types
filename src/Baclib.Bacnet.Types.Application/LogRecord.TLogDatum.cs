@@ -76,13 +76,11 @@ public partial record class LogRecord
         /// </summary>
         public Option Choice { get; }
     
-        private object _choiceValue
-        {
-            get;
-        }
+        private readonly object _choiceValue;
     
         private TLogDatum(Option choice, object value)
         {
+            ArgumentNullException.ThrowIfNull(value);
             Choice = choice;
             _choiceValue = value;
         }
@@ -101,9 +99,24 @@ public partial record class LogRecord
                 return (LogStatus)_choiceValue;
             }
         }
+    
+        /// <summary>
+        /// Tries to get the value when the active choice is <see cref="Option.LogStatus"/>.
+        /// </summary>
+        public bool TryGetLogStatus(out LogStatus value)
+        {
+            if (Choice == Option.LogStatus)
+            {
+                value = (LogStatus)_choiceValue;
+                return true;
+            }
+    
+            value = default!;
+            return false;
+        }
         
         /// <summary>
-        /// Create function for A log status bit string indicating the state of the log.
+        /// Creates a choice with the <see cref="Option.LogStatus"/> option.
         /// </summary>
         public static TLogDatum FromLogStatus(LogStatus value)
         {
@@ -124,9 +137,24 @@ public partial record class LogRecord
                 return (Boolean)_choiceValue;
             }
         }
+    
+        /// <summary>
+        /// Tries to get the value when the active choice is <see cref="Option.BooleanValue"/>.
+        /// </summary>
+        public bool TryGetBooleanValue(out Boolean value)
+        {
+            if (Choice == Option.BooleanValue)
+            {
+                value = (Boolean)_choiceValue;
+                return true;
+            }
+    
+            value = default!;
+            return false;
+        }
         
         /// <summary>
-        /// Create function for A logged boolean value.
+        /// Creates a choice with the <see cref="Option.BooleanValue"/> option.
         /// </summary>
         public static TLogDatum FromBooleanValue(Boolean value)
         {
@@ -147,9 +175,24 @@ public partial record class LogRecord
                 return (float)_choiceValue;
             }
         }
+    
+        /// <summary>
+        /// Tries to get the value when the active choice is <see cref="Option.RealValue"/>.
+        /// </summary>
+        public bool TryGetRealValue(out float value)
+        {
+            if (Choice == Option.RealValue)
+            {
+                value = (float)_choiceValue;
+                return true;
+            }
+    
+            value = default!;
+            return false;
+        }
         
         /// <summary>
-        /// Create function for A logged real (floating-point) value.
+        /// Creates a choice with the <see cref="Option.RealValue"/> option.
         /// </summary>
         public static TLogDatum FromRealValue(float value)
         {
@@ -170,9 +213,24 @@ public partial record class LogRecord
                 return (Enumerated)_choiceValue;
             }
         }
+    
+        /// <summary>
+        /// Tries to get the value when the active choice is <see cref="Option.EnumeratedValue"/>.
+        /// </summary>
+        public bool TryGetEnumeratedValue(out Enumerated value)
+        {
+            if (Choice == Option.EnumeratedValue)
+            {
+                value = (Enumerated)_choiceValue;
+                return true;
+            }
+    
+            value = default!;
+            return false;
+        }
         
         /// <summary>
-        /// Create function for A logged enumerated value.
+        /// Creates a choice with the <see cref="Option.EnumeratedValue"/> option.
         /// </summary>
         public static TLogDatum FromEnumeratedValue(Enumerated value)
         {
@@ -193,9 +251,24 @@ public partial record class LogRecord
                 return (Unsigned)_choiceValue;
             }
         }
+    
+        /// <summary>
+        /// Tries to get the value when the active choice is <see cref="Option.UnsignedValue"/>.
+        /// </summary>
+        public bool TryGetUnsignedValue(out Unsigned value)
+        {
+            if (Choice == Option.UnsignedValue)
+            {
+                value = (Unsigned)_choiceValue;
+                return true;
+            }
+    
+            value = default!;
+            return false;
+        }
         
         /// <summary>
-        /// Create function for A logged unsigned integer value.
+        /// Creates a choice with the <see cref="Option.UnsignedValue"/> option.
         /// </summary>
         public static TLogDatum FromUnsignedValue(Unsigned value)
         {
@@ -216,9 +289,24 @@ public partial record class LogRecord
                 return (int)_choiceValue;
             }
         }
+    
+        /// <summary>
+        /// Tries to get the value when the active choice is <see cref="Option.IntegerValue"/>.
+        /// </summary>
+        public bool TryGetIntegerValue(out int value)
+        {
+            if (Choice == Option.IntegerValue)
+            {
+                value = (int)_choiceValue;
+                return true;
+            }
+    
+            value = default!;
+            return false;
+        }
         
         /// <summary>
-        /// Create function for A logged signed integer value.
+        /// Creates a choice with the <see cref="Option.IntegerValue"/> option.
         /// </summary>
         public static TLogDatum FromIntegerValue(int value)
         {
@@ -239,9 +327,24 @@ public partial record class LogRecord
                 return (BitString)_choiceValue;
             }
         }
+    
+        /// <summary>
+        /// Tries to get the value when the active choice is <see cref="Option.BitstringValue"/>.
+        /// </summary>
+        public bool TryGetBitstringValue(out BitString value)
+        {
+            if (Choice == Option.BitstringValue)
+            {
+                value = (BitString)_choiceValue;
+                return true;
+            }
+    
+            value = default!;
+            return false;
+        }
         
         /// <summary>
-        /// Create function for A logged bit string value.
+        /// Creates a choice with the <see cref="Option.BitstringValue"/> option.
         /// </summary>
         public static TLogDatum FromBitstringValue(BitString value)
         {
@@ -262,9 +365,24 @@ public partial record class LogRecord
                 return (Null)_choiceValue;
             }
         }
+    
+        /// <summary>
+        /// Tries to get the value when the active choice is <see cref="Option.NullValue"/>.
+        /// </summary>
+        public bool TryGetNullValue(out Null value)
+        {
+            if (Choice == Option.NullValue)
+            {
+                value = (Null)_choiceValue;
+                return true;
+            }
+    
+            value = default!;
+            return false;
+        }
         
         /// <summary>
-        /// Create function for Indicates no value was logged at this timestamp.
+        /// Creates a choice with the <see cref="Option.NullValue"/> option.
         /// </summary>
         public static TLogDatum FromNullValue(Null value)
         {
@@ -285,9 +403,24 @@ public partial record class LogRecord
                 return (Error)_choiceValue;
             }
         }
+    
+        /// <summary>
+        /// Tries to get the value when the active choice is <see cref="Option.Failure"/>.
+        /// </summary>
+        public bool TryGetFailure(out Error value)
+        {
+            if (Choice == Option.Failure)
+            {
+                value = (Error)_choiceValue;
+                return true;
+            }
+    
+            value = default!;
+            return false;
+        }
         
         /// <summary>
-        /// Create function for An error that occurred during logging.
+        /// Creates a choice with the <see cref="Option.Failure"/> option.
         /// </summary>
         public static TLogDatum FromFailure(Error value)
         {
@@ -308,9 +441,24 @@ public partial record class LogRecord
                 return (float)_choiceValue;
             }
         }
+    
+        /// <summary>
+        /// Tries to get the value when the active choice is <see cref="Option.TimeChange"/>.
+        /// </summary>
+        public bool TryGetTimeChange(out float value)
+        {
+            if (Choice == Option.TimeChange)
+            {
+                value = (float)_choiceValue;
+                return true;
+            }
+    
+            value = default!;
+            return false;
+        }
         
         /// <summary>
-        /// Create function for Indicates a time change event, with the value representing the time adjustment in seconds.
+        /// Creates a choice with the <see cref="Option.TimeChange"/> option.
         /// </summary>
         public static TLogDatum FromTimeChange(float value)
         {
@@ -331,9 +479,24 @@ public partial record class LogRecord
                 return (Any)_choiceValue;
             }
         }
+    
+        /// <summary>
+        /// Tries to get the value when the active choice is <see cref="Option.AnyValue"/>.
+        /// </summary>
+        public bool TryGetAnyValue(out Any value)
+        {
+            if (Choice == Option.AnyValue)
+            {
+                value = (Any)_choiceValue;
+                return true;
+            }
+    
+            value = default!;
+            return false;
+        }
         
         /// <summary>
-        /// Create function for A logged value of any BACnet data type.
+        /// Creates a choice with the <see cref="Option.AnyValue"/> option.
         /// </summary>
         public static TLogDatum FromAnyValue(Any value)
         {

@@ -12,12 +12,12 @@ public partial record class SubscribeCovPropertyMultipleRequest
     /// The process identifier of the subscriber.
     /// </summary>
     public required Unsigned32 SubscriberProcessIdentifier { get; init; }
-    
+
     /// <summary>
     /// Indicates if confirmed notifications should be issued.
     /// </summary>
     public required Boolean IssueConfirmedNotifications { get; init; }
-    
+
     /// <summary>
     /// The duration of the subscription, in seconds. Optional.
     /// </summary>
@@ -31,5 +31,5 @@ public partial record class SubscribeCovPropertyMultipleRequest
     /// <summary>
     /// A list of COV subscription specifications for multiple objects and properties.
     /// </summary>
-    public required TListOfCovSubscriptionSpecifications ListOfCovSubscriptionSpecifications { get; init; }
-    }
+    public required SequenceOf<TListOfCovSubscriptionSpecificationsItem> ListOfCovSubscriptionSpecifications { get; init; }
+}

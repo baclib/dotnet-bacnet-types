@@ -43,13 +43,11 @@ public partial record class FaultParameter
             /// </summary>
             public Option Choice { get; }
         
-            private object _choiceValue
-            {
-                get;
-            }
+            private readonly object _choiceValue;
         
             private TMinNormalValue(Option choice, object value)
             {
+                ArgumentNullException.ThrowIfNull(value);
                 Choice = choice;
                 _choiceValue = value;
             }
@@ -68,9 +66,24 @@ public partial record class FaultParameter
                     return (float)_choiceValue;
                 }
             }
+        
+            /// <summary>
+            /// Tries to get the value when the active choice is <see cref="Option.Real"/>.
+            /// </summary>
+            public bool TryGetReal(out float value)
+            {
+                if (Choice == Option.Real)
+                {
+                    value = (float)_choiceValue;
+                    return true;
+                }
+        
+                value = default!;
+                return false;
+            }
             
             /// <summary>
-            /// Create function for Minimum normal value as a real number.
+            /// Creates a choice with the <see cref="Option.Real"/> option.
             /// </summary>
             public static TMinNormalValue FromReal(float value)
             {
@@ -91,9 +104,24 @@ public partial record class FaultParameter
                     return (Unsigned)_choiceValue;
                 }
             }
+        
+            /// <summary>
+            /// Tries to get the value when the active choice is <see cref="Option.Unsigned"/>.
+            /// </summary>
+            public bool TryGetUnsigned(out Unsigned value)
+            {
+                if (Choice == Option.Unsigned)
+                {
+                    value = (Unsigned)_choiceValue;
+                    return true;
+                }
+        
+                value = default!;
+                return false;
+            }
             
             /// <summary>
-            /// Create function for Minimum normal value as an unsigned integer.
+            /// Creates a choice with the <see cref="Option.Unsigned"/> option.
             /// </summary>
             public static TMinNormalValue FromUnsigned(Unsigned value)
             {
@@ -114,9 +142,24 @@ public partial record class FaultParameter
                     return (double)_choiceValue;
                 }
             }
+        
+            /// <summary>
+            /// Tries to get the value when the active choice is <see cref="Option.Double"/>.
+            /// </summary>
+            public bool TryGetDouble(out double value)
+            {
+                if (Choice == Option.Double)
+                {
+                    value = (double)_choiceValue;
+                    return true;
+                }
+        
+                value = default!;
+                return false;
+            }
             
             /// <summary>
-            /// Create function for Minimum normal value as a double-precision number.
+            /// Creates a choice with the <see cref="Option.Double"/> option.
             /// </summary>
             public static TMinNormalValue FromDouble(double value)
             {
@@ -137,9 +180,24 @@ public partial record class FaultParameter
                     return (int)_choiceValue;
                 }
             }
+        
+            /// <summary>
+            /// Tries to get the value when the active choice is <see cref="Option.Integer"/>.
+            /// </summary>
+            public bool TryGetInteger(out int value)
+            {
+                if (Choice == Option.Integer)
+                {
+                    value = (int)_choiceValue;
+                    return true;
+                }
+        
+                value = default!;
+                return false;
+            }
             
             /// <summary>
-            /// Create function for Minimum normal value as a signed integer.
+            /// Creates a choice with the <see cref="Option.Integer"/> option.
             /// </summary>
             public static TMinNormalValue FromInteger(int value)
             {

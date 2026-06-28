@@ -12,9 +12,9 @@ public partial record class HostNPort
     /// The host address, which can be an IP address, a name, or unspecified.
     /// </summary>
     public required HostAddress Host { get; init; }
-    
+
     /// <summary>
     /// The port number for the network connection.
     /// </summary>
     public required Unsigned16 Port { get; init; }
-    }
+}

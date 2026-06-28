@@ -174,13 +174,11 @@ public partial record class ConfirmedServiceRequest
     /// </summary>
     public Option Choice { get; }
 
-    private object _choiceValue
-    {
-        get;
-    }
+    private readonly object _choiceValue;
 
     private ConfirmedServiceRequest(Option choice, object value)
     {
+        ArgumentNullException.ThrowIfNull(value);
         Choice = choice;
         _choiceValue = value;
     }
@@ -199,9 +197,24 @@ public partial record class ConfirmedServiceRequest
             return (AcknowledgeAlarmRequest)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.AcknowledgeAlarm"/>.
+    /// </summary>
+    public bool TryGetAcknowledgeAlarm(out AcknowledgeAlarmRequest value)
+    {
+        if (Choice == Option.AcknowledgeAlarm)
+        {
+            value = (AcknowledgeAlarmRequest)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Request to acknowledge an alarm.
+    /// Creates a choice with the <see cref="Option.AcknowledgeAlarm"/> option.
     /// </summary>
     public static ConfirmedServiceRequest FromAcknowledgeAlarm(AcknowledgeAlarmRequest value)
     {
@@ -222,9 +235,24 @@ public partial record class ConfirmedServiceRequest
             return (ConfirmedCovNotificationRequest)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.ConfirmedCovNotification"/>.
+    /// </summary>
+    public bool TryGetConfirmedCovNotification(out ConfirmedCovNotificationRequest value)
+    {
+        if (Choice == Option.ConfirmedCovNotification)
+        {
+            value = (ConfirmedCovNotificationRequest)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Request for confirmed COV notification.
+    /// Creates a choice with the <see cref="Option.ConfirmedCovNotification"/> option.
     /// </summary>
     public static ConfirmedServiceRequest FromConfirmedCovNotification(ConfirmedCovNotificationRequest value)
     {
@@ -245,9 +273,24 @@ public partial record class ConfirmedServiceRequest
             return (ConfirmedCovNotificationMultipleRequest)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.ConfirmedCovNotificationMultiple"/>.
+    /// </summary>
+    public bool TryGetConfirmedCovNotificationMultiple(out ConfirmedCovNotificationMultipleRequest value)
+    {
+        if (Choice == Option.ConfirmedCovNotificationMultiple)
+        {
+            value = (ConfirmedCovNotificationMultipleRequest)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Request for confirmed COV notification multiple.
+    /// Creates a choice with the <see cref="Option.ConfirmedCovNotificationMultiple"/> option.
     /// </summary>
     public static ConfirmedServiceRequest FromConfirmedCovNotificationMultiple(ConfirmedCovNotificationMultipleRequest value)
     {
@@ -268,9 +311,24 @@ public partial record class ConfirmedServiceRequest
             return (ConfirmedEventNotificationRequest)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.ConfirmedEventNotification"/>.
+    /// </summary>
+    public bool TryGetConfirmedEventNotification(out ConfirmedEventNotificationRequest value)
+    {
+        if (Choice == Option.ConfirmedEventNotification)
+        {
+            value = (ConfirmedEventNotificationRequest)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Request for confirmed event notification.
+    /// Creates a choice with the <see cref="Option.ConfirmedEventNotification"/> option.
     /// </summary>
     public static ConfirmedServiceRequest FromConfirmedEventNotification(ConfirmedEventNotificationRequest value)
     {
@@ -291,9 +349,24 @@ public partial record class ConfirmedServiceRequest
             return (GetEnrollmentSummaryRequest)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.GetEnrollmentSummary"/>.
+    /// </summary>
+    public bool TryGetGetEnrollmentSummary(out GetEnrollmentSummaryRequest value)
+    {
+        if (Choice == Option.GetEnrollmentSummary)
+        {
+            value = (GetEnrollmentSummaryRequest)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Request for enrollment summary.
+    /// Creates a choice with the <see cref="Option.GetEnrollmentSummary"/> option.
     /// </summary>
     public static ConfirmedServiceRequest FromGetEnrollmentSummary(GetEnrollmentSummaryRequest value)
     {
@@ -314,9 +387,24 @@ public partial record class ConfirmedServiceRequest
             return (GetEventInformationRequest)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.GetEventInformation"/>.
+    /// </summary>
+    public bool TryGetGetEventInformation(out GetEventInformationRequest value)
+    {
+        if (Choice == Option.GetEventInformation)
+        {
+            value = (GetEventInformationRequest)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Request for event information.
+    /// Creates a choice with the <see cref="Option.GetEventInformation"/> option.
     /// </summary>
     public static ConfirmedServiceRequest FromGetEventInformation(GetEventInformationRequest value)
     {
@@ -337,9 +425,24 @@ public partial record class ConfirmedServiceRequest
             return (LifeSafetyOperationRequest)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.LifeSafetyOperation"/>.
+    /// </summary>
+    public bool TryGetLifeSafetyOperation(out LifeSafetyOperationRequest value)
+    {
+        if (Choice == Option.LifeSafetyOperation)
+        {
+            value = (LifeSafetyOperationRequest)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Request for life safety operation.
+    /// Creates a choice with the <see cref="Option.LifeSafetyOperation"/> option.
     /// </summary>
     public static ConfirmedServiceRequest FromLifeSafetyOperation(LifeSafetyOperationRequest value)
     {
@@ -360,9 +463,24 @@ public partial record class ConfirmedServiceRequest
             return (SubscribeCovRequest)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.SubscribeCov"/>.
+    /// </summary>
+    public bool TryGetSubscribeCov(out SubscribeCovRequest value)
+    {
+        if (Choice == Option.SubscribeCov)
+        {
+            value = (SubscribeCovRequest)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Request to subscribe for COV notifications.
+    /// Creates a choice with the <see cref="Option.SubscribeCov"/> option.
     /// </summary>
     public static ConfirmedServiceRequest FromSubscribeCov(SubscribeCovRequest value)
     {
@@ -383,9 +501,24 @@ public partial record class ConfirmedServiceRequest
             return (SubscribeCovPropertyRequest)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.SubscribeCovProperty"/>.
+    /// </summary>
+    public bool TryGetSubscribeCovProperty(out SubscribeCovPropertyRequest value)
+    {
+        if (Choice == Option.SubscribeCovProperty)
+        {
+            value = (SubscribeCovPropertyRequest)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Request to subscribe for COV on a specific property.
+    /// Creates a choice with the <see cref="Option.SubscribeCovProperty"/> option.
     /// </summary>
     public static ConfirmedServiceRequest FromSubscribeCovProperty(SubscribeCovPropertyRequest value)
     {
@@ -406,9 +539,24 @@ public partial record class ConfirmedServiceRequest
             return (SubscribeCovPropertyMultipleRequest)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.SubscribeCovPropertyMultiple"/>.
+    /// </summary>
+    public bool TryGetSubscribeCovPropertyMultiple(out SubscribeCovPropertyMultipleRequest value)
+    {
+        if (Choice == Option.SubscribeCovPropertyMultiple)
+        {
+            value = (SubscribeCovPropertyMultipleRequest)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Request to subscribe for multiple COV properties.
+    /// Creates a choice with the <see cref="Option.SubscribeCovPropertyMultiple"/> option.
     /// </summary>
     public static ConfirmedServiceRequest FromSubscribeCovPropertyMultiple(SubscribeCovPropertyMultipleRequest value)
     {
@@ -429,9 +577,24 @@ public partial record class ConfirmedServiceRequest
             return (ConfirmedAuditNotificationRequest)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.ConfirmedAuditNotification"/>.
+    /// </summary>
+    public bool TryGetConfirmedAuditNotification(out ConfirmedAuditNotificationRequest value)
+    {
+        if (Choice == Option.ConfirmedAuditNotification)
+        {
+            value = (ConfirmedAuditNotificationRequest)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Request for confirmed audit notification.
+    /// Creates a choice with the <see cref="Option.ConfirmedAuditNotification"/> option.
     /// </summary>
     public static ConfirmedServiceRequest FromConfirmedAuditNotification(ConfirmedAuditNotificationRequest value)
     {
@@ -452,9 +615,24 @@ public partial record class ConfirmedServiceRequest
             return (AtomicReadFileRequest)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.AtomicReadFile"/>.
+    /// </summary>
+    public bool TryGetAtomicReadFile(out AtomicReadFileRequest value)
+    {
+        if (Choice == Option.AtomicReadFile)
+        {
+            value = (AtomicReadFileRequest)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Request to read a file atomically.
+    /// Creates a choice with the <see cref="Option.AtomicReadFile"/> option.
     /// </summary>
     public static ConfirmedServiceRequest FromAtomicReadFile(AtomicReadFileRequest value)
     {
@@ -475,9 +653,24 @@ public partial record class ConfirmedServiceRequest
             return (AtomicWriteFileRequest)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.AtomicWriteFile"/>.
+    /// </summary>
+    public bool TryGetAtomicWriteFile(out AtomicWriteFileRequest value)
+    {
+        if (Choice == Option.AtomicWriteFile)
+        {
+            value = (AtomicWriteFileRequest)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Request to write a file atomically.
+    /// Creates a choice with the <see cref="Option.AtomicWriteFile"/> option.
     /// </summary>
     public static ConfirmedServiceRequest FromAtomicWriteFile(AtomicWriteFileRequest value)
     {
@@ -498,9 +691,24 @@ public partial record class ConfirmedServiceRequest
             return (AddListElementRequest)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.AddListElement"/>.
+    /// </summary>
+    public bool TryGetAddListElement(out AddListElementRequest value)
+    {
+        if (Choice == Option.AddListElement)
+        {
+            value = (AddListElementRequest)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Request to add elements to a list property.
+    /// Creates a choice with the <see cref="Option.AddListElement"/> option.
     /// </summary>
     public static ConfirmedServiceRequest FromAddListElement(AddListElementRequest value)
     {
@@ -521,9 +729,24 @@ public partial record class ConfirmedServiceRequest
             return (RemoveListElementRequest)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.RemoveListElement"/>.
+    /// </summary>
+    public bool TryGetRemoveListElement(out RemoveListElementRequest value)
+    {
+        if (Choice == Option.RemoveListElement)
+        {
+            value = (RemoveListElementRequest)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Request to remove elements from a list property.
+    /// Creates a choice with the <see cref="Option.RemoveListElement"/> option.
     /// </summary>
     public static ConfirmedServiceRequest FromRemoveListElement(RemoveListElementRequest value)
     {
@@ -544,9 +767,24 @@ public partial record class ConfirmedServiceRequest
             return (CreateObjectRequest)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.CreateObject"/>.
+    /// </summary>
+    public bool TryGetCreateObject(out CreateObjectRequest value)
+    {
+        if (Choice == Option.CreateObject)
+        {
+            value = (CreateObjectRequest)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Request to create an object.
+    /// Creates a choice with the <see cref="Option.CreateObject"/> option.
     /// </summary>
     public static ConfirmedServiceRequest FromCreateObject(CreateObjectRequest value)
     {
@@ -567,9 +805,24 @@ public partial record class ConfirmedServiceRequest
             return (DeleteObjectRequest)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.DeleteObject"/>.
+    /// </summary>
+    public bool TryGetDeleteObject(out DeleteObjectRequest value)
+    {
+        if (Choice == Option.DeleteObject)
+        {
+            value = (DeleteObjectRequest)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Request to delete an object.
+    /// Creates a choice with the <see cref="Option.DeleteObject"/> option.
     /// </summary>
     public static ConfirmedServiceRequest FromDeleteObject(DeleteObjectRequest value)
     {
@@ -590,9 +843,24 @@ public partial record class ConfirmedServiceRequest
             return (ReadPropertyRequest)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.ReadProperty"/>.
+    /// </summary>
+    public bool TryGetReadProperty(out ReadPropertyRequest value)
+    {
+        if (Choice == Option.ReadProperty)
+        {
+            value = (ReadPropertyRequest)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Request to read a property.
+    /// Creates a choice with the <see cref="Option.ReadProperty"/> option.
     /// </summary>
     public static ConfirmedServiceRequest FromReadProperty(ReadPropertyRequest value)
     {
@@ -613,9 +881,24 @@ public partial record class ConfirmedServiceRequest
             return (ReadPropertyMultipleRequest)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.ReadPropertyMultiple"/>.
+    /// </summary>
+    public bool TryGetReadPropertyMultiple(out ReadPropertyMultipleRequest value)
+    {
+        if (Choice == Option.ReadPropertyMultiple)
+        {
+            value = (ReadPropertyMultipleRequest)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Request to read multiple properties.
+    /// Creates a choice with the <see cref="Option.ReadPropertyMultiple"/> option.
     /// </summary>
     public static ConfirmedServiceRequest FromReadPropertyMultiple(ReadPropertyMultipleRequest value)
     {
@@ -636,9 +919,24 @@ public partial record class ConfirmedServiceRequest
             return (ReadRangeRequest)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.ReadRange"/>.
+    /// </summary>
+    public bool TryGetReadRange(out ReadRangeRequest value)
+    {
+        if (Choice == Option.ReadRange)
+        {
+            value = (ReadRangeRequest)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Request to read a range from a list or log.
+    /// Creates a choice with the <see cref="Option.ReadRange"/> option.
     /// </summary>
     public static ConfirmedServiceRequest FromReadRange(ReadRangeRequest value)
     {
@@ -659,9 +957,24 @@ public partial record class ConfirmedServiceRequest
             return (WritePropertyRequest)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.WriteProperty"/>.
+    /// </summary>
+    public bool TryGetWriteProperty(out WritePropertyRequest value)
+    {
+        if (Choice == Option.WriteProperty)
+        {
+            value = (WritePropertyRequest)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Request to write a property.
+    /// Creates a choice with the <see cref="Option.WriteProperty"/> option.
     /// </summary>
     public static ConfirmedServiceRequest FromWriteProperty(WritePropertyRequest value)
     {
@@ -682,9 +995,24 @@ public partial record class ConfirmedServiceRequest
             return (WritePropertyMultipleRequest)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.WritePropertyMultiple"/>.
+    /// </summary>
+    public bool TryGetWritePropertyMultiple(out WritePropertyMultipleRequest value)
+    {
+        if (Choice == Option.WritePropertyMultiple)
+        {
+            value = (WritePropertyMultipleRequest)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Request to write multiple properties.
+    /// Creates a choice with the <see cref="Option.WritePropertyMultiple"/> option.
     /// </summary>
     public static ConfirmedServiceRequest FromWritePropertyMultiple(WritePropertyMultipleRequest value)
     {
@@ -705,9 +1033,24 @@ public partial record class ConfirmedServiceRequest
             return (AuditLogQueryRequest)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.AuditLogQuery"/>.
+    /// </summary>
+    public bool TryGetAuditLogQuery(out AuditLogQueryRequest value)
+    {
+        if (Choice == Option.AuditLogQuery)
+        {
+            value = (AuditLogQueryRequest)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Request to query the audit log.
+    /// Creates a choice with the <see cref="Option.AuditLogQuery"/> option.
     /// </summary>
     public static ConfirmedServiceRequest FromAuditLogQuery(AuditLogQueryRequest value)
     {
@@ -728,9 +1071,24 @@ public partial record class ConfirmedServiceRequest
             return (DeviceCommunicationControlRequest)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.DeviceCommunicationControl"/>.
+    /// </summary>
+    public bool TryGetDeviceCommunicationControl(out DeviceCommunicationControlRequest value)
+    {
+        if (Choice == Option.DeviceCommunicationControl)
+        {
+            value = (DeviceCommunicationControlRequest)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Request to control device communications.
+    /// Creates a choice with the <see cref="Option.DeviceCommunicationControl"/> option.
     /// </summary>
     public static ConfirmedServiceRequest FromDeviceCommunicationControl(DeviceCommunicationControlRequest value)
     {
@@ -751,9 +1109,24 @@ public partial record class ConfirmedServiceRequest
             return (ConfirmedPrivateTransferRequest)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.ConfirmedPrivateTransfer"/>.
+    /// </summary>
+    public bool TryGetConfirmedPrivateTransfer(out ConfirmedPrivateTransferRequest value)
+    {
+        if (Choice == Option.ConfirmedPrivateTransfer)
+        {
+            value = (ConfirmedPrivateTransferRequest)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Request for confirmed private transfer.
+    /// Creates a choice with the <see cref="Option.ConfirmedPrivateTransfer"/> option.
     /// </summary>
     public static ConfirmedServiceRequest FromConfirmedPrivateTransfer(ConfirmedPrivateTransferRequest value)
     {
@@ -774,9 +1147,24 @@ public partial record class ConfirmedServiceRequest
             return (ConfirmedTextMessageRequest)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.ConfirmedTextMessage"/>.
+    /// </summary>
+    public bool TryGetConfirmedTextMessage(out ConfirmedTextMessageRequest value)
+    {
+        if (Choice == Option.ConfirmedTextMessage)
+        {
+            value = (ConfirmedTextMessageRequest)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Request for a confirmed text message.
+    /// Creates a choice with the <see cref="Option.ConfirmedTextMessage"/> option.
     /// </summary>
     public static ConfirmedServiceRequest FromConfirmedTextMessage(ConfirmedTextMessageRequest value)
     {
@@ -797,9 +1185,24 @@ public partial record class ConfirmedServiceRequest
             return (ReinitializeDeviceRequest)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.ReinitializeDevice"/>.
+    /// </summary>
+    public bool TryGetReinitializeDevice(out ReinitializeDeviceRequest value)
+    {
+        if (Choice == Option.ReinitializeDevice)
+        {
+            value = (ReinitializeDeviceRequest)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Request to reinitialize a device.
+    /// Creates a choice with the <see cref="Option.ReinitializeDevice"/> option.
     /// </summary>
     public static ConfirmedServiceRequest FromReinitializeDevice(ReinitializeDeviceRequest value)
     {
@@ -820,9 +1223,24 @@ public partial record class ConfirmedServiceRequest
             return (AuthRequestRequest)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.AuthRequest"/>.
+    /// </summary>
+    public bool TryGetAuthRequest(out AuthRequestRequest value)
+    {
+        if (Choice == Option.AuthRequest)
+        {
+            value = (AuthRequestRequest)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Request for authentication services.
+    /// Creates a choice with the <see cref="Option.AuthRequest"/> option.
     /// </summary>
     public static ConfirmedServiceRequest FromAuthRequest(AuthRequestRequest value)
     {
@@ -843,9 +1261,24 @@ public partial record class ConfirmedServiceRequest
             return (VtOpenRequest)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.VtOpen"/>.
+    /// </summary>
+    public bool TryGetVtOpen(out VtOpenRequest value)
+    {
+        if (Choice == Option.VtOpen)
+        {
+            value = (VtOpenRequest)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Request to open a virtual terminal session.
+    /// Creates a choice with the <see cref="Option.VtOpen"/> option.
     /// </summary>
     public static ConfirmedServiceRequest FromVtOpen(VtOpenRequest value)
     {
@@ -866,9 +1299,24 @@ public partial record class ConfirmedServiceRequest
             return (VtCloseRequest)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.VtClose"/>.
+    /// </summary>
+    public bool TryGetVtClose(out VtCloseRequest value)
+    {
+        if (Choice == Option.VtClose)
+        {
+            value = (VtCloseRequest)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Request to close a virtual terminal session.
+    /// Creates a choice with the <see cref="Option.VtClose"/> option.
     /// </summary>
     public static ConfirmedServiceRequest FromVtClose(VtCloseRequest value)
     {
@@ -889,9 +1337,24 @@ public partial record class ConfirmedServiceRequest
             return (VtDataRequest)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.VtData"/>.
+    /// </summary>
+    public bool TryGetVtData(out VtDataRequest value)
+    {
+        if (Choice == Option.VtData)
+        {
+            value = (VtDataRequest)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Request to transfer virtual terminal data.
+    /// Creates a choice with the <see cref="Option.VtData"/> option.
     /// </summary>
     public static ConfirmedServiceRequest FromVtData(VtDataRequest value)
     {

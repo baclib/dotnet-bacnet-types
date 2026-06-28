@@ -12,12 +12,12 @@ public partial record class AuthorizationEvent
     /// The date and time when the authorization event occurred.
     /// </summary>
     public required DateTime Timestamp { get; init; }
-    
+
     /// <summary>
     /// The network address of the client requesting authorization.
     /// </summary>
     public required Address Address { get; init; }
-    
+
     /// <summary>
     /// Information about the authenticated client.
     /// </summary>
@@ -32,7 +32,7 @@ public partial record class AuthorizationEvent
     /// The authorization decision that was made.
     /// </summary>
     public required AuthorizationDecision Decision { get; init; }
-    
+
     /// <summary>
     /// Additional details about the authorization decision.
     /// </summary>

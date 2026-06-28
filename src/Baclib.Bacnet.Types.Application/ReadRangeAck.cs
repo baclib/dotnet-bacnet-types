@@ -12,12 +12,12 @@ public partial record class ReadRangeAck
     /// The identifier of the object being read.
     /// </summary>
     public required ObjectIdentifier ObjectIdentifier { get; init; }
-    
+
     /// <summary>
     /// The property identifier specifying the property being read.
     /// </summary>
     public required PropertyIdentifier PropertyIdentifier { get; init; }
-    
+
     /// <summary>
     /// Optional array index for the property.
     /// </summary>
@@ -27,17 +27,17 @@ public partial record class ReadRangeAck
     /// Flags indicating the position and availability of items in the result set.
     /// </summary>
     public required ResultFlags ResultFlags { get; init; }
-    
+
     /// <summary>
     /// The number of items returned in the result.
     /// </summary>
     public required Unsigned ItemCount { get; init; }
-    
+
     /// <summary>
     /// The data items returned in the result.
     /// </summary>
-    public required TItemData ItemData { get; init; }
-    
+    public required SequenceOf<Any> ItemData { get; init; }
+
     /// <summary>
     /// Optional sequence number of the first item in the result.
     /// </summary>

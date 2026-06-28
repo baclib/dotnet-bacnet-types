@@ -12,9 +12,9 @@ public partial record class VtOpenRequest
     /// The class of the virtual terminal to be opened.
     /// </summary>
     public required VtClass VtClass { get; init; }
-    
+
     /// <summary>
     /// The identifier assigned to the local VT session.
     /// </summary>
     public required Unsigned8 LocalVtSessionIdentifier { get; init; }
-    }
+}

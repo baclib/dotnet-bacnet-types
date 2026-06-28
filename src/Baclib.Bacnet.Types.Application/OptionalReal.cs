@@ -29,13 +29,11 @@ public partial record class OptionalReal
     /// </summary>
     public Option Choice { get; }
 
-    private object _choiceValue
-    {
-        get;
-    }
+    private readonly object _choiceValue;
 
     private OptionalReal(Option choice, object value)
     {
+        ArgumentNullException.ThrowIfNull(value);
         Choice = choice;
         _choiceValue = value;
     }
@@ -54,9 +52,24 @@ public partial record class OptionalReal
             return (Null)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.Null"/>.
+    /// </summary>
+    public bool TryGetNull(out Null value)
+    {
+        if (Choice == Option.Null)
+        {
+            value = (Null)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Indicates the absence of a real value.
+    /// Creates a choice with the <see cref="Option.Null"/> option.
     /// </summary>
     public static OptionalReal FromNull(Null value)
     {
@@ -77,9 +90,24 @@ public partial record class OptionalReal
             return (float)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.Real"/>.
+    /// </summary>
+    public bool TryGetReal(out float value)
+    {
+        if (Choice == Option.Real)
+        {
+            value = (float)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Specifies the BACnet real number value when present.
+    /// Creates a choice with the <see cref="Option.Real"/> option.
     /// </summary>
     public static OptionalReal FromReal(float value)
     {

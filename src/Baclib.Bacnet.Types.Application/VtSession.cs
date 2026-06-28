@@ -12,14 +12,14 @@ public partial record class VtSession
     /// The identifier for the local VT session.
     /// </summary>
     public required Unsigned8 LocalVtSessionId { get; init; }
-    
+
     /// <summary>
     /// The identifier for the remote VT session.
     /// </summary>
     public required Unsigned8 RemoteVtSessionId { get; init; }
-    
+
     /// <summary>
     /// The address of the remote VT session.
     /// </summary>
     public required Address RemoteVtAddress { get; init; }
-    }
+}

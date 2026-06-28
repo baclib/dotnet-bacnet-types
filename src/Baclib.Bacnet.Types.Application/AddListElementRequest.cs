@@ -12,12 +12,12 @@ public partial record class AddListElementRequest
     /// The object identifier containing the list property.
     /// </summary>
     public required ObjectIdentifier ObjectIdentifier { get; init; }
-    
+
     /// <summary>
     /// The property identifier of the list.
     /// </summary>
     public required PropertyIdentifier PropertyIdentifier { get; init; }
-    
+
     /// <summary>
     /// Optional array index if the property is an array.
     /// </summary>
@@ -27,4 +27,4 @@ public partial record class AddListElementRequest
     /// The elements to add to the list.
     /// </summary>
     public required Any ListOfElements { get; init; }
-    }
+}

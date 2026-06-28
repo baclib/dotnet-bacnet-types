@@ -12,12 +12,12 @@ public partial record class RemoveListElementRequest
     /// The identifier of the object from which elements are to be removed.
     /// </summary>
     public required ObjectIdentifier ObjectIdentifier { get; init; }
-    
+
     /// <summary>
     /// The property identifier specifying the list.
     /// </summary>
     public required PropertyIdentifier PropertyIdentifier { get; init; }
-    
+
     /// <summary>
     /// Optional array index for the property list.
     /// </summary>
@@ -27,4 +27,4 @@ public partial record class RemoveListElementRequest
     /// The elements to be removed from the list.
     /// </summary>
     public required Any ListOfElements { get; init; }
-    }
+}

@@ -11,5 +11,5 @@ public partial record class VtCloseRequest
     /// <summary>
     /// List of remote VT session identifiers to be closed.
     /// </summary>
-    public required TListOfRemoteVtSessionIdentifiers ListOfRemoteVtSessionIdentifiers { get; init; }
-    }
+    public required SequenceOf<Unsigned8> ListOfRemoteVtSessionIdentifiers { get; init; }
+}

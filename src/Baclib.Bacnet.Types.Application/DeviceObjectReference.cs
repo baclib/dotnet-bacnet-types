@@ -17,4 +17,4 @@ public partial record class DeviceObjectReference
     /// The identifier of the BACnet object being referenced.
     /// </summary>
     public required ObjectIdentifier ObjectIdentifier { get; init; }
-    }
+}

@@ -12,9 +12,9 @@ public partial record class ChangeListError
     /// The error that occurred during the change list operation.
     /// </summary>
     public required Error ErrorType { get; init; }
-    
+
     /// <summary>
     /// The index of the first element in the change list that failed.
     /// </summary>
     public required Unsigned FirstFailedElementNumber { get; init; }
-    }
+}

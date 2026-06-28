@@ -12,17 +12,17 @@ public partial record class RouterEntry
     /// The BACnet network number for the router entry.
     /// </summary>
     public required Unsigned16 NetworkNumber { get; init; }
-    
+
     /// <summary>
     /// The MAC address associated with the router entry.
     /// </summary>
     public required OctetString MacAddress { get; init; }
-    
+
     /// <summary>
     /// The current status of the router entry.
     /// </summary>
     public required TStatus Status { get; init; }
-    
+
     /// <summary>
     /// Optional performance index for the router entry.
     /// </summary>

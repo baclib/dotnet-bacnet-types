@@ -12,7 +12,7 @@ public partial record class LightingCommand
     /// The lighting operation to be performed.
     /// </summary>
     public required LightingOperation Operation { get; init; }
-    
+
     /// <summary>
     /// Optional target lighting level as a percentage (0-100%).
     /// </summary>

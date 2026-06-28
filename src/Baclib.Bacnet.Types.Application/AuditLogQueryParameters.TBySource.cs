@@ -14,7 +14,7 @@ public partial record class AuditLogQueryParameters
         /// The device identifier of the source device.
         /// </summary>
         public required ObjectIdentifier SourceDeviceIdentifier { get; init; }
-        
+    
         /// <summary>
         /// The network address of the source device.
         /// </summary>
@@ -34,5 +34,5 @@ public partial record class AuditLogQueryParameters
         /// Filter for successful or failed operations.
         /// </summary>
         public required SuccessFilter SuccessfulActionsOnly { get; init; }
-        }
+    }
 }

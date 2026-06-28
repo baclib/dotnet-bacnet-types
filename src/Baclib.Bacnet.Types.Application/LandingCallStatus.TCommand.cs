@@ -31,13 +31,11 @@ public partial record class LandingCallStatus
         /// </summary>
         public Option Choice { get; }
     
-        private object _choiceValue
-        {
-            get;
-        }
+        private readonly object _choiceValue;
     
         private TCommand(Option choice, object value)
         {
+            ArgumentNullException.ThrowIfNull(value);
             Choice = choice;
             _choiceValue = value;
         }
@@ -56,9 +54,24 @@ public partial record class LandingCallStatus
                 return (LiftCarDirection)_choiceValue;
             }
         }
+    
+        /// <summary>
+        /// Tries to get the value when the active choice is <see cref="Option.Direction"/>.
+        /// </summary>
+        public bool TryGetDirection(out LiftCarDirection value)
+        {
+            if (Choice == Option.Direction)
+            {
+                value = (LiftCarDirection)_choiceValue;
+                return true;
+            }
+    
+            value = default!;
+            return false;
+        }
         
         /// <summary>
-        /// Create function for The direction requested for the lift car (up or down).
+        /// Creates a choice with the <see cref="Option.Direction"/> option.
         /// </summary>
         public static TCommand FromDirection(LiftCarDirection value)
         {
@@ -79,9 +92,24 @@ public partial record class LandingCallStatus
                 return (Unsigned8)_choiceValue;
             }
         }
+    
+        /// <summary>
+        /// Tries to get the value when the active choice is <see cref="Option.Destination"/>.
+        /// </summary>
+        public bool TryGetDestination(out Unsigned8 value)
+        {
+            if (Choice == Option.Destination)
+            {
+                value = (Unsigned8)_choiceValue;
+                return true;
+            }
+    
+            value = default!;
+            return false;
+        }
         
         /// <summary>
-        /// Create function for The destination floor number for the call.
+        /// Creates a choice with the <see cref="Option.Destination"/> option.
         /// </summary>
         public static TCommand FromDestination(Unsigned8 value)
         {

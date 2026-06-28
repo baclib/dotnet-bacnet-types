@@ -14,10 +14,10 @@ public partial record class EventParameter
         /// The new value that triggers the event.
         /// </summary>
         public required TNewValue NewValue { get; init; }
-        
+    
         /// <summary>
         /// The status flags associated with the discrete value.
         /// </summary>
         public required StatusFlags StatusFlags { get; init; }
-        }
+    }
 }

@@ -12,12 +12,12 @@ public partial record class GroupChannelValue
     /// The channel number being controlled.
     /// </summary>
     public required Unsigned16 Channel { get; init; }
-    
+
     /// <summary>
     /// The value to be written to the channel.
     /// </summary>
     public required ChannelValue Value { get; init; }
-    
+
     /// <summary>
     /// Optional priority level for the channel value (1-16, where 1 is highest priority).
     /// </summary>

@@ -12,9 +12,9 @@ public partial record class Address
     /// The BACnet network number (0 for the local network).
     /// </summary>
     public required Unsigned16 NetworkNumber { get; init; }
-    
+
     /// <summary>
     /// The MAC address on the specified network.
     /// </summary>
     public required OctetString MacAddress { get; init; }
-    }
+}

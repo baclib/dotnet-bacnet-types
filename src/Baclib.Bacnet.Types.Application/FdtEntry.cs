@@ -12,14 +12,14 @@ public partial record class FdtEntry
     /// The BACnet/IP address of the foreign device.
     /// </summary>
     public required OctetString BacnetipAddress { get; init; }
-    
+
     /// <summary>
     /// The configured time-to-live value in seconds for this FDT entry.
     /// </summary>
     public required Unsigned16 TimeToLive { get; init; }
-    
+
     /// <summary>
     /// The remaining time in seconds before this FDT entry expires.
     /// </summary>
     public required Unsigned16 RemainingTimeToLive { get; init; }
-    }
+}

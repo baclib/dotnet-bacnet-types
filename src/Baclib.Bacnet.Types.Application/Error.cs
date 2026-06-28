@@ -12,9 +12,9 @@ public partial record class Error
     /// The class or category of the error.
     /// </summary>
     public required TErrorClass ErrorClass { get; init; }
-    
+
     /// <summary>
     /// The specific error code providing detailed information about the failure.
     /// </summary>
     public required TErrorCode ErrorCode { get; init; }
-    }
+}

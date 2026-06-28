@@ -12,22 +12,22 @@ public partial record class CovSubscription
     /// The recipient process that will receive COV notifications.
     /// </summary>
     public required RecipientProcess Recipient { get; init; }
-    
+
     /// <summary>
     /// Reference to the property being monitored for changes.
     /// </summary>
     public required ObjectPropertyReference MonitoredPropertyReference { get; init; }
-    
+
     /// <summary>
     /// Indicates whether confirmed notifications should be issued to the recipient.
     /// </summary>
     public required Boolean IssueConfirmedNotifications { get; init; }
-    
+
     /// <summary>
     /// The remaining time in seconds before this subscription expires.
     /// </summary>
     public required Unsigned TimeRemaining { get; init; }
-    
+
     /// <summary>
     /// The minimum change in value required to trigger a notification. Optional.
     /// </summary>

@@ -12,12 +12,12 @@ public partial record class PropertyAccessResult
     /// The identifier of the object whose property was accessed.
     /// </summary>
     public required ObjectIdentifier ObjectIdentifier { get; init; }
-    
+
     /// <summary>
     /// The property identifier specifying the property accessed.
     /// </summary>
     public required PropertyIdentifier PropertyIdentifier { get; init; }
-    
+
     /// <summary>
     /// Optional array index for the property.
     /// </summary>
@@ -32,4 +32,4 @@ public partial record class PropertyAccessResult
     /// The result of accessing the property, either a value or an error.
     /// </summary>
     public required TAccessResult AccessResult { get; init; }
-    }
+}

@@ -12,7 +12,7 @@ public partial record class AuthRequestError
     /// The error that occurred during the authentication request.
     /// </summary>
     public required Error ErrorType { get; init; }
-    
+
     /// <summary>
     /// Additional details about the error.
     /// </summary>

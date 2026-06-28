@@ -14,20 +14,20 @@ public partial record class EventParameter
         /// The minimum time in seconds that the condition must persist before triggering the event.
         /// </summary>
         public required Unsigned TimeDelay { get; init; }
-        
+    
         /// <summary>
         /// The low limit threshold value.
         /// </summary>
         public required Unsigned LowLimit { get; init; }
-        
+    
         /// <summary>
         /// The high limit threshold value.
         /// </summary>
         public required Unsigned HighLimit { get; init; }
-        
+    
         /// <summary>
         /// The deadband value to prevent rapid toggling of the event state.
         /// </summary>
         public required Unsigned Deadband { get; init; }
-        }
+    }
 }

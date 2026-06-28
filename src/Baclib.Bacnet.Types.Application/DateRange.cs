@@ -12,9 +12,9 @@ public partial record class DateRange
     /// The starting date of the range.
     /// </summary>
     public required Date StartDate { get; init; }
-    
+
     /// <summary>
     /// The ending date of the range.
     /// </summary>
     public required Date EndDate { get; init; }
-    }
+}

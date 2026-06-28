@@ -12,19 +12,19 @@ public partial record class IAmRequest
     /// The object identifier of the device making the announcement.
     /// </summary>
     public required ObjectIdentifier IAmDeviceIdentifier { get; init; }
-    
+
     /// <summary>
     /// The maximum APDU length in octets that this device can accept.
     /// </summary>
     public required Unsigned MaxApduLengthAccepted { get; init; }
-    
+
     /// <summary>
     /// The level of segmentation support provided by this device.
     /// </summary>
     public required Segmentation SegmentationSupported { get; init; }
-    
+
     /// <summary>
     /// The vendor identifier assigned to the manufacturer of this device.
     /// </summary>
     public required Unsigned16 VendorId { get; init; }
-    }
+}

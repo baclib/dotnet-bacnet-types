@@ -16,16 +16,16 @@ public partial record class AtomicWriteFileRequest
             /// The starting record number in the file.
             /// </summary>
             public required int FileStartRecord { get; init; }
-            
+        
             /// <summary>
             /// The number of records to write.
             /// </summary>
             public required Unsigned RecordCount { get; init; }
-            
+        
             /// <summary>
             /// A list of records to write to the file.
             /// </summary>
-            public required TFileRecordData FileRecordData { get; init; }
-            }
+            public required SequenceOf<OctetString> FileRecordData { get; init; }
+        }
     }
 }

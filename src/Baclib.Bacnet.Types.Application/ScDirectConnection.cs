@@ -12,22 +12,22 @@ public partial record class ScDirectConnection
     /// The URI of the direct connection.
     /// </summary>
     public required CharacterString Uri { get; init; }
-    
+
     /// <summary>
     /// The current state of the direct connection.
     /// </summary>
     public required ScConnectionState ConnectionState { get; init; }
-    
+
     /// <summary>
     /// Timestamp when the connection was established.
     /// </summary>
     public required DateTime ConnectTimestamp { get; init; }
-    
+
     /// <summary>
     /// Timestamp when the connection was disconnected.
     /// </summary>
     public required DateTime DisconnectTimestamp { get; init; }
-    
+
     /// <summary>
     /// Network address of the peer device. Optional.
     /// </summary>

@@ -12,7 +12,7 @@ public partial record class PropertyValue
     /// The identifier of the property whose value is given.
     /// </summary>
     public required PropertyIdentifier Identifier { get; init; }
-    
+
     /// <summary>
     /// The index within an array property, if applicable. Optional.
     /// </summary>
@@ -22,7 +22,7 @@ public partial record class PropertyValue
     /// The value of the specified property.
     /// </summary>
     public required Any Value { get; init; }
-    
+
     /// <summary>
     /// The priority of the value, if applicable. Optional.
     /// </summary>

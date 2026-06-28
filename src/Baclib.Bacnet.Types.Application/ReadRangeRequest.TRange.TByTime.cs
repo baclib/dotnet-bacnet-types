@@ -16,11 +16,11 @@ public partial record class ReadRangeRequest
             /// Reference time for the range.
             /// </summary>
             public required DateTime ReferenceTime { get; init; }
-            
+        
             /// <summary>
             /// Number of items to read from the reference time.
             /// </summary>
             public required Integer16 Count { get; init; }
-            }
+        }
     }
 }

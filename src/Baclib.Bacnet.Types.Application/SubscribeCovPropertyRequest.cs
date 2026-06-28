@@ -12,12 +12,12 @@ public partial record class SubscribeCovPropertyRequest
     /// The process identifier of the subscriber.
     /// </summary>
     public required Unsigned32 SubscriberProcessIdentifier { get; init; }
-    
+
     /// <summary>
     /// The identifier of the object to be monitored.
     /// </summary>
     public required ObjectIdentifier MonitoredObjectIdentifier { get; init; }
-    
+
     /// <summary>
     /// Indicates if confirmed notifications should be issued. Optional.
     /// </summary>
@@ -32,7 +32,7 @@ public partial record class SubscribeCovPropertyRequest
     /// The property of the object to be monitored.
     /// </summary>
     public required PropertyReference MonitoredPropertyIdentifier { get; init; }
-    
+
     /// <summary>
     /// The minimum change in value required to trigger a notification. Optional.
     /// </summary>

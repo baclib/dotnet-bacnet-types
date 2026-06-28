@@ -36,13 +36,11 @@ public partial record class AuditLogRecord
         /// </summary>
         public Option Choice { get; }
     
-        private object _choiceValue
-        {
-            get;
-        }
+        private readonly object _choiceValue;
     
         private TLogDatum(Option choice, object value)
         {
+            ArgumentNullException.ThrowIfNull(value);
             Choice = choice;
             _choiceValue = value;
         }
@@ -61,9 +59,24 @@ public partial record class AuditLogRecord
                 return (LogStatus)_choiceValue;
             }
         }
+    
+        /// <summary>
+        /// Tries to get the value when the active choice is <see cref="Option.LogStatus"/>.
+        /// </summary>
+        public bool TryGetLogStatus(out LogStatus value)
+        {
+            if (Choice == Option.LogStatus)
+            {
+                value = (LogStatus)_choiceValue;
+                return true;
+            }
+    
+            value = default!;
+            return false;
+        }
         
         /// <summary>
-        /// Create function for A log status change event.
+        /// Creates a choice with the <see cref="Option.LogStatus"/> option.
         /// </summary>
         public static TLogDatum FromLogStatus(LogStatus value)
         {
@@ -84,9 +97,24 @@ public partial record class AuditLogRecord
                 return (AuditNotification)_choiceValue;
             }
         }
+    
+        /// <summary>
+        /// Tries to get the value when the active choice is <see cref="Option.AuditNotification"/>.
+        /// </summary>
+        public bool TryGetAuditNotification(out AuditNotification value)
+        {
+            if (Choice == Option.AuditNotification)
+            {
+                value = (AuditNotification)_choiceValue;
+                return true;
+            }
+    
+            value = default!;
+            return false;
+        }
         
         /// <summary>
-        /// Create function for An audit notification event.
+        /// Creates a choice with the <see cref="Option.AuditNotification"/> option.
         /// </summary>
         public static TLogDatum FromAuditNotification(AuditNotification value)
         {
@@ -107,9 +135,24 @@ public partial record class AuditLogRecord
                 return (float)_choiceValue;
             }
         }
+    
+        /// <summary>
+        /// Tries to get the value when the active choice is <see cref="Option.TimeChange"/>.
+        /// </summary>
+        public bool TryGetTimeChange(out float value)
+        {
+            if (Choice == Option.TimeChange)
+            {
+                value = (float)_choiceValue;
+                return true;
+            }
+    
+            value = default!;
+            return false;
+        }
         
         /// <summary>
-        /// Create function for A time change event indicating the magnitude of the time adjustment.
+        /// Creates a choice with the <see cref="Option.TimeChange"/> option.
         /// </summary>
         public static TLogDatum FromTimeChange(float value)
         {

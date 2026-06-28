@@ -14,10 +14,10 @@ public partial record class FaultParameter
         /// The minimum value of the normal operating range.
         /// </summary>
         public required TMinNormalValue MinNormalValue { get; init; }
-        
+    
         /// <summary>
         /// The maximum value of the normal operating range.
         /// </summary>
         public required TMaxNormalValue MaxNormalValue { get; init; }
-        }
+    }
 }

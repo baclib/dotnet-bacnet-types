@@ -12,9 +12,9 @@ public partial record class CredentialAuthenticationFactor
     /// Indicates whether this authentication factor is disabled.
     /// </summary>
     public required AccessAuthenticationFactorDisable Disable { get; init; }
-    
+
     /// <summary>
     /// The authentication factor details.
     /// </summary>
     public required AuthenticationFactor AuthenticationFactor { get; init; }
-    }
+}

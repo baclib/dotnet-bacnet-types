@@ -73,13 +73,11 @@ public partial record class NotificationParameters
             /// </summary>
             public Option Choice { get; }
         
-            private object _choiceValue
-            {
-                get;
-            }
+            private readonly object _choiceValue;
         
             private TNewValue(Option choice, object value)
             {
+                ArgumentNullException.ThrowIfNull(value);
                 Choice = choice;
                 _choiceValue = value;
             }
@@ -98,9 +96,24 @@ public partial record class NotificationParameters
                     return (Boolean)_choiceValue;
                 }
             }
+        
+            /// <summary>
+            /// Tries to get the value when the active choice is <see cref="Option.Boolean"/>.
+            /// </summary>
+            public bool TryGetBoolean(out Boolean value)
+            {
+                if (Choice == Option.Boolean)
+                {
+                    value = (Boolean)_choiceValue;
+                    return true;
+                }
+        
+                value = default!;
+                return false;
+            }
             
             /// <summary>
-            /// Create function for A boolean discrete value.
+            /// Creates a choice with the <see cref="Option.Boolean"/> option.
             /// </summary>
             public static TNewValue FromBoolean(Boolean value)
             {
@@ -121,9 +134,24 @@ public partial record class NotificationParameters
                     return (Unsigned)_choiceValue;
                 }
             }
+        
+            /// <summary>
+            /// Tries to get the value when the active choice is <see cref="Option.Unsigned"/>.
+            /// </summary>
+            public bool TryGetUnsigned(out Unsigned value)
+            {
+                if (Choice == Option.Unsigned)
+                {
+                    value = (Unsigned)_choiceValue;
+                    return true;
+                }
+        
+                value = default!;
+                return false;
+            }
             
             /// <summary>
-            /// Create function for An unsigned integer discrete value.
+            /// Creates a choice with the <see cref="Option.Unsigned"/> option.
             /// </summary>
             public static TNewValue FromUnsigned(Unsigned value)
             {
@@ -144,9 +172,24 @@ public partial record class NotificationParameters
                     return (int)_choiceValue;
                 }
             }
+        
+            /// <summary>
+            /// Tries to get the value when the active choice is <see cref="Option.Integer"/>.
+            /// </summary>
+            public bool TryGetInteger(out int value)
+            {
+                if (Choice == Option.Integer)
+                {
+                    value = (int)_choiceValue;
+                    return true;
+                }
+        
+                value = default!;
+                return false;
+            }
             
             /// <summary>
-            /// Create function for A signed integer discrete value.
+            /// Creates a choice with the <see cref="Option.Integer"/> option.
             /// </summary>
             public static TNewValue FromInteger(int value)
             {
@@ -167,9 +210,24 @@ public partial record class NotificationParameters
                     return (Enumerated)_choiceValue;
                 }
             }
+        
+            /// <summary>
+            /// Tries to get the value when the active choice is <see cref="Option.Enumerated"/>.
+            /// </summary>
+            public bool TryGetEnumerated(out Enumerated value)
+            {
+                if (Choice == Option.Enumerated)
+                {
+                    value = (Enumerated)_choiceValue;
+                    return true;
+                }
+        
+                value = default!;
+                return false;
+            }
             
             /// <summary>
-            /// Create function for An enumerated discrete value.
+            /// Creates a choice with the <see cref="Option.Enumerated"/> option.
             /// </summary>
             public static TNewValue FromEnumerated(Enumerated value)
             {
@@ -190,9 +248,24 @@ public partial record class NotificationParameters
                     return (CharacterString)_choiceValue;
                 }
             }
+        
+            /// <summary>
+            /// Tries to get the value when the active choice is <see cref="Option.Characterstring"/>.
+            /// </summary>
+            public bool TryGetCharacterstring(out CharacterString value)
+            {
+                if (Choice == Option.Characterstring)
+                {
+                    value = (CharacterString)_choiceValue;
+                    return true;
+                }
+        
+                value = default!;
+                return false;
+            }
             
             /// <summary>
-            /// Create function for A character string discrete value.
+            /// Creates a choice with the <see cref="Option.Characterstring"/> option.
             /// </summary>
             public static TNewValue FromCharacterstring(CharacterString value)
             {
@@ -213,9 +286,24 @@ public partial record class NotificationParameters
                     return (OctetString)_choiceValue;
                 }
             }
+        
+            /// <summary>
+            /// Tries to get the value when the active choice is <see cref="Option.Octetstring"/>.
+            /// </summary>
+            public bool TryGetOctetstring(out OctetString value)
+            {
+                if (Choice == Option.Octetstring)
+                {
+                    value = (OctetString)_choiceValue;
+                    return true;
+                }
+        
+                value = default!;
+                return false;
+            }
             
             /// <summary>
-            /// Create function for An octet string discrete value.
+            /// Creates a choice with the <see cref="Option.Octetstring"/> option.
             /// </summary>
             public static TNewValue FromOctetstring(OctetString value)
             {
@@ -236,9 +324,24 @@ public partial record class NotificationParameters
                     return (Date)_choiceValue;
                 }
             }
+        
+            /// <summary>
+            /// Tries to get the value when the active choice is <see cref="Option.Date"/>.
+            /// </summary>
+            public bool TryGetDate(out Date value)
+            {
+                if (Choice == Option.Date)
+                {
+                    value = (Date)_choiceValue;
+                    return true;
+                }
+        
+                value = default!;
+                return false;
+            }
             
             /// <summary>
-            /// Create function for A date discrete value.
+            /// Creates a choice with the <see cref="Option.Date"/> option.
             /// </summary>
             public static TNewValue FromDate(Date value)
             {
@@ -259,9 +362,24 @@ public partial record class NotificationParameters
                     return (Time)_choiceValue;
                 }
             }
+        
+            /// <summary>
+            /// Tries to get the value when the active choice is <see cref="Option.Time"/>.
+            /// </summary>
+            public bool TryGetTime(out Time value)
+            {
+                if (Choice == Option.Time)
+                {
+                    value = (Time)_choiceValue;
+                    return true;
+                }
+        
+                value = default!;
+                return false;
+            }
             
             /// <summary>
-            /// Create function for A time discrete value.
+            /// Creates a choice with the <see cref="Option.Time"/> option.
             /// </summary>
             public static TNewValue FromTime(Time value)
             {
@@ -282,9 +400,24 @@ public partial record class NotificationParameters
                     return (ObjectIdentifier)_choiceValue;
                 }
             }
+        
+            /// <summary>
+            /// Tries to get the value when the active choice is <see cref="Option.Objectidentifier"/>.
+            /// </summary>
+            public bool TryGetObjectidentifier(out ObjectIdentifier value)
+            {
+                if (Choice == Option.Objectidentifier)
+                {
+                    value = (ObjectIdentifier)_choiceValue;
+                    return true;
+                }
+        
+                value = default!;
+                return false;
+            }
             
             /// <summary>
-            /// Create function for An object identifier discrete value.
+            /// Creates a choice with the <see cref="Option.Objectidentifier"/> option.
             /// </summary>
             public static TNewValue FromObjectidentifier(ObjectIdentifier value)
             {
@@ -305,9 +438,24 @@ public partial record class NotificationParameters
                     return (DateTime)_choiceValue;
                 }
             }
+        
+            /// <summary>
+            /// Tries to get the value when the active choice is <see cref="Option.Datetime"/>.
+            /// </summary>
+            public bool TryGetDatetime(out DateTime value)
+            {
+                if (Choice == Option.Datetime)
+                {
+                    value = (DateTime)_choiceValue;
+                    return true;
+                }
+        
+                value = default!;
+                return false;
+            }
             
             /// <summary>
-            /// Create function for A date-time discrete value.
+            /// Creates a choice with the <see cref="Option.Datetime"/> option.
             /// </summary>
             public static TNewValue FromDatetime(DateTime value)
             {

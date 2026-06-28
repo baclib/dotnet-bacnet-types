@@ -12,9 +12,9 @@ public partial record class XyColor
     /// The x chromaticity coordinate.
     /// </summary>
     public required float XCoordinate { get; init; }
-    
+
     /// <summary>
     /// The y chromaticity coordinate.
     /// </summary>
     public required float YCoordinate { get; init; }
-    }
+}

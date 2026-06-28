@@ -34,13 +34,11 @@ public partial record class HostAddress
     /// </summary>
     public Option Choice { get; }
 
-    private object _choiceValue
-    {
-        get;
-    }
+    private readonly object _choiceValue;
 
     private HostAddress(Option choice, object value)
     {
+        ArgumentNullException.ThrowIfNull(value);
         Choice = choice;
         _choiceValue = value;
     }
@@ -59,9 +57,24 @@ public partial record class HostAddress
             return (Null)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.None"/>.
+    /// </summary>
+    public bool TryGetNone(out Null value)
+    {
+        if (Choice == Option.None)
+        {
+            value = (Null)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for No host address specified.
+    /// Creates a choice with the <see cref="Option.None"/> option.
     /// </summary>
     public static HostAddress FromNone(Null value)
     {
@@ -82,9 +95,24 @@ public partial record class HostAddress
             return (OctetString)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.IpAddress"/>.
+    /// </summary>
+    public bool TryGetIpAddress(out OctetString value)
+    {
+        if (Choice == Option.IpAddress)
+        {
+            value = (OctetString)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for An IP address represented as an octet string (IPv4 or IPv6).
+    /// Creates a choice with the <see cref="Option.IpAddress"/> option.
     /// </summary>
     public static HostAddress FromIpAddress(OctetString value)
     {
@@ -105,9 +133,24 @@ public partial record class HostAddress
             return (CharacterString)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.Name"/>.
+    /// </summary>
+    public bool TryGetName(out CharacterString value)
+    {
+        if (Choice == Option.Name)
+        {
+            value = (CharacterString)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for A hostname or domain name as a character string.
+    /// Creates a choice with the <see cref="Option.Name"/> option.
     /// </summary>
     public static HostAddress FromName(CharacterString value)
     {

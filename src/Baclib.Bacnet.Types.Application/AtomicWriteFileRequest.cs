@@ -12,9 +12,9 @@ public partial record class AtomicWriteFileRequest
     /// The object identifier of the file to write to.
     /// </summary>
     public required ObjectIdentifier FileIdentifier { get; init; }
-    
+
     /// <summary>
     /// The access method and data to write.
     /// </summary>
     public required TAccessMethod AccessMethod { get; init; }
-    }
+}

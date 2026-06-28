@@ -29,13 +29,11 @@ public partial record class OptionalDouble
     /// </summary>
     public Option Choice { get; }
 
-    private object _choiceValue
-    {
-        get;
-    }
+    private readonly object _choiceValue;
 
     private OptionalDouble(Option choice, object value)
     {
+        ArgumentNullException.ThrowIfNull(value);
         Choice = choice;
         _choiceValue = value;
     }
@@ -54,9 +52,24 @@ public partial record class OptionalDouble
             return (Null)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.Null"/>.
+    /// </summary>
+    public bool TryGetNull(out Null value)
+    {
+        if (Choice == Option.Null)
+        {
+            value = (Null)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Indicates the absence of a double value.
+    /// Creates a choice with the <see cref="Option.Null"/> option.
     /// </summary>
     public static OptionalDouble FromNull(Null value)
     {
@@ -77,9 +90,24 @@ public partial record class OptionalDouble
             return (double)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.Double"/>.
+    /// </summary>
+    public bool TryGetDouble(out double value)
+    {
+        if (Choice == Option.Double)
+        {
+            value = (double)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Specifies the BACnet double value when present.
+    /// Creates a choice with the <see cref="Option.Double"/> option.
     /// </summary>
     public static OptionalDouble FromDouble(double value)
     {

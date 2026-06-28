@@ -12,17 +12,17 @@ public partial record class WriteGroupRequest
     /// The group number identifying the set of channels to write.
     /// </summary>
     public required Unsigned32 GroupNumber { get; init; }
-    
+
     /// <summary>
     /// The priority to use for the write operation.
     /// </summary>
     public required TWritePriority WritePriority { get; init; }
-    
+
     /// <summary>
     /// A list of values to be written to the group channels.
     /// </summary>
-    public required TChangeList ChangeList { get; init; }
-    
+    public required SequenceOf<GroupChannelValue> ChangeList { get; init; }
+
     /// <summary>
     /// If true, delays the write operation. Optional.
     /// </summary>

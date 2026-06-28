@@ -104,13 +104,11 @@ public partial record class TimerStateChangeValue
     /// </summary>
     public Option Choice { get; }
 
-    private object _choiceValue
-    {
-        get;
-    }
+    private readonly object _choiceValue;
 
     private TimerStateChangeValue(Option choice, object value)
     {
+        ArgumentNullException.ThrowIfNull(value);
         Choice = choice;
         _choiceValue = value;
     }
@@ -129,9 +127,24 @@ public partial record class TimerStateChangeValue
             return (Null)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.Null"/>.
+    /// </summary>
+    public bool TryGetNull(out Null value)
+    {
+        if (Choice == Option.Null)
+        {
+            value = (Null)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for No value specified.
+    /// Creates a choice with the <see cref="Option.Null"/> option.
     /// </summary>
     public static TimerStateChangeValue FromNull(Null value)
     {
@@ -152,9 +165,24 @@ public partial record class TimerStateChangeValue
             return (Boolean)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.Boolean"/>.
+    /// </summary>
+    public bool TryGetBoolean(out Boolean value)
+    {
+        if (Choice == Option.Boolean)
+        {
+            value = (Boolean)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for A boolean value.
+    /// Creates a choice with the <see cref="Option.Boolean"/> option.
     /// </summary>
     public static TimerStateChangeValue FromBoolean(Boolean value)
     {
@@ -175,9 +203,24 @@ public partial record class TimerStateChangeValue
             return (Unsigned)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.Unsigned"/>.
+    /// </summary>
+    public bool TryGetUnsigned(out Unsigned value)
+    {
+        if (Choice == Option.Unsigned)
+        {
+            value = (Unsigned)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for An unsigned integer value.
+    /// Creates a choice with the <see cref="Option.Unsigned"/> option.
     /// </summary>
     public static TimerStateChangeValue FromUnsigned(Unsigned value)
     {
@@ -198,9 +241,24 @@ public partial record class TimerStateChangeValue
             return (int)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.Integer"/>.
+    /// </summary>
+    public bool TryGetInteger(out int value)
+    {
+        if (Choice == Option.Integer)
+        {
+            value = (int)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for A signed integer value.
+    /// Creates a choice with the <see cref="Option.Integer"/> option.
     /// </summary>
     public static TimerStateChangeValue FromInteger(int value)
     {
@@ -221,9 +279,24 @@ public partial record class TimerStateChangeValue
             return (float)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.Real"/>.
+    /// </summary>
+    public bool TryGetReal(out float value)
+    {
+        if (Choice == Option.Real)
+        {
+            value = (float)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for A real (floating-point) value.
+    /// Creates a choice with the <see cref="Option.Real"/> option.
     /// </summary>
     public static TimerStateChangeValue FromReal(float value)
     {
@@ -244,9 +317,24 @@ public partial record class TimerStateChangeValue
             return (double)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.Double"/>.
+    /// </summary>
+    public bool TryGetDouble(out double value)
+    {
+        if (Choice == Option.Double)
+        {
+            value = (double)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for A double-precision floating-point value.
+    /// Creates a choice with the <see cref="Option.Double"/> option.
     /// </summary>
     public static TimerStateChangeValue FromDouble(double value)
     {
@@ -267,9 +355,24 @@ public partial record class TimerStateChangeValue
             return (OctetString)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.Octetstring"/>.
+    /// </summary>
+    public bool TryGetOctetstring(out OctetString value)
+    {
+        if (Choice == Option.Octetstring)
+        {
+            value = (OctetString)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for An octet string value.
+    /// Creates a choice with the <see cref="Option.Octetstring"/> option.
     /// </summary>
     public static TimerStateChangeValue FromOctetstring(OctetString value)
     {
@@ -290,9 +393,24 @@ public partial record class TimerStateChangeValue
             return (CharacterString)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.Characterstring"/>.
+    /// </summary>
+    public bool TryGetCharacterstring(out CharacterString value)
+    {
+        if (Choice == Option.Characterstring)
+        {
+            value = (CharacterString)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for A character string value.
+    /// Creates a choice with the <see cref="Option.Characterstring"/> option.
     /// </summary>
     public static TimerStateChangeValue FromCharacterstring(CharacterString value)
     {
@@ -313,9 +431,24 @@ public partial record class TimerStateChangeValue
             return (BitString)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.Bitstring"/>.
+    /// </summary>
+    public bool TryGetBitstring(out BitString value)
+    {
+        if (Choice == Option.Bitstring)
+        {
+            value = (BitString)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for A bit string value.
+    /// Creates a choice with the <see cref="Option.Bitstring"/> option.
     /// </summary>
     public static TimerStateChangeValue FromBitstring(BitString value)
     {
@@ -336,9 +469,24 @@ public partial record class TimerStateChangeValue
             return (Enumerated)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.Enumerated"/>.
+    /// </summary>
+    public bool TryGetEnumerated(out Enumerated value)
+    {
+        if (Choice == Option.Enumerated)
+        {
+            value = (Enumerated)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for An enumerated value.
+    /// Creates a choice with the <see cref="Option.Enumerated"/> option.
     /// </summary>
     public static TimerStateChangeValue FromEnumerated(Enumerated value)
     {
@@ -359,9 +507,24 @@ public partial record class TimerStateChangeValue
             return (DatePattern)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.Date"/>.
+    /// </summary>
+    public bool TryGetDate(out DatePattern value)
+    {
+        if (Choice == Option.Date)
+        {
+            value = (DatePattern)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for A date pattern value.
+    /// Creates a choice with the <see cref="Option.Date"/> option.
     /// </summary>
     public static TimerStateChangeValue FromDate(DatePattern value)
     {
@@ -382,9 +545,24 @@ public partial record class TimerStateChangeValue
             return (TimePattern)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.Time"/>.
+    /// </summary>
+    public bool TryGetTime(out TimePattern value)
+    {
+        if (Choice == Option.Time)
+        {
+            value = (TimePattern)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for A time pattern value.
+    /// Creates a choice with the <see cref="Option.Time"/> option.
     /// </summary>
     public static TimerStateChangeValue FromTime(TimePattern value)
     {
@@ -405,9 +583,24 @@ public partial record class TimerStateChangeValue
             return (ObjectIdentifier)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.Objectidentifier"/>.
+    /// </summary>
+    public bool TryGetObjectidentifier(out ObjectIdentifier value)
+    {
+        if (Choice == Option.Objectidentifier)
+        {
+            value = (ObjectIdentifier)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for An object identifier value.
+    /// Creates a choice with the <see cref="Option.Objectidentifier"/> option.
     /// </summary>
     public static TimerStateChangeValue FromObjectidentifier(ObjectIdentifier value)
     {
@@ -428,9 +621,24 @@ public partial record class TimerStateChangeValue
             return (Null)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.NoValue"/>.
+    /// </summary>
+    public bool TryGetNoValue(out Null value)
+    {
+        if (Choice == Option.NoValue)
+        {
+            value = (Null)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for No value present (context-specific).
+    /// Creates a choice with the <see cref="Option.NoValue"/> option.
     /// </summary>
     public static TimerStateChangeValue FromNoValue(Null value)
     {
@@ -451,9 +659,24 @@ public partial record class TimerStateChangeValue
             return (Any)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.ConstructedValue"/>.
+    /// </summary>
+    public bool TryGetConstructedValue(out Any value)
+    {
+        if (Choice == Option.ConstructedValue)
+        {
+            value = (Any)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for A constructed value (context-specific).
+    /// Creates a choice with the <see cref="Option.ConstructedValue"/> option.
     /// </summary>
     public static TimerStateChangeValue FromConstructedValue(Any value)
     {
@@ -474,9 +697,24 @@ public partial record class TimerStateChangeValue
             return (DateTime)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.Datetime"/>.
+    /// </summary>
+    public bool TryGetDatetime(out DateTime value)
+    {
+        if (Choice == Option.Datetime)
+        {
+            value = (DateTime)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for A date and time value (context-specific).
+    /// Creates a choice with the <see cref="Option.Datetime"/> option.
     /// </summary>
     public static TimerStateChangeValue FromDatetime(DateTime value)
     {
@@ -497,9 +735,24 @@ public partial record class TimerStateChangeValue
             return (LightingCommand)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.LightingCommand"/>.
+    /// </summary>
+    public bool TryGetLightingCommand(out LightingCommand value)
+    {
+        if (Choice == Option.LightingCommand)
+        {
+            value = (LightingCommand)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for A lighting command value (context-specific).
+    /// Creates a choice with the <see cref="Option.LightingCommand"/> option.
     /// </summary>
     public static TimerStateChangeValue FromLightingCommand(LightingCommand value)
     {

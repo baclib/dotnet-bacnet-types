@@ -12,9 +12,9 @@ public partial record class AtomicReadFileAck
     /// Indicates whether the end of the file has been reached.
     /// </summary>
     public required Boolean EndOfFile { get; init; }
-    
+
     /// <summary>
     /// The access method and data that was read.
     /// </summary>
     public required TAccessMethod AccessMethod { get; init; }
-    }
+}

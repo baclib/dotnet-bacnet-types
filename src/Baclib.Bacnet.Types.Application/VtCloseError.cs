@@ -12,9 +12,9 @@ public partial record class VtCloseError
     /// The type of error that occurred during VT-Close.
     /// </summary>
     public required Error ErrorType { get; init; }
-    
+
     /// <summary>
     /// Optional list of VT session identifiers related to the error.
     /// </summary>
-    public Optional<TListOfVtSessionIdentifiers> ListOfVtSessionIdentifiers { get; init; }
+    public Optional<SequenceOf<Unsigned8>> ListOfVtSessionIdentifiers { get; init; }
 }

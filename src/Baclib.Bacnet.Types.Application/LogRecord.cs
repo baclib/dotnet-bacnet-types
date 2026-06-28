@@ -12,12 +12,12 @@ public partial record class LogRecord
     /// The date and time when the log entry was recorded.
     /// </summary>
     public required DateTime Timestamp { get; init; }
-    
+
     /// <summary>
     /// The actual data recorded in this log entry, which can be of various types.
     /// </summary>
     public required TLogDatum LogDatum { get; init; }
-    
+
     /// <summary>
     /// Optional status flags indicating the state of the logged object at the time of recording.
     /// </summary>

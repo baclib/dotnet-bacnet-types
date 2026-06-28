@@ -12,9 +12,9 @@ public partial record class DateTime
     /// The date component.
     /// </summary>
     public required Date Date { get; init; }
-    
+
     /// <summary>
     /// The time component.
     /// </summary>
     public required Time Time { get; init; }
-    }
+}

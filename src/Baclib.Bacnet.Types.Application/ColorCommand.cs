@@ -12,7 +12,7 @@ public partial record class ColorCommand
     /// The color operation to be performed.
     /// </summary>
     public required ColorOperation Operation { get; init; }
-    
+
     /// <summary>
     /// The target color in XY color space. Optional.
     /// </summary>

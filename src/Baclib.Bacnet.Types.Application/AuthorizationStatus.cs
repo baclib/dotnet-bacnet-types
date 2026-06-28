@@ -12,7 +12,7 @@ public partial record class AuthorizationStatus
     /// The current configuration posture of the authorization system.
     /// </summary>
     public required AuthorizationPosture Posture { get; init; }
-    
+
     /// <summary>
     /// Error information if the authorization system is in an error state.
     /// </summary>
@@ -31,20 +31,20 @@ public partial record class AuthorizationStatus
     /// <summary>
     /// A list of recent successful authentication events.
     /// </summary>
-    public Optional<TAuthenticationSuccess> AuthenticationSuccess { get; init; }
+    public Optional<SequenceOf<AuthenticationEvent>> AuthenticationSuccess { get; init; }
 
     /// <summary>
     /// A list of recent failed authentication events.
     /// </summary>
-    public Optional<TAuthenticationFailure> AuthenticationFailure { get; init; }
+    public Optional<SequenceOf<AuthenticationEvent>> AuthenticationFailure { get; init; }
 
     /// <summary>
     /// A list of recent successful authorization events.
     /// </summary>
-    public Optional<TAuthorizationSuccess> AuthorizationSuccess { get; init; }
+    public Optional<SequenceOf<AuthorizationEvent>> AuthorizationSuccess { get; init; }
 
     /// <summary>
     /// A list of recent failed authorization events.
     /// </summary>
-    public Optional<TAuthorizationFailure> AuthorizationFailure { get; init; }
+    public Optional<SequenceOf<AuthorizationEvent>> AuthorizationFailure { get; init; }
 }

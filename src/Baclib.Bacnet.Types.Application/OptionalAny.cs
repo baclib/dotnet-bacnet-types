@@ -29,13 +29,11 @@ public partial record class OptionalAny
     /// </summary>
     public Option Choice { get; }
 
-    private object _choiceValue
-    {
-        get;
-    }
+    private readonly object _choiceValue;
 
     private OptionalAny(Option choice, object value)
     {
+        ArgumentNullException.ThrowIfNull(value);
         Choice = choice;
         _choiceValue = value;
     }
@@ -54,9 +52,24 @@ public partial record class OptionalAny
             return (Null)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.Null"/>.
+    /// </summary>
+    public bool TryGetNull(out Null value)
+    {
+        if (Choice == Option.Null)
+        {
+            value = (Null)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Indicates the absence of a value.
+    /// Creates a choice with the <see cref="Option.Null"/> option.
     /// </summary>
     public static OptionalAny FromNull(Null value)
     {
@@ -77,9 +90,24 @@ public partial record class OptionalAny
             return (Any)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.Any"/>.
+    /// </summary>
+    public bool TryGetAny(out Any value)
+    {
+        if (Choice == Option.Any)
+        {
+            value = (Any)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Specifies a BACnet value of any type when present.
+    /// Creates a choice with the <see cref="Option.Any"/> option.
     /// </summary>
     public static OptionalAny FromAny(Any value)
     {

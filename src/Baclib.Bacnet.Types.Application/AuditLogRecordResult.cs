@@ -12,9 +12,9 @@ public partial record class AuditLogRecordResult
     /// The sequence number of this audit log record.
     /// </summary>
     public required Unsigned64 SequenceNumber { get; init; }
-    
+
     /// <summary>
     /// The audit log record data.
     /// </summary>
     public required AuditLogRecord LogRecord { get; init; }
-    }
+}

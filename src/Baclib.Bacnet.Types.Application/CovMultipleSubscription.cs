@@ -12,24 +12,24 @@ public partial record class CovMultipleSubscription
     /// The recipient process that will receive COV notifications.
     /// </summary>
     public required RecipientProcess Recipient { get; init; }
-    
+
     /// <summary>
     /// Indicates whether confirmed notifications should be issued to the recipient.
     /// </summary>
     public required Boolean IssueConfirmedNotifications { get; init; }
-    
+
     /// <summary>
     /// The remaining time in seconds before this subscription expires.
     /// </summary>
     public required Unsigned TimeRemaining { get; init; }
-    
+
     /// <summary>
     /// The maximum time in seconds that notifications may be delayed for batching.
     /// </summary>
     public required Unsigned MaxNotificationDelay { get; init; }
-    
+
     /// <summary>
     /// A list of object and property specifications for COV monitoring.
     /// </summary>
-    public required TListOfCovSubscriptionSpecifications ListOfCovSubscriptionSpecifications { get; init; }
-    }
+    public required SequenceOf<TListOfCovSubscriptionSpecificationsItem> ListOfCovSubscriptionSpecifications { get; init; }
+}

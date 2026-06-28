@@ -12,12 +12,12 @@ public partial record class ReadRangeRequest
     /// The identifier of the object to read from.
     /// </summary>
     public required ObjectIdentifier ObjectIdentifier { get; init; }
-    
+
     /// <summary>
     /// The property identifier specifying the property to read.
     /// </summary>
     public required PropertyIdentifier PropertyIdentifier { get; init; }
-    
+
     /// <summary>
     /// Optional array index for the property.
     /// </summary>

@@ -12,9 +12,9 @@ public partial record class ReadAccessSpecification
     /// The identifier of the object to read from.
     /// </summary>
     public required ObjectIdentifier ObjectIdentifier { get; init; }
-    
+
     /// <summary>
     /// A list of property references to be read from the object.
     /// </summary>
-    public required TListOfPropertyReferences ListOfPropertyReferences { get; init; }
-    }
+    public required SequenceOf<PropertyReference> ListOfPropertyReferences { get; init; }
+}

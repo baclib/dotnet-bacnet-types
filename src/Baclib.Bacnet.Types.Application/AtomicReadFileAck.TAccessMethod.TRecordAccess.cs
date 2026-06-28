@@ -16,16 +16,16 @@ public partial record class AtomicReadFileAck
             /// The starting record number of the returned data.
             /// </summary>
             public required int FileStartRecord { get; init; }
-            
+        
             /// <summary>
             /// The number of records returned.
             /// </summary>
             public required Unsigned ReturnedRecordCount { get; init; }
-            
+        
             /// <summary>
             /// A list of records read from the file.
             /// </summary>
-            public required TFileRecordData FileRecordData { get; init; }
-            }
+            public required SequenceOf<OctetString> FileRecordData { get; init; }
+        }
     }
 }

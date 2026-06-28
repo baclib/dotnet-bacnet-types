@@ -17,4 +17,4 @@ public partial record class WhoHasRequest
     /// The object to search for, specified by identifier or name.
     /// </summary>
     public required TObject Object { get; init; }
-    }
+}

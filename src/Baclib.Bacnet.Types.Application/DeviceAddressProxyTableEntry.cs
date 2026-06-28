@@ -12,14 +12,14 @@ public partial record class DeviceAddressProxyTableEntry
     /// The network address of the BACnet device.
     /// </summary>
     public required Address Address { get; init; }
-    
+
     /// <summary>
     /// The last I-Am message received from this device.
     /// </summary>
     public required IAmRequest IAm { get; init; }
-    
+
     /// <summary>
     /// The date and time when the last I-Am message was received.
     /// </summary>
     public required DateTime LastIAmTime { get; init; }
-    }
+}

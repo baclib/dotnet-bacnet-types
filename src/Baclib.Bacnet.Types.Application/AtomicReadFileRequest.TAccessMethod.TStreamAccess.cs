@@ -16,11 +16,11 @@ public partial record class AtomicReadFileRequest
             /// The starting byte position in the file.
             /// </summary>
             public required int FileStartPosition { get; init; }
-            
+        
             /// <summary>
             /// The number of bytes to read.
             /// </summary>
             public required Unsigned RequestedOctetCount { get; init; }
-            }
+        }
     }
 }

@@ -12,9 +12,9 @@ public partial record class AuditLogRecord
     /// The date and time when the audit log record was created.
     /// </summary>
     public required DateTime Timestamp { get; init; }
-    
+
     /// <summary>
     /// The data content of the audit log record.
     /// </summary>
     public required TLogDatum LogDatum { get; init; }
-    }
+}

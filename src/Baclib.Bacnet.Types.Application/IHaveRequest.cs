@@ -12,14 +12,14 @@ public partial record class IHaveRequest
     /// The object identifier of the device that contains the object.
     /// </summary>
     public required ObjectIdentifier DeviceIdentifier { get; init; }
-    
+
     /// <summary>
     /// The object identifier of the object being announced.
     /// </summary>
     public required ObjectIdentifier ObjectIdentifier { get; init; }
-    
+
     /// <summary>
     /// The name of the object being announced.
     /// </summary>
     public required CharacterString ObjectName { get; init; }
-    }
+}

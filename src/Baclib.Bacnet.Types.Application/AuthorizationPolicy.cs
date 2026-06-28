@@ -21,15 +21,15 @@ public partial record class AuthorizationPolicy
     /// <summary>
     /// A list of client identifiers to which this policy applies.
     /// </summary>
-    public required TClients Clients { get; init; }
-    
+    public required SequenceOf<Unsigned32> Clients { get; init; }
+
     /// <summary>
     /// Constraints on the origin and authentication method for this policy.
     /// </summary>
     public required AuthorizationConstraint Constraint { get; init; }
-    
+
     /// <summary>
     /// The scope of access granted by this policy.
     /// </summary>
     public required AuthorizationScope Scope { get; init; }
-    }
+}

@@ -12,9 +12,9 @@ public partial record class AtomicReadFileRequest
     /// The object identifier of the file to read from.
     /// </summary>
     public required ObjectIdentifier FileIdentifier { get; init; }
-    
+
     /// <summary>
     /// The access method specifying what data to read.
     /// </summary>
     public required TAccessMethod AccessMethod { get; init; }
-    }
+}

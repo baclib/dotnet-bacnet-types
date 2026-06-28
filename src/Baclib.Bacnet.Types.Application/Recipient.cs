@@ -29,13 +29,11 @@ public partial record class Recipient
     /// </summary>
     public Option Choice { get; }
 
-    private object _choiceValue
-    {
-        get;
-    }
+    private readonly object _choiceValue;
 
     private Recipient(Option choice, object value)
     {
+        ArgumentNullException.ThrowIfNull(value);
         Choice = choice;
         _choiceValue = value;
     }
@@ -54,9 +52,24 @@ public partial record class Recipient
             return (ObjectIdentifier)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.Device"/>.
+    /// </summary>
+    public bool TryGetDevice(out ObjectIdentifier value)
+    {
+        if (Choice == Option.Device)
+        {
+            value = (ObjectIdentifier)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for The recipient is a BACnet device identified by object-identifier.
+    /// Creates a choice with the <see cref="Option.Device"/> option.
     /// </summary>
     public static Recipient FromDevice(ObjectIdentifier value)
     {
@@ -77,9 +90,24 @@ public partial record class Recipient
             return (Address)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.Address"/>.
+    /// </summary>
+    public bool TryGetAddress(out Address value)
+    {
+        if (Choice == Option.Address)
+        {
+            value = (Address)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for The recipient is specified by a BACnet address.
+    /// Creates a choice with the <see cref="Option.Address"/> option.
     /// </summary>
     public static Recipient FromAddress(Address value)
     {

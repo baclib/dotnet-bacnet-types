@@ -12,7 +12,7 @@ public partial record class GetEnrollmentSummaryRequest
     /// Filter for event acknowledgment status.
     /// </summary>
     public required TAcknowledgmentFilter AcknowledgmentFilter { get; init; }
-    
+
     /// <summary>
     /// Optional filter to match a specific event recipient process.
     /// </summary>

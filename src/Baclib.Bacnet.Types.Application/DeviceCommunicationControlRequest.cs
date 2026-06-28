@@ -17,7 +17,7 @@ public partial record class DeviceCommunicationControlRequest
     /// Indicates whether to enable or disable communication.
     /// </summary>
     public required TEnableDisable EnableDisable { get; init; }
-    
+
     /// <summary>
     /// An optional password for authentication. Maximum length of 20 characters.
     /// </summary>

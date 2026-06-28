@@ -12,7 +12,7 @@ public partial record class NameValue
     /// The name associated with the value.
     /// </summary>
     public required CharacterString Name { get; init; }
-    
+
     /// <summary>
     /// The value associated with the name. Optional.
     /// </summary>

@@ -14,10 +14,10 @@ public partial record class EventParameter
         /// The minimum time in seconds that the condition must persist before triggering the event.
         /// </summary>
         public required Unsigned TimeDelay { get; init; }
-        
+    
         /// <summary>
         /// A list of character string values that trigger the event when matched.
         /// </summary>
-        public required TListOfAlarmValues ListOfAlarmValues { get; init; }
-        }
+        public required SequenceOf<CharacterString> ListOfAlarmValues { get; init; }
+    }
 }

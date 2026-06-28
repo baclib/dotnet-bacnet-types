@@ -31,13 +31,11 @@ public partial record class PropertyAccessResult
         /// </summary>
         public Option Choice { get; }
     
-        private object _choiceValue
-        {
-            get;
-        }
+        private readonly object _choiceValue;
     
         private TAccessResult(Option choice, object value)
         {
+            ArgumentNullException.ThrowIfNull(value);
             Choice = choice;
             _choiceValue = value;
         }
@@ -56,9 +54,24 @@ public partial record class PropertyAccessResult
                 return (Any)_choiceValue;
             }
         }
+    
+        /// <summary>
+        /// Tries to get the value when the active choice is <see cref="Option.PropertyValue"/>.
+        /// </summary>
+        public bool TryGetPropertyValue(out Any value)
+        {
+            if (Choice == Option.PropertyValue)
+            {
+                value = (Any)_choiceValue;
+                return true;
+            }
+    
+            value = default!;
+            return false;
+        }
         
         /// <summary>
-        /// Create function for The value of the property accessed.
+        /// Creates a choice with the <see cref="Option.PropertyValue"/> option.
         /// </summary>
         public static TAccessResult FromPropertyValue(Any value)
         {
@@ -79,9 +92,24 @@ public partial record class PropertyAccessResult
                 return (Error)_choiceValue;
             }
         }
+    
+        /// <summary>
+        /// Tries to get the value when the active choice is <see cref="Option.PropertyAccessError"/>.
+        /// </summary>
+        public bool TryGetPropertyAccessError(out Error value)
+        {
+            if (Choice == Option.PropertyAccessError)
+            {
+                value = (Error)_choiceValue;
+                return true;
+            }
+    
+            value = default!;
+            return false;
+        }
         
         /// <summary>
-        /// Create function for Error encountered while accessing the property.
+        /// Creates a choice with the <see cref="Option.PropertyAccessError"/> option.
         /// </summary>
         public static TAccessResult FromPropertyAccessError(Error value)
         {

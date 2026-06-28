@@ -14,10 +14,10 @@ public partial record class EventParameter
         /// The minimum time in seconds that the condition must persist before triggering the event.
         /// </summary>
         public required Unsigned TimeDelay { get; init; }
-        
+    
         /// <summary>
         /// Reference to the property that provides feedback on the command result.
         /// </summary>
         public required DeviceObjectPropertyReference FeedbackPropertyReference { get; init; }
-        }
+    }
 }

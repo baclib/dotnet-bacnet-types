@@ -34,13 +34,11 @@ public partial record class ShedLevel
     /// </summary>
     public Option Choice { get; }
 
-    private object _choiceValue
-    {
-        get;
-    }
+    private readonly object _choiceValue;
 
     private ShedLevel(Option choice, object value)
     {
+        ArgumentNullException.ThrowIfNull(value);
         Choice = choice;
         _choiceValue = value;
     }
@@ -59,9 +57,24 @@ public partial record class ShedLevel
             return (Unsigned)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.Percent"/>.
+    /// </summary>
+    public bool TryGetPercent(out Unsigned value)
+    {
+        if (Choice == Option.Percent)
+        {
+            value = (Unsigned)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for The percent of load to be shed.
+    /// Creates a choice with the <see cref="Option.Percent"/> option.
     /// </summary>
     public static ShedLevel FromPercent(Unsigned value)
     {
@@ -82,9 +95,24 @@ public partial record class ShedLevel
             return (Unsigned)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.Level"/>.
+    /// </summary>
+    public bool TryGetLevel(out Unsigned value)
+    {
+        if (Choice == Option.Level)
+        {
+            value = (Unsigned)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for The discrete level of load to be shed.
+    /// Creates a choice with the <see cref="Option.Level"/> option.
     /// </summary>
     public static ShedLevel FromLevel(Unsigned value)
     {
@@ -105,9 +133,24 @@ public partial record class ShedLevel
             return (float)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.Amount"/>.
+    /// </summary>
+    public bool TryGetAmount(out float value)
+    {
+        if (Choice == Option.Amount)
+        {
+            value = (float)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for The absolute amount of load to be shed.
+    /// Creates a choice with the <see cref="Option.Amount"/> option.
     /// </summary>
     public static ShedLevel FromAmount(float value)
     {

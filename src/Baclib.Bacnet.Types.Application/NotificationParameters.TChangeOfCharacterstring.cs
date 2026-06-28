@@ -14,15 +14,15 @@ public partial record class NotificationParameters
         /// The new character string value that triggered the notification.
         /// </summary>
         public required CharacterString ChangedValue { get; init; }
-        
+    
         /// <summary>
         /// The status flags indicating the state of the object at the time of notification.
         /// </summary>
         public required StatusFlags StatusFlags { get; init; }
-        
+    
         /// <summary>
         /// The alarm value that the changed value matched or triggered.
         /// </summary>
         public required CharacterString AlarmValue { get; init; }
-        }
+    }
 }

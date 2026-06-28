@@ -11,5 +11,5 @@ public partial record class UnconfirmedAuditNotificationRequest
     /// <summary>
     /// A list of audit notifications to be sent.
     /// </summary>
-    public required TNotifications Notifications { get; init; }
-    }
+    public required SequenceOf<AuditNotification> Notifications { get; init; }
+}

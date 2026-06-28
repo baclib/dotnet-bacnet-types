@@ -11,15 +11,15 @@ public partial record class AuthenticationPolicy
     /// <summary>
     /// A list of credential data inputs required by this policy.
     /// </summary>
-    public required TPolicy Policy { get; init; }
-    
+    public required SequenceOf<TPolicyItem> Policy { get; init; }
+
     /// <summary>
     /// Indicates whether the order of credential presentation must be enforced.
     /// </summary>
     public required Boolean OrderEnforced { get; init; }
-    
+
     /// <summary>
     /// The timeout period in seconds for completing the authentication process.
     /// </summary>
     public required Unsigned Timeout { get; init; }
-    }
+}

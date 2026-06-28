@@ -16,11 +16,11 @@ public partial record class AtomicReadFileRequest
             /// The starting record number in the file.
             /// </summary>
             public required int FileStartRecord { get; init; }
-            
+        
             /// <summary>
             /// The number of records to read.
             /// </summary>
             public required Unsigned RequestedRecordCount { get; init; }
-            }
+        }
     }
 }

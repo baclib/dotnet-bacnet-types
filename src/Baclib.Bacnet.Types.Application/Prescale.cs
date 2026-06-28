@@ -12,9 +12,9 @@ public partial record class Prescale
     /// The multiplier value for prescaling.
     /// </summary>
     public required Unsigned Multiplier { get; init; }
-    
+
     /// <summary>
     /// The modulo divide value for prescaling.
     /// </summary>
     public required Unsigned ModuloDivide { get; init; }
-    }
+}

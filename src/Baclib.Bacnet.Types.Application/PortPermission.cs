@@ -12,9 +12,9 @@ public partial record class PortPermission
     /// The identifier of the port.
     /// </summary>
     public required Unsigned8 PortId { get; init; }
-    
+
     /// <summary>
     /// Indicates if the port is enabled.
     /// </summary>
     public required Boolean Enabled { get; init; }
-    }
+}

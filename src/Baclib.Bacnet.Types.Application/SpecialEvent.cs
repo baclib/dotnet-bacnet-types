@@ -12,14 +12,14 @@ public partial record class SpecialEvent
     /// The period during which the special event is active, specified as a calendar entry or reference.
     /// </summary>
     public required TPeriod Period { get; init; }
-    
+
     /// <summary>
     /// A list of time values associated with the special event.
     /// </summary>
-    public required TListOfTimeValues ListOfTimeValues { get; init; }
-    
+    public required SequenceOf<TimeValue> ListOfTimeValues { get; init; }
+
     /// <summary>
     /// The priority of the special event, from 1 (highest) to 16 (lowest).
     /// </summary>
     public required TEventPriority EventPriority { get; init; }
-    }
+}

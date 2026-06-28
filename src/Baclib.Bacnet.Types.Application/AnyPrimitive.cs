@@ -84,13 +84,11 @@ public partial record class AnyPrimitive
     /// </summary>
     public Option Choice { get; }
 
-    private object _choiceValue
-    {
-        get;
-    }
+    private readonly object _choiceValue;
 
     private AnyPrimitive(Option choice, object value)
     {
+        ArgumentNullException.ThrowIfNull(value);
         Choice = choice;
         _choiceValue = value;
     }
@@ -109,9 +107,24 @@ public partial record class AnyPrimitive
             return (Null)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.Null"/>.
+    /// </summary>
+    public bool TryGetNull(out Null value)
+    {
+        if (Choice == Option.Null)
+        {
+            value = (Null)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for A null value.
+    /// Creates a choice with the <see cref="Option.Null"/> option.
     /// </summary>
     public static AnyPrimitive FromNull(Null value)
     {
@@ -132,9 +145,24 @@ public partial record class AnyPrimitive
             return (Boolean)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.Boolean"/>.
+    /// </summary>
+    public bool TryGetBoolean(out Boolean value)
+    {
+        if (Choice == Option.Boolean)
+        {
+            value = (Boolean)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for A boolean value.
+    /// Creates a choice with the <see cref="Option.Boolean"/> option.
     /// </summary>
     public static AnyPrimitive FromBoolean(Boolean value)
     {
@@ -155,9 +183,24 @@ public partial record class AnyPrimitive
             return (Unsigned)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.Unsigned"/>.
+    /// </summary>
+    public bool TryGetUnsigned(out Unsigned value)
+    {
+        if (Choice == Option.Unsigned)
+        {
+            value = (Unsigned)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for An unsigned integer value.
+    /// Creates a choice with the <see cref="Option.Unsigned"/> option.
     /// </summary>
     public static AnyPrimitive FromUnsigned(Unsigned value)
     {
@@ -178,9 +221,24 @@ public partial record class AnyPrimitive
             return (int)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.Integer"/>.
+    /// </summary>
+    public bool TryGetInteger(out int value)
+    {
+        if (Choice == Option.Integer)
+        {
+            value = (int)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for A signed integer value.
+    /// Creates a choice with the <see cref="Option.Integer"/> option.
     /// </summary>
     public static AnyPrimitive FromInteger(int value)
     {
@@ -201,9 +259,24 @@ public partial record class AnyPrimitive
             return (float)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.Real"/>.
+    /// </summary>
+    public bool TryGetReal(out float value)
+    {
+        if (Choice == Option.Real)
+        {
+            value = (float)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for A real (floating-point) value.
+    /// Creates a choice with the <see cref="Option.Real"/> option.
     /// </summary>
     public static AnyPrimitive FromReal(float value)
     {
@@ -224,9 +297,24 @@ public partial record class AnyPrimitive
             return (double)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.Double"/>.
+    /// </summary>
+    public bool TryGetDouble(out double value)
+    {
+        if (Choice == Option.Double)
+        {
+            value = (double)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for A double-precision floating-point value.
+    /// Creates a choice with the <see cref="Option.Double"/> option.
     /// </summary>
     public static AnyPrimitive FromDouble(double value)
     {
@@ -247,9 +335,24 @@ public partial record class AnyPrimitive
             return (OctetString)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.OctetString"/>.
+    /// </summary>
+    public bool TryGetOctetString(out OctetString value)
+    {
+        if (Choice == Option.OctetString)
+        {
+            value = (OctetString)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for An octet string value.
+    /// Creates a choice with the <see cref="Option.OctetString"/> option.
     /// </summary>
     public static AnyPrimitive FromOctetString(OctetString value)
     {
@@ -270,9 +373,24 @@ public partial record class AnyPrimitive
             return (CharacterString)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.CharacterString"/>.
+    /// </summary>
+    public bool TryGetCharacterString(out CharacterString value)
+    {
+        if (Choice == Option.CharacterString)
+        {
+            value = (CharacterString)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for A character string value.
+    /// Creates a choice with the <see cref="Option.CharacterString"/> option.
     /// </summary>
     public static AnyPrimitive FromCharacterString(CharacterString value)
     {
@@ -293,9 +411,24 @@ public partial record class AnyPrimitive
             return (BitString)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.BitString"/>.
+    /// </summary>
+    public bool TryGetBitString(out BitString value)
+    {
+        if (Choice == Option.BitString)
+        {
+            value = (BitString)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for A bit string value.
+    /// Creates a choice with the <see cref="Option.BitString"/> option.
     /// </summary>
     public static AnyPrimitive FromBitString(BitString value)
     {
@@ -316,9 +449,24 @@ public partial record class AnyPrimitive
             return (Enumerated)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.Enumerated"/>.
+    /// </summary>
+    public bool TryGetEnumerated(out Enumerated value)
+    {
+        if (Choice == Option.Enumerated)
+        {
+            value = (Enumerated)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for An enumerated value.
+    /// Creates a choice with the <see cref="Option.Enumerated"/> option.
     /// </summary>
     public static AnyPrimitive FromEnumerated(Enumerated value)
     {
@@ -339,9 +487,24 @@ public partial record class AnyPrimitive
             return (DatePattern)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.DatePattern"/>.
+    /// </summary>
+    public bool TryGetDatePattern(out DatePattern value)
+    {
+        if (Choice == Option.DatePattern)
+        {
+            value = (DatePattern)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for A date pattern value for matching dates.
+    /// Creates a choice with the <see cref="Option.DatePattern"/> option.
     /// </summary>
     public static AnyPrimitive FromDatePattern(DatePattern value)
     {
@@ -362,9 +525,24 @@ public partial record class AnyPrimitive
             return (TimePattern)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.TimePattern"/>.
+    /// </summary>
+    public bool TryGetTimePattern(out TimePattern value)
+    {
+        if (Choice == Option.TimePattern)
+        {
+            value = (TimePattern)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for A time pattern value for matching times.
+    /// Creates a choice with the <see cref="Option.TimePattern"/> option.
     /// </summary>
     public static AnyPrimitive FromTimePattern(TimePattern value)
     {
@@ -385,9 +563,24 @@ public partial record class AnyPrimitive
             return (ObjectIdentifier)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.ObjectIdentifier"/>.
+    /// </summary>
+    public bool TryGetObjectIdentifier(out ObjectIdentifier value)
+    {
+        if (Choice == Option.ObjectIdentifier)
+        {
+            value = (ObjectIdentifier)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for An object identifier value.
+    /// Creates a choice with the <see cref="Option.ObjectIdentifier"/> option.
     /// </summary>
     public static AnyPrimitive FromObjectIdentifier(ObjectIdentifier value)
     {

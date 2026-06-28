@@ -14,15 +14,15 @@ public partial record class AuthRequestRequest
         /// The identifier of the client requesting authentication.
         /// </summary>
         public required Unsigned32 Client { get; init; }
-        
+    
         /// <summary>
         /// A list of intended audience identifiers for the token.
         /// </summary>
-        public required TAudience Audience { get; init; }
-        
+        public required SequenceOf<Integer32> Audience { get; init; }
+    
         /// <summary>
         /// The requested authorization scope for the token.
         /// </summary>
         public required AuthorizationScope Scope { get; init; }
-        }
+    }
 }

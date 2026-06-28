@@ -12,7 +12,7 @@ public partial record class PropertyReference
     /// The identifier of the property being referenced.
     /// </summary>
     public required PropertyIdentifier PropertyIdentifier { get; init; }
-    
+
     /// <summary>
     /// The index within an array property, if applicable. Optional.
     /// </summary>

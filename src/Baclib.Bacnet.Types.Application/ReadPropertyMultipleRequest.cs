@@ -11,5 +11,5 @@ public partial record class ReadPropertyMultipleRequest
     /// <summary>
     /// A list of access specifications for reading properties from objects.
     /// </summary>
-    public required TListOfReadAccessSpecifications ListOfReadAccessSpecifications { get; init; }
-    }
+    public required SequenceOf<ReadAccessSpecification> ListOfReadAccessSpecifications { get; init; }
+}

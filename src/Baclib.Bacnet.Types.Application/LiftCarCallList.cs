@@ -11,5 +11,5 @@ public partial record class LiftCarCallList
     /// <summary>
     /// A series of floor numbers where the lift car has active calls.
     /// </summary>
-    public required TFloorNumbers FloorNumbers { get; init; }
-    }
+    public required SequenceOf<Unsigned8> FloorNumbers { get; init; }
+}

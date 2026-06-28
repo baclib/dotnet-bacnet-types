@@ -14,15 +14,15 @@ public partial record class EventParameter
         /// The vendor identification code indicating the provider of the extended event type.
         /// </summary>
         public required Unsigned16 VendorId { get; init; }
-        
+    
         /// <summary>
         /// The vendor-specific event type identifier.
         /// </summary>
         public required Unsigned ExtendedEventType { get; init; }
-        
+    
         /// <summary>
         /// A list of vendor-specific parameter values for the extended event type.
         /// </summary>
-        public required TParameters Parameters { get; init; }
-        }
+        public required SequenceOf<TParametersItem> Parameters { get; init; }
+    }
 }

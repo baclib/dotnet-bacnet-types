@@ -14,5 +14,5 @@ public partial record class FaultParameter
         /// Reference to the status flags property to be monitored.
         /// </summary>
         public required DeviceObjectPropertyReference StatusFlagsReference { get; init; }
-        }
+    }
 }

@@ -14,10 +14,10 @@ public partial record class NotificationParameters
         /// The new value, either as changed bits or a numeric value.
         /// </summary>
         public required TNewValue NewValue { get; init; }
-        
+    
         /// <summary>
         /// The status flags indicating the state of the object at the time of notification.
         /// </summary>
         public required StatusFlags StatusFlags { get; init; }
-        }
+    }
 }

@@ -14,15 +14,15 @@ public partial record class NotificationParameters
         /// The unsigned value that exceeded the limit.
         /// </summary>
         public required Unsigned ExceedingValue { get; init; }
-        
+    
         /// <summary>
         /// The status flags indicating the state of the object at the time of notification.
         /// </summary>
         public required StatusFlags StatusFlags { get; init; }
-        
+    
         /// <summary>
         /// The limit value that was exceeded.
         /// </summary>
         public required Unsigned ExceededLimit { get; init; }
-        }
+    }
 }

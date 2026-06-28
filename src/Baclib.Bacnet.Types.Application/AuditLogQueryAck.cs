@@ -12,14 +12,14 @@ public partial record class AuditLogQueryAck
     /// The object identifier of the audit log being queried.
     /// </summary>
     public required ObjectIdentifier AuditLog { get; init; }
-    
+
     /// <summary>
     /// A list of audit log records that match the query criteria.
     /// </summary>
-    public required TRecords Records { get; init; }
-    
+    public required SequenceOf<AuditLogRecordResult> Records { get; init; }
+
     /// <summary>
     /// Indicates whether there are no more records available beyond those returned.
     /// </summary>
     public required Boolean NoMoreItems { get; init; }
-    }
+}

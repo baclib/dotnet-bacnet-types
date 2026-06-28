@@ -12,12 +12,12 @@ public partial record class DeviceObjectPropertyReference
     /// The identifier of the BACnet object containing the property.
     /// </summary>
     public required ObjectIdentifier ObjectIdentifier { get; init; }
-    
+
     /// <summary>
     /// The identifier of the property within the object.
     /// </summary>
     public required PropertyIdentifier PropertyIdentifier { get; init; }
-    
+
     /// <summary>
     /// The index within an array property, if applicable. Optional.
     /// </summary>

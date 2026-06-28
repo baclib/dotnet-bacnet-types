@@ -12,9 +12,9 @@ public partial record class CreateObjectError
     /// The error class and code describing the failure.
     /// </summary>
     public required Error ErrorType { get; init; }
-    
+
     /// <summary>
     /// The index of the first property value in the list-of-initial-values that caused an error.
     /// </summary>
     public required Unsigned FirstFailedElementNumber { get; init; }
-    }
+}

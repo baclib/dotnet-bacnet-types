@@ -29,13 +29,11 @@ public partial record class AtomicWriteFileAck
     /// </summary>
     public Option Choice { get; }
 
-    private object _choiceValue
-    {
-        get;
-    }
+    private readonly object _choiceValue;
 
     private AtomicWriteFileAck(Option choice, object value)
     {
+        ArgumentNullException.ThrowIfNull(value);
         Choice = choice;
         _choiceValue = value;
     }
@@ -54,9 +52,24 @@ public partial record class AtomicWriteFileAck
             return (int)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.FileStartPosition"/>.
+    /// </summary>
+    public bool TryGetFileStartPosition(out int value)
+    {
+        if (Choice == Option.FileStartPosition)
+        {
+            value = (int)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for The starting byte position where data was written (for stream access).
+    /// Creates a choice with the <see cref="Option.FileStartPosition"/> option.
     /// </summary>
     public static AtomicWriteFileAck FromFileStartPosition(int value)
     {
@@ -77,9 +90,24 @@ public partial record class AtomicWriteFileAck
             return (int)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.FileStartRecord"/>.
+    /// </summary>
+    public bool TryGetFileStartRecord(out int value)
+    {
+        if (Choice == Option.FileStartRecord)
+        {
+            value = (int)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for The starting record number where data was written (for record access).
+    /// Creates a choice with the <see cref="Option.FileStartRecord"/> option.
     /// </summary>
     public static AtomicWriteFileAck FromFileStartRecord(int value)
     {

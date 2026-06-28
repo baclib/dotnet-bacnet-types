@@ -33,13 +33,11 @@ public partial record class EventParameter
             /// </summary>
             public Option Choice { get; }
         
-            private object _choiceValue
-            {
-                get;
-            }
+            private readonly object _choiceValue;
         
             private TCovCriteria(Option choice, object value)
             {
+                ArgumentNullException.ThrowIfNull(value);
                 Choice = choice;
                 _choiceValue = value;
             }
@@ -58,9 +56,24 @@ public partial record class EventParameter
                     return (BitString)_choiceValue;
                 }
             }
+        
+            /// <summary>
+            /// Tries to get the value when the active choice is <see cref="Option.Bitmask"/>.
+            /// </summary>
+            public bool TryGetBitmask(out BitString value)
+            {
+                if (Choice == Option.Bitmask)
+                {
+                    value = (BitString)_choiceValue;
+                    return true;
+                }
+        
+                value = default!;
+                return false;
+            }
             
             /// <summary>
-            /// Create function for A bit mask for detecting changes in specific bits.
+            /// Creates a choice with the <see cref="Option.Bitmask"/> option.
             /// </summary>
             public static TCovCriteria FromBitmask(BitString value)
             {
@@ -81,9 +94,24 @@ public partial record class EventParameter
                     return (float)_choiceValue;
                 }
             }
+        
+            /// <summary>
+            /// Tries to get the value when the active choice is <see cref="Option.ReferencedPropertyIncrement"/>.
+            /// </summary>
+            public bool TryGetReferencedPropertyIncrement(out float value)
+            {
+                if (Choice == Option.ReferencedPropertyIncrement)
+                {
+                    value = (float)_choiceValue;
+                    return true;
+                }
+        
+                value = default!;
+                return false;
+            }
             
             /// <summary>
-            /// Create function for The minimum change in value required to trigger the event.
+            /// Creates a choice with the <see cref="Option.ReferencedPropertyIncrement"/> option.
             /// </summary>
             public static TCovCriteria FromReferencedPropertyIncrement(float value)
             {

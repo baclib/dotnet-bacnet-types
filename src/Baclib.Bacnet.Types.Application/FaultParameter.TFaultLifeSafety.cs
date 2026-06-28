@@ -13,11 +13,11 @@ public partial record class FaultParameter
         /// <summary>
         /// A list of life safety states that indicate a fault condition.
         /// </summary>
-        public required TListOfFaultValues ListOfFaultValues { get; init; }
-        
+        public required SequenceOf<LifeSafetyState> ListOfFaultValues { get; init; }
+    
         /// <summary>
         /// Reference to the mode property that affects fault detection.
         /// </summary>
         public required DeviceObjectPropertyReference ModePropertyReference { get; init; }
-        }
+    }
 }

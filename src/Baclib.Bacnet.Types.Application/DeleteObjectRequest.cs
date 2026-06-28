@@ -12,4 +12,4 @@ public partial record class DeleteObjectRequest
     /// The identifier of the object to be deleted.
     /// </summary>
     public required ObjectIdentifier ObjectIdentifier { get; init; }
-    }
+}

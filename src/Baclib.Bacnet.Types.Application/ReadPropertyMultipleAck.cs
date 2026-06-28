@@ -11,5 +11,5 @@ public partial record class ReadPropertyMultipleAck
     /// <summary>
     /// A list of access results for the properties read from objects.
     /// </summary>
-    public required TListOfReadAccessResults ListOfReadAccessResults { get; init; }
-    }
+    public required SequenceOf<ReadAccessResult> ListOfReadAccessResults { get; init; }
+}

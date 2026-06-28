@@ -12,37 +12,37 @@ public partial record class UnconfirmedEventNotificationRequest
     /// The process identifier for the event notification.
     /// </summary>
     public required Unsigned32 ProcessIdentifier { get; init; }
-    
+
     /// <summary>
     /// The identifier of the device initiating the notification.
     /// </summary>
     public required ObjectIdentifier InitiatingDeviceIdentifier { get; init; }
-    
+
     /// <summary>
     /// The identifier of the object where the event occurred.
     /// </summary>
     public required ObjectIdentifier EventObjectIdentifier { get; init; }
-    
+
     /// <summary>
     /// The timestamp of the event.
     /// </summary>
     public required TimeStamp Timestamp { get; init; }
-    
+
     /// <summary>
     /// The notification class for the event.
     /// </summary>
     public required Unsigned NotificationClass { get; init; }
-    
+
     /// <summary>
     /// The priority of the event notification.
     /// </summary>
     public required Unsigned8 Priority { get; init; }
-    
+
     /// <summary>
     /// The type of event being reported.
     /// </summary>
     public required EventType EventType { get; init; }
-    
+
     /// <summary>
     /// Optional text message describing the event.
     /// </summary>
@@ -52,7 +52,7 @@ public partial record class UnconfirmedEventNotificationRequest
     /// The notification type (e.g., alarm, event, or acknowledgment).
     /// </summary>
     public required NotifyType NotifyType { get; init; }
-    
+
     /// <summary>
     /// Indicates if acknowledgment is required. Optional.
     /// </summary>
@@ -67,7 +67,7 @@ public partial record class UnconfirmedEventNotificationRequest
     /// The new state after the event.
     /// </summary>
     public required EventState ToState { get; init; }
-    
+
     /// <summary>
     /// Optional additional parameters for the event.
     /// </summary>

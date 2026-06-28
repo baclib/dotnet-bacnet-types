@@ -12,9 +12,9 @@ public partial record class WritePropertyMultipleError
     /// The type of error that occurred.
     /// </summary>
     public required Error ErrorType { get; init; }
-    
+
     /// <summary>
     /// Reference to the first property that failed to be written.
     /// </summary>
     public required ObjectPropertyReference FirstFailedWriteAttempt { get; init; }
-    }
+}

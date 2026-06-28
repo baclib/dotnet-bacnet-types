@@ -12,24 +12,24 @@ public partial record class ConfirmedCovNotificationRequest
     /// The process identifier of the subscriber.
     /// </summary>
     public required Unsigned32 SubscriberProcessIdentifier { get; init; }
-    
+
     /// <summary>
     /// The identifier of the device initiating the notification.
     /// </summary>
     public required ObjectIdentifier InitiatingDeviceIdentifier { get; init; }
-    
+
     /// <summary>
     /// The identifier of the object being monitored.
     /// </summary>
     public required ObjectIdentifier MonitoredObjectIdentifier { get; init; }
-    
+
     /// <summary>
     /// The remaining time in seconds before the subscription expires.
     /// </summary>
     public required Unsigned TimeRemaining { get; init; }
-    
+
     /// <summary>
     /// A list of property values that have changed.
     /// </summary>
-    public required TListOfValues ListOfValues { get; init; }
-    }
+    public required SequenceOf<PropertyValue> ListOfValues { get; init; }
+}

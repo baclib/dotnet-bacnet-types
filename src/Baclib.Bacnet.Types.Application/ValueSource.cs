@@ -34,13 +34,11 @@ public partial record class ValueSource
     /// </summary>
     public Option Choice { get; }
 
-    private object _choiceValue
-    {
-        get;
-    }
+    private readonly object _choiceValue;
 
     private ValueSource(Option choice, object value)
     {
+        ArgumentNullException.ThrowIfNull(value);
         Choice = choice;
         _choiceValue = value;
     }
@@ -59,9 +57,24 @@ public partial record class ValueSource
             return (Null)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.None"/>.
+    /// </summary>
+    public bool TryGetNone(out Null value)
+    {
+        if (Choice == Option.None)
+        {
+            value = (Null)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for No value source specified.
+    /// Creates a choice with the <see cref="Option.None"/> option.
     /// </summary>
     public static ValueSource FromNone(Null value)
     {
@@ -82,9 +95,24 @@ public partial record class ValueSource
             return (DeviceObjectReference)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.Object"/>.
+    /// </summary>
+    public bool TryGetObject(out DeviceObjectReference value)
+    {
+        if (Choice == Option.Object)
+        {
+            value = (DeviceObjectReference)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for The value source is a device object reference.
+    /// Creates a choice with the <see cref="Option.Object"/> option.
     /// </summary>
     public static ValueSource FromObject(DeviceObjectReference value)
     {
@@ -105,9 +133,24 @@ public partial record class ValueSource
             return (Address)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.Address"/>.
+    /// </summary>
+    public bool TryGetAddress(out Address value)
+    {
+        if (Choice == Option.Address)
+        {
+            value = (Address)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for The value source is a network address.
+    /// Creates a choice with the <see cref="Option.Address"/> option.
     /// </summary>
     public static ValueSource FromAddress(Address value)
     {

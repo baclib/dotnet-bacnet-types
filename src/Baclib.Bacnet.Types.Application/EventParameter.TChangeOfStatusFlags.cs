@@ -14,10 +14,10 @@ public partial record class EventParameter
         /// The minimum time in seconds that the condition must persist before triggering the event.
         /// </summary>
         public required Unsigned TimeDelay { get; init; }
-        
+    
         /// <summary>
         /// The status flags to monitor for changes.
         /// </summary>
         public required StatusFlags SelectedFlags { get; init; }
-        }
+    }
 }

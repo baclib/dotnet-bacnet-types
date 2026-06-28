@@ -14,20 +14,20 @@ public partial record class NotificationParameters
         /// The new life safety state.
         /// </summary>
         public required LifeSafetyState NewState { get; init; }
-        
+    
         /// <summary>
         /// The new life safety mode.
         /// </summary>
         public required LifeSafetyMode NewMode { get; init; }
-        
+    
         /// <summary>
         /// The status flags indicating the state of the object at the time of notification.
         /// </summary>
         public required StatusFlags StatusFlags { get; init; }
-        
+    
         /// <summary>
         /// The life safety operation expected to be performed.
         /// </summary>
         public required LifeSafetyOperation OperationExpected { get; init; }
-        }
+    }
 }

@@ -14,15 +14,15 @@ public partial record class NotificationParameters
         /// Reference to the buffer property that is ready.
         /// </summary>
         public required DeviceObjectPropertyReference BufferProperty { get; init; }
-        
+    
         /// <summary>
         /// The record number of the previous buffer-ready notification.
         /// </summary>
         public required Unsigned32 PreviousNotification { get; init; }
-        
+    
         /// <summary>
         /// The record number of the current buffer-ready notification.
         /// </summary>
         public required Unsigned32 CurrentNotification { get; init; }
-        }
+    }
 }

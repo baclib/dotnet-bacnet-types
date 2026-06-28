@@ -12,12 +12,12 @@ public partial record class ScFailedConnectionRequest
     /// Timestamp when the connection attempt failed.
     /// </summary>
     public required DateTime Timestamp { get; init; }
-    
+
     /// <summary>
     /// Network address of the peer device.
     /// </summary>
     public required HostNPort PeerAddress { get; init; }
-    
+
     /// <summary>
     /// Virtual MAC address of the peer device. Optional.
     /// </summary>
@@ -32,7 +32,7 @@ public partial record class ScFailedConnectionRequest
     /// Error code for the failed connection attempt.
     /// </summary>
     public required Error Error { get; init; }
-    
+
     /// <summary>
     /// Additional error details if available. Optional.
     /// </summary>

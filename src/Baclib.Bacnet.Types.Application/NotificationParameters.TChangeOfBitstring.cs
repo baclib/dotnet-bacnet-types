@@ -14,10 +14,10 @@ public partial record class NotificationParameters
         /// The bit string value that triggered the notification.
         /// </summary>
         public required BitString ReferencedBitstring { get; init; }
-        
+    
         /// <summary>
         /// The status flags indicating the state of the object at the time of notification.
         /// </summary>
         public required StatusFlags StatusFlags { get; init; }
-        }
+    }
 }

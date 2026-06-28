@@ -12,9 +12,9 @@ public partial record class TimeValue
     /// The time at which the value is to be applied.
     /// </summary>
     public required Time Time { get; init; }
-    
+
     /// <summary>
     /// The value to be applied at the specified time.
     /// </summary>
     public required Any Value { get; init; }
-    }
+}

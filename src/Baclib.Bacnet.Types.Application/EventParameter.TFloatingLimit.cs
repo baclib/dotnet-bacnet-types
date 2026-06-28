@@ -14,25 +14,25 @@ public partial record class EventParameter
         /// The minimum time in seconds that the condition must persist before triggering the event.
         /// </summary>
         public required Unsigned TimeDelay { get; init; }
-        
+    
         /// <summary>
         /// Reference to the property containing the setpoint value.
         /// </summary>
         public required DeviceObjectPropertyReference SetpointReference { get; init; }
-        
+    
         /// <summary>
         /// The maximum allowed negative deviation from the setpoint.
         /// </summary>
         public required float LowDiffLimit { get; init; }
-        
+    
         /// <summary>
         /// The maximum allowed positive deviation from the setpoint.
         /// </summary>
         public required float HighDiffLimit { get; init; }
-        
+    
         /// <summary>
         /// The deadband value to prevent rapid toggling of the event state.
         /// </summary>
         public required float Deadband { get; init; }
-        }
+    }
 }

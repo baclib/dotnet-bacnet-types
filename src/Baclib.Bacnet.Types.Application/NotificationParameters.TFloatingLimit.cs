@@ -14,20 +14,20 @@ public partial record class NotificationParameters
         /// The current reference value being monitored.
         /// </summary>
         public required float ReferenceValue { get; init; }
-        
+    
         /// <summary>
         /// The status flags indicating the state of the object at the time of notification.
         /// </summary>
         public required StatusFlags StatusFlags { get; init; }
-        
+    
         /// <summary>
         /// The setpoint value from which the reference value has deviated.
         /// </summary>
         public required float SetpointValue { get; init; }
-        
+    
         /// <summary>
         /// The maximum allowed deviation from the setpoint value.
         /// </summary>
         public required float ErrorLimit { get; init; }
-        }
+    }
 }

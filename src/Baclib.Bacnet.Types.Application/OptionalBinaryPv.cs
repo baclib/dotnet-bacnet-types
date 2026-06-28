@@ -29,13 +29,11 @@ public partial record class OptionalBinaryPv
     /// </summary>
     public Option Choice { get; }
 
-    private object _choiceValue
-    {
-        get;
-    }
+    private readonly object _choiceValue;
 
     private OptionalBinaryPv(Option choice, object value)
     {
+        ArgumentNullException.ThrowIfNull(value);
         Choice = choice;
         _choiceValue = value;
     }
@@ -54,9 +52,24 @@ public partial record class OptionalBinaryPv
             return (Null)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.Null"/>.
+    /// </summary>
+    public bool TryGetNull(out Null value)
+    {
+        if (Choice == Option.Null)
+        {
+            value = (Null)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Indicates the absence of a binary PV value.
+    /// Creates a choice with the <see cref="Option.Null"/> option.
     /// </summary>
     public static OptionalBinaryPv FromNull(Null value)
     {
@@ -77,9 +90,24 @@ public partial record class OptionalBinaryPv
             return (BinaryPv)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.BinaryPv"/>.
+    /// </summary>
+    public bool TryGetBinaryPv(out BinaryPv value)
+    {
+        if (Choice == Option.BinaryPv)
+        {
+            value = (BinaryPv)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Specifies the BACnet binary PV value when present.
+    /// Creates a choice with the <see cref="Option.BinaryPv"/> option.
     /// </summary>
     public static OptionalBinaryPv FromBinaryPv(BinaryPv value)
     {

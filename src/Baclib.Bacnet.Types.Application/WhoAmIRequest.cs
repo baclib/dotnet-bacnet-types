@@ -12,14 +12,14 @@ public partial record class WhoAmIRequest
     /// The vendor identifier of the device.
     /// </summary>
     public required Unsigned16 VendorId { get; init; }
-    
+
     /// <summary>
     /// The model name of the device.
     /// </summary>
     public required CharacterString ModelName { get; init; }
-    
+
     /// <summary>
     /// The serial number of the device.
     /// </summary>
     public required CharacterString SerialNumber { get; init; }
-    }
+}

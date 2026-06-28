@@ -12,7 +12,7 @@ public partial record class VtDataAck
     /// Indicates if all new data was accepted (true/false).
     /// </summary>
     public required Boolean AllNewDataAccepted { get; init; }
-    
+
     /// <summary>
     /// The number of octets accepted, if not all data was accepted. Optional.
     /// </summary>

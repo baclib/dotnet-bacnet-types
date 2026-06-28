@@ -22,7 +22,7 @@ public partial record class AuditNotification
     /// The device that initiated the operation.
     /// </summary>
     public required Recipient SourceDevice { get; init; }
-    
+
     /// <summary>
     /// The object on the source device that initiated the operation.
     /// </summary>
@@ -32,7 +32,7 @@ public partial record class AuditNotification
     /// The type of operation that was performed.
     /// </summary>
     public required AuditOperation Operation { get; init; }
-    
+
     /// <summary>
     /// Optional comment from the source device.
     /// </summary>
@@ -62,7 +62,7 @@ public partial record class AuditNotification
     /// The device that was the target of the operation.
     /// </summary>
     public required Recipient TargetDevice { get; init; }
-    
+
     /// <summary>
     /// The object on the target device that was affected.
     /// </summary>

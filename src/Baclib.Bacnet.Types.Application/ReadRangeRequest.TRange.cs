@@ -36,13 +36,11 @@ public partial record class ReadRangeRequest
         /// </summary>
         public Option Choice { get; }
     
-        private object _choiceValue
-        {
-            get;
-        }
+        private readonly object _choiceValue;
     
         private TRange(Option choice, object value)
         {
+            ArgumentNullException.ThrowIfNull(value);
             Choice = choice;
             _choiceValue = value;
         }
@@ -61,9 +59,24 @@ public partial record class ReadRangeRequest
                 return (TByPosition)_choiceValue;
             }
         }
+    
+        /// <summary>
+        /// Tries to get the value when the active choice is <see cref="Option.ByPosition"/>.
+        /// </summary>
+        public bool TryGetByPosition(out TByPosition value)
+        {
+            if (Choice == Option.ByPosition)
+            {
+                value = (TByPosition)_choiceValue;
+                return true;
+            }
+    
+            value = default!;
+            return false;
+        }
         
         /// <summary>
-        /// Create function for Read range by position.
+        /// Creates a choice with the <see cref="Option.ByPosition"/> option.
         /// </summary>
         public static TRange FromByPosition(TByPosition value)
         {
@@ -84,9 +97,24 @@ public partial record class ReadRangeRequest
                 return (TBySequenceNumber)_choiceValue;
             }
         }
+    
+        /// <summary>
+        /// Tries to get the value when the active choice is <see cref="Option.BySequenceNumber"/>.
+        /// </summary>
+        public bool TryGetBySequenceNumber(out TBySequenceNumber value)
+        {
+            if (Choice == Option.BySequenceNumber)
+            {
+                value = (TBySequenceNumber)_choiceValue;
+                return true;
+            }
+    
+            value = default!;
+            return false;
+        }
         
         /// <summary>
-        /// Create function for Read range by sequence number.
+        /// Creates a choice with the <see cref="Option.BySequenceNumber"/> option.
         /// </summary>
         public static TRange FromBySequenceNumber(TBySequenceNumber value)
         {
@@ -107,9 +135,24 @@ public partial record class ReadRangeRequest
                 return (TByTime)_choiceValue;
             }
         }
+    
+        /// <summary>
+        /// Tries to get the value when the active choice is <see cref="Option.ByTime"/>.
+        /// </summary>
+        public bool TryGetByTime(out TByTime value)
+        {
+            if (Choice == Option.ByTime)
+            {
+                value = (TByTime)_choiceValue;
+                return true;
+            }
+    
+            value = default!;
+            return false;
+        }
         
         /// <summary>
-        /// Create function for Read range by time.
+        /// Creates a choice with the <see cref="Option.ByTime"/> option.
         /// </summary>
         public static TRange FromByTime(TByTime value)
         {

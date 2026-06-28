@@ -14,10 +14,10 @@ public partial record class EventParameter
         /// The minimum time in seconds that the condition must persist before triggering the event.
         /// </summary>
         public required Unsigned TimeDelay { get; init; }
-        
+    
         /// <summary>
         /// The criteria defining what constitutes a significant change of value.
         /// </summary>
         public required TCovCriteria CovCriteria { get; init; }
-        }
+    }
 }

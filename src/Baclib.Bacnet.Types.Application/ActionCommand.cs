@@ -17,12 +17,12 @@ public partial record class ActionCommand
     /// The object identifier containing the property to write.
     /// </summary>
     public required ObjectIdentifier ObjectIdentifier { get; init; }
-    
+
     /// <summary>
     /// The property identifier to write to.
     /// </summary>
     public required PropertyIdentifier PropertyIdentifier { get; init; }
-    
+
     /// <summary>
     /// Optional array index if the property is an array.
     /// </summary>
@@ -32,7 +32,7 @@ public partial record class ActionCommand
     /// The value to write to the property.
     /// </summary>
     public required Any PropertyValue { get; init; }
-    
+
     /// <summary>
     /// Optional priority level for the write operation (1-16).
     /// </summary>
@@ -47,9 +47,9 @@ public partial record class ActionCommand
     /// Indicates whether to stop executing subsequent commands if this one fails.
     /// </summary>
     public required Boolean QuitOnFailure { get; init; }
-    
+
     /// <summary>
     /// Indicates whether the write operation was successful.
     /// </summary>
     public required Boolean WriteSuccessful { get; init; }
-    }
+}

@@ -14,10 +14,10 @@ public partial record class EventParameter
         /// The number of log records required to trigger a notification.
         /// </summary>
         public required Unsigned NotificationThreshold { get; init; }
-        
+    
         /// <summary>
         /// The count from the previous notification for detecting unconfirmed buffers.
         /// </summary>
         public required Unsigned32 PreviousNotificationCount { get; init; }
-        }
+    }
 }

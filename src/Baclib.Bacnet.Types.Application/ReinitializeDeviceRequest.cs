@@ -12,7 +12,7 @@ public partial record class ReinitializeDeviceRequest
     /// The state to which the device should be reinitialized.
     /// </summary>
     public required TReinitializedStateOfDevice ReinitializedStateOfDevice { get; init; }
-    
+
     /// <summary>
     /// Optional password required for reinitialization.
     /// </summary>

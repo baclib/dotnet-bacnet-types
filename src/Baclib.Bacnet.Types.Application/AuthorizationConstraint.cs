@@ -12,9 +12,9 @@ public partial record class AuthorizationConstraint
     /// The required network origin of the client.
     /// </summary>
     public required TOrigin Origin { get; init; }
-    
+
     /// <summary>
     /// The required authentication method for the client.
     /// </summary>
     public required TAuthentication Authentication { get; init; }
-    }
+}

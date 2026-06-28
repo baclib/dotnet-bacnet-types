@@ -34,13 +34,11 @@ public partial record class TimeStamp
     /// </summary>
     public Option Choice { get; }
 
-    private object _choiceValue
-    {
-        get;
-    }
+    private readonly object _choiceValue;
 
     private TimeStamp(Option choice, object value)
     {
+        ArgumentNullException.ThrowIfNull(value);
         Choice = choice;
         _choiceValue = value;
     }
@@ -59,9 +57,24 @@ public partial record class TimeStamp
             return (Time)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.Time"/>.
+    /// </summary>
+    public bool TryGetTime(out Time value)
+    {
+        if (Choice == Option.Time)
+        {
+            value = (Time)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for A time value as the timestamp.
+    /// Creates a choice with the <see cref="Option.Time"/> option.
     /// </summary>
     public static TimeStamp FromTime(Time value)
     {
@@ -82,9 +95,24 @@ public partial record class TimeStamp
             return (TSequenceNumber)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.SequenceNumber"/>.
+    /// </summary>
+    public bool TryGetSequenceNumber(out TSequenceNumber value)
+    {
+        if (Choice == Option.SequenceNumber)
+        {
+            value = (TSequenceNumber)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for A sequence number as the timestamp.
+    /// Creates a choice with the <see cref="Option.SequenceNumber"/> option.
     /// </summary>
     public static TimeStamp FromSequenceNumber(TSequenceNumber value)
     {
@@ -105,9 +133,24 @@ public partial record class TimeStamp
             return (DateTime)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.Datetime"/>.
+    /// </summary>
+    public bool TryGetDatetime(out DateTime value)
+    {
+        if (Choice == Option.Datetime)
+        {
+            value = (DateTime)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for A date and time value as the timestamp.
+    /// Creates a choice with the <see cref="Option.Datetime"/> option.
     /// </summary>
     public static TimeStamp FromDatetime(DateTime value)
     {

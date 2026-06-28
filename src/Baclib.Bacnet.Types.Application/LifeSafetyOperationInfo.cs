@@ -12,9 +12,9 @@ public partial record class LifeSafetyOperationInfo
     /// The identifier of the process that requested the life safety operation.
     /// </summary>
     public required Unsigned32 RequestingProcessIdentifier { get; init; }
-    
+
     /// <summary>
     /// The life safety operation that was requested.
     /// </summary>
     public required LifeSafetyOperation Request { get; init; }
-    }
+}

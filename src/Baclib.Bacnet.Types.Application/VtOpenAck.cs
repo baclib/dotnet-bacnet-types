@@ -12,4 +12,4 @@ public partial record class VtOpenAck
     /// The identifier assigned to the remote VT session.
     /// </summary>
     public required Unsigned8 RemoteVtSessionIdentifier { get; init; }
-    }
+}

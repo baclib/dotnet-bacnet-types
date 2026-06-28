@@ -33,13 +33,11 @@ public partial record class NotificationParameters
             /// </summary>
             public Option Choice { get; }
         
-            private object _choiceValue
-            {
-                get;
-            }
+            private readonly object _choiceValue;
         
             private TNewValue(Option choice, object value)
             {
+                ArgumentNullException.ThrowIfNull(value);
                 Choice = choice;
                 _choiceValue = value;
             }
@@ -58,9 +56,24 @@ public partial record class NotificationParameters
                     return (BitString)_choiceValue;
                 }
             }
+        
+            /// <summary>
+            /// Tries to get the value when the active choice is <see cref="Option.ChangedBits"/>.
+            /// </summary>
+            public bool TryGetChangedBits(out BitString value)
+            {
+                if (Choice == Option.ChangedBits)
+                {
+                    value = (BitString)_choiceValue;
+                    return true;
+                }
+        
+                value = default!;
+                return false;
+            }
             
             /// <summary>
-            /// Create function for The bits that have changed in a bit string value.
+            /// Creates a choice with the <see cref="Option.ChangedBits"/> option.
             /// </summary>
             public static TNewValue FromChangedBits(BitString value)
             {
@@ -81,9 +94,24 @@ public partial record class NotificationParameters
                     return (float)_choiceValue;
                 }
             }
+        
+            /// <summary>
+            /// Tries to get the value when the active choice is <see cref="Option.ChangedValue"/>.
+            /// </summary>
+            public bool TryGetChangedValue(out float value)
+            {
+                if (Choice == Option.ChangedValue)
+                {
+                    value = (float)_choiceValue;
+                    return true;
+                }
+        
+                value = default!;
+                return false;
+            }
             
             /// <summary>
-            /// Create function for The new numeric value that triggered the notification.
+            /// Creates a choice with the <see cref="Option.ChangedValue"/> option.
             /// </summary>
             public static TNewValue FromChangedValue(float value)
             {

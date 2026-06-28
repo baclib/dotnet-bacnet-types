@@ -14,15 +14,15 @@ public partial record class EventParameter
         /// The minimum time in seconds that the condition must persist before triggering the event.
         /// </summary>
         public required Unsigned TimeDelay { get; init; }
-        
+    
         /// <summary>
         /// A bit mask indicating which bits in the monitored value are significant for comparison.
         /// </summary>
         public required BitString Bitmask { get; init; }
-        
+    
         /// <summary>
         /// A list of bit string values that trigger the event when matched.
         /// </summary>
-        public required TListOfBitstringValues ListOfBitstringValues { get; init; }
-        }
+        public required SequenceOf<BitString> ListOfBitstringValues { get; init; }
+    }
 }

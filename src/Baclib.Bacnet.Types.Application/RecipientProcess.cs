@@ -12,9 +12,9 @@ public partial record class RecipientProcess
     /// The recipient of the notification or message.
     /// </summary>
     public required Recipient Recipient { get; init; }
-    
+
     /// <summary>
     /// The process identifier associated with the recipient.
     /// </summary>
     public required Unsigned32 ProcessIdentifier { get; init; }
-    }
+}

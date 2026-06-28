@@ -11,5 +11,5 @@ public partial record class NameValueCollection
     /// <summary>
     /// The collection of name-value pairs.
     /// </summary>
-    public required TMembers Members { get; init; }
-    }
+    public required SequenceOf<NameValue> Members { get; init; }
+}

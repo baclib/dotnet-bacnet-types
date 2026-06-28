@@ -12,9 +12,9 @@ public partial record class CreateObjectRequest
     /// Specifies the object to be created, either by type alone or by complete identifier.
     /// </summary>
     public required TObjectSpecifier ObjectSpecifier { get; init; }
-    
+
     /// <summary>
     /// An optional list of initial property values to be set when the object is created.
     /// </summary>
-    public Optional<TListOfInitialValues> ListOfInitialValues { get; init; }
+    public Optional<SequenceOf<PropertyValue>> ListOfInitialValues { get; init; }
 }

@@ -13,11 +13,11 @@ public partial record class EventParameter
         /// <summary>
         /// A list of access event types that trigger the event when matched.
         /// </summary>
-        public required TListOfAccessEvents ListOfAccessEvents { get; init; }
-        
+        public required SequenceOf<AccessEvent> ListOfAccessEvents { get; init; }
+    
         /// <summary>
         /// Reference to the property containing the time of the access event.
         /// </summary>
         public required DeviceObjectPropertyReference AccessEventTimeReference { get; init; }
-        }
+    }
 }

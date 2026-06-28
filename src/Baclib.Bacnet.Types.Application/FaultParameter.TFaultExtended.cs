@@ -14,15 +14,15 @@ public partial record class FaultParameter
         /// The vendor identifier for the vendor-specific fault type.
         /// </summary>
         public required Unsigned16 VendorId { get; init; }
-        
+    
         /// <summary>
         /// The vendor-specific fault type identifier.
         /// </summary>
         public required Unsigned ExtendedFaultType { get; init; }
-        
+    
         /// <summary>
         /// A series of parameters for the extended fault type, which can be of various data types.
         /// </summary>
-        public required TParameters Parameters { get; init; }
-        }
+        public required SequenceOf<TParametersItem> Parameters { get; init; }
+    }
 }

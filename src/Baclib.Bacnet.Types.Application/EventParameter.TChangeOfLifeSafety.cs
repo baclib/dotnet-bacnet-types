@@ -14,20 +14,20 @@ public partial record class EventParameter
         /// The minimum time in seconds that the condition must persist before triggering the event.
         /// </summary>
         public required Unsigned TimeDelay { get; init; }
-        
+    
         /// <summary>
         /// A list of life safety state values that trigger the event when matched.
         /// </summary>
-        public required TListOfLifeSafetyAlarmValues ListOfLifeSafetyAlarmValues { get; init; }
-        
+        public required SequenceOf<LifeSafetyState> ListOfLifeSafetyAlarmValues { get; init; }
+    
         /// <summary>
         /// An additional list of alarm values for event detection.
         /// </summary>
-        public required TListOfAlarmValues ListOfAlarmValues { get; init; }
-        
+        public required SequenceOf<LifeSafetyState> ListOfAlarmValues { get; init; }
+    
         /// <summary>
         /// Reference to the property containing the life safety mode.
         /// </summary>
         public required DeviceObjectPropertyReference ModePropertyReference { get; init; }
-        }
+    }
 }

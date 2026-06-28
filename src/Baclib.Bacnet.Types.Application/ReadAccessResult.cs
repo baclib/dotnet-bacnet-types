@@ -12,9 +12,9 @@ public partial record class ReadAccessResult
     /// The identifier of the object from which properties were read.
     /// </summary>
     public required ObjectIdentifier ObjectIdentifier { get; init; }
-    
+
     /// <summary>
     /// A list of results for the properties read from the object.
     /// </summary>
-    public required TListOfResults ListOfResults { get; init; }
-    }
+    public required SequenceOf<TListOfResultsItem> ListOfResults { get; init; }
+}

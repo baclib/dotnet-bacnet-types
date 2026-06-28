@@ -29,13 +29,11 @@ public partial record class OptionalDateTime
     /// </summary>
     public Option Choice { get; }
 
-    private object _choiceValue
-    {
-        get;
-    }
+    private readonly object _choiceValue;
 
     private OptionalDateTime(Option choice, object value)
     {
+        ArgumentNullException.ThrowIfNull(value);
         Choice = choice;
         _choiceValue = value;
     }
@@ -54,9 +52,24 @@ public partial record class OptionalDateTime
             return (Null)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.Null"/>.
+    /// </summary>
+    public bool TryGetNull(out Null value)
+    {
+        if (Choice == Option.Null)
+        {
+            value = (Null)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Indicates the absence of a date-time value.
+    /// Creates a choice with the <see cref="Option.Null"/> option.
     /// </summary>
     public static OptionalDateTime FromNull(Null value)
     {
@@ -77,9 +90,24 @@ public partial record class OptionalDateTime
             return (DateTime)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.Datetime"/>.
+    /// </summary>
+    public bool TryGetDatetime(out DateTime value)
+    {
+        if (Choice == Option.Datetime)
+        {
+            value = (DateTime)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Specifies the BACnet date-time value when present.
+    /// Creates a choice with the <see cref="Option.Datetime"/> option.
     /// </summary>
     public static OptionalDateTime FromDatetime(DateTime value)
     {

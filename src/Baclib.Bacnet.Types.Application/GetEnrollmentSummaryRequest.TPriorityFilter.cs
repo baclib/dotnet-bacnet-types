@@ -14,10 +14,10 @@ public partial record class GetEnrollmentSummaryRequest
         /// Minimum priority value for the filter range.
         /// </summary>
         public required Unsigned8 MinPriority { get; init; }
-        
+    
         /// <summary>
         /// Maximum priority value for the filter range.
         /// </summary>
         public required Unsigned8 MaxPriority { get; init; }
-        }
+    }
 }

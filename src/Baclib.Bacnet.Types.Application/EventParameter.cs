@@ -114,13 +114,11 @@ public partial record class EventParameter
     /// </summary>
     public Option Choice { get; }
 
-    private object _choiceValue
-    {
-        get;
-    }
+    private readonly object _choiceValue;
 
     private EventParameter(Option choice, object value)
     {
+        ArgumentNullException.ThrowIfNull(value);
         Choice = choice;
         _choiceValue = value;
     }
@@ -139,9 +137,24 @@ public partial record class EventParameter
             return (TChangeOfBitstring)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.ChangeOfBitstring"/>.
+    /// </summary>
+    public bool TryGetChangeOfBitstring(out TChangeOfBitstring value)
+    {
+        if (Choice == Option.ChangeOfBitstring)
+        {
+            value = (TChangeOfBitstring)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Event parameters for change-of-bitstring detection, triggered when a bit string value changes according to the specified criteria.
+    /// Creates a choice with the <see cref="Option.ChangeOfBitstring"/> option.
     /// </summary>
     public static EventParameter FromChangeOfBitstring(TChangeOfBitstring value)
     {
@@ -162,9 +175,24 @@ public partial record class EventParameter
             return (TChangeOfState)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.ChangeOfState"/>.
+    /// </summary>
+    public bool TryGetChangeOfState(out TChangeOfState value)
+    {
+        if (Choice == Option.ChangeOfState)
+        {
+            value = (TChangeOfState)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Event parameters for change-of-state detection, triggered when a state property changes to one of the specified values.
+    /// Creates a choice with the <see cref="Option.ChangeOfState"/> option.
     /// </summary>
     public static EventParameter FromChangeOfState(TChangeOfState value)
     {
@@ -185,9 +213,24 @@ public partial record class EventParameter
             return (TChangeOfValue)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.ChangeOfValue"/>.
+    /// </summary>
+    public bool TryGetChangeOfValue(out TChangeOfValue value)
+    {
+        if (Choice == Option.ChangeOfValue)
+        {
+            value = (TChangeOfValue)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Event parameters for change-of-value detection, triggered when a value changes significantly based on the specified criteria.
+    /// Creates a choice with the <see cref="Option.ChangeOfValue"/> option.
     /// </summary>
     public static EventParameter FromChangeOfValue(TChangeOfValue value)
     {
@@ -208,9 +251,24 @@ public partial record class EventParameter
             return (TCommandFailure)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.CommandFailure"/>.
+    /// </summary>
+    public bool TryGetCommandFailure(out TCommandFailure value)
+    {
+        if (Choice == Option.CommandFailure)
+        {
+            value = (TCommandFailure)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Event parameters for command-failure detection, triggered when a command does not achieve the expected result.
+    /// Creates a choice with the <see cref="Option.CommandFailure"/> option.
     /// </summary>
     public static EventParameter FromCommandFailure(TCommandFailure value)
     {
@@ -231,9 +289,24 @@ public partial record class EventParameter
             return (TFloatingLimit)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.FloatingLimit"/>.
+    /// </summary>
+    public bool TryGetFloatingLimit(out TFloatingLimit value)
+    {
+        if (Choice == Option.FloatingLimit)
+        {
+            value = (TFloatingLimit)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Event parameters for floating-limit detection, triggered when a value deviates from a setpoint by more than the specified limits.
+    /// Creates a choice with the <see cref="Option.FloatingLimit"/> option.
     /// </summary>
     public static EventParameter FromFloatingLimit(TFloatingLimit value)
     {
@@ -254,9 +327,24 @@ public partial record class EventParameter
             return (TOutOfRange)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.OutOfRange"/>.
+    /// </summary>
+    public bool TryGetOutOfRange(out TOutOfRange value)
+    {
+        if (Choice == Option.OutOfRange)
+        {
+            value = (TOutOfRange)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Event parameters for out-of-range detection, triggered when a real value exceeds the specified low or high limits.
+    /// Creates a choice with the <see cref="Option.OutOfRange"/> option.
     /// </summary>
     public static EventParameter FromOutOfRange(TOutOfRange value)
     {
@@ -277,9 +365,24 @@ public partial record class EventParameter
             return (TChangeOfLifeSafety)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.ChangeOfLifeSafety"/>.
+    /// </summary>
+    public bool TryGetChangeOfLifeSafety(out TChangeOfLifeSafety value)
+    {
+        if (Choice == Option.ChangeOfLifeSafety)
+        {
+            value = (TChangeOfLifeSafety)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Event parameters for change-of-life-safety detection, triggered when a life safety value changes to one of the specified alarm values or modes.
+    /// Creates a choice with the <see cref="Option.ChangeOfLifeSafety"/> option.
     /// </summary>
     public static EventParameter FromChangeOfLifeSafety(TChangeOfLifeSafety value)
     {
@@ -300,9 +403,24 @@ public partial record class EventParameter
             return (TExtended)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.Extended"/>.
+    /// </summary>
+    public bool TryGetExtended(out TExtended value)
+    {
+        if (Choice == Option.Extended)
+        {
+            value = (TExtended)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Event parameters for vendor-specific extended event types, allowing proprietary event detection using vendor-defined parameters.
+    /// Creates a choice with the <see cref="Option.Extended"/> option.
     /// </summary>
     public static EventParameter FromExtended(TExtended value)
     {
@@ -323,9 +441,24 @@ public partial record class EventParameter
             return (TBufferReady)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.BufferReady"/>.
+    /// </summary>
+    public bool TryGetBufferReady(out TBufferReady value)
+    {
+        if (Choice == Option.BufferReady)
+        {
+            value = (TBufferReady)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Event parameters for buffer-ready detection, triggered when buffer storage reaches the specified notification thresholds or when a previous notification has not been confirmed.
+    /// Creates a choice with the <see cref="Option.BufferReady"/> option.
     /// </summary>
     public static EventParameter FromBufferReady(TBufferReady value)
     {
@@ -346,9 +479,24 @@ public partial record class EventParameter
             return (TUnsignedRange)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.UnsignedRange"/>.
+    /// </summary>
+    public bool TryGetUnsignedRange(out TUnsignedRange value)
+    {
+        if (Choice == Option.UnsignedRange)
+        {
+            value = (TUnsignedRange)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Event parameters for unsigned-range detection, triggered when an unsigned integer value exceeds the specified low or high limits.
+    /// Creates a choice with the <see cref="Option.UnsignedRange"/> option.
     /// </summary>
     public static EventParameter FromUnsignedRange(TUnsignedRange value)
     {
@@ -369,9 +517,24 @@ public partial record class EventParameter
             return (TAccessEvent)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.AccessEvent"/>.
+    /// </summary>
+    public bool TryGetAccessEvent(out TAccessEvent value)
+    {
+        if (Choice == Option.AccessEvent)
+        {
+            value = (TAccessEvent)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Event parameters for access-event detection, triggered when physical access events occur that match the specified criteria.
+    /// Creates a choice with the <see cref="Option.AccessEvent"/> option.
     /// </summary>
     public static EventParameter FromAccessEvent(TAccessEvent value)
     {
@@ -392,9 +555,24 @@ public partial record class EventParameter
             return (TDoubleOutOfRange)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.DoubleOutOfRange"/>.
+    /// </summary>
+    public bool TryGetDoubleOutOfRange(out TDoubleOutOfRange value)
+    {
+        if (Choice == Option.DoubleOutOfRange)
+        {
+            value = (TDoubleOutOfRange)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Event parameters for double-out-of-range detection, triggered when a double-precision floating-point value exceeds the specified low or high limits.
+    /// Creates a choice with the <see cref="Option.DoubleOutOfRange"/> option.
     /// </summary>
     public static EventParameter FromDoubleOutOfRange(TDoubleOutOfRange value)
     {
@@ -415,9 +593,24 @@ public partial record class EventParameter
             return (TSignedOutOfRange)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.SignedOutOfRange"/>.
+    /// </summary>
+    public bool TryGetSignedOutOfRange(out TSignedOutOfRange value)
+    {
+        if (Choice == Option.SignedOutOfRange)
+        {
+            value = (TSignedOutOfRange)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Event parameters for signed-out-of-range detection, triggered when a signed integer value exceeds the specified low or high limits.
+    /// Creates a choice with the <see cref="Option.SignedOutOfRange"/> option.
     /// </summary>
     public static EventParameter FromSignedOutOfRange(TSignedOutOfRange value)
     {
@@ -438,9 +631,24 @@ public partial record class EventParameter
             return (TUnsignedOutOfRange)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.UnsignedOutOfRange"/>.
+    /// </summary>
+    public bool TryGetUnsignedOutOfRange(out TUnsignedOutOfRange value)
+    {
+        if (Choice == Option.UnsignedOutOfRange)
+        {
+            value = (TUnsignedOutOfRange)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Event parameters for unsigned-out-of-range detection, triggered when an unsigned integer value exceeds the specified low or high limits.
+    /// Creates a choice with the <see cref="Option.UnsignedOutOfRange"/> option.
     /// </summary>
     public static EventParameter FromUnsignedOutOfRange(TUnsignedOutOfRange value)
     {
@@ -461,9 +669,24 @@ public partial record class EventParameter
             return (TChangeOfCharacterstring)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.ChangeOfCharacterstring"/>.
+    /// </summary>
+    public bool TryGetChangeOfCharacterstring(out TChangeOfCharacterstring value)
+    {
+        if (Choice == Option.ChangeOfCharacterstring)
+        {
+            value = (TChangeOfCharacterstring)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Event parameters for change-of-characterstring detection, triggered when a character string value changes to one of the specified alarm values.
+    /// Creates a choice with the <see cref="Option.ChangeOfCharacterstring"/> option.
     /// </summary>
     public static EventParameter FromChangeOfCharacterstring(TChangeOfCharacterstring value)
     {
@@ -484,9 +707,24 @@ public partial record class EventParameter
             return (TChangeOfStatusFlags)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.ChangeOfStatusFlags"/>.
+    /// </summary>
+    public bool TryGetChangeOfStatusFlags(out TChangeOfStatusFlags value)
+    {
+        if (Choice == Option.ChangeOfStatusFlags)
+        {
+            value = (TChangeOfStatusFlags)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Event parameters for change-of-status-flags detection, triggered when the specified status flags change state.
+    /// Creates a choice with the <see cref="Option.ChangeOfStatusFlags"/> option.
     /// </summary>
     public static EventParameter FromChangeOfStatusFlags(TChangeOfStatusFlags value)
     {
@@ -507,9 +745,24 @@ public partial record class EventParameter
             return (Null)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.None"/>.
+    /// </summary>
+    public bool TryGetNone(out Null value)
+    {
+        if (Choice == Option.None)
+        {
+            value = (Null)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Indicates no event parameters are defined.
+    /// Creates a choice with the <see cref="Option.None"/> option.
     /// </summary>
     public static EventParameter FromNone(Null value)
     {
@@ -530,9 +783,24 @@ public partial record class EventParameter
             return (TChangeOfDiscreteValue)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.ChangeOfDiscreteValue"/>.
+    /// </summary>
+    public bool TryGetChangeOfDiscreteValue(out TChangeOfDiscreteValue value)
+    {
+        if (Choice == Option.ChangeOfDiscreteValue)
+        {
+            value = (TChangeOfDiscreteValue)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Event parameters for change-of-discrete-value detection, triggered when a discrete-valued property changes to a new value.
+    /// Creates a choice with the <see cref="Option.ChangeOfDiscreteValue"/> option.
     /// </summary>
     public static EventParameter FromChangeOfDiscreteValue(TChangeOfDiscreteValue value)
     {
@@ -553,9 +821,24 @@ public partial record class EventParameter
             return (TChangeOfTimer)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.ChangeOfTimer"/>.
+    /// </summary>
+    public bool TryGetChangeOfTimer(out TChangeOfTimer value)
+    {
+        if (Choice == Option.ChangeOfTimer)
+        {
+            value = (TChangeOfTimer)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Event parameters for change-of-timer detection, triggered when a timer state changes to one of the specified alarm values.
+    /// Creates a choice with the <see cref="Option.ChangeOfTimer"/> option.
     /// </summary>
     public static EventParameter FromChangeOfTimer(TChangeOfTimer value)
     {

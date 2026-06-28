@@ -16,11 +16,11 @@ public partial record class AtomicReadFileAck
             /// The starting byte position of the returned data.
             /// </summary>
             public required int FileStartPosition { get; init; }
-            
+        
             /// <summary>
             /// The data read from the file.
             /// </summary>
             public required OctetString FileData { get; init; }
-            }
+        }
     }
 }

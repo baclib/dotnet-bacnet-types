@@ -11,10 +11,10 @@ public partial record class GetEventInformationAck
     /// <summary>
     /// A list of event summary entries, one for each active event.
     /// </summary>
-    public required TListOfEventSummaries ListOfEventSummaries { get; init; }
-    
+    public required SequenceOf<TListOfEventSummariesItem> ListOfEventSummaries { get; init; }
+
     /// <summary>
     /// Indicates whether more event information is available (true) or if all events have been returned (false).
     /// </summary>
     public required Boolean MoreEvents { get; init; }
-    }
+}

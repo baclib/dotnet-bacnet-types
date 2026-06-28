@@ -12,14 +12,14 @@ public partial record class AuthenticationFactor
     /// The type of authentication factor format.
     /// </summary>
     public required AuthenticationFactorType FormatType { get; init; }
-    
+
     /// <summary>
     /// The class or variant within the format type.
     /// </summary>
     public required Unsigned FormatClass { get; init; }
-    
+
     /// <summary>
     /// The actual authentication credential value.
     /// </summary>
     public required OctetString Value { get; init; }
-    }
+}

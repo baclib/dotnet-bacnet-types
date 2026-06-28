@@ -12,12 +12,12 @@ public partial record class SubscribeCovRequest
     /// The process identifier of the subscriber.
     /// </summary>
     public required Unsigned32 SubscriberProcessIdentifier { get; init; }
-    
+
     /// <summary>
     /// The identifier of the object to be monitored for changes.
     /// </summary>
     public required ObjectIdentifier MonitoredObjectIdentifier { get; init; }
-    
+
     /// <summary>
     /// Indicates if confirmed notifications should be issued. Optional.
     /// </summary>

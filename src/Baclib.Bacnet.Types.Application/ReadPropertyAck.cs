@@ -12,12 +12,12 @@ public partial record class ReadPropertyAck
     /// The identifier of the object being read.
     /// </summary>
     public required ObjectIdentifier ObjectIdentifier { get; init; }
-    
+
     /// <summary>
     /// The property identifier specifying the property being read.
     /// </summary>
     public required PropertyIdentifier PropertyIdentifier { get; init; }
-    
+
     /// <summary>
     /// Optional array index for the property.
     /// </summary>
@@ -27,4 +27,4 @@ public partial record class ReadPropertyAck
     /// The value of the property being read.
     /// </summary>
     public required Any PropertyValue { get; init; }
-    }
+}

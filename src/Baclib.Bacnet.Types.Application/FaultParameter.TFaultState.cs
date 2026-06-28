@@ -13,6 +13,6 @@ public partial record class FaultParameter
         /// <summary>
         /// A list of property states that indicate a fault condition.
         /// </summary>
-        public required TListOfFaultValues ListOfFaultValues { get; init; }
-        }
+        public required SequenceOf<PropertyStates> ListOfFaultValues { get; init; }
+    }
 }

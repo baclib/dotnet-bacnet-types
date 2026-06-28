@@ -9,7 +9,7 @@ public interface IBitString : IReadOnlyCollection<bool>
     /// Gets the number of bits in this bit string.
     /// </summary>
     /// <value>The number of bits (0 to the maximum capacity of the implementation).</value>
-    new int Count { get; }
+    int Length { get; }
 
     /// <summary>
     /// Gets the value of a bit at the specified index.

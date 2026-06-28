@@ -29,13 +29,11 @@ public partial record class ProcessIdSelection
     /// </summary>
     public Option Choice { get; }
 
-    private object _choiceValue
-    {
-        get;
-    }
+    private readonly object _choiceValue;
 
     private ProcessIdSelection(Option choice, object value)
     {
+        ArgumentNullException.ThrowIfNull(value);
         Choice = choice;
         _choiceValue = value;
     }
@@ -54,9 +52,24 @@ public partial record class ProcessIdSelection
             return (Unsigned32)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.ProcessIdentifier"/>.
+    /// </summary>
+    public bool TryGetProcessIdentifier(out Unsigned32 value)
+    {
+        if (Choice == Option.ProcessIdentifier)
+        {
+            value = (Unsigned32)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for A specific process identifier.
+    /// Creates a choice with the <see cref="Option.ProcessIdentifier"/> option.
     /// </summary>
     public static ProcessIdSelection FromProcessIdentifier(Unsigned32 value)
     {
@@ -77,9 +90,24 @@ public partial record class ProcessIdSelection
             return (Null)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.NullValue"/>.
+    /// </summary>
+    public bool TryGetNullValue(out Null value)
+    {
+        if (Choice == Option.NullValue)
+        {
+            value = (Null)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Indicates no process identifier is selected.
+    /// Creates a choice with the <see cref="Option.NullValue"/> option.
     /// </summary>
     public static ProcessIdSelection FromNullValue(Null value)
     {

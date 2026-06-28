@@ -34,13 +34,11 @@ public partial record class CalendarEntry
     /// </summary>
     public Option Choice { get; }
 
-    private object _choiceValue
-    {
-        get;
-    }
+    private readonly object _choiceValue;
 
     private CalendarEntry(Option choice, object value)
     {
+        ArgumentNullException.ThrowIfNull(value);
         Choice = choice;
         _choiceValue = value;
     }
@@ -59,9 +57,24 @@ public partial record class CalendarEntry
             return (DatePattern)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.Date"/>.
+    /// </summary>
+    public bool TryGetDate(out DatePattern value)
+    {
+        if (Choice == Option.Date)
+        {
+            value = (DatePattern)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for A specific date or date pattern.
+    /// Creates a choice with the <see cref="Option.Date"/> option.
     /// </summary>
     public static CalendarEntry FromDate(DatePattern value)
     {
@@ -82,9 +95,24 @@ public partial record class CalendarEntry
             return (DateRange)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.DateRange"/>.
+    /// </summary>
+    public bool TryGetDateRange(out DateRange value)
+    {
+        if (Choice == Option.DateRange)
+        {
+            value = (DateRange)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for A range defined by a start date and an end date.
+    /// Creates a choice with the <see cref="Option.DateRange"/> option.
     /// </summary>
     public static CalendarEntry FromDateRange(DateRange value)
     {
@@ -105,9 +133,24 @@ public partial record class CalendarEntry
             return (WeekNDay)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.Weeknday"/>.
+    /// </summary>
+    public bool TryGetWeeknday(out WeekNDay value)
+    {
+        if (Choice == Option.Weeknday)
+        {
+            value = (WeekNDay)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for A combination of month, week, and day.
+    /// Creates a choice with the <see cref="Option.Weeknday"/> option.
     /// </summary>
     public static CalendarEntry FromWeeknday(WeekNDay value)
     {

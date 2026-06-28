@@ -12,9 +12,9 @@ public partial record class AuthorizationScopeDescription
     /// The name of the authorization scope.
     /// </summary>
     public required CharacterString Name { get; init; }
-    
+
     /// <summary>
     /// A textual description of what this authorization scope allows.
     /// </summary>
     public required CharacterString Description { get; init; }
-    }
+}

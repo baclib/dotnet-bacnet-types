@@ -12,9 +12,9 @@ public partial record class AuthorizationScope
     /// Standard bit flags defining the scope of access.
     /// </summary>
     public required TStandard Standard { get; init; }
-    
+
     /// <summary>
     /// Optional list of extended scope identifiers for vendor-specific or custom access scopes.
     /// </summary>
-    public Optional<TExtended> Extended { get; init; }
+    public Optional<SequenceOf<CharacterString>> Extended { get; init; }
 }

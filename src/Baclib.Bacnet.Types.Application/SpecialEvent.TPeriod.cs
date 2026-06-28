@@ -31,13 +31,11 @@ public partial record class SpecialEvent
         /// </summary>
         public Option Choice { get; }
     
-        private object _choiceValue
-        {
-            get;
-        }
+        private readonly object _choiceValue;
     
         private TPeriod(Option choice, object value)
         {
+            ArgumentNullException.ThrowIfNull(value);
             Choice = choice;
             _choiceValue = value;
         }
@@ -56,9 +54,24 @@ public partial record class SpecialEvent
                 return (CalendarEntry)_choiceValue;
             }
         }
+    
+        /// <summary>
+        /// Tries to get the value when the active choice is <see cref="Option.CalendarEntry"/>.
+        /// </summary>
+        public bool TryGetCalendarEntry(out CalendarEntry value)
+        {
+            if (Choice == Option.CalendarEntry)
+            {
+                value = (CalendarEntry)_choiceValue;
+                return true;
+            }
+    
+            value = default!;
+            return false;
+        }
         
         /// <summary>
-        /// Create function for A specific calendar entry defining the event period.
+        /// Creates a choice with the <see cref="Option.CalendarEntry"/> option.
         /// </summary>
         public static TPeriod FromCalendarEntry(CalendarEntry value)
         {
@@ -79,9 +92,24 @@ public partial record class SpecialEvent
                 return (ObjectIdentifier)_choiceValue;
             }
         }
+    
+        /// <summary>
+        /// Tries to get the value when the active choice is <see cref="Option.CalendarReference"/>.
+        /// </summary>
+        public bool TryGetCalendarReference(out ObjectIdentifier value)
+        {
+            if (Choice == Option.CalendarReference)
+            {
+                value = (ObjectIdentifier)_choiceValue;
+                return true;
+            }
+    
+            value = default!;
+            return false;
+        }
         
         /// <summary>
-        /// Create function for A reference to a calendar object defining the event period.
+        /// Creates a choice with the <see cref="Option.CalendarReference"/> option.
         /// </summary>
         public static TPeriod FromCalendarReference(ObjectIdentifier value)
         {

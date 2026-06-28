@@ -119,13 +119,11 @@ public partial record class NotificationParameters
     /// </summary>
     public Option Choice { get; }
 
-    private object _choiceValue
-    {
-        get;
-    }
+    private readonly object _choiceValue;
 
     private NotificationParameters(Option choice, object value)
     {
+        ArgumentNullException.ThrowIfNull(value);
         Choice = choice;
         _choiceValue = value;
     }
@@ -144,9 +142,24 @@ public partial record class NotificationParameters
             return (TChangeOfBitstring)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.ChangeOfBitstring"/>.
+    /// </summary>
+    public bool TryGetChangeOfBitstring(out TChangeOfBitstring value)
+    {
+        if (Choice == Option.ChangeOfBitstring)
+        {
+            value = (TChangeOfBitstring)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Notification parameters for a change-of-bitstring event, triggered when a bit string value changes.
+    /// Creates a choice with the <see cref="Option.ChangeOfBitstring"/> option.
     /// </summary>
     public static NotificationParameters FromChangeOfBitstring(TChangeOfBitstring value)
     {
@@ -167,9 +180,24 @@ public partial record class NotificationParameters
             return (TChangeOfState)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.ChangeOfState"/>.
+    /// </summary>
+    public bool TryGetChangeOfState(out TChangeOfState value)
+    {
+        if (Choice == Option.ChangeOfState)
+        {
+            value = (TChangeOfState)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Notification parameters for a change-of-state event, triggered when an object transitions to a new state.
+    /// Creates a choice with the <see cref="Option.ChangeOfState"/> option.
     /// </summary>
     public static NotificationParameters FromChangeOfState(TChangeOfState value)
     {
@@ -190,9 +218,24 @@ public partial record class NotificationParameters
             return (TChangeOfValue)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.ChangeOfValue"/>.
+    /// </summary>
+    public bool TryGetChangeOfValue(out TChangeOfValue value)
+    {
+        if (Choice == Option.ChangeOfValue)
+        {
+            value = (TChangeOfValue)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Notification parameters for a change-of-value event, triggered when a monitored value changes significantly.
+    /// Creates a choice with the <see cref="Option.ChangeOfValue"/> option.
     /// </summary>
     public static NotificationParameters FromChangeOfValue(TChangeOfValue value)
     {
@@ -213,9 +256,24 @@ public partial record class NotificationParameters
             return (TCommandFailure)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.CommandFailure"/>.
+    /// </summary>
+    public bool TryGetCommandFailure(out TCommandFailure value)
+    {
+        if (Choice == Option.CommandFailure)
+        {
+            value = (TCommandFailure)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Notification parameters for a command-failure event, triggered when a command does not achieve the expected result.
+    /// Creates a choice with the <see cref="Option.CommandFailure"/> option.
     /// </summary>
     public static NotificationParameters FromCommandFailure(TCommandFailure value)
     {
@@ -236,9 +294,24 @@ public partial record class NotificationParameters
             return (TFloatingLimit)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.FloatingLimit"/>.
+    /// </summary>
+    public bool TryGetFloatingLimit(out TFloatingLimit value)
+    {
+        if (Choice == Option.FloatingLimit)
+        {
+            value = (TFloatingLimit)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Notification parameters for a floating-limit event, triggered when a value deviates from a setpoint by more than a specified error limit.
+    /// Creates a choice with the <see cref="Option.FloatingLimit"/> option.
     /// </summary>
     public static NotificationParameters FromFloatingLimit(TFloatingLimit value)
     {
@@ -259,9 +332,24 @@ public partial record class NotificationParameters
             return (TOutOfRange)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.OutOfRange"/>.
+    /// </summary>
+    public bool TryGetOutOfRange(out TOutOfRange value)
+    {
+        if (Choice == Option.OutOfRange)
+        {
+            value = (TOutOfRange)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Notification parameters for an out-of-range event, triggered when a real value exceeds a defined limit.
+    /// Creates a choice with the <see cref="Option.OutOfRange"/> option.
     /// </summary>
     public static NotificationParameters FromOutOfRange(TOutOfRange value)
     {
@@ -271,7 +359,7 @@ public partial record class NotificationParameters
     /// <summary>
     /// Notification parameters for a complex event type, containing a series of property-value pairs for vendor-specific or advanced event scenarios.
     /// </summary>
-    public TComplexEventType ComplexEventType
+    public PropertyValue ComplexEventType
     {
         get
         {
@@ -279,14 +367,29 @@ public partial record class NotificationParameters
             {
                 throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.ComplexEventType)}.");
             }
-            return (TComplexEventType)_choiceValue;
+            return (PropertyValue)_choiceValue;
         }
+    }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.ComplexEventType"/>.
+    /// </summary>
+    public bool TryGetComplexEventType(out PropertyValue value)
+    {
+        if (Choice == Option.ComplexEventType)
+        {
+            value = (PropertyValue)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
     }
     
     /// <summary>
-    /// Create function for Notification parameters for a complex event type, containing a series of property-value pairs for vendor-specific or advanced event scenarios.
+    /// Creates a choice with the <see cref="Option.ComplexEventType"/> option.
     /// </summary>
-    public static NotificationParameters FromComplexEventType(TComplexEventType value)
+    public static NotificationParameters FromComplexEventType(PropertyValue value)
     {
         return new NotificationParameters(Option.ComplexEventType, value);
     }
@@ -305,9 +408,24 @@ public partial record class NotificationParameters
             return (TChangeOfLifeSafety)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.ChangeOfLifeSafety"/>.
+    /// </summary>
+    public bool TryGetChangeOfLifeSafety(out TChangeOfLifeSafety value)
+    {
+        if (Choice == Option.ChangeOfLifeSafety)
+        {
+            value = (TChangeOfLifeSafety)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Notification parameters for a change-of-life-safety event, triggered when a life safety system changes state or mode.
+    /// Creates a choice with the <see cref="Option.ChangeOfLifeSafety"/> option.
     /// </summary>
     public static NotificationParameters FromChangeOfLifeSafety(TChangeOfLifeSafety value)
     {
@@ -328,9 +446,24 @@ public partial record class NotificationParameters
             return (TExtended)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.Extended"/>.
+    /// </summary>
+    public bool TryGetExtended(out TExtended value)
+    {
+        if (Choice == Option.Extended)
+        {
+            value = (TExtended)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Notification parameters for vendor-specific extended events, allowing custom event types beyond the standard BACnet event definitions.
+    /// Creates a choice with the <see cref="Option.Extended"/> option.
     /// </summary>
     public static NotificationParameters FromExtended(TExtended value)
     {
@@ -351,9 +484,24 @@ public partial record class NotificationParameters
             return (TBufferReady)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.BufferReady"/>.
+    /// </summary>
+    public bool TryGetBufferReady(out TBufferReady value)
+    {
+        if (Choice == Option.BufferReady)
+        {
+            value = (TBufferReady)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Notification parameters for a buffer-ready event, triggered when a data buffer reaches a threshold and is ready for retrieval.
+    /// Creates a choice with the <see cref="Option.BufferReady"/> option.
     /// </summary>
     public static NotificationParameters FromBufferReady(TBufferReady value)
     {
@@ -374,9 +522,24 @@ public partial record class NotificationParameters
             return (TUnsignedRange)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.UnsignedRange"/>.
+    /// </summary>
+    public bool TryGetUnsignedRange(out TUnsignedRange value)
+    {
+        if (Choice == Option.UnsignedRange)
+        {
+            value = (TUnsignedRange)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Notification parameters for an unsigned-range event, triggered when an unsigned integer value exceeds a defined limit.
+    /// Creates a choice with the <see cref="Option.UnsignedRange"/> option.
     /// </summary>
     public static NotificationParameters FromUnsignedRange(TUnsignedRange value)
     {
@@ -397,9 +560,24 @@ public partial record class NotificationParameters
             return (TAccessEvent)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.AccessEvent"/>.
+    /// </summary>
+    public bool TryGetAccessEvent(out TAccessEvent value)
+    {
+        if (Choice == Option.AccessEvent)
+        {
+            value = (TAccessEvent)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Notification parameters for an access-event, triggered by physical access control events such as door access attempts.
+    /// Creates a choice with the <see cref="Option.AccessEvent"/> option.
     /// </summary>
     public static NotificationParameters FromAccessEvent(TAccessEvent value)
     {
@@ -420,9 +598,24 @@ public partial record class NotificationParameters
             return (TDoubleOutOfRange)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.DoubleOutOfRange"/>.
+    /// </summary>
+    public bool TryGetDoubleOutOfRange(out TDoubleOutOfRange value)
+    {
+        if (Choice == Option.DoubleOutOfRange)
+        {
+            value = (TDoubleOutOfRange)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Notification parameters for a double-out-of-range event, triggered when a double-precision value exceeds a defined limit.
+    /// Creates a choice with the <see cref="Option.DoubleOutOfRange"/> option.
     /// </summary>
     public static NotificationParameters FromDoubleOutOfRange(TDoubleOutOfRange value)
     {
@@ -443,9 +636,24 @@ public partial record class NotificationParameters
             return (TSignedOutOfRange)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.SignedOutOfRange"/>.
+    /// </summary>
+    public bool TryGetSignedOutOfRange(out TSignedOutOfRange value)
+    {
+        if (Choice == Option.SignedOutOfRange)
+        {
+            value = (TSignedOutOfRange)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Notification parameters for a signed-out-of-range event, triggered when a signed integer value exceeds a defined limit.
+    /// Creates a choice with the <see cref="Option.SignedOutOfRange"/> option.
     /// </summary>
     public static NotificationParameters FromSignedOutOfRange(TSignedOutOfRange value)
     {
@@ -466,9 +674,24 @@ public partial record class NotificationParameters
             return (TUnsignedOutOfRange)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.UnsignedOutOfRange"/>.
+    /// </summary>
+    public bool TryGetUnsignedOutOfRange(out TUnsignedOutOfRange value)
+    {
+        if (Choice == Option.UnsignedOutOfRange)
+        {
+            value = (TUnsignedOutOfRange)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Notification parameters for an unsigned-out-of-range event, triggered when an unsigned integer value exceeds a defined limit.
+    /// Creates a choice with the <see cref="Option.UnsignedOutOfRange"/> option.
     /// </summary>
     public static NotificationParameters FromUnsignedOutOfRange(TUnsignedOutOfRange value)
     {
@@ -489,9 +712,24 @@ public partial record class NotificationParameters
             return (TChangeOfCharacterstring)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.ChangeOfCharacterstring"/>.
+    /// </summary>
+    public bool TryGetChangeOfCharacterstring(out TChangeOfCharacterstring value)
+    {
+        if (Choice == Option.ChangeOfCharacterstring)
+        {
+            value = (TChangeOfCharacterstring)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Notification parameters for a change-of-characterstring event, triggered when a character string value changes to a specified alarm value.
+    /// Creates a choice with the <see cref="Option.ChangeOfCharacterstring"/> option.
     /// </summary>
     public static NotificationParameters FromChangeOfCharacterstring(TChangeOfCharacterstring value)
     {
@@ -512,9 +750,24 @@ public partial record class NotificationParameters
             return (TChangeOfStatusFlags)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.ChangeOfStatusFlags"/>.
+    /// </summary>
+    public bool TryGetChangeOfStatusFlags(out TChangeOfStatusFlags value)
+    {
+        if (Choice == Option.ChangeOfStatusFlags)
+        {
+            value = (TChangeOfStatusFlags)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Notification parameters for a change-of-status-flags event, triggered when object status flags change.
+    /// Creates a choice with the <see cref="Option.ChangeOfStatusFlags"/> option.
     /// </summary>
     public static NotificationParameters FromChangeOfStatusFlags(TChangeOfStatusFlags value)
     {
@@ -535,9 +788,24 @@ public partial record class NotificationParameters
             return (TChangeOfReliability)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.ChangeOfReliability"/>.
+    /// </summary>
+    public bool TryGetChangeOfReliability(out TChangeOfReliability value)
+    {
+        if (Choice == Option.ChangeOfReliability)
+        {
+            value = (TChangeOfReliability)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Notification parameters for a change-of-reliability event, triggered when an object&#x27;s reliability status changes.
+    /// Creates a choice with the <see cref="Option.ChangeOfReliability"/> option.
     /// </summary>
     public static NotificationParameters FromChangeOfReliability(TChangeOfReliability value)
     {
@@ -558,9 +826,24 @@ public partial record class NotificationParameters
             return (TChangeOfDiscreteValue)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.ChangeOfDiscreteValue"/>.
+    /// </summary>
+    public bool TryGetChangeOfDiscreteValue(out TChangeOfDiscreteValue value)
+    {
+        if (Choice == Option.ChangeOfDiscreteValue)
+        {
+            value = (TChangeOfDiscreteValue)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Notification parameters for a change-of-discrete-value event, triggered when a discrete value changes to a new state.
+    /// Creates a choice with the <see cref="Option.ChangeOfDiscreteValue"/> option.
     /// </summary>
     public static NotificationParameters FromChangeOfDiscreteValue(TChangeOfDiscreteValue value)
     {
@@ -581,9 +864,24 @@ public partial record class NotificationParameters
             return (TChangeOfTimer)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.ChangeOfTimer"/>.
+    /// </summary>
+    public bool TryGetChangeOfTimer(out TChangeOfTimer value)
+    {
+        if (Choice == Option.ChangeOfTimer)
+        {
+            value = (TChangeOfTimer)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Notification parameters for a change-of-timer event, triggered when a timer object transitions to a new state.
+    /// Creates a choice with the <see cref="Option.ChangeOfTimer"/> option.
     /// </summary>
     public static NotificationParameters FromChangeOfTimer(TChangeOfTimer value)
     {

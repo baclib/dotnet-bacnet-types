@@ -34,13 +34,11 @@ public partial record class ObjectSelector
     /// </summary>
     public Option Choice { get; }
 
-    private object _choiceValue
-    {
-        get;
-    }
+    private readonly object _choiceValue;
 
     private ObjectSelector(Option choice, object value)
     {
+        ArgumentNullException.ThrowIfNull(value);
         Choice = choice;
         _choiceValue = value;
     }
@@ -59,9 +57,24 @@ public partial record class ObjectSelector
             return (Null)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.None"/>.
+    /// </summary>
+    public bool TryGetNone(out Null value)
+    {
+        if (Choice == Option.None)
+        {
+            value = (Null)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for No object is selected.
+    /// Creates a choice with the <see cref="Option.None"/> option.
     /// </summary>
     public static ObjectSelector FromNone(Null value)
     {
@@ -82,9 +95,24 @@ public partial record class ObjectSelector
             return (ObjectIdentifier)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.Object"/>.
+    /// </summary>
+    public bool TryGetObject(out ObjectIdentifier value)
+    {
+        if (Choice == Option.Object)
+        {
+            value = (ObjectIdentifier)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Selects a specific object by its identifier.
+    /// Creates a choice with the <see cref="Option.Object"/> option.
     /// </summary>
     public static ObjectSelector FromObject(ObjectIdentifier value)
     {
@@ -105,9 +133,24 @@ public partial record class ObjectSelector
             return (ObjectType)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.ObjectType"/>.
+    /// </summary>
+    public bool TryGetObjectType(out ObjectType value)
+    {
+        if (Choice == Option.ObjectType)
+        {
+            value = (ObjectType)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Selects all objects of a given type.
+    /// Creates a choice with the <see cref="Option.ObjectType"/> option.
     /// </summary>
     public static ObjectSelector FromObjectType(ObjectType value)
     {

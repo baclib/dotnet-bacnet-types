@@ -11,5 +11,5 @@ public partial record class ActionList
     /// <summary>
     /// A list of action commands.
     /// </summary>
-    public required TAction Action { get; init; }
-    }
+    public required SequenceOf<ActionCommand> Action { get; init; }
+}

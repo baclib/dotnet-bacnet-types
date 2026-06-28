@@ -31,13 +31,11 @@ public partial record class CreateObjectRequest
         /// </summary>
         public Option Choice { get; }
     
-        private object _choiceValue
-        {
-            get;
-        }
+        private readonly object _choiceValue;
     
         private TObjectSpecifier(Option choice, object value)
         {
+            ArgumentNullException.ThrowIfNull(value);
             Choice = choice;
             _choiceValue = value;
         }
@@ -56,9 +54,24 @@ public partial record class CreateObjectRequest
                 return (ObjectType)_choiceValue;
             }
         }
+    
+        /// <summary>
+        /// Tries to get the value when the active choice is <see cref="Option.ObjectType"/>.
+        /// </summary>
+        public bool TryGetObjectType(out ObjectType value)
+        {
+            if (Choice == Option.ObjectType)
+            {
+                value = (ObjectType)_choiceValue;
+                return true;
+            }
+    
+            value = default!;
+            return false;
+        }
         
         /// <summary>
-        /// Create function for Specifies the type of object to create, letting the device assign the instance number.
+        /// Creates a choice with the <see cref="Option.ObjectType"/> option.
         /// </summary>
         public static TObjectSpecifier FromObjectType(ObjectType value)
         {
@@ -79,9 +92,24 @@ public partial record class CreateObjectRequest
                 return (ObjectIdentifier)_choiceValue;
             }
         }
+    
+        /// <summary>
+        /// Tries to get the value when the active choice is <see cref="Option.ObjectIdentifier"/>.
+        /// </summary>
+        public bool TryGetObjectIdentifier(out ObjectIdentifier value)
+        {
+            if (Choice == Option.ObjectIdentifier)
+            {
+                value = (ObjectIdentifier)_choiceValue;
+                return true;
+            }
+    
+            value = default!;
+            return false;
+        }
         
         /// <summary>
-        /// Create function for Specifies the complete object identifier including both type and instance number.
+        /// Creates a choice with the <see cref="Option.ObjectIdentifier"/> option.
         /// </summary>
         public static TObjectSpecifier FromObjectIdentifier(ObjectIdentifier value)
         {

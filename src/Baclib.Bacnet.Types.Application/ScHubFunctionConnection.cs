@@ -12,32 +12,32 @@ public partial record class ScHubFunctionConnection
     /// The current state of the SC hub function connection.
     /// </summary>
     public required ScConnectionState ConnectionState { get; init; }
-    
+
     /// <summary>
     /// Timestamp when the connection was established.
     /// </summary>
     public required DateTime ConnectTimestamp { get; init; }
-    
+
     /// <summary>
     /// Timestamp when the connection was disconnected.
     /// </summary>
     public required DateTime DisconnectTimestamp { get; init; }
-    
+
     /// <summary>
     /// Network address of the peer device.
     /// </summary>
     public required HostNPort PeerAddress { get; init; }
-    
+
     /// <summary>
     /// Virtual MAC address of the peer device.
     /// </summary>
     public required TPeerVmac PeerVmac { get; init; }
-    
+
     /// <summary>
     /// UUID of the peer device.
     /// </summary>
     public required TPeerUuid PeerUuid { get; init; }
-    
+
     /// <summary>
     /// Error code if the connection failed. Optional.
     /// </summary>

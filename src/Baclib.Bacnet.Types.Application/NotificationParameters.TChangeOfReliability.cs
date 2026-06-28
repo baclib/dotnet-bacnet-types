@@ -14,15 +14,15 @@ public partial record class NotificationParameters
         /// The new reliability value of the object.
         /// </summary>
         public required Reliability Reliability { get; init; }
-        
+    
         /// <summary>
         /// The status flags indicating the state of the object at the time of notification.
         /// </summary>
         public required StatusFlags StatusFlags { get; init; }
-        
+    
         /// <summary>
         /// A series of property values providing additional context about the reliability change.
         /// </summary>
-        public required TPropertyValues PropertyValues { get; init; }
-        }
+        public required SequenceOf<PropertyValue> PropertyValues { get; init; }
+    }
 }

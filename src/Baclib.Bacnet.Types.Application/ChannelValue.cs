@@ -99,13 +99,11 @@ public partial record class ChannelValue
     /// </summary>
     public Option Choice { get; }
 
-    private object _choiceValue
-    {
-        get;
-    }
+    private readonly object _choiceValue;
 
     private ChannelValue(Option choice, object value)
     {
+        ArgumentNullException.ThrowIfNull(value);
         Choice = choice;
         _choiceValue = value;
     }
@@ -124,9 +122,24 @@ public partial record class ChannelValue
             return (Null)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.Null"/>.
+    /// </summary>
+    public bool TryGetNull(out Null value)
+    {
+        if (Choice == Option.Null)
+        {
+            value = (Null)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for No value.
+    /// Creates a choice with the <see cref="Option.Null"/> option.
     /// </summary>
     public static ChannelValue FromNull(Null value)
     {
@@ -147,9 +160,24 @@ public partial record class ChannelValue
             return (float)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.Real"/>.
+    /// </summary>
+    public bool TryGetReal(out float value)
+    {
+        if (Choice == Option.Real)
+        {
+            value = (float)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for A real (floating-point) value.
+    /// Creates a choice with the <see cref="Option.Real"/> option.
     /// </summary>
     public static ChannelValue FromReal(float value)
     {
@@ -170,9 +198,24 @@ public partial record class ChannelValue
             return (Enumerated)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.Enumerated"/>.
+    /// </summary>
+    public bool TryGetEnumerated(out Enumerated value)
+    {
+        if (Choice == Option.Enumerated)
+        {
+            value = (Enumerated)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for An enumerated value.
+    /// Creates a choice with the <see cref="Option.Enumerated"/> option.
     /// </summary>
     public static ChannelValue FromEnumerated(Enumerated value)
     {
@@ -193,9 +236,24 @@ public partial record class ChannelValue
             return (Unsigned)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.Unsigned"/>.
+    /// </summary>
+    public bool TryGetUnsigned(out Unsigned value)
+    {
+        if (Choice == Option.Unsigned)
+        {
+            value = (Unsigned)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for An unsigned integer value.
+    /// Creates a choice with the <see cref="Option.Unsigned"/> option.
     /// </summary>
     public static ChannelValue FromUnsigned(Unsigned value)
     {
@@ -216,9 +274,24 @@ public partial record class ChannelValue
             return (Boolean)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.Boolean"/>.
+    /// </summary>
+    public bool TryGetBoolean(out Boolean value)
+    {
+        if (Choice == Option.Boolean)
+        {
+            value = (Boolean)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for A boolean value.
+    /// Creates a choice with the <see cref="Option.Boolean"/> option.
     /// </summary>
     public static ChannelValue FromBoolean(Boolean value)
     {
@@ -239,9 +312,24 @@ public partial record class ChannelValue
             return (int)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.Integer"/>.
+    /// </summary>
+    public bool TryGetInteger(out int value)
+    {
+        if (Choice == Option.Integer)
+        {
+            value = (int)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for A signed integer value.
+    /// Creates a choice with the <see cref="Option.Integer"/> option.
     /// </summary>
     public static ChannelValue FromInteger(int value)
     {
@@ -262,9 +350,24 @@ public partial record class ChannelValue
             return (double)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.Double"/>.
+    /// </summary>
+    public bool TryGetDouble(out double value)
+    {
+        if (Choice == Option.Double)
+        {
+            value = (double)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for A double-precision floating-point value.
+    /// Creates a choice with the <see cref="Option.Double"/> option.
     /// </summary>
     public static ChannelValue FromDouble(double value)
     {
@@ -285,9 +388,24 @@ public partial record class ChannelValue
             return (Time)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.Time"/>.
+    /// </summary>
+    public bool TryGetTime(out Time value)
+    {
+        if (Choice == Option.Time)
+        {
+            value = (Time)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for A time value.
+    /// Creates a choice with the <see cref="Option.Time"/> option.
     /// </summary>
     public static ChannelValue FromTime(Time value)
     {
@@ -308,9 +426,24 @@ public partial record class ChannelValue
             return (CharacterString)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.Characterstring"/>.
+    /// </summary>
+    public bool TryGetCharacterstring(out CharacterString value)
+    {
+        if (Choice == Option.Characterstring)
+        {
+            value = (CharacterString)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for A character string value.
+    /// Creates a choice with the <see cref="Option.Characterstring"/> option.
     /// </summary>
     public static ChannelValue FromCharacterstring(CharacterString value)
     {
@@ -331,9 +464,24 @@ public partial record class ChannelValue
             return (OctetString)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.Octetstring"/>.
+    /// </summary>
+    public bool TryGetOctetstring(out OctetString value)
+    {
+        if (Choice == Option.Octetstring)
+        {
+            value = (OctetString)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for An octet string value.
+    /// Creates a choice with the <see cref="Option.Octetstring"/> option.
     /// </summary>
     public static ChannelValue FromOctetstring(OctetString value)
     {
@@ -354,9 +502,24 @@ public partial record class ChannelValue
             return (BitString)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.Bitstring"/>.
+    /// </summary>
+    public bool TryGetBitstring(out BitString value)
+    {
+        if (Choice == Option.Bitstring)
+        {
+            value = (BitString)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for A bit string value.
+    /// Creates a choice with the <see cref="Option.Bitstring"/> option.
     /// </summary>
     public static ChannelValue FromBitstring(BitString value)
     {
@@ -377,9 +540,24 @@ public partial record class ChannelValue
             return (Date)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.Date"/>.
+    /// </summary>
+    public bool TryGetDate(out Date value)
+    {
+        if (Choice == Option.Date)
+        {
+            value = (Date)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for A date value.
+    /// Creates a choice with the <see cref="Option.Date"/> option.
     /// </summary>
     public static ChannelValue FromDate(Date value)
     {
@@ -400,9 +578,24 @@ public partial record class ChannelValue
             return (ObjectIdentifier)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.Objectidentifier"/>.
+    /// </summary>
+    public bool TryGetObjectidentifier(out ObjectIdentifier value)
+    {
+        if (Choice == Option.Objectidentifier)
+        {
+            value = (ObjectIdentifier)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for An object identifier value.
+    /// Creates a choice with the <see cref="Option.Objectidentifier"/> option.
     /// </summary>
     public static ChannelValue FromObjectidentifier(ObjectIdentifier value)
     {
@@ -423,9 +616,24 @@ public partial record class ChannelValue
             return (LightingCommand)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.LightingCommand"/>.
+    /// </summary>
+    public bool TryGetLightingCommand(out LightingCommand value)
+    {
+        if (Choice == Option.LightingCommand)
+        {
+            value = (LightingCommand)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for A lighting command value.
+    /// Creates a choice with the <see cref="Option.LightingCommand"/> option.
     /// </summary>
     public static ChannelValue FromLightingCommand(LightingCommand value)
     {
@@ -446,9 +654,24 @@ public partial record class ChannelValue
             return (XyColor)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.Xycolor"/>.
+    /// </summary>
+    public bool TryGetXycolor(out XyColor value)
+    {
+        if (Choice == Option.Xycolor)
+        {
+            value = (XyColor)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for An XY color space value.
+    /// Creates a choice with the <see cref="Option.Xycolor"/> option.
     /// </summary>
     public static ChannelValue FromXycolor(XyColor value)
     {
@@ -469,9 +692,24 @@ public partial record class ChannelValue
             return (ColorCommand)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.ColorCommand"/>.
+    /// </summary>
+    public bool TryGetColorCommand(out ColorCommand value)
+    {
+        if (Choice == Option.ColorCommand)
+        {
+            value = (ColorCommand)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for A color command value.
+    /// Creates a choice with the <see cref="Option.ColorCommand"/> option.
     /// </summary>
     public static ChannelValue FromColorCommand(ColorCommand value)
     {

@@ -31,13 +31,11 @@ public partial record class ConfirmedTextMessageRequest
         /// </summary>
         public Option Choice { get; }
     
-        private object _choiceValue
-        {
-            get;
-        }
+        private readonly object _choiceValue;
     
         private TMessageClass(Option choice, object value)
         {
+            ArgumentNullException.ThrowIfNull(value);
             Choice = choice;
             _choiceValue = value;
         }
@@ -56,9 +54,24 @@ public partial record class ConfirmedTextMessageRequest
                 return (Unsigned)_choiceValue;
             }
         }
+    
+        /// <summary>
+        /// Tries to get the value when the active choice is <see cref="Option.Numeric"/>.
+        /// </summary>
+        public bool TryGetNumeric(out Unsigned value)
+        {
+            if (Choice == Option.Numeric)
+            {
+                value = (Unsigned)_choiceValue;
+                return true;
+            }
+    
+            value = default!;
+            return false;
+        }
         
         /// <summary>
-        /// Create function for A numeric message class identifier.
+        /// Creates a choice with the <see cref="Option.Numeric"/> option.
         /// </summary>
         public static TMessageClass FromNumeric(Unsigned value)
         {
@@ -79,9 +92,24 @@ public partial record class ConfirmedTextMessageRequest
                 return (CharacterString)_choiceValue;
             }
         }
+    
+        /// <summary>
+        /// Tries to get the value when the active choice is <see cref="Option.Character"/>.
+        /// </summary>
+        public bool TryGetCharacter(out CharacterString value)
+        {
+            if (Choice == Option.Character)
+            {
+                value = (CharacterString)_choiceValue;
+                return true;
+            }
+    
+            value = default!;
+            return false;
+        }
         
         /// <summary>
-        /// Create function for A character string message class identifier.
+        /// Creates a choice with the <see cref="Option.Character"/> option.
         /// </summary>
         public static TMessageClass FromCharacter(CharacterString value)
         {

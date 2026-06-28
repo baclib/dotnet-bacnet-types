@@ -12,7 +12,7 @@ public partial record class UnconfirmedTextMessageRequest
     /// The identifier of the device sending the text message.
     /// </summary>
     public required ObjectIdentifier TextMessageSourceDevice { get; init; }
-    
+
     /// <summary>
     /// Optional message class, either numeric or character string.
     /// </summary>
@@ -22,9 +22,9 @@ public partial record class UnconfirmedTextMessageRequest
     /// The priority of the text message.
     /// </summary>
     public required TMessagePriority MessagePriority { get; init; }
-    
+
     /// <summary>
     /// The text message content.
     /// </summary>
     public required CharacterString Message { get; init; }
-    }
+}

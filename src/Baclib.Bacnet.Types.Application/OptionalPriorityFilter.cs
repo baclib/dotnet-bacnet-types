@@ -29,13 +29,11 @@ public partial record class OptionalPriorityFilter
     /// </summary>
     public Option Choice { get; }
 
-    private object _choiceValue
-    {
-        get;
-    }
+    private readonly object _choiceValue;
 
     private OptionalPriorityFilter(Option choice, object value)
     {
+        ArgumentNullException.ThrowIfNull(value);
         Choice = choice;
         _choiceValue = value;
     }
@@ -54,9 +52,24 @@ public partial record class OptionalPriorityFilter
             return (Null)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.Null"/>.
+    /// </summary>
+    public bool TryGetNull(out Null value)
+    {
+        if (Choice == Option.Null)
+        {
+            value = (Null)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Indicates the absence of a priority filter value.
+    /// Creates a choice with the <see cref="Option.Null"/> option.
     /// </summary>
     public static OptionalPriorityFilter FromNull(Null value)
     {
@@ -77,9 +90,24 @@ public partial record class OptionalPriorityFilter
             return (PriorityFilter)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.Filter"/>.
+    /// </summary>
+    public bool TryGetFilter(out PriorityFilter value)
+    {
+        if (Choice == Option.Filter)
+        {
+            value = (PriorityFilter)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Specifies the BACnet priority filter value when present.
+    /// Creates a choice with the <see cref="Option.Filter"/> option.
     /// </summary>
     public static OptionalPriorityFilter FromFilter(PriorityFilter value)
     {

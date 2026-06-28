@@ -11,5 +11,5 @@ public partial record class AssignedLandingCalls
     /// <summary>
     /// A list of landing calls with floor and direction.
     /// </summary>
-    public required TLandingCalls LandingCalls { get; init; }
-    }
+    public required SequenceOf<TLandingCallsItem> LandingCalls { get; init; }
+}

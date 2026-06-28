@@ -31,13 +31,11 @@ public partial record class WhoHasRequest
         /// </summary>
         public Option Choice { get; }
     
-        private object _choiceValue
-        {
-            get;
-        }
+        private readonly object _choiceValue;
     
         private TObject(Option choice, object value)
         {
+            ArgumentNullException.ThrowIfNull(value);
             Choice = choice;
             _choiceValue = value;
         }
@@ -56,9 +54,24 @@ public partial record class WhoHasRequest
                 return (ObjectIdentifier)_choiceValue;
             }
         }
+    
+        /// <summary>
+        /// Tries to get the value when the active choice is <see cref="Option.ObjectIdentifier"/>.
+        /// </summary>
+        public bool TryGetObjectIdentifier(out ObjectIdentifier value)
+        {
+            if (Choice == Option.ObjectIdentifier)
+            {
+                value = (ObjectIdentifier)_choiceValue;
+                return true;
+            }
+    
+            value = default!;
+            return false;
+        }
         
         /// <summary>
-        /// Create function for The object identifier to search for.
+        /// Creates a choice with the <see cref="Option.ObjectIdentifier"/> option.
         /// </summary>
         public static TObject FromObjectIdentifier(ObjectIdentifier value)
         {
@@ -79,9 +92,24 @@ public partial record class WhoHasRequest
                 return (CharacterString)_choiceValue;
             }
         }
+    
+        /// <summary>
+        /// Tries to get the value when the active choice is <see cref="Option.ObjectName"/>.
+        /// </summary>
+        public bool TryGetObjectName(out CharacterString value)
+        {
+            if (Choice == Option.ObjectName)
+            {
+                value = (CharacterString)_choiceValue;
+                return true;
+            }
+    
+            value = default!;
+            return false;
+        }
         
         /// <summary>
-        /// Create function for The object name to search for.
+        /// Creates a choice with the <see cref="Option.ObjectName"/> option.
         /// </summary>
         public static TObject FromObjectName(CharacterString value)
         {

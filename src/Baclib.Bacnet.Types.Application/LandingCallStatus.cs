@@ -12,12 +12,12 @@ public partial record class LandingCallStatus
     /// The floor number where the landing call was made.
     /// </summary>
     public required Unsigned8 FloorNumber { get; init; }
-    
+
     /// <summary>
     /// The call command, either a direction or a specific destination floor.
     /// </summary>
     public required TCommand Command { get; init; }
-    
+
     /// <summary>
     /// Optional text description of the floor.
     /// </summary>

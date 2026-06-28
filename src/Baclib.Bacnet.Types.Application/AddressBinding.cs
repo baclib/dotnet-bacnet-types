@@ -12,9 +12,9 @@ public partial record class AddressBinding
     /// The object identifier of the device.
     /// </summary>
     public required ObjectIdentifier DeviceIdentifier { get; init; }
-    
+
     /// <summary>
     /// The network address of the device.
     /// </summary>
     public required Address DeviceAddress { get; init; }
-    }
+}

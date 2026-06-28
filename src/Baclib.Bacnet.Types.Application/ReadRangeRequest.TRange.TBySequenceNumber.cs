@@ -16,11 +16,11 @@ public partial record class ReadRangeRequest
             /// Reference sequence number for the range.
             /// </summary>
             public required Unsigned ReferenceSequenceNumber { get; init; }
-            
+        
             /// <summary>
             /// Number of items to read from the reference sequence number.
             /// </summary>
             public required Integer16 Count { get; init; }
-            }
+        }
     }
 }

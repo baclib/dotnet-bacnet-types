@@ -11,5 +11,5 @@ public partial record class WritePropertyMultipleRequest
     /// <summary>
     /// A list of write access specifications, each defining properties to write for a specific object.
     /// </summary>
-    public required TListOfWriteAccessSpecifications ListOfWriteAccessSpecifications { get; init; }
-    }
+    public required SequenceOf<WriteAccessSpecification> ListOfWriteAccessSpecifications { get; init; }
+}

@@ -12,17 +12,17 @@ public partial record class ConfirmedCovNotificationMultipleRequest
     /// The process identifier of the subscriber.
     /// </summary>
     public required Unsigned32 SubscriberProcessIdentifier { get; init; }
-    
+
     /// <summary>
     /// The identifier of the device initiating the notification.
     /// </summary>
     public required ObjectIdentifier InitiatingDeviceIdentifier { get; init; }
-    
+
     /// <summary>
     /// The remaining time in seconds before the subscription expires.
     /// </summary>
     public required Unsigned TimeRemaining { get; init; }
-    
+
     /// <summary>
     /// Optional timestamp for the notification.
     /// </summary>
@@ -31,5 +31,5 @@ public partial record class ConfirmedCovNotificationMultipleRequest
     /// <summary>
     /// A list of COV notifications for multiple objects.
     /// </summary>
-    public required TListOfCovNotifications ListOfCovNotifications { get; init; }
-    }
+    public required SequenceOf<TListOfCovNotificationsItem> ListOfCovNotifications { get; init; }
+}

@@ -13,6 +13,6 @@ public partial record class FaultParameter
         /// <summary>
         /// A list of character string values that indicate a fault condition.
         /// </summary>
-        public required TListOfFaultValues ListOfFaultValues { get; init; }
-        }
+        public required SequenceOf<CharacterString> ListOfFaultValues { get; init; }
+    }
 }

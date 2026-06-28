@@ -12,4 +12,4 @@ public partial record class TimeSynchronizationRequest
     /// The date and time to which the device should be synchronized.
     /// </summary>
     public required DateTime Time { get; init; }
-    }
+}

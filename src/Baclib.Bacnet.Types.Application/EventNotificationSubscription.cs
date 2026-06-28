@@ -12,19 +12,19 @@ public partial record class EventNotificationSubscription
     /// The recipient to receive event notifications.
     /// </summary>
     public required Recipient Recipient { get; init; }
-    
+
     /// <summary>
     /// A unique identifier for the subscribing process.
     /// </summary>
     public required Unsigned32 ProcessIdentifier { get; init; }
-    
+
     /// <summary>
     /// Indicates whether confirmed event notifications should be issued to the recipient.
     /// </summary>
     public required Boolean IssueConfirmedNotifications { get; init; }
-    
+
     /// <summary>
     /// The remaining time in seconds before this subscription expires.
     /// </summary>
     public required Unsigned TimeRemaining { get; init; }
-    }
+}

@@ -12,12 +12,12 @@ public partial record class UnconfirmedPrivateTransferRequest
     /// The vendor identifier for the proprietary service.
     /// </summary>
     public required Unsigned16 VendorId { get; init; }
-    
+
     /// <summary>
     /// The service number identifying the proprietary service.
     /// </summary>
     public required Unsigned ServiceNumber { get; init; }
-    
+
     /// <summary>
     /// Optional parameters for the proprietary service.
     /// </summary>

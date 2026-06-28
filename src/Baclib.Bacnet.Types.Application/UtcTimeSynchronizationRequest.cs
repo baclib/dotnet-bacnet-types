@@ -12,4 +12,4 @@ public partial record class UtcTimeSynchronizationRequest
     /// The UTC date and time to which the device should be synchronized.
     /// </summary>
     public required DateTime Time { get; init; }
-    }
+}

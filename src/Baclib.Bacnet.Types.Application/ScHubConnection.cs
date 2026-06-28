@@ -12,17 +12,17 @@ public partial record class ScHubConnection
     /// The current state of the SC hub connection.
     /// </summary>
     public required ScConnectionState ConnectionState { get; init; }
-    
+
     /// <summary>
     /// Timestamp when the connection was established.
     /// </summary>
     public required DateTime ConnectTimestamp { get; init; }
-    
+
     /// <summary>
     /// Timestamp when the connection was disconnected.
     /// </summary>
     public required DateTime DisconnectTimestamp { get; init; }
-    
+
     /// <summary>
     /// Error code if the connection failed. Optional.
     /// </summary>

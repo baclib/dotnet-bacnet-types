@@ -12,14 +12,14 @@ public partial record class StageLimitValue
     /// The limit value for the stage.
     /// </summary>
     public required float Limit { get; init; }
-    
+
     /// <summary>
     /// A bit string representing the active stages.
     /// </summary>
     public required BitString Values { get; init; }
-    
+
     /// <summary>
     /// The deadband value for the stage.
     /// </summary>
     public required float Deadband { get; init; }
-    }
+}

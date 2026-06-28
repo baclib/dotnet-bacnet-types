@@ -12,9 +12,9 @@ public partial record class VmacEntry
     /// The virtual MAC address used in BACnet networks.
     /// </summary>
     public required OctetString VirtualMacAddress { get; init; }
-    
+
     /// <summary>
     /// The native (physical) MAC address corresponding to the virtual MAC address.
     /// </summary>
     public required OctetString NativeMacAddress { get; init; }
-    }
+}

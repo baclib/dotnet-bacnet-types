@@ -16,11 +16,11 @@ public partial record class AtomicWriteFileRequest
             /// The starting byte position in the file.
             /// </summary>
             public required int FileStartPosition { get; init; }
-            
+        
             /// <summary>
             /// The data to write to the file.
             /// </summary>
             public required OctetString FileData { get; init; }
-            }
+        }
     }
 }

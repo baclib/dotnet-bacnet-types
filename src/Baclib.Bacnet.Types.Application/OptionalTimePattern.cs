@@ -29,13 +29,11 @@ public partial record class OptionalTimePattern
     /// </summary>
     public Option Choice { get; }
 
-    private object _choiceValue
-    {
-        get;
-    }
+    private readonly object _choiceValue;
 
     private OptionalTimePattern(Option choice, object value)
     {
+        ArgumentNullException.ThrowIfNull(value);
         Choice = choice;
         _choiceValue = value;
     }
@@ -54,9 +52,24 @@ public partial record class OptionalTimePattern
             return (Null)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.Null"/>.
+    /// </summary>
+    public bool TryGetNull(out Null value)
+    {
+        if (Choice == Option.Null)
+        {
+            value = (Null)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Indicates the absence of a time pattern value.
+    /// Creates a choice with the <see cref="Option.Null"/> option.
     /// </summary>
     public static OptionalTimePattern FromNull(Null value)
     {
@@ -77,9 +90,24 @@ public partial record class OptionalTimePattern
             return (TimePattern)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.Timeepattern"/>.
+    /// </summary>
+    public bool TryGetTimeepattern(out TimePattern value)
+    {
+        if (Choice == Option.Timeepattern)
+        {
+            value = (TimePattern)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Specifies the BACnet time pattern value when present.
+    /// Creates a choice with the <see cref="Option.Timeepattern"/> option.
     /// </summary>
     public static OptionalTimePattern FromTimeepattern(TimePattern value)
     {

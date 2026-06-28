@@ -12,12 +12,12 @@ public partial record class AuditLogQueryRequest
     /// The object identifier of the audit log to query.
     /// </summary>
     public required ObjectIdentifier AuditLog { get; init; }
-    
+
     /// <summary>
     /// The parameters defining which records to retrieve.
     /// </summary>
     public required AuditLogQueryParameters QueryParameters { get; init; }
-    
+
     /// <summary>
     /// The sequence number at which to start retrieving records.
     /// </summary>
@@ -27,4 +27,4 @@ public partial record class AuditLogQueryRequest
     /// The maximum number of records to return.
     /// </summary>
     public required Unsigned16 RequestedCount { get; init; }
-    }
+}

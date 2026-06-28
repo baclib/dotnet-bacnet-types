@@ -16,11 +16,11 @@ public partial record class ReadRangeRequest
             /// Reference index for the range.
             /// </summary>
             public required Unsigned ReferenceIndex { get; init; }
-            
+        
             /// <summary>
             /// Number of items to read from the reference index.
             /// </summary>
             public required Integer16 Count { get; init; }
-            }
+        }
     }
 }

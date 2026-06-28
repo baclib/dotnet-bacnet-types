@@ -11,5 +11,5 @@ public partial record class LandingDoorStatus
     /// <summary>
     /// A series of landing door entries, each containing a floor number and the door status at that floor.
     /// </summary>
-    public required TLandingDoors LandingDoors { get; init; }
-    }
+    public required SequenceOf<TLandingDoorsItem> LandingDoors { get; init; }
+}

@@ -12,7 +12,7 @@ public partial record class AccessRule
     /// Specifies how the time range is determined.
     /// </summary>
     public required TTimeRangeSpecifier TimeRangeSpecifier { get; init; }
-    
+
     /// <summary>
     /// Reference to the time range object/property when specified.
     /// </summary>
@@ -22,7 +22,7 @@ public partial record class AccessRule
     /// Specifies how the location is determined.
     /// </summary>
     public required TLocationSpecifier LocationSpecifier { get; init; }
-    
+
     /// <summary>
     /// Reference to the location object when specified.
     /// </summary>
@@ -32,4 +32,4 @@ public partial record class AccessRule
     /// Indicates whether this access rule is enabled.
     /// </summary>
     public required Boolean Enable { get; init; }
-    }
+}

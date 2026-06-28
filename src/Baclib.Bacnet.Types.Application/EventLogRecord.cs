@@ -12,9 +12,9 @@ public partial record class EventLogRecord
     /// The date and time when the event log record was created.
     /// </summary>
     public required DateTime Timestamp { get; init; }
-    
+
     /// <summary>
     /// The data associated with this log record.
     /// </summary>
     public required TLogDatum LogDatum { get; init; }
-    }
+}

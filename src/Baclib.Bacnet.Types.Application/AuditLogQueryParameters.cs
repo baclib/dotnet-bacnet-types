@@ -29,13 +29,11 @@ public partial record class AuditLogQueryParameters
     /// </summary>
     public Option Choice { get; }
 
-    private object _choiceValue
-    {
-        get;
-    }
+    private readonly object _choiceValue;
 
     private AuditLogQueryParameters(Option choice, object value)
     {
+        ArgumentNullException.ThrowIfNull(value);
         Choice = choice;
         _choiceValue = value;
     }
@@ -54,9 +52,24 @@ public partial record class AuditLogQueryParameters
             return (TByTarget)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.ByTarget"/>.
+    /// </summary>
+    public bool TryGetByTarget(out TByTarget value)
+    {
+        if (Choice == Option.ByTarget)
+        {
+            value = (TByTarget)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Query audit log records based on the target device and object.
+    /// Creates a choice with the <see cref="Option.ByTarget"/> option.
     /// </summary>
     public static AuditLogQueryParameters FromByTarget(TByTarget value)
     {
@@ -77,9 +90,24 @@ public partial record class AuditLogQueryParameters
             return (TBySource)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.BySource"/>.
+    /// </summary>
+    public bool TryGetBySource(out TBySource value)
+    {
+        if (Choice == Option.BySource)
+        {
+            value = (TBySource)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Query audit log records based on the source device and object.
+    /// Creates a choice with the <see cref="Option.BySource"/> option.
     /// </summary>
     public static AuditLogQueryParameters FromBySource(TBySource value)
     {

@@ -29,13 +29,11 @@ public partial record class ClientCov
     /// </summary>
     public Option Choice { get; }
 
-    private object _choiceValue
-    {
-        get;
-    }
+    private readonly object _choiceValue;
 
     private ClientCov(Option choice, object value)
     {
+        ArgumentNullException.ThrowIfNull(value);
         Choice = choice;
         _choiceValue = value;
     }
@@ -54,9 +52,24 @@ public partial record class ClientCov
             return (float)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.RealIncrement"/>.
+    /// </summary>
+    public bool TryGetRealIncrement(out float value)
+    {
+        if (Choice == Option.RealIncrement)
+        {
+            value = (float)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for A specific real value increment for COV detection.
+    /// Creates a choice with the <see cref="Option.RealIncrement"/> option.
     /// </summary>
     public static ClientCov FromRealIncrement(float value)
     {
@@ -77,9 +90,24 @@ public partial record class ClientCov
             return (Null)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.DefaultIncrement"/>.
+    /// </summary>
+    public bool TryGetDefaultIncrement(out Null value)
+    {
+        if (Choice == Option.DefaultIncrement)
+        {
+            value = (Null)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Use the default increment value.
+    /// Creates a choice with the <see cref="Option.DefaultIncrement"/> option.
     /// </summary>
     public static ClientCov FromDefaultIncrement(Null value)
     {

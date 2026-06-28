@@ -12,7 +12,7 @@ public partial record class AuthenticationFactorFormat
     /// The type of authentication factor format.
     /// </summary>
     public required AuthenticationFactorType FormatType { get; init; }
-    
+
     /// <summary>
     /// The vendor identifier for vendor-specific formats.
     /// </summary>

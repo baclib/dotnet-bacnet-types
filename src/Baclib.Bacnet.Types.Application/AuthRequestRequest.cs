@@ -24,13 +24,11 @@ public partial record class AuthRequestRequest
     /// </summary>
     public Option Choice { get; }
 
-    private object _choiceValue
-    {
-        get;
-    }
+    private readonly object _choiceValue;
 
     private AuthRequestRequest(Option choice, object value)
     {
+        ArgumentNullException.ThrowIfNull(value);
         Choice = choice;
         _choiceValue = value;
     }
@@ -49,9 +47,24 @@ public partial record class AuthRequestRequest
             return (TTokenRequest)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.TokenRequest"/>.
+    /// </summary>
+    public bool TryGetTokenRequest(out TTokenRequest value)
+    {
+        if (Choice == Option.TokenRequest)
+        {
+            value = (TTokenRequest)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for A request for an access token.
+    /// Creates a choice with the <see cref="Option.TokenRequest"/> option.
     /// </summary>
     public static AuthRequestRequest FromTokenRequest(TTokenRequest value)
     {

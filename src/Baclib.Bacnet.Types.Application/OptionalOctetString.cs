@@ -29,13 +29,11 @@ public partial record class OptionalOctetString
     /// </summary>
     public Option Choice { get; }
 
-    private object _choiceValue
-    {
-        get;
-    }
+    private readonly object _choiceValue;
 
     private OptionalOctetString(Option choice, object value)
     {
+        ArgumentNullException.ThrowIfNull(value);
         Choice = choice;
         _choiceValue = value;
     }
@@ -54,9 +52,24 @@ public partial record class OptionalOctetString
             return (Null)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.Null"/>.
+    /// </summary>
+    public bool TryGetNull(out Null value)
+    {
+        if (Choice == Option.Null)
+        {
+            value = (Null)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Indicates the absence of an octet string value.
+    /// Creates a choice with the <see cref="Option.Null"/> option.
     /// </summary>
     public static OptionalOctetString FromNull(Null value)
     {
@@ -77,9 +90,24 @@ public partial record class OptionalOctetString
             return (OctetString)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.Octetstring"/>.
+    /// </summary>
+    public bool TryGetOctetstring(out OctetString value)
+    {
+        if (Choice == Option.Octetstring)
+        {
+            value = (OctetString)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Specifies the BACnet octet string value when present.
+    /// Creates a choice with the <see cref="Option.Octetstring"/> option.
     /// </summary>
     public static OptionalOctetString FromOctetstring(OctetString value)
     {

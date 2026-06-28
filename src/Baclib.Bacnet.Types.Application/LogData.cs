@@ -34,13 +34,11 @@ public partial record class LogData
     /// </summary>
     public Option Choice { get; }
 
-    private object _choiceValue
-    {
-        get;
-    }
+    private readonly object _choiceValue;
 
     private LogData(Option choice, object value)
     {
+        ArgumentNullException.ThrowIfNull(value);
         Choice = choice;
         _choiceValue = value;
     }
@@ -59,9 +57,24 @@ public partial record class LogData
             return (LogStatus)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.Status"/>.
+    /// </summary>
+    public bool TryGetStatus(out LogStatus value)
+    {
+        if (Choice == Option.Status)
+        {
+            value = (LogStatus)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for A log status bit string indicating the operational state of the log.
+    /// Creates a choice with the <see cref="Option.Status"/> option.
     /// </summary>
     public static LogData FromStatus(LogStatus value)
     {
@@ -71,7 +84,7 @@ public partial record class LogData
     /// <summary>
     /// A series of logged data values, which can be of various types.
     /// </summary>
-    public TSeries Series
+    public TSeriesItem Series
     {
         get
         {
@@ -79,14 +92,29 @@ public partial record class LogData
             {
                 throw new InvalidOperationException($"The active choice is {Choice}, not {(Option.Series)}.");
             }
-            return (TSeries)_choiceValue;
+            return (TSeriesItem)_choiceValue;
         }
+    }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.Series"/>.
+    /// </summary>
+    public bool TryGetSeries(out TSeriesItem value)
+    {
+        if (Choice == Option.Series)
+        {
+            value = (TSeriesItem)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
     }
     
     /// <summary>
-    /// Create function for A series of logged data values, which can be of various types.
+    /// Creates a choice with the <see cref="Option.Series"/> option.
     /// </summary>
-    public static LogData FromSeries(TSeries value)
+    public static LogData FromSeries(TSeriesItem value)
     {
         return new LogData(Option.Series, value);
     }
@@ -105,9 +133,24 @@ public partial record class LogData
             return (float)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.TimeChange"/>.
+    /// </summary>
+    public bool TryGetTimeChange(out float value)
+    {
+        if (Choice == Option.TimeChange)
+        {
+            value = (float)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Indicates a time change event, with the value representing the time adjustment in seconds.
+    /// Creates a choice with the <see cref="Option.TimeChange"/> option.
     /// </summary>
     public static LogData FromTimeChange(float value)
     {

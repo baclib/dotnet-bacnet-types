@@ -14,15 +14,15 @@ public partial record class EventParameter
         /// The minimum time in seconds that the condition must persist before triggering the event.
         /// </summary>
         public required Unsigned TimeDelay { get; init; }
-        
+    
         /// <summary>
         /// A list of timer state values that trigger the event when matched.
         /// </summary>
-        public required TAlarmValues AlarmValues { get; init; }
-        
+        public required SequenceOf<TimerState> AlarmValues { get; init; }
+    
         /// <summary>
         /// Reference to the property containing the timer update time.
         /// </summary>
         public required DeviceObjectPropertyReference UpdateTimeReference { get; init; }
-        }
+    }
 }

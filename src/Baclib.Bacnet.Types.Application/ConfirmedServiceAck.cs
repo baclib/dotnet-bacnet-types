@@ -89,13 +89,11 @@ public partial record class ConfirmedServiceAck
     /// </summary>
     public Option Choice { get; }
 
-    private object _choiceValue
-    {
-        get;
-    }
+    private readonly object _choiceValue;
 
     private ConfirmedServiceAck(Option choice, object value)
     {
+        ArgumentNullException.ThrowIfNull(value);
         Choice = choice;
         _choiceValue = value;
     }
@@ -114,9 +112,24 @@ public partial record class ConfirmedServiceAck
             return (GetAlarmSummaryAck)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.GetAlarmSummary"/>.
+    /// </summary>
+    public bool TryGetGetAlarmSummary(out GetAlarmSummaryAck value)
+    {
+        if (Choice == Option.GetAlarmSummary)
+        {
+            value = (GetAlarmSummaryAck)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Acknowledgment for Get Alarm Summary.
+    /// Creates a choice with the <see cref="Option.GetAlarmSummary"/> option.
     /// </summary>
     public static ConfirmedServiceAck FromGetAlarmSummary(GetAlarmSummaryAck value)
     {
@@ -137,9 +150,24 @@ public partial record class ConfirmedServiceAck
             return (GetEnrollmentSummaryAck)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.GetEnrollmentSummary"/>.
+    /// </summary>
+    public bool TryGetGetEnrollmentSummary(out GetEnrollmentSummaryAck value)
+    {
+        if (Choice == Option.GetEnrollmentSummary)
+        {
+            value = (GetEnrollmentSummaryAck)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Acknowledgment for Get Enrollment Summary.
+    /// Creates a choice with the <see cref="Option.GetEnrollmentSummary"/> option.
     /// </summary>
     public static ConfirmedServiceAck FromGetEnrollmentSummary(GetEnrollmentSummaryAck value)
     {
@@ -160,9 +188,24 @@ public partial record class ConfirmedServiceAck
             return (GetEventInformationAck)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.GetEventInformation"/>.
+    /// </summary>
+    public bool TryGetGetEventInformation(out GetEventInformationAck value)
+    {
+        if (Choice == Option.GetEventInformation)
+        {
+            value = (GetEventInformationAck)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Acknowledgment for Get Event Information.
+    /// Creates a choice with the <see cref="Option.GetEventInformation"/> option.
     /// </summary>
     public static ConfirmedServiceAck FromGetEventInformation(GetEventInformationAck value)
     {
@@ -183,9 +226,24 @@ public partial record class ConfirmedServiceAck
             return (AtomicReadFileAck)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.AtomicReadFile"/>.
+    /// </summary>
+    public bool TryGetAtomicReadFile(out AtomicReadFileAck value)
+    {
+        if (Choice == Option.AtomicReadFile)
+        {
+            value = (AtomicReadFileAck)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Acknowledgment for Atomic Read File.
+    /// Creates a choice with the <see cref="Option.AtomicReadFile"/> option.
     /// </summary>
     public static ConfirmedServiceAck FromAtomicReadFile(AtomicReadFileAck value)
     {
@@ -206,9 +264,24 @@ public partial record class ConfirmedServiceAck
             return (AtomicWriteFileAck)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.AtomicWriteFile"/>.
+    /// </summary>
+    public bool TryGetAtomicWriteFile(out AtomicWriteFileAck value)
+    {
+        if (Choice == Option.AtomicWriteFile)
+        {
+            value = (AtomicWriteFileAck)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Acknowledgment for Atomic Write File.
+    /// Creates a choice with the <see cref="Option.AtomicWriteFile"/> option.
     /// </summary>
     public static ConfirmedServiceAck FromAtomicWriteFile(AtomicWriteFileAck value)
     {
@@ -229,9 +302,24 @@ public partial record class ConfirmedServiceAck
             return (CreateObjectAck)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.CreateObject"/>.
+    /// </summary>
+    public bool TryGetCreateObject(out CreateObjectAck value)
+    {
+        if (Choice == Option.CreateObject)
+        {
+            value = (CreateObjectAck)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Acknowledgment for Create Object.
+    /// Creates a choice with the <see cref="Option.CreateObject"/> option.
     /// </summary>
     public static ConfirmedServiceAck FromCreateObject(CreateObjectAck value)
     {
@@ -252,9 +340,24 @@ public partial record class ConfirmedServiceAck
             return (ReadPropertyAck)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.ReadProperty"/>.
+    /// </summary>
+    public bool TryGetReadProperty(out ReadPropertyAck value)
+    {
+        if (Choice == Option.ReadProperty)
+        {
+            value = (ReadPropertyAck)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Acknowledgment for Read Property.
+    /// Creates a choice with the <see cref="Option.ReadProperty"/> option.
     /// </summary>
     public static ConfirmedServiceAck FromReadProperty(ReadPropertyAck value)
     {
@@ -275,9 +378,24 @@ public partial record class ConfirmedServiceAck
             return (ReadPropertyMultipleAck)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.ReadPropertyMultiple"/>.
+    /// </summary>
+    public bool TryGetReadPropertyMultiple(out ReadPropertyMultipleAck value)
+    {
+        if (Choice == Option.ReadPropertyMultiple)
+        {
+            value = (ReadPropertyMultipleAck)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Acknowledgment for Read Property Multiple.
+    /// Creates a choice with the <see cref="Option.ReadPropertyMultiple"/> option.
     /// </summary>
     public static ConfirmedServiceAck FromReadPropertyMultiple(ReadPropertyMultipleAck value)
     {
@@ -298,9 +416,24 @@ public partial record class ConfirmedServiceAck
             return (ReadRangeAck)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.ReadRange"/>.
+    /// </summary>
+    public bool TryGetReadRange(out ReadRangeAck value)
+    {
+        if (Choice == Option.ReadRange)
+        {
+            value = (ReadRangeAck)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Acknowledgment for Read Range.
+    /// Creates a choice with the <see cref="Option.ReadRange"/> option.
     /// </summary>
     public static ConfirmedServiceAck FromReadRange(ReadRangeAck value)
     {
@@ -321,9 +454,24 @@ public partial record class ConfirmedServiceAck
             return (AuditLogQueryAck)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.AuditLogQuery"/>.
+    /// </summary>
+    public bool TryGetAuditLogQuery(out AuditLogQueryAck value)
+    {
+        if (Choice == Option.AuditLogQuery)
+        {
+            value = (AuditLogQueryAck)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Acknowledgment for Audit Log Query.
+    /// Creates a choice with the <see cref="Option.AuditLogQuery"/> option.
     /// </summary>
     public static ConfirmedServiceAck FromAuditLogQuery(AuditLogQueryAck value)
     {
@@ -344,9 +492,24 @@ public partial record class ConfirmedServiceAck
             return (ConfirmedPrivateTransferAck)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.ConfirmedPrivateTransfer"/>.
+    /// </summary>
+    public bool TryGetConfirmedPrivateTransfer(out ConfirmedPrivateTransferAck value)
+    {
+        if (Choice == Option.ConfirmedPrivateTransfer)
+        {
+            value = (ConfirmedPrivateTransferAck)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Acknowledgment for Confirmed Private Transfer.
+    /// Creates a choice with the <see cref="Option.ConfirmedPrivateTransfer"/> option.
     /// </summary>
     public static ConfirmedServiceAck FromConfirmedPrivateTransfer(ConfirmedPrivateTransferAck value)
     {
@@ -367,9 +530,24 @@ public partial record class ConfirmedServiceAck
             return (AuthRequestAck)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.AuthRequest"/>.
+    /// </summary>
+    public bool TryGetAuthRequest(out AuthRequestAck value)
+    {
+        if (Choice == Option.AuthRequest)
+        {
+            value = (AuthRequestAck)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Acknowledgment for Authentication Request.
+    /// Creates a choice with the <see cref="Option.AuthRequest"/> option.
     /// </summary>
     public static ConfirmedServiceAck FromAuthRequest(AuthRequestAck value)
     {
@@ -390,9 +568,24 @@ public partial record class ConfirmedServiceAck
             return (VtOpenAck)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.VtOpen"/>.
+    /// </summary>
+    public bool TryGetVtOpen(out VtOpenAck value)
+    {
+        if (Choice == Option.VtOpen)
+        {
+            value = (VtOpenAck)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Acknowledgment for VT Open.
+    /// Creates a choice with the <see cref="Option.VtOpen"/> option.
     /// </summary>
     public static ConfirmedServiceAck FromVtOpen(VtOpenAck value)
     {
@@ -413,9 +606,24 @@ public partial record class ConfirmedServiceAck
             return (VtDataAck)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.VtData"/>.
+    /// </summary>
+    public bool TryGetVtData(out VtDataAck value)
+    {
+        if (Choice == Option.VtData)
+        {
+            value = (VtDataAck)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Acknowledgment for VT Data.
+    /// Creates a choice with the <see cref="Option.VtData"/> option.
     /// </summary>
     public static ConfirmedServiceAck FromVtData(VtDataAck value)
     {

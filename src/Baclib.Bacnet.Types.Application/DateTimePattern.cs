@@ -12,9 +12,9 @@ public partial record class DateTimePattern
     /// The date pattern component, which may include wildcards.
     /// </summary>
     public required DatePattern Date { get; init; }
-    
+
     /// <summary>
     /// The time pattern component, which may include wildcards.
     /// </summary>
     public required TimePattern Time { get; init; }
-    }
+}

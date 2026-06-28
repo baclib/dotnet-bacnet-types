@@ -12,9 +12,9 @@ public partial record class LogMultipleRecord
     /// The date and time when the log entry was recorded.
     /// </summary>
     public required DateTime Timestamp { get; init; }
-    
+
     /// <summary>
     /// The log data, which can be a status indicator, a series of values, or a time change notification.
     /// </summary>
     public required LogData LogData { get; init; }
-    }
+}

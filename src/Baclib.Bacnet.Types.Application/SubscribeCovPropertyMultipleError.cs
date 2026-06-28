@@ -29,13 +29,11 @@ public partial record class SubscribeCovPropertyMultipleError
     /// </summary>
     public Option Choice { get; }
 
-    private object _choiceValue
-    {
-        get;
-    }
+    private readonly object _choiceValue;
 
     private SubscribeCovPropertyMultipleError(Option choice, object value)
     {
+        ArgumentNullException.ThrowIfNull(value);
         Choice = choice;
         _choiceValue = value;
     }
@@ -54,9 +52,24 @@ public partial record class SubscribeCovPropertyMultipleError
             return (Error)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.ErrorType"/>.
+    /// </summary>
+    public bool TryGetErrorType(out Error value)
+    {
+        if (Choice == Option.ErrorType)
+        {
+            value = (Error)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for The type of error that occurred.
+    /// Creates a choice with the <see cref="Option.ErrorType"/> option.
     /// </summary>
     public static SubscribeCovPropertyMultipleError FromErrorType(Error value)
     {
@@ -77,9 +90,24 @@ public partial record class SubscribeCovPropertyMultipleError
             return (TFirstFailedSubscription)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.FirstFailedSubscription"/>.
+    /// </summary>
+    public bool TryGetFirstFailedSubscription(out TFirstFailedSubscription value)
+    {
+        if (Choice == Option.FirstFailedSubscription)
+        {
+            value = (TFirstFailedSubscription)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Details of the first failed subscription, including object, property, and error type.
+    /// Creates a choice with the <see cref="Option.FirstFailedSubscription"/> option.
     /// </summary>
     public static SubscribeCovPropertyMultipleError FromFirstFailedSubscription(TFirstFailedSubscription value)
     {

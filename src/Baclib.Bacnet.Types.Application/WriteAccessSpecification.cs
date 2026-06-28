@@ -12,9 +12,9 @@ public partial record class WriteAccessSpecification
     /// The identifier of the BACnet object to be written.
     /// </summary>
     public required ObjectIdentifier ObjectIdentifier { get; init; }
-    
+
     /// <summary>
     /// A list of property values to be written to the object.
     /// </summary>
-    public required TListOfProperties ListOfProperties { get; init; }
-    }
+    public required SequenceOf<PropertyValue> ListOfProperties { get; init; }
+}

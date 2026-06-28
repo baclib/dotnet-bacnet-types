@@ -12,12 +12,12 @@ public partial record class Health
     /// The date and time when the health status was determined.
     /// </summary>
     public required DateTime Timestamp { get; init; }
-    
+
     /// <summary>
     /// The error information indicating the health status or any problems detected.
     /// </summary>
     public required Error Result { get; init; }
-    
+
     /// <summary>
     /// Optional property identifier related to the health status.
     /// </summary>

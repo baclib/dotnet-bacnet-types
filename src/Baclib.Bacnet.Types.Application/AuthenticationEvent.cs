@@ -12,22 +12,22 @@ public partial record class AuthenticationEvent
     /// The date and time when the authentication event occurred.
     /// </summary>
     public required DateTime Timestamp { get; init; }
-    
+
     /// <summary>
     /// Information about the peer device involved in the authentication.
     /// </summary>
     public required AuthenticationPeer Peer { get; init; }
-    
+
     /// <summary>
     /// Information about the client being authenticated.
     /// </summary>
     public required AuthenticationClient Client { get; init; }
-    
+
     /// <summary>
     /// The authentication decision that was made.
     /// </summary>
     public required AuthenticationDecision Decision { get; init; }
-    
+
     /// <summary>
     /// Additional details about the authentication decision.
     /// </summary>

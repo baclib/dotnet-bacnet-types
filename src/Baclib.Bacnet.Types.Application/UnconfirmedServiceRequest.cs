@@ -94,13 +94,11 @@ public partial record class UnconfirmedServiceRequest
     /// </summary>
     public Option Choice { get; }
 
-    private object _choiceValue
-    {
-        get;
-    }
+    private readonly object _choiceValue;
 
     private UnconfirmedServiceRequest(Option choice, object value)
     {
+        ArgumentNullException.ThrowIfNull(value);
         Choice = choice;
         _choiceValue = value;
     }
@@ -119,9 +117,24 @@ public partial record class UnconfirmedServiceRequest
             return (IAmRequest)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.IAm"/>.
+    /// </summary>
+    public bool TryGetIAm(out IAmRequest value)
+    {
+        if (Choice == Option.IAm)
+        {
+            value = (IAmRequest)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for I-Am service request.
+    /// Creates a choice with the <see cref="Option.IAm"/> option.
     /// </summary>
     public static UnconfirmedServiceRequest FromIAm(IAmRequest value)
     {
@@ -142,9 +155,24 @@ public partial record class UnconfirmedServiceRequest
             return (IHaveRequest)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.IHave"/>.
+    /// </summary>
+    public bool TryGetIHave(out IHaveRequest value)
+    {
+        if (Choice == Option.IHave)
+        {
+            value = (IHaveRequest)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for I-Have service request.
+    /// Creates a choice with the <see cref="Option.IHave"/> option.
     /// </summary>
     public static UnconfirmedServiceRequest FromIHave(IHaveRequest value)
     {
@@ -165,9 +193,24 @@ public partial record class UnconfirmedServiceRequest
             return (UnconfirmedCovNotificationRequest)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.UnconfirmedCovNotification"/>.
+    /// </summary>
+    public bool TryGetUnconfirmedCovNotification(out UnconfirmedCovNotificationRequest value)
+    {
+        if (Choice == Option.UnconfirmedCovNotification)
+        {
+            value = (UnconfirmedCovNotificationRequest)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Unconfirmed COV notification request.
+    /// Creates a choice with the <see cref="Option.UnconfirmedCovNotification"/> option.
     /// </summary>
     public static UnconfirmedServiceRequest FromUnconfirmedCovNotification(UnconfirmedCovNotificationRequest value)
     {
@@ -188,9 +231,24 @@ public partial record class UnconfirmedServiceRequest
             return (UnconfirmedEventNotificationRequest)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.UnconfirmedEventNotification"/>.
+    /// </summary>
+    public bool TryGetUnconfirmedEventNotification(out UnconfirmedEventNotificationRequest value)
+    {
+        if (Choice == Option.UnconfirmedEventNotification)
+        {
+            value = (UnconfirmedEventNotificationRequest)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Unconfirmed event notification request.
+    /// Creates a choice with the <see cref="Option.UnconfirmedEventNotification"/> option.
     /// </summary>
     public static UnconfirmedServiceRequest FromUnconfirmedEventNotification(UnconfirmedEventNotificationRequest value)
     {
@@ -211,9 +269,24 @@ public partial record class UnconfirmedServiceRequest
             return (UnconfirmedPrivateTransferRequest)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.UnconfirmedPrivateTransfer"/>.
+    /// </summary>
+    public bool TryGetUnconfirmedPrivateTransfer(out UnconfirmedPrivateTransferRequest value)
+    {
+        if (Choice == Option.UnconfirmedPrivateTransfer)
+        {
+            value = (UnconfirmedPrivateTransferRequest)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Unconfirmed private transfer request.
+    /// Creates a choice with the <see cref="Option.UnconfirmedPrivateTransfer"/> option.
     /// </summary>
     public static UnconfirmedServiceRequest FromUnconfirmedPrivateTransfer(UnconfirmedPrivateTransferRequest value)
     {
@@ -234,9 +307,24 @@ public partial record class UnconfirmedServiceRequest
             return (UnconfirmedTextMessageRequest)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.UnconfirmedTextMessage"/>.
+    /// </summary>
+    public bool TryGetUnconfirmedTextMessage(out UnconfirmedTextMessageRequest value)
+    {
+        if (Choice == Option.UnconfirmedTextMessage)
+        {
+            value = (UnconfirmedTextMessageRequest)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Unconfirmed text message request.
+    /// Creates a choice with the <see cref="Option.UnconfirmedTextMessage"/> option.
     /// </summary>
     public static UnconfirmedServiceRequest FromUnconfirmedTextMessage(UnconfirmedTextMessageRequest value)
     {
@@ -257,9 +345,24 @@ public partial record class UnconfirmedServiceRequest
             return (TimeSynchronizationRequest)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.TimeSynchronization"/>.
+    /// </summary>
+    public bool TryGetTimeSynchronization(out TimeSynchronizationRequest value)
+    {
+        if (Choice == Option.TimeSynchronization)
+        {
+            value = (TimeSynchronizationRequest)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Time synchronization request.
+    /// Creates a choice with the <see cref="Option.TimeSynchronization"/> option.
     /// </summary>
     public static UnconfirmedServiceRequest FromTimeSynchronization(TimeSynchronizationRequest value)
     {
@@ -280,9 +383,24 @@ public partial record class UnconfirmedServiceRequest
             return (WhoHasRequest)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.WhoHas"/>.
+    /// </summary>
+    public bool TryGetWhoHas(out WhoHasRequest value)
+    {
+        if (Choice == Option.WhoHas)
+        {
+            value = (WhoHasRequest)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Who-Has service request.
+    /// Creates a choice with the <see cref="Option.WhoHas"/> option.
     /// </summary>
     public static UnconfirmedServiceRequest FromWhoHas(WhoHasRequest value)
     {
@@ -303,9 +421,24 @@ public partial record class UnconfirmedServiceRequest
             return (WhoIsRequest)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.WhoIs"/>.
+    /// </summary>
+    public bool TryGetWhoIs(out WhoIsRequest value)
+    {
+        if (Choice == Option.WhoIs)
+        {
+            value = (WhoIsRequest)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Who-Is service request.
+    /// Creates a choice with the <see cref="Option.WhoIs"/> option.
     /// </summary>
     public static UnconfirmedServiceRequest FromWhoIs(WhoIsRequest value)
     {
@@ -326,9 +459,24 @@ public partial record class UnconfirmedServiceRequest
             return (UtcTimeSynchronizationRequest)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.UtcTimeSynchronization"/>.
+    /// </summary>
+    public bool TryGetUtcTimeSynchronization(out UtcTimeSynchronizationRequest value)
+    {
+        if (Choice == Option.UtcTimeSynchronization)
+        {
+            value = (UtcTimeSynchronizationRequest)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for UTC time synchronization request.
+    /// Creates a choice with the <see cref="Option.UtcTimeSynchronization"/> option.
     /// </summary>
     public static UnconfirmedServiceRequest FromUtcTimeSynchronization(UtcTimeSynchronizationRequest value)
     {
@@ -349,9 +497,24 @@ public partial record class UnconfirmedServiceRequest
             return (WriteGroupRequest)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.WriteGroup"/>.
+    /// </summary>
+    public bool TryGetWriteGroup(out WriteGroupRequest value)
+    {
+        if (Choice == Option.WriteGroup)
+        {
+            value = (WriteGroupRequest)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Write group request.
+    /// Creates a choice with the <see cref="Option.WriteGroup"/> option.
     /// </summary>
     public static UnconfirmedServiceRequest FromWriteGroup(WriteGroupRequest value)
     {
@@ -372,9 +535,24 @@ public partial record class UnconfirmedServiceRequest
             return (UnconfirmedCovNotificationMultipleRequest)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.UnconfirmedCovNotificationMultiple"/>.
+    /// </summary>
+    public bool TryGetUnconfirmedCovNotificationMultiple(out UnconfirmedCovNotificationMultipleRequest value)
+    {
+        if (Choice == Option.UnconfirmedCovNotificationMultiple)
+        {
+            value = (UnconfirmedCovNotificationMultipleRequest)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Unconfirmed COV notification multiple request.
+    /// Creates a choice with the <see cref="Option.UnconfirmedCovNotificationMultiple"/> option.
     /// </summary>
     public static UnconfirmedServiceRequest FromUnconfirmedCovNotificationMultiple(UnconfirmedCovNotificationMultipleRequest value)
     {
@@ -395,9 +573,24 @@ public partial record class UnconfirmedServiceRequest
             return (UnconfirmedAuditNotificationRequest)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.UnconfirmedAuditNotification"/>.
+    /// </summary>
+    public bool TryGetUnconfirmedAuditNotification(out UnconfirmedAuditNotificationRequest value)
+    {
+        if (Choice == Option.UnconfirmedAuditNotification)
+        {
+            value = (UnconfirmedAuditNotificationRequest)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Unconfirmed audit notification request.
+    /// Creates a choice with the <see cref="Option.UnconfirmedAuditNotification"/> option.
     /// </summary>
     public static UnconfirmedServiceRequest FromUnconfirmedAuditNotification(UnconfirmedAuditNotificationRequest value)
     {
@@ -418,9 +611,24 @@ public partial record class UnconfirmedServiceRequest
             return (WhoAmIRequest)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.WhoAmI"/>.
+    /// </summary>
+    public bool TryGetWhoAmI(out WhoAmIRequest value)
+    {
+        if (Choice == Option.WhoAmI)
+        {
+            value = (WhoAmIRequest)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for Who-Am-I service request.
+    /// Creates a choice with the <see cref="Option.WhoAmI"/> option.
     /// </summary>
     public static UnconfirmedServiceRequest FromWhoAmI(WhoAmIRequest value)
     {
@@ -441,9 +649,24 @@ public partial record class UnconfirmedServiceRequest
             return (YouAreRequest)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.YouAre"/>.
+    /// </summary>
+    public bool TryGetYouAre(out YouAreRequest value)
+    {
+        if (Choice == Option.YouAre)
+        {
+            value = (YouAreRequest)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for You-Are service request.
+    /// Creates a choice with the <see cref="Option.YouAre"/> option.
     /// </summary>
     public static UnconfirmedServiceRequest FromYouAre(YouAreRequest value)
     {

@@ -14,5 +14,5 @@ public partial record class FaultParameter
         /// Reference to the property containing the list of fault values.
         /// </summary>
         public required DeviceObjectPropertyReference FaultListReference { get; init; }
-        }
+    }
 }

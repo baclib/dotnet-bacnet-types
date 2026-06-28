@@ -324,13 +324,11 @@ public partial record class PropertyStates
     /// </summary>
     public Option Choice { get; }
 
-    private object _choiceValue
-    {
-        get;
-    }
+    private readonly object _choiceValue;
 
     private PropertyStates(Option choice, object value)
     {
+        ArgumentNullException.ThrowIfNull(value);
         Choice = choice;
         _choiceValue = value;
     }
@@ -349,9 +347,24 @@ public partial record class PropertyStates
             return (Boolean)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.BooleanValue"/>.
+    /// </summary>
+    public bool TryGetBooleanValue(out Boolean value)
+    {
+        if (Choice == Option.BooleanValue)
+        {
+            value = (Boolean)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for A boolean property state (true/false).
+    /// Creates a choice with the <see cref="Option.BooleanValue"/> option.
     /// </summary>
     public static PropertyStates FromBooleanValue(Boolean value)
     {
@@ -372,9 +385,24 @@ public partial record class PropertyStates
             return (BinaryPv)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.BinaryValue"/>.
+    /// </summary>
+    public bool TryGetBinaryValue(out BinaryPv value)
+    {
+        if (Choice == Option.BinaryValue)
+        {
+            value = (BinaryPv)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for A binary present value property state.
+    /// Creates a choice with the <see cref="Option.BinaryValue"/> option.
     /// </summary>
     public static PropertyStates FromBinaryValue(BinaryPv value)
     {
@@ -395,9 +423,24 @@ public partial record class PropertyStates
             return (EventType)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.EventType"/>.
+    /// </summary>
+    public bool TryGetEventType(out EventType value)
+    {
+        if (Choice == Option.EventType)
+        {
+            value = (EventType)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for The type of event for the property.
+    /// Creates a choice with the <see cref="Option.EventType"/> option.
     /// </summary>
     public static PropertyStates FromEventType(EventType value)
     {
@@ -418,9 +461,24 @@ public partial record class PropertyStates
             return (Polarity)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.Polarity"/>.
+    /// </summary>
+    public bool TryGetPolarity(out Polarity value)
+    {
+        if (Choice == Option.Polarity)
+        {
+            value = (Polarity)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for The polarity state of the property.
+    /// Creates a choice with the <see cref="Option.Polarity"/> option.
     /// </summary>
     public static PropertyStates FromPolarity(Polarity value)
     {
@@ -441,9 +499,24 @@ public partial record class PropertyStates
             return (ProgramRequest)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.ProgramChange"/>.
+    /// </summary>
+    public bool TryGetProgramChange(out ProgramRequest value)
+    {
+        if (Choice == Option.ProgramChange)
+        {
+            value = (ProgramRequest)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for A program change request state.
+    /// Creates a choice with the <see cref="Option.ProgramChange"/> option.
     /// </summary>
     public static PropertyStates FromProgramChange(ProgramRequest value)
     {
@@ -464,9 +537,24 @@ public partial record class PropertyStates
             return (ProgramState)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.ProgramState"/>.
+    /// </summary>
+    public bool TryGetProgramState(out ProgramState value)
+    {
+        if (Choice == Option.ProgramState)
+        {
+            value = (ProgramState)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for The state of a program.
+    /// Creates a choice with the <see cref="Option.ProgramState"/> option.
     /// </summary>
     public static PropertyStates FromProgramState(ProgramState value)
     {
@@ -487,9 +575,24 @@ public partial record class PropertyStates
             return (ProgramError)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.ReasonForHalt"/>.
+    /// </summary>
+    public bool TryGetReasonForHalt(out ProgramError value)
+    {
+        if (Choice == Option.ReasonForHalt)
+        {
+            value = (ProgramError)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for The reason for a program halt.
+    /// Creates a choice with the <see cref="Option.ReasonForHalt"/> option.
     /// </summary>
     public static PropertyStates FromReasonForHalt(ProgramError value)
     {
@@ -510,9 +613,24 @@ public partial record class PropertyStates
             return (Reliability)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.Reliability"/>.
+    /// </summary>
+    public bool TryGetReliability(out Reliability value)
+    {
+        if (Choice == Option.Reliability)
+        {
+            value = (Reliability)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for The reliability state of the property.
+    /// Creates a choice with the <see cref="Option.Reliability"/> option.
     /// </summary>
     public static PropertyStates FromReliability(Reliability value)
     {
@@ -533,9 +651,24 @@ public partial record class PropertyStates
             return (EventState)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.State"/>.
+    /// </summary>
+    public bool TryGetState(out EventState value)
+    {
+        if (Choice == Option.State)
+        {
+            value = (EventState)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for The event state of the property.
+    /// Creates a choice with the <see cref="Option.State"/> option.
     /// </summary>
     public static PropertyStates FromState(EventState value)
     {
@@ -556,9 +689,24 @@ public partial record class PropertyStates
             return (DeviceStatus)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.SystemStatus"/>.
+    /// </summary>
+    public bool TryGetSystemStatus(out DeviceStatus value)
+    {
+        if (Choice == Option.SystemStatus)
+        {
+            value = (DeviceStatus)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for The system status of the device.
+    /// Creates a choice with the <see cref="Option.SystemStatus"/> option.
     /// </summary>
     public static PropertyStates FromSystemStatus(DeviceStatus value)
     {
@@ -579,9 +727,24 @@ public partial record class PropertyStates
             return (EngineeringUnits)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.Units"/>.
+    /// </summary>
+    public bool TryGetUnits(out EngineeringUnits value)
+    {
+        if (Choice == Option.Units)
+        {
+            value = (EngineeringUnits)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for The engineering units of the property.
+    /// Creates a choice with the <see cref="Option.Units"/> option.
     /// </summary>
     public static PropertyStates FromUnits(EngineeringUnits value)
     {
@@ -602,9 +765,24 @@ public partial record class PropertyStates
             return (Unsigned)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.UnsignedValue"/>.
+    /// </summary>
+    public bool TryGetUnsignedValue(out Unsigned value)
+    {
+        if (Choice == Option.UnsignedValue)
+        {
+            value = (Unsigned)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for An unsigned integer value.
+    /// Creates a choice with the <see cref="Option.UnsignedValue"/> option.
     /// </summary>
     public static PropertyStates FromUnsignedValue(Unsigned value)
     {
@@ -625,9 +803,24 @@ public partial record class PropertyStates
             return (LifeSafetyMode)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.LifeSafetyMode"/>.
+    /// </summary>
+    public bool TryGetLifeSafetyMode(out LifeSafetyMode value)
+    {
+        if (Choice == Option.LifeSafetyMode)
+        {
+            value = (LifeSafetyMode)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for The life safety mode state.
+    /// Creates a choice with the <see cref="Option.LifeSafetyMode"/> option.
     /// </summary>
     public static PropertyStates FromLifeSafetyMode(LifeSafetyMode value)
     {
@@ -648,9 +841,24 @@ public partial record class PropertyStates
             return (LifeSafetyState)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.LifeSafetyState"/>.
+    /// </summary>
+    public bool TryGetLifeSafetyState(out LifeSafetyState value)
+    {
+        if (Choice == Option.LifeSafetyState)
+        {
+            value = (LifeSafetyState)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for The life safety state.
+    /// Creates a choice with the <see cref="Option.LifeSafetyState"/> option.
     /// </summary>
     public static PropertyStates FromLifeSafetyState(LifeSafetyState value)
     {
@@ -671,9 +879,24 @@ public partial record class PropertyStates
             return (RestartReason)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.RestartReason"/>.
+    /// </summary>
+    public bool TryGetRestartReason(out RestartReason value)
+    {
+        if (Choice == Option.RestartReason)
+        {
+            value = (RestartReason)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for The reason for device restart.
+    /// Creates a choice with the <see cref="Option.RestartReason"/> option.
     /// </summary>
     public static PropertyStates FromRestartReason(RestartReason value)
     {
@@ -694,9 +917,24 @@ public partial record class PropertyStates
             return (DoorAlarmState)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.DoorAlarmState"/>.
+    /// </summary>
+    public bool TryGetDoorAlarmState(out DoorAlarmState value)
+    {
+        if (Choice == Option.DoorAlarmState)
+        {
+            value = (DoorAlarmState)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for The alarm state of a door.
+    /// Creates a choice with the <see cref="Option.DoorAlarmState"/> option.
     /// </summary>
     public static PropertyStates FromDoorAlarmState(DoorAlarmState value)
     {
@@ -717,9 +955,24 @@ public partial record class PropertyStates
             return (Action)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.Action"/>.
+    /// </summary>
+    public bool TryGetAction(out Action value)
+    {
+        if (Choice == Option.Action)
+        {
+            value = (Action)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for An action state.
+    /// Creates a choice with the <see cref="Option.Action"/> option.
     /// </summary>
     public static PropertyStates FromAction(Action value)
     {
@@ -740,9 +993,24 @@ public partial record class PropertyStates
             return (DoorSecuredStatus)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.DoorSecuredStatus"/>.
+    /// </summary>
+    public bool TryGetDoorSecuredStatus(out DoorSecuredStatus value)
+    {
+        if (Choice == Option.DoorSecuredStatus)
+        {
+            value = (DoorSecuredStatus)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for The secured status of a door.
+    /// Creates a choice with the <see cref="Option.DoorSecuredStatus"/> option.
     /// </summary>
     public static PropertyStates FromDoorSecuredStatus(DoorSecuredStatus value)
     {
@@ -763,9 +1031,24 @@ public partial record class PropertyStates
             return (DoorStatus)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.DoorStatus"/>.
+    /// </summary>
+    public bool TryGetDoorStatus(out DoorStatus value)
+    {
+        if (Choice == Option.DoorStatus)
+        {
+            value = (DoorStatus)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for The status of a door.
+    /// Creates a choice with the <see cref="Option.DoorStatus"/> option.
     /// </summary>
     public static PropertyStates FromDoorStatus(DoorStatus value)
     {
@@ -786,9 +1069,24 @@ public partial record class PropertyStates
             return (DoorValue)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.DoorValue"/>.
+    /// </summary>
+    public bool TryGetDoorValue(out DoorValue value)
+    {
+        if (Choice == Option.DoorValue)
+        {
+            value = (DoorValue)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for The value state of a door.
+    /// Creates a choice with the <see cref="Option.DoorValue"/> option.
     /// </summary>
     public static PropertyStates FromDoorValue(DoorValue value)
     {
@@ -809,9 +1107,24 @@ public partial record class PropertyStates
             return (FileAccessMethod)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.FileAccessMethod"/>.
+    /// </summary>
+    public bool TryGetFileAccessMethod(out FileAccessMethod value)
+    {
+        if (Choice == Option.FileAccessMethod)
+        {
+            value = (FileAccessMethod)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for The file access method state.
+    /// Creates a choice with the <see cref="Option.FileAccessMethod"/> option.
     /// </summary>
     public static PropertyStates FromFileAccessMethod(FileAccessMethod value)
     {
@@ -832,9 +1145,24 @@ public partial record class PropertyStates
             return (LockStatus)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.LockStatus"/>.
+    /// </summary>
+    public bool TryGetLockStatus(out LockStatus value)
+    {
+        if (Choice == Option.LockStatus)
+        {
+            value = (LockStatus)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for The lock status state.
+    /// Creates a choice with the <see cref="Option.LockStatus"/> option.
     /// </summary>
     public static PropertyStates FromLockStatus(LockStatus value)
     {
@@ -855,9 +1183,24 @@ public partial record class PropertyStates
             return (LifeSafetyOperation)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.LifeSafetyOperation"/>.
+    /// </summary>
+    public bool TryGetLifeSafetyOperation(out LifeSafetyOperation value)
+    {
+        if (Choice == Option.LifeSafetyOperation)
+        {
+            value = (LifeSafetyOperation)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for The life safety operation state.
+    /// Creates a choice with the <see cref="Option.LifeSafetyOperation"/> option.
     /// </summary>
     public static PropertyStates FromLifeSafetyOperation(LifeSafetyOperation value)
     {
@@ -878,9 +1221,24 @@ public partial record class PropertyStates
             return (Maintenance)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.Maintenance"/>.
+    /// </summary>
+    public bool TryGetMaintenance(out Maintenance value)
+    {
+        if (Choice == Option.Maintenance)
+        {
+            value = (Maintenance)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for The maintenance state.
+    /// Creates a choice with the <see cref="Option.Maintenance"/> option.
     /// </summary>
     public static PropertyStates FromMaintenance(Maintenance value)
     {
@@ -901,9 +1259,24 @@ public partial record class PropertyStates
             return (NodeType)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.NodeType"/>.
+    /// </summary>
+    public bool TryGetNodeType(out NodeType value)
+    {
+        if (Choice == Option.NodeType)
+        {
+            value = (NodeType)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for The node type state.
+    /// Creates a choice with the <see cref="Option.NodeType"/> option.
     /// </summary>
     public static PropertyStates FromNodeType(NodeType value)
     {
@@ -924,9 +1297,24 @@ public partial record class PropertyStates
             return (NotifyType)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.NotifyType"/>.
+    /// </summary>
+    public bool TryGetNotifyType(out NotifyType value)
+    {
+        if (Choice == Option.NotifyType)
+        {
+            value = (NotifyType)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for The notification type state.
+    /// Creates a choice with the <see cref="Option.NotifyType"/> option.
     /// </summary>
     public static PropertyStates FromNotifyType(NotifyType value)
     {
@@ -947,9 +1335,24 @@ public partial record class PropertyStates
             return (ShedState)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.ShedState"/>.
+    /// </summary>
+    public bool TryGetShedState(out ShedState value)
+    {
+        if (Choice == Option.ShedState)
+        {
+            value = (ShedState)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for The shed state.
+    /// Creates a choice with the <see cref="Option.ShedState"/> option.
     /// </summary>
     public static PropertyStates FromShedState(ShedState value)
     {
@@ -970,9 +1373,24 @@ public partial record class PropertyStates
             return (SilencedState)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.SilencedState"/>.
+    /// </summary>
+    public bool TryGetSilencedState(out SilencedState value)
+    {
+        if (Choice == Option.SilencedState)
+        {
+            value = (SilencedState)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for The silenced state.
+    /// Creates a choice with the <see cref="Option.SilencedState"/> option.
     /// </summary>
     public static PropertyStates FromSilencedState(SilencedState value)
     {
@@ -993,9 +1411,24 @@ public partial record class PropertyStates
             return (AccessEvent)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.AccessEvent"/>.
+    /// </summary>
+    public bool TryGetAccessEvent(out AccessEvent value)
+    {
+        if (Choice == Option.AccessEvent)
+        {
+            value = (AccessEvent)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for The access event state.
+    /// Creates a choice with the <see cref="Option.AccessEvent"/> option.
     /// </summary>
     public static PropertyStates FromAccessEvent(AccessEvent value)
     {
@@ -1016,9 +1449,24 @@ public partial record class PropertyStates
             return (AccessZoneOccupancyState)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.ZoneOccupancyState"/>.
+    /// </summary>
+    public bool TryGetZoneOccupancyState(out AccessZoneOccupancyState value)
+    {
+        if (Choice == Option.ZoneOccupancyState)
+        {
+            value = (AccessZoneOccupancyState)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for The occupancy state of an access zone.
+    /// Creates a choice with the <see cref="Option.ZoneOccupancyState"/> option.
     /// </summary>
     public static PropertyStates FromZoneOccupancyState(AccessZoneOccupancyState value)
     {
@@ -1039,9 +1487,24 @@ public partial record class PropertyStates
             return (AccessCredentialDisableReason)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.AccessCredentialDisableReason"/>.
+    /// </summary>
+    public bool TryGetAccessCredentialDisableReason(out AccessCredentialDisableReason value)
+    {
+        if (Choice == Option.AccessCredentialDisableReason)
+        {
+            value = (AccessCredentialDisableReason)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for The reason for disabling an access credential.
+    /// Creates a choice with the <see cref="Option.AccessCredentialDisableReason"/> option.
     /// </summary>
     public static PropertyStates FromAccessCredentialDisableReason(AccessCredentialDisableReason value)
     {
@@ -1062,9 +1525,24 @@ public partial record class PropertyStates
             return (AccessCredentialDisable)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.AccessCredentialDisable"/>.
+    /// </summary>
+    public bool TryGetAccessCredentialDisable(out AccessCredentialDisable value)
+    {
+        if (Choice == Option.AccessCredentialDisable)
+        {
+            value = (AccessCredentialDisable)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for The disable state of an access credential.
+    /// Creates a choice with the <see cref="Option.AccessCredentialDisable"/> option.
     /// </summary>
     public static PropertyStates FromAccessCredentialDisable(AccessCredentialDisable value)
     {
@@ -1085,9 +1563,24 @@ public partial record class PropertyStates
             return (AuthenticationStatus)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.AuthenticationStatus"/>.
+    /// </summary>
+    public bool TryGetAuthenticationStatus(out AuthenticationStatus value)
+    {
+        if (Choice == Option.AuthenticationStatus)
+        {
+            value = (AuthenticationStatus)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for The authentication status state.
+    /// Creates a choice with the <see cref="Option.AuthenticationStatus"/> option.
     /// </summary>
     public static PropertyStates FromAuthenticationStatus(AuthenticationStatus value)
     {
@@ -1108,9 +1601,24 @@ public partial record class PropertyStates
             return (BackupState)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.BackupState"/>.
+    /// </summary>
+    public bool TryGetBackupState(out BackupState value)
+    {
+        if (Choice == Option.BackupState)
+        {
+            value = (BackupState)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for The backup state.
+    /// Creates a choice with the <see cref="Option.BackupState"/> option.
     /// </summary>
     public static PropertyStates FromBackupState(BackupState value)
     {
@@ -1131,9 +1639,24 @@ public partial record class PropertyStates
             return (WriteStatus)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.WriteStatus"/>.
+    /// </summary>
+    public bool TryGetWriteStatus(out WriteStatus value)
+    {
+        if (Choice == Option.WriteStatus)
+        {
+            value = (WriteStatus)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for The write status state.
+    /// Creates a choice with the <see cref="Option.WriteStatus"/> option.
     /// </summary>
     public static PropertyStates FromWriteStatus(WriteStatus value)
     {
@@ -1154,9 +1677,24 @@ public partial record class PropertyStates
             return (LightingInProgress)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.LightingInProgress"/>.
+    /// </summary>
+    public bool TryGetLightingInProgress(out LightingInProgress value)
+    {
+        if (Choice == Option.LightingInProgress)
+        {
+            value = (LightingInProgress)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for The lighting in progress state.
+    /// Creates a choice with the <see cref="Option.LightingInProgress"/> option.
     /// </summary>
     public static PropertyStates FromLightingInProgress(LightingInProgress value)
     {
@@ -1177,9 +1715,24 @@ public partial record class PropertyStates
             return (LightingOperation)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.LightingOperation"/>.
+    /// </summary>
+    public bool TryGetLightingOperation(out LightingOperation value)
+    {
+        if (Choice == Option.LightingOperation)
+        {
+            value = (LightingOperation)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for The lighting operation state.
+    /// Creates a choice with the <see cref="Option.LightingOperation"/> option.
     /// </summary>
     public static PropertyStates FromLightingOperation(LightingOperation value)
     {
@@ -1200,9 +1753,24 @@ public partial record class PropertyStates
             return (LightingTransition)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.LightingTransition"/>.
+    /// </summary>
+    public bool TryGetLightingTransition(out LightingTransition value)
+    {
+        if (Choice == Option.LightingTransition)
+        {
+            value = (LightingTransition)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for The lighting transition state.
+    /// Creates a choice with the <see cref="Option.LightingTransition"/> option.
     /// </summary>
     public static PropertyStates FromLightingTransition(LightingTransition value)
     {
@@ -1223,9 +1791,24 @@ public partial record class PropertyStates
             return (int)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.IntegerValue"/>.
+    /// </summary>
+    public bool TryGetIntegerValue(out int value)
+    {
+        if (Choice == Option.IntegerValue)
+        {
+            value = (int)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for An integer value state.
+    /// Creates a choice with the <see cref="Option.IntegerValue"/> option.
     /// </summary>
     public static PropertyStates FromIntegerValue(int value)
     {
@@ -1246,9 +1829,24 @@ public partial record class PropertyStates
             return (BinaryLightingPv)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.BinaryLightingValue"/>.
+    /// </summary>
+    public bool TryGetBinaryLightingValue(out BinaryLightingPv value)
+    {
+        if (Choice == Option.BinaryLightingValue)
+        {
+            value = (BinaryLightingPv)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for A binary lighting present value state.
+    /// Creates a choice with the <see cref="Option.BinaryLightingValue"/> option.
     /// </summary>
     public static PropertyStates FromBinaryLightingValue(BinaryLightingPv value)
     {
@@ -1269,9 +1867,24 @@ public partial record class PropertyStates
             return (TimerState)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.TimerState"/>.
+    /// </summary>
+    public bool TryGetTimerState(out TimerState value)
+    {
+        if (Choice == Option.TimerState)
+        {
+            value = (TimerState)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for The timer state.
+    /// Creates a choice with the <see cref="Option.TimerState"/> option.
     /// </summary>
     public static PropertyStates FromTimerState(TimerState value)
     {
@@ -1292,9 +1905,24 @@ public partial record class PropertyStates
             return (TimerTransition)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.TimerTransition"/>.
+    /// </summary>
+    public bool TryGetTimerTransition(out TimerTransition value)
+    {
+        if (Choice == Option.TimerTransition)
+        {
+            value = (TimerTransition)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for The timer transition state.
+    /// Creates a choice with the <see cref="Option.TimerTransition"/> option.
     /// </summary>
     public static PropertyStates FromTimerTransition(TimerTransition value)
     {
@@ -1315,9 +1943,24 @@ public partial record class PropertyStates
             return (IpMode)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.BacnetIpMode"/>.
+    /// </summary>
+    public bool TryGetBacnetIpMode(out IpMode value)
+    {
+        if (Choice == Option.BacnetIpMode)
+        {
+            value = (IpMode)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for The BACnet/IP mode state.
+    /// Creates a choice with the <see cref="Option.BacnetIpMode"/> option.
     /// </summary>
     public static PropertyStates FromBacnetIpMode(IpMode value)
     {
@@ -1338,9 +1981,24 @@ public partial record class PropertyStates
             return (NetworkPortCommand)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.NetworkPortCommand"/>.
+    /// </summary>
+    public bool TryGetNetworkPortCommand(out NetworkPortCommand value)
+    {
+        if (Choice == Option.NetworkPortCommand)
+        {
+            value = (NetworkPortCommand)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for The network port command state.
+    /// Creates a choice with the <see cref="Option.NetworkPortCommand"/> option.
     /// </summary>
     public static PropertyStates FromNetworkPortCommand(NetworkPortCommand value)
     {
@@ -1361,9 +2019,24 @@ public partial record class PropertyStates
             return (NetworkType)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.NetworkType"/>.
+    /// </summary>
+    public bool TryGetNetworkType(out NetworkType value)
+    {
+        if (Choice == Option.NetworkType)
+        {
+            value = (NetworkType)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for The network type state.
+    /// Creates a choice with the <see cref="Option.NetworkType"/> option.
     /// </summary>
     public static PropertyStates FromNetworkType(NetworkType value)
     {
@@ -1384,9 +2057,24 @@ public partial record class PropertyStates
             return (NetworkNumberQuality)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.NetworkNumberQuality"/>.
+    /// </summary>
+    public bool TryGetNetworkNumberQuality(out NetworkNumberQuality value)
+    {
+        if (Choice == Option.NetworkNumberQuality)
+        {
+            value = (NetworkNumberQuality)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for The network number quality state.
+    /// Creates a choice with the <see cref="Option.NetworkNumberQuality"/> option.
     /// </summary>
     public static PropertyStates FromNetworkNumberQuality(NetworkNumberQuality value)
     {
@@ -1407,9 +2095,24 @@ public partial record class PropertyStates
             return (EscalatorOperationDirection)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.EscalatorOperationDirection"/>.
+    /// </summary>
+    public bool TryGetEscalatorOperationDirection(out EscalatorOperationDirection value)
+    {
+        if (Choice == Option.EscalatorOperationDirection)
+        {
+            value = (EscalatorOperationDirection)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for The operation direction of an escalator.
+    /// Creates a choice with the <see cref="Option.EscalatorOperationDirection"/> option.
     /// </summary>
     public static PropertyStates FromEscalatorOperationDirection(EscalatorOperationDirection value)
     {
@@ -1430,9 +2133,24 @@ public partial record class PropertyStates
             return (EscalatorFault)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.EscalatorFault"/>.
+    /// </summary>
+    public bool TryGetEscalatorFault(out EscalatorFault value)
+    {
+        if (Choice == Option.EscalatorFault)
+        {
+            value = (EscalatorFault)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for The fault state of an escalator.
+    /// Creates a choice with the <see cref="Option.EscalatorFault"/> option.
     /// </summary>
     public static PropertyStates FromEscalatorFault(EscalatorFault value)
     {
@@ -1453,9 +2171,24 @@ public partial record class PropertyStates
             return (EscalatorMode)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.EscalatorMode"/>.
+    /// </summary>
+    public bool TryGetEscalatorMode(out EscalatorMode value)
+    {
+        if (Choice == Option.EscalatorMode)
+        {
+            value = (EscalatorMode)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for The mode state of an escalator.
+    /// Creates a choice with the <see cref="Option.EscalatorMode"/> option.
     /// </summary>
     public static PropertyStates FromEscalatorMode(EscalatorMode value)
     {
@@ -1476,9 +2209,24 @@ public partial record class PropertyStates
             return (LiftCarDirection)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.LiftCarDirection"/>.
+    /// </summary>
+    public bool TryGetLiftCarDirection(out LiftCarDirection value)
+    {
+        if (Choice == Option.LiftCarDirection)
+        {
+            value = (LiftCarDirection)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for The direction state of a lift car.
+    /// Creates a choice with the <see cref="Option.LiftCarDirection"/> option.
     /// </summary>
     public static PropertyStates FromLiftCarDirection(LiftCarDirection value)
     {
@@ -1499,9 +2247,24 @@ public partial record class PropertyStates
             return (LiftCarDoorCommand)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.LiftCarDoorCommand"/>.
+    /// </summary>
+    public bool TryGetLiftCarDoorCommand(out LiftCarDoorCommand value)
+    {
+        if (Choice == Option.LiftCarDoorCommand)
+        {
+            value = (LiftCarDoorCommand)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for The door command state of a lift car.
+    /// Creates a choice with the <see cref="Option.LiftCarDoorCommand"/> option.
     /// </summary>
     public static PropertyStates FromLiftCarDoorCommand(LiftCarDoorCommand value)
     {
@@ -1522,9 +2285,24 @@ public partial record class PropertyStates
             return (LiftCarDriveStatus)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.LiftCarDriveStatus"/>.
+    /// </summary>
+    public bool TryGetLiftCarDriveStatus(out LiftCarDriveStatus value)
+    {
+        if (Choice == Option.LiftCarDriveStatus)
+        {
+            value = (LiftCarDriveStatus)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for The drive status of a lift car.
+    /// Creates a choice with the <see cref="Option.LiftCarDriveStatus"/> option.
     /// </summary>
     public static PropertyStates FromLiftCarDriveStatus(LiftCarDriveStatus value)
     {
@@ -1545,9 +2323,24 @@ public partial record class PropertyStates
             return (LiftCarMode)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.LiftCarMode"/>.
+    /// </summary>
+    public bool TryGetLiftCarMode(out LiftCarMode value)
+    {
+        if (Choice == Option.LiftCarMode)
+        {
+            value = (LiftCarMode)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for The mode state of a lift car.
+    /// Creates a choice with the <see cref="Option.LiftCarMode"/> option.
     /// </summary>
     public static PropertyStates FromLiftCarMode(LiftCarMode value)
     {
@@ -1568,9 +2361,24 @@ public partial record class PropertyStates
             return (LiftGroupMode)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.LiftGroupMode"/>.
+    /// </summary>
+    public bool TryGetLiftGroupMode(out LiftGroupMode value)
+    {
+        if (Choice == Option.LiftGroupMode)
+        {
+            value = (LiftGroupMode)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for The mode state of a lift group.
+    /// Creates a choice with the <see cref="Option.LiftGroupMode"/> option.
     /// </summary>
     public static PropertyStates FromLiftGroupMode(LiftGroupMode value)
     {
@@ -1591,9 +2399,24 @@ public partial record class PropertyStates
             return (LiftFault)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.LiftFault"/>.
+    /// </summary>
+    public bool TryGetLiftFault(out LiftFault value)
+    {
+        if (Choice == Option.LiftFault)
+        {
+            value = (LiftFault)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for The fault state of a lift.
+    /// Creates a choice with the <see cref="Option.LiftFault"/> option.
     /// </summary>
     public static PropertyStates FromLiftFault(LiftFault value)
     {
@@ -1614,9 +2437,24 @@ public partial record class PropertyStates
             return (ProtocolLevel)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.ProtocolLevel"/>.
+    /// </summary>
+    public bool TryGetProtocolLevel(out ProtocolLevel value)
+    {
+        if (Choice == Option.ProtocolLevel)
+        {
+            value = (ProtocolLevel)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for The protocol level state.
+    /// Creates a choice with the <see cref="Option.ProtocolLevel"/> option.
     /// </summary>
     public static PropertyStates FromProtocolLevel(ProtocolLevel value)
     {
@@ -1637,9 +2475,24 @@ public partial record class PropertyStates
             return (AuditLevel)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.AuditLevel"/>.
+    /// </summary>
+    public bool TryGetAuditLevel(out AuditLevel value)
+    {
+        if (Choice == Option.AuditLevel)
+        {
+            value = (AuditLevel)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for The audit level state.
+    /// Creates a choice with the <see cref="Option.AuditLevel"/> option.
     /// </summary>
     public static PropertyStates FromAuditLevel(AuditLevel value)
     {
@@ -1660,9 +2513,24 @@ public partial record class PropertyStates
             return (AuditOperation)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.AuditOperation"/>.
+    /// </summary>
+    public bool TryGetAuditOperation(out AuditOperation value)
+    {
+        if (Choice == Option.AuditOperation)
+        {
+            value = (AuditOperation)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for The audit operation state.
+    /// Creates a choice with the <see cref="Option.AuditOperation"/> option.
     /// </summary>
     public static PropertyStates FromAuditOperation(AuditOperation value)
     {
@@ -1683,9 +2551,24 @@ public partial record class PropertyStates
             return (Unsigned32)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.ExtendedValue"/>.
+    /// </summary>
+    public bool TryGetExtendedValue(out Unsigned32 value)
+    {
+        if (Choice == Option.ExtendedValue)
+        {
+            value = (Unsigned32)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for An extended unsigned integer value.
+    /// Creates a choice with the <see cref="Option.ExtendedValue"/> option.
     /// </summary>
     public static PropertyStates FromExtendedValue(Unsigned32 value)
     {
@@ -1706,9 +2589,24 @@ public partial record class PropertyStates
             return (ScConnectionState)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.ScConnectionState"/>.
+    /// </summary>
+    public bool TryGetScConnectionState(out ScConnectionState value)
+    {
+        if (Choice == Option.ScConnectionState)
+        {
+            value = (ScConnectionState)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for The state of a secure connection.
+    /// Creates a choice with the <see cref="Option.ScConnectionState"/> option.
     /// </summary>
     public static PropertyStates FromScConnectionState(ScConnectionState value)
     {
@@ -1729,9 +2627,24 @@ public partial record class PropertyStates
             return (ScHubConnectorState)_choiceValue;
         }
     }
+
+    /// <summary>
+    /// Tries to get the value when the active choice is <see cref="Option.ScHubConnectorState"/>.
+    /// </summary>
+    public bool TryGetScHubConnectorState(out ScHubConnectorState value)
+    {
+        if (Choice == Option.ScHubConnectorState)
+        {
+            value = (ScHubConnectorState)_choiceValue;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
     
     /// <summary>
-    /// Create function for The state of a secure hub connector.
+    /// Creates a choice with the <see cref="Option.ScHubConnectorState"/> option.
     /// </summary>
     public static PropertyStates FromScHubConnectorState(ScHubConnectorState value)
     {

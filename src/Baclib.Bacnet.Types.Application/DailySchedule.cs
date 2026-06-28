@@ -11,5 +11,5 @@ public partial record class DailySchedule
     /// <summary>
     /// A list of time-value pairs defining scheduled values throughout the day.
     /// </summary>
-    public required TDaySchedule DaySchedule { get; init; }
-    }
+    public required SequenceOf<TimeValue> DaySchedule { get; init; }
+}

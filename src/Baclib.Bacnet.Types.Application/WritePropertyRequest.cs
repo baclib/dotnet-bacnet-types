@@ -12,12 +12,12 @@ public partial record class WritePropertyRequest
     /// The identifier of the BACnet object whose property is to be written.
     /// </summary>
     public required ObjectIdentifier ObjectIdentifier { get; init; }
-    
+
     /// <summary>
     /// The identifier of the property to be written.
     /// </summary>
     public required PropertyIdentifier PropertyIdentifier { get; init; }
-    
+
     /// <summary>
     /// The index within an array property, if applicable. Optional.
     /// </summary>
@@ -27,7 +27,7 @@ public partial record class WritePropertyRequest
     /// The value to write to the property.
     /// </summary>
     public required Any PropertyValue { get; init; }
-    
+
     /// <summary>
     /// The priority of the write operation, if applicable. Optional.
     /// </summary>
