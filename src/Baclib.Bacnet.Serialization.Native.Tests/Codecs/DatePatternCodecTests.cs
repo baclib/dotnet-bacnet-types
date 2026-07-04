@@ -13,8 +13,8 @@ public class DatePatternCodecTests
         // Application tag 10 (Date), length 4: (10 << 4) | 4 = 0xA4
         // Date format: Year (1 byte), Month (1 byte), Day (1 byte), DayOfWeek (1 byte)
         // Data: 0x7F 0x01 0x01 0x01
-        var reader = new NativeReader([0xA4, 0x7F, 0x01, 0x01, 0x01]);
-        var result = DatePatternCodec.Instance.Decode(ref reader);
+        var reader = new AsduReader([0xA4, 0x7F, 0x01, 0x01, 0x01]);
+        var result = DatePatternCodec.Decode(ref reader);
         Assert.True(true);
     }
 
@@ -23,8 +23,8 @@ public class DatePatternCodecTests
     {
         // Application tag 10 (Date), length 4: (10 << 4) | 4 = 0xA4
         // Data: 0x70 0x03 0x0F 0x02
-        var reader = new NativeReader([0xA4, 0x70, 0x03, 0x0F, 0x02]);
-        var result = DatePatternCodec.Instance.Decode(ref reader);
+        var reader = new AsduReader([0xA4, 0x70, 0x03, 0x0F, 0x02]);
+        var result = DatePatternCodec.Decode(ref reader);
         Assert.True(true);
     }
 
@@ -33,16 +33,16 @@ public class DatePatternCodecTests
     {
         // Context tag 1, length 4: (1 << 4) | 0x08 | 4 = 0x1C
         // Data: 0x68 0x06 0x1C 0x03
-        var reader = new NativeReader([0x1C, 0x68, 0x06, 0x1C, 0x03]);
-        var result = DatePatternCodec.Instance.Decode(ref reader, tagNumber: 1);
+        var reader = new AsduReader([0x1C, 0x68, 0x06, 0x1C, 0x03]);
+        var result = DatePatternCodec.Decode(ref reader, tagNumber: 1);
         Assert.True(true);
     }
 
     [Fact]
     public void DecodeOptional_PresentValue_ReturnsValue()
     {
-        var reader = new NativeReader([0xA4, 0x7C, 0x0C, 0x19, 0x00]);
-        Optional<DatePattern> result = DatePatternCodec.Instance.DecodeOptional(ref reader);
+        var reader = new AsduReader([0xA4, 0x7C, 0x0C, 0x19, 0x00]);
+        Optional<DatePattern> result = Asdu.DecodeOptional<DatePatternCodec, DatePattern>(ref reader);
         Assert.True(result.HasValue);
     }
 
@@ -50,8 +50,8 @@ public class DatePatternCodecTests
     public void DecodeOptional_AbsentValue_ReturnsEmpty()
     {
         // Boolean tag (0x11) — date decoder should not match.
-        var reader = new NativeReader([0x11]);
-        Optional<DatePattern> result = DatePatternCodec.Instance.DecodeOptional(ref reader);
+        var reader = new AsduReader([0x11]);
+        Optional<DatePattern> result = Asdu.DecodeOptional<DatePatternCodec, DatePattern>(ref reader);
         Assert.False(result.HasValue);
     }
 
@@ -59,7 +59,7 @@ public class DatePatternCodecTests
     public void GetEncodedSize_ApplicationTagged_Returns6()
     {
         var datePattern = new DatePattern();
-        var result = DatePatternCodec.Instance.GetEncodedSize(datePattern);
+        var result = DatePatternCodec.GetEncodedLength(datePattern);
         // Tag (1) + Data (4) = 5
         Assert.Equal(5, result);
     }

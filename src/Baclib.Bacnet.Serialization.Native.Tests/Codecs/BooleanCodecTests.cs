@@ -11,31 +11,31 @@ public class BooleanCodecTests
     [Fact]
     public void Decode_True_ReturnsTrue()
     {
-        var reader = new NativeReader([0x11]);
-        Assert.True(BooleanCodec.Instance.Decode(ref reader));
+        var reader = new AsduReader([0x11]);
+        Assert.True(BooleanCodec.Decode(ref reader));
     }
 
     [Fact]
     public void Decode_False_ReturnsFalse()
     {
-        var reader = new NativeReader([0x10]);
-        Assert.False(BooleanCodec.Instance.Decode(ref reader));
+        var reader = new AsduReader([0x10]);
+        Assert.False(BooleanCodec.Decode(ref reader));
     }
 
     [Fact]
     public void Decode_ContextTagged_True_ReturnsTrue()
     {
         // Context tag 0, length 1: (0 << 4) | 0x08 | 1 = 0x09, data byte 0x01 = true
-        var reader = new NativeReader([0x09, 0x01]);
-        Assert.True(BooleanCodec.Instance.Decode(ref reader, tagNumber: 0));
+        var reader = new AsduReader([0x09, 0x01]);
+        Assert.True(BooleanCodec.Decode(ref reader, tagNumber: 0));
     }
 
     [Fact]
     public void Decode_ContextTagged_False_ReturnsFalse()
     {
         // Context tag 0, length 1: 0x09, data byte 0x00 = false
-        var reader = new NativeReader([0x09, 0x00]);
-        Assert.False(BooleanCodec.Instance.Decode(ref reader, tagNumber: 0));
+        var reader = new AsduReader([0x09, 0x00]);
+        Assert.False(BooleanCodec.Decode(ref reader, tagNumber: 0));
     }
 
     [Theory]
@@ -43,8 +43,8 @@ public class BooleanCodecTests
     [InlineData(new byte[] { 0x10 }, false)]
     public void DecodeOptional_PresentValue_ReturnsExpected(byte[] bytes, bool expected)
     {
-        var reader = new NativeReader(bytes);
-        Optional<bool> result = BooleanCodec.Instance.DecodeOptional(ref reader);
+        var reader = new AsduReader(bytes);
+        Optional<bool> result = Asdu.DecodeOptional<BooleanCodec, bool>(ref reader);
         Assert.True(result.HasValue);
         Assert.Equal(expected, result.Value);
     }
@@ -53,8 +53,8 @@ public class BooleanCodecTests
     public void DecodeOptional_AbsentValue_ReturnsEmpty()
     {
         // Wrong tag (Unsigned tag = 0x21) — boolean decoder should not match.
-        var reader = new NativeReader([0x21, 0x2A]);
-        Optional<bool> result = BooleanCodec.Instance.DecodeOptional(ref reader);
+        var reader = new AsduReader([0x21, 0x2A]);
+        Optional<bool> result = Asdu.DecodeOptional<BooleanCodec, bool>(ref reader);
         Assert.False(result.HasValue);
     }
 }

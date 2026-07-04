@@ -20,16 +20,16 @@ public class Integer32CodecTests
     [InlineData(new byte[] { 0x34, 0x7F, 0xFF, 0xFF, 0xFF }, int.MaxValue)]
     public void Decode_ApplicationTagged_ReturnsExpected(byte[] bytes, int expected)
     {
-        var reader = new NativeReader(bytes);
-        Assert.Equal(expected, Integer32Codec.Instance.Decode(ref reader));
+        var reader = new AsduReader(bytes);
+        Assert.Equal(expected, Integer32Codec.Decode(ref reader));
     }
 
     [Fact]
     public void Decode_ContextTagged_ReturnsValue()
     {
         // Context tag 0, length 1: 0x09, data 0x64 = 100
-        var reader = new NativeReader([0x09, 0x64]);
-        Assert.Equal(100, Integer32Codec.Instance.Decode(ref reader, tagNumber: 0));
+        var reader = new AsduReader([0x09, 0x64]);
+        Assert.Equal(100, Integer32Codec.Decode(ref reader, tagNumber: 0));
     }
 
     [Theory]
@@ -38,8 +38,8 @@ public class Integer32CodecTests
     [InlineData(new byte[] { 0x32, 0x80, 0x00 }, -32768)]
     public void DecodeOptional_PresentValue_ReturnsExpected(byte[] bytes, int expected)
     {
-        var reader = new NativeReader(bytes);
-        Optional<int> result = Integer32Codec.Instance.DecodeOptional(ref reader);
+        var reader = new AsduReader(bytes);
+        Optional<int> result = Asdu.DecodeOptional<Integer32Codec, int>(ref reader);
         Assert.True(result.HasValue);
         Assert.Equal(expected, result.Value);
     }
@@ -48,8 +48,8 @@ public class Integer32CodecTests
     public void DecodeOptional_AbsentValue_ReturnsEmpty()
     {
         // Boolean tag (0x11) — integer decoder should not match.
-        var reader = new NativeReader([0x11]);
-        Optional<int> result = Integer32Codec.Instance.DecodeOptional(ref reader);
+        var reader = new AsduReader([0x11]);
+        Optional<int> result = Asdu.DecodeOptional<Integer32Codec, int>(ref reader);
         Assert.False(result.HasValue);
     }
 }

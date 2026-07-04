@@ -12,8 +12,8 @@ public class ObjectIdentifierCodecTests
     public void Decode_ApplicationTagged_ReturnsObjectIdentifier()
     {
         // objectType=0, instance=1 → packed 0x00000001
-        var reader = new NativeReader([0xC4, 0x00, 0x00, 0x00, 0x01]);
-        ObjectIdentifier result = ObjectIdentifierCodec.Instance.Decode(ref reader);
+        var reader = new AsduReader([0xC4, 0x00, 0x00, 0x00, 0x01]);
+        ObjectIdentifier result = ObjectIdentifierCodec.Decode(ref reader);
         Assert.Equal(new ObjectIdentifier(0x00000001), result);
     }
 
@@ -21,8 +21,8 @@ public class ObjectIdentifierCodecTests
     public void Decode_ApplicationTagged_WithKnownPackedValue_RoundTrips()
     {
         // objectType=3 (AnalogValue), instance=1 → (3 << 22) | 1 = 0x00C00001
-        var reader = new NativeReader([0xC4, 0x00, 0xC0, 0x00, 0x01]);
-        ObjectIdentifier result = ObjectIdentifierCodec.Instance.Decode(ref reader);
+        var reader = new AsduReader([0xC4, 0x00, 0xC0, 0x00, 0x01]);
+        ObjectIdentifier result = ObjectIdentifierCodec.Decode(ref reader);
         Assert.Equal(new ObjectIdentifier(0x00C00001), result);
     }
 
@@ -30,8 +30,8 @@ public class ObjectIdentifierCodecTests
     public void Decode_ContextTagged_ReturnsObjectIdentifier()
     {
         // Context tag 0, length 4: (0 << 4) | 0x08 | 4 = 0x0C, then 4 data bytes
-        var reader = new NativeReader([0x0C, 0x00, 0x00, 0x00, 0x01]);
-        ObjectIdentifier result = ObjectIdentifierCodec.Instance.Decode(ref reader, tagNumber: 0);
+        var reader = new AsduReader([0x0C, 0x00, 0x00, 0x00, 0x01]);
+        ObjectIdentifier result = ObjectIdentifierCodec.Decode(ref reader, tagNumber: 0);
         Assert.Equal(new ObjectIdentifier(0x00000001), result);
     }
 
@@ -39,8 +39,8 @@ public class ObjectIdentifierCodecTests
     public void DecodeOptional_AbsentValue_ReturnsEmpty()
     {
         // Boolean tag — ObjectIdentifier decoder should not match.
-        var reader = new NativeReader([0x11]);
-        Optional<ObjectIdentifier> result = ObjectIdentifierCodec.Instance.DecodeOptional(ref reader);
+        var reader = new AsduReader([0x11]);
+        Optional<ObjectIdentifier> result = Asdu.DecodeOptional<ObjectIdentifierCodec, ObjectIdentifier>(ref reader);
         Assert.False(result.HasValue);
     }
 }

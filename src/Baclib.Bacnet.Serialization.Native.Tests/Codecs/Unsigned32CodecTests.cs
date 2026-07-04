@@ -12,16 +12,16 @@ public class Unsigned32CodecTests
     [InlineData(new byte[] { 0x24, 0xFF, 0xFF, 0xFF, 0xFF }, uint.MaxValue)]
     public void Decode_ApplicationTagged_ReturnsExpected(byte[] bytes, uint expected)
     {
-        var reader = new NativeReader(bytes);
-        Assert.Equal(expected, Unsigned32Codec.Instance.Decode(ref reader));
+        var reader = new AsduReader(bytes);
+        Assert.Equal(expected, Unsigned32Codec.Decode(ref reader));
     }
 
     [Fact]
     public void Decode_ContextTagged_ReturnsExpected()
     {
         // Context tag 0, length 2: 0x0A, data 0x01 0x00 = 256
-        var reader = new NativeReader([0x0A, 0x01, 0x00]);
-        Assert.Equal(256u, Unsigned32Codec.Instance.Decode(ref reader, tagNumber: 0));
+        var reader = new AsduReader([0x0A, 0x01, 0x00]);
+        Assert.Equal(256u, Unsigned32Codec.Decode(ref reader, tagNumber: 0));
     }
 
     [Theory]
@@ -30,8 +30,8 @@ public class Unsigned32CodecTests
     [InlineData(new byte[] { 0x24, 0x80, 0x00, 0x00, 0x00 }, 2147483648u)]
     public void DecodeOptional_PresentValue_ReturnsExpected(byte[] bytes, uint expected)
     {
-        var reader = new NativeReader(bytes);
-        Optional<uint> result = Unsigned32Codec.Instance.DecodeOptional(ref reader);
+        var reader = new AsduReader(bytes);
+        Optional<uint> result = Asdu.DecodeOptional<Unsigned32Codec, uint>(ref reader);
         Assert.True(result.HasValue);
         Assert.Equal(expected, result.Value);
     }
@@ -40,8 +40,8 @@ public class Unsigned32CodecTests
     public void DecodeOptional_AbsentValue_ReturnsEmpty()
     {
         // Boolean tag (0x11) — unsigned decoder should not match.
-        var reader = new NativeReader([0x11]);
-        Optional<uint> result = Unsigned32Codec.Instance.DecodeOptional(ref reader);
+        var reader = new AsduReader([0x11]);
+        Optional<uint> result = Asdu.DecodeOptional<Unsigned32Codec, uint>(ref reader);
         Assert.False(result.HasValue);
     }
 }

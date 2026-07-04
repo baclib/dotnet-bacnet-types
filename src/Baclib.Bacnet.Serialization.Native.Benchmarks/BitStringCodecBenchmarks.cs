@@ -23,8 +23,8 @@ public class BitStringCodecBenchmarks
         int sum = 0;
         for (int i = 0; i < OperationsPerInvoke; i++)
         {
-            var reader = new NativeReader(Encoded8);
-            sum += BitString8Codec.Instance.Decode(ref reader).Length;
+            var reader = new AsduReader(Encoded8);
+            sum += BitString8Codec.Decode(ref reader).Length;
         }
 
         return sum;
@@ -36,8 +36,8 @@ public class BitStringCodecBenchmarks
         int sum = 0;
         for (int i = 0; i < OperationsPerInvoke; i++)
         {
-            var reader = new NativeReader(Encoded16);
-            sum += BitString16Codec.Instance.Decode(ref reader).Length;
+            var reader = new AsduReader(Encoded16);
+            sum += BitString16Codec.Decode(ref reader).Length;
         }
 
         return sum;
@@ -49,8 +49,8 @@ public class BitStringCodecBenchmarks
         int sum = 0;
         for (int i = 0; i < OperationsPerInvoke; i++)
         {
-            var reader = new NativeReader(Encoded32);
-            sum += BitString32Codec.Instance.Decode(ref reader).Length;
+            var reader = new AsduReader(Encoded32);
+            sum += BitString32Codec.Decode(ref reader).Length;
         }
 
         return sum;
@@ -62,8 +62,8 @@ public class BitStringCodecBenchmarks
         int sum = 0;
         for (int i = 0; i < OperationsPerInvoke; i++)
         {
-            var reader = new NativeReader(Encoded64);
-            sum += BitString64Codec.Instance.Decode(ref reader).Length;
+            var reader = new AsduReader(Encoded64);
+            sum += BitString64Codec.Decode(ref reader).Length;
         }
 
         return sum;
@@ -73,12 +73,12 @@ public class BitStringCodecBenchmarks
     public int EncodeBitString8()
     {
         int sum = 0;
-        var writer = new NativeWriter(BitString8Codec.Instance.GetEncodedSize(Value8));
+        var writer = new AsduWriter(BitString8Codec.GetEncodedLength(Value8));
 
         for (int i = 0; i < OperationsPerInvoke; i++)
         {
             writer.Reset();
-            BitString8Codec.Instance.Encode(ref writer, in Value8);
+            BitString8Codec.Encode(ref writer, in Value8);
             sum += writer.WrittenLength;
         }
 
@@ -89,12 +89,12 @@ public class BitStringCodecBenchmarks
     public int EncodeBitString16()
     {
         int sum = 0;
-        var writer = new NativeWriter(BitString16Codec.Instance.GetEncodedSize(Value16));
+        var writer = new AsduWriter(BitString16Codec.GetEncodedLength(Value16));
 
         for (int i = 0; i < OperationsPerInvoke; i++)
         {
             writer.Reset();
-            BitString16Codec.Instance.Encode(ref writer, in Value16);
+            BitString16Codec.Encode(ref writer, in Value16);
             sum += writer.WrittenLength;
         }
 
@@ -105,12 +105,12 @@ public class BitStringCodecBenchmarks
     public int EncodeBitString32()
     {
         int sum = 0;
-        var writer = new NativeWriter(BitString32Codec.Instance.GetEncodedSize(Value32));
+        var writer = new AsduWriter(BitString32Codec.GetEncodedLength(Value32));
 
         for (int i = 0; i < OperationsPerInvoke; i++)
         {
             writer.Reset();
-            BitString32Codec.Instance.Encode(ref writer, in Value32);
+            BitString32Codec.Encode(ref writer, in Value32);
             sum += writer.WrittenLength;
         }
 
@@ -121,12 +121,12 @@ public class BitStringCodecBenchmarks
     public int EncodeBitString64()
     {
         int sum = 0;
-        var writer = new NativeWriter(BitString64Codec.Instance.GetEncodedSize(Value64));
+        var writer = new AsduWriter(BitString64Codec.GetEncodedLength(Value64));
 
         for (int i = 0; i < OperationsPerInvoke; i++)
         {
             writer.Reset();
-            BitString64Codec.Instance.Encode(ref writer, in Value64);
+            BitString64Codec.Encode(ref writer, in Value64);
             sum += writer.WrittenLength;
         }
 
