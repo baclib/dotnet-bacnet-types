@@ -5,12 +5,7 @@ import { writeFileSync } from 'fs';
 import fs from 'fs/promises';
 import { EOL } from 'os';
 import path from 'path';
-import { fileURLToPath } from 'url';
-import { traverseDefinitions } from '@baclib/generic-bacnet-types/src/traverse.js';
-import { CodecGeneratorBase } from './codec-generator-common.js';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+import { CodecGeneratorBase } from './base.js';
 
 const specialVariableLengths = new Map([
     ['bit-string-8', 8],
@@ -21,7 +16,7 @@ const specialVariableLengths = new Map([
 
 class BitStringCodecTransformer extends CodecGeneratorBase {
     constructor() {
-        super(__dirname, {
+        super({
             filterEnvName: 'BITSTRING_CODEC_FILTER',
             noEscape: true
         });
@@ -277,8 +272,8 @@ public sealed class ${codecObject.className} :
     /// </summary>
     /// <param name="reader">The reader positioned at a bit string primitive tag.</param>
     /// <returns>The decoded value.</returns>
-    public static ${codecObject.csharpType} Decode(ref NativeReader reader)
-        => Asdu.DecodePrimitive<${codecObject.className}, ${codecObject.csharpType}>(ref reader);
+    public static ${codecObject.csharpType} Decode(ref AsduReader reader)
+        => AsduPrimitive.Decode<${codecObject.className}, ${codecObject.csharpType}>(ref reader);
 
     /// <summary>
     /// Decodes a <see cref="${codecObject.csharpType}"/> value from the current reader position using a specific context tag.
@@ -286,8 +281,8 @@ public sealed class ${codecObject.className} :
     /// <param name="reader">The reader positioned at a bit string primitive tag.</param>
     /// <param name="tagNumber">The expected context tag number.</param>
     /// <returns>The decoded value.</returns>
-    public static ${codecObject.csharpType} Decode(ref NativeReader reader, byte tagNumber)
-        => Asdu.DecodePrimitive<${codecObject.className}, ${codecObject.csharpType}>(ref reader, tagNumber);
+    public static ${codecObject.csharpType} Decode(ref AsduReader reader, byte tagNumber)
+        => AsduPrimitive.Decode<${codecObject.className}, ${codecObject.csharpType}>(ref reader, tagNumber);
 
     /// <summary>
     /// Decodes a <see cref="${codecObject.csharpType}"/> value from raw encoded bytes.
@@ -304,8 +299,8 @@ ${decodeValueBody}
     /// </summary>
     /// <param name="writer">The writer receiving the encoded value.</param>
     /// <param name="value">The value to encode.</param>
-    public static void Encode(ref NativeWriter writer, in ${codecObject.csharpType} value)
-        => Asdu.EncodePrimitive<${codecObject.className}, ${codecObject.csharpType}>(ref writer, value);
+    public static void Encode(ref AsduWriter writer, in ${codecObject.csharpType} value)
+        => AsduPrimitive.Encode<${codecObject.className}, ${codecObject.csharpType}>(ref writer, value);
 
     /// <summary>
     /// Encodes a <see cref="${codecObject.csharpType}"/> value using a specific context tag.
@@ -313,8 +308,8 @@ ${decodeValueBody}
     /// <param name="writer">The writer receiving the encoded value.</param>
     /// <param name="tagNumber">The context tag number.</param>
     /// <param name="value">The value to encode.</param>
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in ${codecObject.csharpType} value)
-        => Asdu.EncodePrimitive<${codecObject.className}, ${codecObject.csharpType}>(ref writer, tagNumber, value);
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in ${codecObject.csharpType} value)
+        => AsduPrimitive.Encode<${codecObject.className}, ${codecObject.csharpType}>(ref writer, tagNumber, value);
 
     /// <summary>
     /// Encodes a <see cref="${codecObject.csharpType}"/> value into an already allocated payload span.
@@ -339,8 +334,8 @@ ${encodeValueBody}
     /// </summary>
     /// <param name="value">The value whose total encoded length is requested.</param>
     /// <returns>The total encoded length in bytes.</returns>
-    public static int GetLength(in ${codecObject.csharpType} value)
-        => AsduLength.Sum(TagNumber, GetEncodedValueLength(value));
+    public static int GetEncodedLength(in ${codecObject.csharpType} value)
+        => AsduPrimitive.GetEncodedLength<${codecObject.className}, ${codecObject.csharpType}>(value);
 
     /// <summary>
     /// Gets the total encoded length including a specific context tag.
@@ -348,25 +343,16 @@ ${encodeValueBody}
     /// <param name="value">The value whose total encoded length is requested.</param>
     /// <param name="tagNumber">The context tag number.</param>
     /// <returns>The total encoded length in bytes.</returns>
-    public static int GetLength(in ${codecObject.csharpType} value, byte tagNumber)
-        => AsduLength.Sum(tagNumber, GetEncodedValueLength(value));
+    public static int GetEncodedLength(in ${codecObject.csharpType} value, byte tagNumber)
+        => AsduPrimitive.GetEncodedLength<${codecObject.className}, ${codecObject.csharpType}>(tagNumber, value);
 
     /// <summary>
     /// Determines whether the next value in the reader matches this codec's application tag.
     /// </summary>
     /// <param name="reader">The reader to inspect.</param>
     /// <returns><see langword="true"/> when the next tag matches; otherwise, <see langword="false"/>.</returns>
-    public static bool Matches(ref NativeReader reader)
-        => reader.PeekPrimitiveTag(TagNumber);
-
-    /// <summary>
-    /// Determines whether the next value in the reader matches a specific context tag.
-    /// </summary>
-    /// <param name="reader">The reader to inspect.</param>
-    /// <param name="tagNumber">The expected context tag number.</param>
-    /// <returns><see langword="true"/> when the next tag matches; otherwise, <see langword="false"/>.</returns>
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekPrimitiveTag(tagNumber);
+    public static bool Matches(ref AsduReader reader)
+        => reader.PeekApplicationTag(TagNumber);
 
     /// <summary>
     /// Gets the BACnet application tag number handled by this codec.
@@ -472,5 +458,7 @@ ${helperMethods}}
     }
 }
 
-const transformer = new BitStringCodecTransformer();
-await traverseDefinitions(transformer);
+/** Creates the bit-string codec generator. */
+export function createBitStringCodecGenerator() {
+    return new BitStringCodecTransformer();
+}

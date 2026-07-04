@@ -3,22 +3,18 @@
 
 import { writeFileSync } from 'fs';
 import fs from 'fs/promises';
-import { EOL } from 'os';
 import path from 'path';
-import { fileURLToPath } from 'url';
-import Handlebars from 'handlebars';
-import { traverseDefinitions } from '@baclib/generic-bacnet-types/src/traverse.js';
+import { TemplateEngine } from '../core/template-engine.js';
+import { toPascalCase } from '../core/text.js';
+import { codecTemplatesDir, generatorRoot, workingDir } from '../core/paths.js';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-class EnumCodecTransformer {
+class EnumCodecTransformer extends TemplateEngine {
     constructor() {
+        super();
         this.directory = process.env.CODEC_OUTPUT_DIR
-            ? path.resolve(__dirname, process.env.CODEC_OUTPUT_DIR)
-            : path.join(__dirname, '..', '..', 'local-working-files', 'enums');
-        this.templatesDir = path.join(__dirname, 'templates', 'codecs');
-        this.templateCache = new Map();
+            ? path.resolve(generatorRoot, process.env.CODEC_OUTPUT_DIR)
+            : path.join(workingDir, 'enums');
+        this.templatesDir = codecTemplatesDir;
         this.codecObjects = [];
         this.filter = process.env.ENUM_CODEC_FILTER ?? null;
     }
@@ -80,6 +76,11 @@ class EnumCodecTransformer {
     }
 
     async afterProcessing() {
+        // The generic BACnet `enumerated` application type maps to the `Enumerated` C# type
+        // (see codecOverrides). It has no standalone definition with enumerated traits, so emit
+        // its codec explicitly using the 32-bit variable-length encoding spec.
+        this.codecObjects.push(this.buildGenericEnumeratedCodec());
+
         const generatedFileNames = new Set(this.codecObjects.map(item => item.fileName));
         const existingFiles = await fs.readdir(this.directory);
         for (const file of existingFiles) {
@@ -97,6 +98,23 @@ class EnumCodecTransformer {
 
     isSeries(context) {
         return context.traits && Object.hasOwn(context.traits, 'series') && context.traits.series !== false;
+    }
+
+    buildGenericEnumeratedCodec() {
+        const underlyingType = 'uint';
+        const levelSpec = this.getLevelSpec(underlyingType);
+        return {
+            fullname: 'enumerated',
+            bacnetName: 'enumerated',
+            namespace: 'Baclib.Bacnet.Serialization.Native.AsduCodecs',
+            className: 'EnumeratedCodec',
+            fileName: 'EnumeratedCodec.cs',
+            typeName: 'Enumerated',
+            typeRef: 'T.Enumerated',
+            underlyingType,
+            fromLengthMethod: levelSpec.fromLengthMethod,
+            levels: levelSpec.levels
+        };
     }
 
     matchesFilter(fullname) {
@@ -301,33 +319,12 @@ class EnumCodecTransformer {
         return fullname.split('.').map((part, index) => (index ? 'T' : '') + this.toPascalCase(part));
     }
 
-    async loadTemplate(templatePath) {
-        if (this.templateCache.has(templatePath)) {
-            return this.templateCache.get(templatePath);
-        }
-
-        const templateContent = await fs.readFile(templatePath, 'utf-8');
-        const compiledTemplate = Handlebars.compile(templateContent);
-        this.templateCache.set(templatePath, compiledTemplate);
-        return compiledTemplate;
-    }
-
-    async render(templatePath, data) {
-        const template = await this.loadTemplate(templatePath);
-        return this.normalizeLineEndings(template(data));
-    }
-
-    normalizeLineEndings(content) {
-        return content.replace(/\r\n|\n|\r/g, EOL);
-    }
-
     toPascalCase(kebabCase) {
-        return kebabCase
-            .split('-')
-            .map(part => part.charAt(0).toUpperCase() + part.slice(1))
-            .join('');
+        return toPascalCase(kebabCase);
     }
 }
 
-const transformer = new EnumCodecTransformer();
-await traverseDefinitions(transformer);
+/** Creates the enumerated codec generator. */
+export function createEnumCodecGenerator() {
+    return new EnumCodecTransformer();
+}

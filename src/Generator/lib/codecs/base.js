@@ -1,76 +1,36 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026, The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
-import fs from 'fs/promises';
-import { EOL } from 'os';
 import path from 'path';
-import Handlebars from 'handlebars';
+import { TemplateEngine } from '../core/template-engine.js';
+import { toPascalCase, toCamelCase } from '../core/text.js';
+import { codecTemplatesDir, generatorRoot, workingDir } from '../core/paths.js';
+import {
+    codecOverrides,
+    constructedBaseTypes,
+    nativeAliases,
+    primitiveBaseTypes,
+    typeReferenceOverrides
+} from '../core/constants.js';
 
-export const partials = Object.freeze([
-    'number', 'unsigned', 'integer', 'real', 'double',
-    'octet-string', 'character-string', 'bit-string', 'enumerated',
-    'choice', 'sequence', 'sequence-of'
-]);
+/**
+ * Shared base class for every codec generator.
+ *
+ * Builds a registry of type metadata during traversal and exposes the naming, codec-reference,
+ * and kind-resolution helpers that the concrete codec generators (choice, sequence, restricted,
+ * bit-string, ...) rely on.
+ */
+export class CodecGeneratorBase extends TemplateEngine {
+    constructor(options = {}) {
+        super({ noEscape: options.noEscape });
 
-export const codecOverrides = Object.freeze({
-    'boolean': 'BooleanCodec',
-    'null': 'NullCodec',
-    'unsigned': 'UnsignedCodec',
-    'object-identifier': 'ObjectIdentifierCodec',
-    'property-identifier': 'PropertyIdentifierCodec',
-    'enumerated': 'Enumerated32Codec',
-    'enumerated-32': 'Enumerated32Codec',
-    'date-pattern': 'DatePatternCodec',
-    'week-n-day': 'WeekNDayCodec'
-});
-
-export const nativeAliases = Object.freeze({
-    'boolean': 'bool',
-    'unsigned': 'uint',
-    'unsigned-8': 'byte',
-    'unsigned-16': 'ushort',
-    'unsigned-32': 'uint',
-    'unsigned-64': 'ulong',
-    'integer': 'int',
-    'integer-8': 'sbyte',
-    'integer-16': 'short',
-    'integer-32': 'int',
-    'integer-64': 'long',
-    'real': 'float',
-    'double': 'double',
-    'string': 'string'
-});
-
-const primitiveBaseTypes = new Set([
-    'boolean',
-    'null',
-    'unsigned',
-    'integer',
-    'real',
-    'double',
-    'octet-string',
-    'character-string',
-    'bit-string',
-    'enumerated',
-    'object-identifier',
-    'week-n-day',
-    'date-pattern',
-    'time-pattern'
-]);
-
-const constructedBaseTypes = new Set(['choice', 'sequence', 'sequence-of']);
-
-export class CodecGeneratorBase {
-    constructor(baseDir, options) {
-        // Shared override for all codec generators, used by generate-all-codecs.js
+        // Shared override for all codec generators, used by the codec orchestrator.
         this.directory = process.env.CODEC_OUTPUT_DIR
-            ? path.resolve(baseDir, process.env.CODEC_OUTPUT_DIR)
-            : path.join(baseDir, '..', '..', 'local-working-files', 'codecs');
-        this.templatesDir = path.join(baseDir, 'templates', 'codecs');
-        this.templateCache = new Map();
+            ? path.resolve(generatorRoot, process.env.CODEC_OUTPUT_DIR)
+            : path.join(workingDir, 'codecs');
+        this.templatesDir = codecTemplatesDir;
         this.typeRegistry = new Map();
-        this.filter = process.env[options.filterEnvName] ?? null;
-        this.noEscape = Boolean(options.noEscape);
+        this.filter = options.filterEnvName ? (process.env[options.filterEnvName] ?? null) : null;
     }
 
     registerType(context) {
@@ -78,7 +38,17 @@ export class CodecGeneratorBase {
         const next = { ...current };
 
         if (context.traits) {
-            next.baseType = this.isSeries(context) ? 'sequence-of' : context.traits.base;
+            const series = this.isSeries(context);
+            next.baseType = series ? 'sequence-of' : context.traits.base;
+
+            // For a SEQUENCE OF, also register the element variant ("<fullname>-item") with the
+            // underlying element base type so consumers can resolve the element's codec kind
+            // (e.g. a SEQUENCE OF CHOICE element is constructed, not primitive).
+            if (series && typeof context.traits.base === 'string') {
+                const itemFullname = `${context.fullname}-item`;
+                const itemMeta = this.typeRegistry.get(itemFullname) ?? {};
+                this.typeRegistry.set(itemFullname, { ...itemMeta, baseType: context.traits.base });
+            }
         }
 
         if (typeof context.definition?.type === 'string') {
@@ -98,6 +68,12 @@ export class CodecGeneratorBase {
         }
 
         return fullname === this.filter || this.getTypeHierarchy(fullname).join('.') === this.filter;
+    }
+
+    getApplicationTagName(fullname) {
+        const metadata = this.typeRegistry.get(fullname);
+        const baseType = metadata?.baseType ?? fullname;
+        return this.toPascalCase({'integer': 'Signed', 'date': 'DatePattern', 'time': 'TimePattern'}[baseType] ?? baseType);
     }
 
     resolveKind(fullname, visited = new Set()) {
@@ -134,6 +110,10 @@ export class CodecGeneratorBase {
             return nativeAliases[fullname];
         }
 
+        if (Object.hasOwn(typeReferenceOverrides, fullname)) {
+            return typeReferenceOverrides[fullname];
+        }
+
         return this.getTypeHierarchy(fullname).at(-1);
     }
 
@@ -154,6 +134,12 @@ export class CodecGeneratorBase {
     }
 
     getTypeReference(fullname) {
+        if (Object.hasOwn(typeReferenceOverrides, fullname)) {
+			//return `${typeReferenceOverrides[fullname]}`;
+            return `global::Baclib.Bacnet.Types.Application.${typeReferenceOverrides[fullname]}`;
+        }
+
+		//return `${this.getTypeHierarchy(fullname).join('.')}`;
         return `global::Baclib.Bacnet.Types.Application.${this.getTypeHierarchy(fullname).join('.')}`;
     }
 
@@ -224,34 +210,14 @@ export class CodecGeneratorBase {
         return deduplicatedParts.join('.');
     }
 
-    async loadTemplate(templatePath) {
-        if (this.templateCache.has(templatePath)) {
-            return this.templateCache.get(templatePath);
-        }
-
-        const templateContent = await fs.readFile(templatePath, 'utf-8');
-        const compiledTemplate = Handlebars.compile(templateContent, { noEscape: this.noEscape });
-        this.templateCache.set(templatePath, compiledTemplate);
-        return compiledTemplate;
-    }
-
-    async render(templatePath, data) {
-        const template = await this.loadTemplate(templatePath);
-        return this.normalizeLineEndings(template(data));
-    }
-
-    normalizeLineEndings(content) {
-        return content.replace(/\r\n|\n|\r/g, EOL);
-    }
-
     toCamelCase(value) {
-        return value.charAt(0).toLowerCase() + value.slice(1);
+        return toCamelCase(value);
     }
 
     toPascalCase(kebabCase) {
-        return kebabCase
-            .split('-')
-            .map(part => part.charAt(0).toUpperCase() + part.slice(1))
-            .join('');
+        return toPascalCase(kebabCase);
     }
 }
+
+// Re-exported for backwards compatibility with generators importing vocabulary from the base module.
+export { partials } from '../core/constants.js';

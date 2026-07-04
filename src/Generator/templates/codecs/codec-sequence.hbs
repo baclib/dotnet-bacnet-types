@@ -1,67 +1,70 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class {{className}} :
-    IAsduElementCodec<{{typeRef}}>,
-    IAsduConstructedCodec<{{typeRef}}>
+    IAsduElementCodec<{{aliasTypeRef}}>,
+    IAsduConstructedCodec<{{aliasTypeRef}}>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static {{aliasTypeRef}} Decode(ref AsduReader reader)
     {
-{{#if hasFirstRequiredItem}}
-        return {{firstRequiredItem.matchExpression}};
-{{else}}
-        return !reader.End;
-{{/if}}
-    }
-
-    public static {{typeRef}} Decode(ref NativeReader reader)
-    {
-{{#each items}}
-        var _{{variableName}} = {{{decodeExpression}}};
-{{/each}}
-
-        return new {{typeRef}}
+        return new {{aliasTypeRef}}
         {
 {{#each items}}
-            {{name}} = _{{variableName}}{{#unless @last}},{{/unless}}
+            {{name}} = AsduElement.Decode{{#if optional}}Optional{{/if}}{{#if isSeries}}SequenceOf{{/if}}<{{codecRef}}, {{aliasTypeName}}>(ref reader{{#if hasContextTag}}, {{tagNumber}}{{/if}}){{#unless @last}},{{/unless}}
 {{/each}}
         };
     }
 
-    public static {{typeRef}} Decode(ref NativeReader reader, byte tagNumber)
-    {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
-    }
+    public static {{aliasTypeRef}} Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<{{className}}, {{aliasTypeRef}}>(ref reader, tagNumber);
 
-    public static void Encode(ref NativeWriter writer, in {{typeRef}} value)
+    public static void Encode(ref AsduWriter writer, in {{aliasTypeRef}} value)
     {
 {{#each items}}
-{{{encodeBody}}}
+        AsduElement.Encode{{#if optional}}Optional{{/if}}{{#if isSeries}}SequenceOf{{/if}}<{{codecRef}}, {{aliasTypeName}}>(ref writer, {{#if hasContextTag}}{{tagNumber}}, {{/if}}value.{{name}});
 {{/each}}
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in {{typeRef}} value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in {{aliasTypeRef}} value)
+        => AsduConstructed.Encode<{{className}}, {{aliasTypeRef}}>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in {{aliasTypeRef}} value)
     {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
+        var length = 0;
+{{#each items}}
+        length += AsduElement.Get{{#if optional}}Optional{{/if}}{{#if isSeries}}SequenceOf{{/if}}EncodedLength<{{codecRef}}, {{aliasTypeName}}>({{#if hasContextTag}}{{tagNumber}}, {{/if}}value.{{name}});
+{{/each}}
+        return length;
     }
 
-    public static int GetLength(in {{typeRef}} value)
-    {
-        return {{{lengthSumExpression}}};
-    }
+    public static int GetEncodedLength(in {{aliasTypeRef}} value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<{{className}}, {{aliasTypeRef}}>(tagNumber, value);
 
-    public static int GetLength(in {{typeRef}} value, byte tagNumber)
+    public static bool Matches(ref AsduReader reader)
     {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
+{{#each matchItems}}
+    {{#if @last}}
+        {{#if hasContextTagNumber}}
+        return reader.PeekContextTag({{contextTagNumber}});
+        {{else}}
+        return {{codecRef}}.Matches(ref reader);
+        {{/if}}
+    {{else}}
+        {{#if hasContextTagNumber}}
+        if (reader.PeekContextTag({{contextTagNumber}}))
+        {{else}}
+        if ({{codecRef}}.Matches(ref reader))
+        {{/if}}
+        {
+            return true;
+        }
+    {{/if}}
+{{else}}
+        return !reader.End;
+{{/each}}
     }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

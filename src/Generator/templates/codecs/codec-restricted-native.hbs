@@ -1,0 +1,44 @@
+// SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
+// SPDX-License-Identifier: EPL-2.0
+
+namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
+
+// Restriction wrapper codec. Delegates wire handling to {{baseCodec}} and projects the
+// underlying value to and from {{typeRef}}.
+public sealed class {{className}} :
+    IAsduElementCodec<{{typeRef}}>,
+    IAsduPrimitiveCodec<{{typeRef}}>
+{
+    public static {{typeRef}} Decode(ref AsduReader reader)
+        => AsduPrimitive.Decode<{{className}}, {{typeRef}}>(ref reader);
+
+    public static {{typeRef}} Decode(ref AsduReader reader, byte tagNumber)
+        => AsduPrimitive.Decode<{{className}}, {{typeRef}}>(ref reader, tagNumber);
+
+    public static {{typeRef}} DecodeValue(ReadOnlySpan<byte> source)
+        => ({{typeRef}}){{baseCodec}}.DecodeValue(source);
+
+    public static void Encode(ref AsduWriter writer, in {{typeRef}} value)
+        => AsduPrimitive.Encode<{{className}}, {{typeRef}}>(ref writer, value);
+
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in {{typeRef}} value)
+        => AsduPrimitive.Encode<{{className}}, {{typeRef}}>(ref writer, tagNumber, value);
+
+    public static void EncodeValue(Span<byte> destination, in {{typeRef}} value)
+        => {{baseCodec}}.EncodeValue(destination, value.Value);
+
+    public static int GetEncodedValueLength(in {{typeRef}} value)
+        => {{baseCodec}}.GetEncodedValueLength(value.Value);
+
+    public static int GetEncodedLength(in {{typeRef}} value)
+        => AsduLength.Sum(TagNumber, GetEncodedValueLength(value));
+
+    public static int GetEncodedLength(in {{typeRef}} value, byte tagNumber)
+        => AsduLength.Sum(tagNumber, GetEncodedValueLength(value));
+
+    public static bool Matches(ref AsduReader reader)
+        => reader.PeekApplicationTag(TagNumber);
+
+    public static ApplicationTagNumber TagNumber
+        => {{baseCodec}}.TagNumber;
+}

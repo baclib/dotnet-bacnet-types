@@ -4,15 +4,12 @@
 import { writeFileSync } from 'fs';
 import fs from 'fs/promises';
 import path from 'path';
-import { fileURLToPath } from 'url';
 import { traverseDefinitions } from '@baclib/generic-bacnet-types/src/traverse.js';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+import { workingDir } from './core/paths.js';
 
 class BitStringDefinitionReportTransformer {
     constructor() {
-        this.outputDirectory = path.join(__dirname, '..', '..', 'local-working-files');
+        this.outputDirectory = workingDir;
         this.outputFilePath = path.join(this.outputDirectory, 'bit-string-definitions.html');
         this.definitions = [];
     }
@@ -463,5 +460,8 @@ ${items}
     }
 }
 
-const transformer = new BitStringDefinitionReportTransformer();
-await traverseDefinitions(transformer);
+/** Generates the bit-string definitions HTML report. */
+export async function generateBitStringReport() {
+    const transformer = new BitStringDefinitionReportTransformer();
+    await traverseDefinitions(transformer);
+}

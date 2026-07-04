@@ -8,6 +8,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import Handlebars from 'handlebars';
 import { traverseDefinitions } from '@baclib/generic-bacnet-types/src/traverse.js';
+import { generatorRoot, templatesDir, workingDir } from './core/paths.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -35,10 +36,10 @@ class BitStringTypeGenerator {
         this.outputDirectory = options.outputDirectory
             ? path.resolve(options.outputDirectory)
             : (process.env.BITSTRING_OUTPUT_DIR
-                ? path.resolve(__dirname, process.env.BITSTRING_OUTPUT_DIR)
-                : path.join(__dirname, '..', '..', 'local-working-files', 'bitstrings'));
+                ? path.resolve(generatorRoot, process.env.BITSTRING_OUTPUT_DIR)
+                : path.join(workingDir, 'bitstrings'));
         this.cleanupMode = options.cleanupMode ?? 'all-cs';
-        this.templatesDir = path.join(__dirname, 'templates');
+        this.templatesDir = templatesDir;
         this.templateCache = new Map();
         this.partialsRegistered = false;
         this.fileObjects = [];
@@ -142,7 +143,7 @@ class BitStringTypeGenerator {
             writeFileSync(path.join(this.outputDirectory, fileObject.fileName), content, 'utf-8');
         }
 
-        console.log(`Generated ${this.fileObjects.length} bit-string types in ${this.outputDirectory}.`);
+        //console.log(`Generated ${this.fileObjects.length} bit-string types in ${this.outputDirectory}.`);
     }
 
     ensurePrimitiveBitStringFileObject() {

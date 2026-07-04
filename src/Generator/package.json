@@ -6,14 +6,11 @@
     "private": true,
     "scripts": {
         "start": "node generate.js",
-        "generate:bit-string-report": "node generate-bit-string-report.js",
-        "generate:bit-string-types": "node generate-bit-string-types.js",
-        "generate:bit-string-codecs": "node generate-bit-string-codecs.js",
-        "generate:choice-codecs": "node generate-choice-codecs.js",
-        "generate:sequence-codecs": "node generate-sequence-codecs.js",
-        "generate:enum-codecs": "node generate-enum-codecs.js",
-        "generate:fixed-codecs": "node generate-fixed-codecs.js",
-        "generate:all-codecs": "node generate-all-codecs.js"
+        "generate:types": "node generate.js types",
+        "generate:codecs": "node generate.js codecs",
+        "generate:all": "node generate.js all",
+        "generate:bit-string-types": "node generate.js bit-string-types",
+        "generate:bit-string-report": "node generate.js bit-string-report"
     },
     "author": "The BAClib Initiative <baclib@mailbox.org> (https://github.com/baclib)",
     "license": "EPL-2.0",

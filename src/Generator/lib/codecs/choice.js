@@ -4,17 +4,20 @@
 import { writeFileSync } from 'fs';
 import fs from 'fs/promises';
 import path from 'path';
-import { fileURLToPath } from 'url';
 import Handlebars from 'handlebars';
-import { traverseDefinitions } from '@baclib/generic-bacnet-types/src/traverse.js';
-import { CodecGeneratorBase } from './codec-generator-common.js';
+import { CodecGeneratorBase } from './base.js';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+// BACnet context tag numbers above 254 require an extended tag encoding that the current
+// byte-based tag infrastructure does not support, so such CHOICE options are omitted.
+const MAX_SUPPORTED_CONTEXT_TAG = 254;
+
+// Types whose codecs are intentionally skipped. CHOICE options referencing these are omitted
+// so the generated codecs compile without the (currently unsupported) referenced codec.
+const EXCLUDED_CODEC_TYPES = new Set(['create-object-ack']);
 
 class ChoiceCodecTransformer extends CodecGeneratorBase {
     constructor() {
-        super(__dirname, {
+        super({
             filterEnvName: 'CHOICE_CODEC_FILTER',
             noEscape: false
         });
@@ -38,27 +41,36 @@ class ChoiceCodecTransformer extends CodecGeneratorBase {
     }
 
     endTraits(context) {
-        if (this.isSeries(context) || context.traits?.base !== 'choice') {
+        if (context.traits?.base !== 'choice') {
             return;
         }
 
-        if (!this.matchesFilter(context.fullname)) {
+        // A SEQUENCE OF CHOICE produces a dedicated element type named "<field>-item" for nested
+        // fields. Top-level series choices are handled elsewhere and have no standalone codec.
+        const isSeries = this.isSeries(context);
+        if (isSeries && !context.fullname.includes('.')) {
             return;
         }
 
-        const hierarchy = this.getTypeHierarchy(context.fullname);
+        const codecFullname = isSeries ? `${context.fullname}-item` : context.fullname;
+
+        if (!this.matchesFilter(codecFullname)) {
+            return;
+        }
+
+        const hierarchy = this.getTypeHierarchy(codecFullname);
         const typeName = hierarchy.join('.');
         const className = hierarchy.join('') + 'Codec';
         const fileName = `${className}.cs`;
 
         this.codecObjects.push({
-            fullname: context.fullname,
+            fullname: codecFullname,
             bacnetName: context.thisAlias ?? context.thisName,
             namespace: 'Baclib.Bacnet.Serialization.Native.AsduCodecs',
             className,
             fileName,
             typeName,
-            typeRef: this.getTypeReference(context.fullname),
+            typeRef: this.getTypeReference(codecFullname),
             items: context.userContext
         });
     }
@@ -67,9 +79,40 @@ class ChoiceCodecTransformer extends CodecGeneratorBase {
 
     endItem(context) {
         const parent = context.ancestors.at(-1);
-        const itemTypeFullname = typeof context.item.type === 'string'
-            ? context.item.type
-            : context.fullname;
+        const itemType = context.item.type;
+        let itemTypeFullname;
+        if (typeof itemType === 'string') {
+            itemTypeFullname = itemType;
+        }
+        else if (itemType && typeof itemType === 'object') {
+            // An option whose type only references a base type (optionally as a series) does not
+            // introduce a dedicated nested type; reference the base type directly. Options that carry
+            // an inline definition (extra keys beyond base/series) keep their own nested codec. When
+            // such an inline option is itself a series, the type generator names the nested element
+            // type with an "-item" suffix (e.g. LogData.TSeriesItem), so align the reference here.
+            const hasInlineDefinition = Object.keys(itemType).some(key => !['base', 'series'].includes(key));
+            if (hasInlineDefinition) {
+                itemTypeFullname = itemType.series ? `${context.fullname}-item` : context.fullname;
+            }
+            else {
+                itemTypeFullname = itemType.base;
+            }
+        }
+        else {
+            itemTypeFullname = context.fullname;
+        }
+
+        // Skip options that cannot be represented by the byte-based context tag infrastructure
+        // (context tag numbers > 254 need extended tag encoding that is not yet supported).
+        if (Object.hasOwn(context.item, 'context') && context.item.context > MAX_SUPPORTED_CONTEXT_TAG) {
+            return;
+        }
+
+        // Skip options referencing types that are excluded from codec generation.
+        if (EXCLUDED_CODEC_TYPES.has(itemTypeFullname)) {
+            return;
+        }
+
         const itemName = this.toPascalCase(context.item.name);
 
         parent.userContext.push({
@@ -90,20 +133,12 @@ class ChoiceCodecTransformer extends CodecGeneratorBase {
             }
         }
 
-        function getAppTagName(name) {
-            const map = { 'bool': 'Boolean', 'uint': 'Unsigned', 'int': 'Signed', 'float': 'Real', 'double': 'Double',
-                'Time': 'TimePattern', 'Date': 'DatePattern' };
-            return map[name] ?? name;
-        }
-
-
-
         const templatePath = path.join(this.templatesDir, 'codec-choice.hbs');
         for (const codecObject of this.codecObjects) {
             const resolvedItems = codecObject.items.map(item => ({
                 ...item,
                 typeName: this.getItemTypeReference(item.sourceFullname),
-                appTagName: getAppTagName(this.getItemValueType(item.sourceFullname)),
+                appTagName: this.resolveKind(item.sourceFullname) === 'primitive' ? this.getApplicationTagName(item.sourceFullname) : null,
                 typeRef: this.getTypeReference(item.sourceFullname),
                 codecRef: this.getCodecReference(item.sourceFullname),
                 kind: this.resolveKind(item.sourceFullname)
@@ -122,8 +157,9 @@ class ChoiceCodecTransformer extends CodecGeneratorBase {
     registerHelpers() {
         Handlebars.registerHelper('eq', (left, right) => left === right);
     }
-
 }
 
-const transformer = new ChoiceCodecTransformer();
-await traverseDefinitions(transformer);
+/** Creates the CHOICE codec generator. */
+export function createChoiceCodecGenerator() {
+    return new ChoiceCodecTransformer();
+}

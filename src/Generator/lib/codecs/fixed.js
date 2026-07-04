@@ -3,13 +3,10 @@
 
 import { writeFileSync } from 'fs';
 import fs from 'fs/promises';
-import { EOL } from 'os';
 import path from 'path';
-import { fileURLToPath } from 'url';
-import Handlebars from 'handlebars';
+import { TemplateEngine } from '../core/template-engine.js';
+import { codecTemplatesDir, codecsOutputDir, generatorRoot } from '../core/paths.js';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 const fixedCodecSpecs = Object.freeze([
     {
@@ -32,7 +29,7 @@ const fixedCodecSpecs = Object.freeze([
     },
     {
         className: 'DateCodec',
-        csharpType: 'Date',
+        csharpType: 'global::Baclib.Bacnet.Types.Application.Date',
         tagName: 'DatePattern',
         template: 'codec-date-pattern-native'
     },
@@ -44,9 +41,15 @@ const fixedCodecSpecs = Object.freeze([
     },
     {
         className: 'TimeCodec',
-        csharpType: 'Time',
+        csharpType: 'global::Baclib.Bacnet.Types.Application.Time',
         tagName: 'TimePattern',
         template: 'codec-time-pattern-native'
+    },
+    {
+        className: 'WeekNDayCodec',
+        csharpType: 'global::Baclib.Bacnet.Types.Application.WeekNDay',
+        tagName: 'OctetString',
+        template: 'codec-week-n-day-native'
     },
     {
         className: 'ObjectIdentifierCodec',
@@ -208,14 +211,26 @@ const fixedCodecSpecs = Object.freeze([
     }
 ]);
 
-class FixedCodecTransformer {
+class FixedCodecTransformer extends TemplateEngine {
     constructor() {
+        super();
         this.directory = process.env.CODEC_OUTPUT_DIR
-            ? path.resolve(__dirname, process.env.CODEC_OUTPUT_DIR)
-            : path.join(__dirname, '..', 'Baclib.Bacnet.Serialization.Native', 'AsduCodecs');
-        this.templatesDir = path.join(__dirname, 'templates', 'codecs');
-        this.templateCache = new Map();
+            ? path.resolve(generatorRoot, process.env.CODEC_OUTPUT_DIR)
+            : codecsOutputDir;
+        this.templatesDir = codecTemplatesDir;
     }
+
+    startDefinition(context) {}
+
+    endDefinition(context) {}
+
+    startTraits(context) {}
+
+    endTraits(context) {}
+
+    startItem(context) {}
+
+    endItem(context) {}
 
     async start() {
         await fs.mkdir(this.directory, { recursive: true });
@@ -230,28 +245,9 @@ class FixedCodecTransformer {
             writeFileSync(path.join(this.directory, fileName), content);
         }
     }
-
-    async loadTemplate(templatePath) {
-        if (this.templateCache.has(templatePath)) {
-            return this.templateCache.get(templatePath);
-        }
-
-        const templateContent = await fs.readFile(templatePath, 'utf-8');
-        const compiledTemplate = Handlebars.compile(templateContent);
-        this.templateCache.set(templatePath, compiledTemplate);
-        return compiledTemplate;
-    }
-
-    async render(templatePath, data) {
-        const template = await this.loadTemplate(templatePath);
-        return this.normalizeLineEndings(template(data));
-    }
-
-    normalizeLineEndings(content) {
-        return content.replace(/\r\n|\n|\r/g, EOL);
-    }
 }
 
-const transformer = new FixedCodecTransformer();
-await transformer.start();
-await transformer.afterProcessing();
+/** Creates the fixed/primitive codec generator. */
+export function createFixedCodecGenerator() {
+    return new FixedCodecTransformer();
+}
