@@ -7,91 +7,77 @@ public sealed class TimeStampCodec :
     IAsduElementCodec<global::Baclib.Bacnet.Types.Application.TimeStamp>,
     IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.TimeStamp>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static bool Matches(ref AsduReader reader)
     {
-
-        var contextTagNumber = reader.PeekContextTagNumber();
-        switch (contextTagNumber)
+        if (!reader.PeekContextTag(out var contextTagNumber))
         {
-            case 0:
-            case 1:
-            case 2:
-                return true;
-            default:
-                return false;
+            return false;
         }
+        return contextTagNumber switch
+        {
+            0 or
+            1 or
+            2 => true,
+            _ => false
+        };
     }
 
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag(tagNumber);
-
-    public static global::Baclib.Bacnet.Types.Application.TimeStamp Decode(ref NativeReader reader)
+    public static global::Baclib.Bacnet.Types.Application.TimeStamp Decode(ref AsduReader reader)
     {
-        var tagNumber = reader.PeekContextTagNumber();
+        var tagNumber = reader.ReadContextTagNumber();
         switch (tagNumber)
         {
             case 0:
-                var _time = Asdu.DecodePrimitive<TimeCodec, global::Baclib.Bacnet.Types.Application.Time>(ref reader, 0);
-                return global::Baclib.Bacnet.Types.Application.TimeStamp.FromTime(_time);
+                var @time = TimeCodec.Decode(ref reader, 0);
+                return global::Baclib.Bacnet.Types.Application.TimeStamp.FromTime(@time);
             case 1:
-                var _sequenceNumber = Asdu.DecodePrimitive<TimeStampTSequenceNumberCodec, global::Baclib.Bacnet.Types.Application.TimeStamp.TSequenceNumber>(ref reader, 1);
-                return global::Baclib.Bacnet.Types.Application.TimeStamp.FromSequenceNumber(_sequenceNumber);
+                var @sequenceNumber = TimeStampTSequenceNumberCodec.Decode(ref reader, 1);
+                return global::Baclib.Bacnet.Types.Application.TimeStamp.FromSequenceNumber(@sequenceNumber);
             case 2:
-                var _datetime = Asdu.DecodeConstructed<DateTimeCodec, global::Baclib.Bacnet.Types.Application.DateTime>(ref reader, 2);
-                return global::Baclib.Bacnet.Types.Application.TimeStamp.FromDatetime(_datetime);
+                var @datetime = DateTimeCodec.Decode(ref reader, 2);
+                return global::Baclib.Bacnet.Types.Application.TimeStamp.FromDatetime(@datetime);
         }
         throw new FormatException(nameof(reader));
     }
 
-    public static global::Baclib.Bacnet.Types.Application.TimeStamp Decode(ref NativeReader reader, byte tagNumber)
-    {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
-    }
+    public static global::Baclib.Bacnet.Types.Application.TimeStamp Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<TimeStampCodec, global::Baclib.Bacnet.Types.Application.TimeStamp>(ref reader, tagNumber);
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.TimeStamp value)
+    public static void Encode(ref AsduWriter writer, in global::Baclib.Bacnet.Types.Application.TimeStamp value)
     {
         switch (value.Choice)
         {
             case global::Baclib.Bacnet.Types.Application.TimeStamp.Option.Time:
-                Asdu.EncodePrimitive<TimeCodec, global::Baclib.Bacnet.Types.Application.Time>(ref writer, 0, value.Time);
+                TimeCodec.Encode(ref writer, 0, value.Time);
                 return;
             case global::Baclib.Bacnet.Types.Application.TimeStamp.Option.SequenceNumber:
-                Asdu.EncodePrimitive<TimeStampTSequenceNumberCodec, global::Baclib.Bacnet.Types.Application.TimeStamp.TSequenceNumber>(ref writer, 1, value.SequenceNumber);
+                TimeStampTSequenceNumberCodec.Encode(ref writer, 1, value.SequenceNumber);
                 return;
             case global::Baclib.Bacnet.Types.Application.TimeStamp.Option.Datetime:
-                Asdu.EncodeConstructed<DateTimeCodec, global::Baclib.Bacnet.Types.Application.DateTime>(ref writer, 2, value.Datetime);
+                DateTimeCodec.Encode(ref writer, 2, value.Datetime);
                 return;
-        }
-        throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported.");
-    }
-
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.TimeStamp value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.TimeStamp value)
-    {
-        switch (value.Choice)
-        {
-            case global::Baclib.Bacnet.Types.Application.TimeStamp.Option.Time:
-                return Asdu.GetPrimitiveLength<TimeCodec, global::Baclib.Bacnet.Types.Application.Time>(0, value.Time);
-            case global::Baclib.Bacnet.Types.Application.TimeStamp.Option.SequenceNumber:
-                return Asdu.GetPrimitiveLength<TimeStampTSequenceNumberCodec, global::Baclib.Bacnet.Types.Application.TimeStamp.TSequenceNumber>(1, value.SequenceNumber);
-            case global::Baclib.Bacnet.Types.Application.TimeStamp.Option.Datetime:
-                return Asdu.GetConstructedLength<DateTimeCodec, global::Baclib.Bacnet.Types.Application.DateTime>(2, value.Datetime);
             default:
                 throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported.");
         }
     }
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.TimeStamp value, byte tagNumber)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.TimeStamp value)
+        => AsduConstructed.Encode<TimeStampCodec, global::Baclib.Bacnet.Types.Application.TimeStamp>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in global::Baclib.Bacnet.Types.Application.TimeStamp value)
     {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
+        return value.Choice switch
+        {
+            global::Baclib.Bacnet.Types.Application.TimeStamp.Option.Time
+                => TimeCodec.GetEncodedLength(value.Time, 0),
+            global::Baclib.Bacnet.Types.Application.TimeStamp.Option.SequenceNumber
+                => TimeStampTSequenceNumberCodec.GetEncodedLength(value.SequenceNumber, 1),
+            global::Baclib.Bacnet.Types.Application.TimeStamp.Option.Datetime
+                => DateTimeCodec.GetEncodedLength(value.Datetime, 2),
+            _ => throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported."),
+        };
     }
+
+    public static int GetEncodedLength(in global::Baclib.Bacnet.Types.Application.TimeStamp value, byte tagNumber)
+        => AsduElement.GetEncodedLength<TimeStampCodec, global::Baclib.Bacnet.Types.Application.TimeStamp>(tagNumber, value);
 }

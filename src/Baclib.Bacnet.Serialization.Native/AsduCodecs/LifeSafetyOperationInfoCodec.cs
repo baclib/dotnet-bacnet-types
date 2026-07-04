@@ -1,60 +1,48 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class LifeSafetyOperationInfoCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.LifeSafetyOperationInfo>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.LifeSafetyOperationInfo>
+    IAsduElementCodec<T::LifeSafetyOperationInfo>,
+    IAsduConstructedCodec<T::LifeSafetyOperationInfo>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::LifeSafetyOperationInfo Decode(ref AsduReader reader)
     {
-        return reader.PeekTag((byte)0);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.LifeSafetyOperationInfo Decode(ref NativeReader reader)
-    {
-        var _requestingProcessIdentifier = Asdu.DecodePrimitive<Unsigned32Codec, uint>(ref reader, 0);
-        var _request = Asdu.DecodePrimitive<LifeSafetyOperationCodec, global::Baclib.Bacnet.Types.Application.LifeSafetyOperation>(ref reader, 1);
-
-        return new global::Baclib.Bacnet.Types.Application.LifeSafetyOperationInfo
+        return new T::LifeSafetyOperationInfo
         {
-            RequestingProcessIdentifier = _requestingProcessIdentifier,
-            Request = _request
+            RequestingProcessIdentifier = AsduElement.Decode<Unsigned32Codec, uint>(ref reader, 0),
+            Request = AsduElement.Decode<LifeSafetyOperationCodec, T::LifeSafetyOperation>(ref reader, 1)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.LifeSafetyOperationInfo Decode(ref NativeReader reader, byte tagNumber)
+    public static T::LifeSafetyOperationInfo Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<LifeSafetyOperationInfoCodec, T::LifeSafetyOperationInfo>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::LifeSafetyOperationInfo value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.Encode<Unsigned32Codec, uint>(ref writer, 0, value.RequestingProcessIdentifier);
+        AsduElement.Encode<LifeSafetyOperationCodec, T::LifeSafetyOperation>(ref writer, 1, value.Request);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.LifeSafetyOperationInfo value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::LifeSafetyOperationInfo value)
+        => AsduConstructed.Encode<LifeSafetyOperationInfoCodec, T::LifeSafetyOperationInfo>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::LifeSafetyOperationInfo value)
     {
-        Asdu.EncodePrimitive<Unsigned32Codec, uint>(ref writer, 0, value.RequestingProcessIdentifier);
-        Asdu.EncodePrimitive<LifeSafetyOperationCodec, global::Baclib.Bacnet.Types.Application.LifeSafetyOperation>(ref writer, 1, value.Request);
+        var length = 0;
+        length += AsduElement.GetEncodedLength<Unsigned32Codec, uint>(0, value.RequestingProcessIdentifier);
+        length += AsduElement.GetEncodedLength<LifeSafetyOperationCodec, T::LifeSafetyOperation>(1, value.Request);
+        return length;
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.LifeSafetyOperationInfo value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
+    public static int GetEncodedLength(in T::LifeSafetyOperationInfo value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<LifeSafetyOperationInfoCodec, T::LifeSafetyOperationInfo>(tagNumber, value);
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.LifeSafetyOperationInfo value)
+    public static bool Matches(ref AsduReader reader)
     {
-        return Asdu.GetPrimitiveLength<Unsigned32Codec, uint>(0, value.RequestingProcessIdentifier) + Asdu.GetPrimitiveLength<LifeSafetyOperationCodec, global::Baclib.Bacnet.Types.Application.LifeSafetyOperation>(1, value.Request);
+        return reader.PeekContextTag(0);
     }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.LifeSafetyOperationInfo value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

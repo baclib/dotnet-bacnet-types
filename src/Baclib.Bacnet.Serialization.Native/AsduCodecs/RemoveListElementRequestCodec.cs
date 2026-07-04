@@ -1,69 +1,54 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class RemoveListElementRequestCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.RemoveListElementRequest>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.RemoveListElementRequest>
+    IAsduElementCodec<T::RemoveListElementRequest>,
+    IAsduConstructedCodec<T::RemoveListElementRequest>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::RemoveListElementRequest Decode(ref AsduReader reader)
     {
-        return reader.PeekTag((byte)0);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.RemoveListElementRequest Decode(ref NativeReader reader)
-    {
-        var _objectIdentifier = Asdu.DecodePrimitive<ObjectIdentifierCodec, global::Baclib.Bacnet.Types.Application.ObjectIdentifier>(ref reader, 0);
-        var _propertyIdentifier = Asdu.DecodePrimitive<PropertyIdentifierCodec, global::Baclib.Bacnet.Types.Application.PropertyIdentifier>(ref reader, 1);
-        var _propertyArrayIndex = Asdu.DecodeOptional<UnsignedCodec, uint>(ref reader, 2);
-        var _listOfElements = Asdu.DecodePrimitive<AnyCodec, global::Baclib.Bacnet.Types.Application.Any>(ref reader, 3);
-
-        return new global::Baclib.Bacnet.Types.Application.RemoveListElementRequest
+        return new T::RemoveListElementRequest
         {
-            ObjectIdentifier = _objectIdentifier,
-            PropertyIdentifier = _propertyIdentifier,
-            PropertyArrayIndex = _propertyArrayIndex,
-            ListOfElements = _listOfElements
+            ObjectIdentifier = AsduElement.Decode<ObjectIdentifierCodec, T::ObjectIdentifier>(ref reader, 0),
+            PropertyIdentifier = AsduElement.Decode<PropertyIdentifierCodec, T::PropertyIdentifier>(ref reader, 1),
+            PropertyArrayIndex = AsduElement.DecodeOptional<UnsignedCodec, uint>(ref reader, 2),
+            ListOfElements = AsduElement.Decode<AnyCodec, T::Any>(ref reader, 3)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.RemoveListElementRequest Decode(ref NativeReader reader, byte tagNumber)
+    public static T::RemoveListElementRequest Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<RemoveListElementRequestCodec, T::RemoveListElementRequest>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::RemoveListElementRequest value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.Encode<ObjectIdentifierCodec, T::ObjectIdentifier>(ref writer, 0, value.ObjectIdentifier);
+        AsduElement.Encode<PropertyIdentifierCodec, T::PropertyIdentifier>(ref writer, 1, value.PropertyIdentifier);
+        AsduElement.EncodeOptional<UnsignedCodec, uint>(ref writer, 2, value.PropertyArrayIndex);
+        AsduElement.Encode<AnyCodec, T::Any>(ref writer, 3, value.ListOfElements);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.RemoveListElementRequest value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::RemoveListElementRequest value)
+        => AsduConstructed.Encode<RemoveListElementRequestCodec, T::RemoveListElementRequest>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::RemoveListElementRequest value)
     {
-        Asdu.EncodePrimitive<ObjectIdentifierCodec, global::Baclib.Bacnet.Types.Application.ObjectIdentifier>(ref writer, 0, value.ObjectIdentifier);
-        Asdu.EncodePrimitive<PropertyIdentifierCodec, global::Baclib.Bacnet.Types.Application.PropertyIdentifier>(ref writer, 1, value.PropertyIdentifier);
-        if (value.PropertyArrayIndex.HasValue)
-        {
-            Asdu.EncodePrimitive<UnsignedCodec, uint>(ref writer, 2, value.PropertyArrayIndex.Value);
-        }
-        Asdu.EncodePrimitive<AnyCodec, global::Baclib.Bacnet.Types.Application.Any>(ref writer, 3, value.ListOfElements);
+        var length = 0;
+        length += AsduElement.GetEncodedLength<ObjectIdentifierCodec, T::ObjectIdentifier>(0, value.ObjectIdentifier);
+        length += AsduElement.GetEncodedLength<PropertyIdentifierCodec, T::PropertyIdentifier>(1, value.PropertyIdentifier);
+        length += AsduElement.GetOptionalEncodedLength<UnsignedCodec, uint>(2, value.PropertyArrayIndex);
+        length += AsduElement.GetEncodedLength<AnyCodec, T::Any>(3, value.ListOfElements);
+        return length;
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.RemoveListElementRequest value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
+    public static int GetEncodedLength(in T::RemoveListElementRequest value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<RemoveListElementRequestCodec, T::RemoveListElementRequest>(tagNumber, value);
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.RemoveListElementRequest value)
+    public static bool Matches(ref AsduReader reader)
     {
-        return Asdu.GetPrimitiveLength<ObjectIdentifierCodec, global::Baclib.Bacnet.Types.Application.ObjectIdentifier>(0, value.ObjectIdentifier) + Asdu.GetPrimitiveLength<PropertyIdentifierCodec, global::Baclib.Bacnet.Types.Application.PropertyIdentifier>(1, value.PropertyIdentifier) + (value.PropertyArrayIndex.HasValue ? Asdu.GetPrimitiveLength<UnsignedCodec, uint>(2, value.PropertyArrayIndex.Value) : 0) + Asdu.GetPrimitiveLength<AnyCodec, global::Baclib.Bacnet.Types.Application.Any>(3, value.ListOfElements);
+        return reader.PeekContextTag(0);
     }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.RemoveListElementRequest value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

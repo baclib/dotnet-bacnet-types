@@ -1,66 +1,54 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class EventParameterTOutOfRangeCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.EventParameter.TOutOfRange>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.EventParameter.TOutOfRange>
+    IAsduElementCodec<T::EventParameter.TOutOfRange>,
+    IAsduConstructedCodec<T::EventParameter.TOutOfRange>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::EventParameter.TOutOfRange Decode(ref AsduReader reader)
     {
-        return reader.PeekTag((byte)0);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.EventParameter.TOutOfRange Decode(ref NativeReader reader)
-    {
-        var _timeDelay = Asdu.DecodePrimitive<UnsignedCodec, uint>(ref reader, 0);
-        var _lowLimit = Asdu.DecodePrimitive<RealCodec, float>(ref reader, 1);
-        var _highLimit = Asdu.DecodePrimitive<RealCodec, float>(ref reader, 2);
-        var _deadband = Asdu.DecodePrimitive<RealCodec, float>(ref reader, 3);
-
-        return new global::Baclib.Bacnet.Types.Application.EventParameter.TOutOfRange
+        return new T::EventParameter.TOutOfRange
         {
-            TimeDelay = _timeDelay,
-            LowLimit = _lowLimit,
-            HighLimit = _highLimit,
-            Deadband = _deadband
+            TimeDelay = AsduElement.Decode<UnsignedCodec, uint>(ref reader, 0),
+            LowLimit = AsduElement.Decode<RealCodec, float>(ref reader, 1),
+            HighLimit = AsduElement.Decode<RealCodec, float>(ref reader, 2),
+            Deadband = AsduElement.Decode<RealCodec, float>(ref reader, 3)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.EventParameter.TOutOfRange Decode(ref NativeReader reader, byte tagNumber)
+    public static T::EventParameter.TOutOfRange Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<EventParameterTOutOfRangeCodec, T::EventParameter.TOutOfRange>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::EventParameter.TOutOfRange value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.Encode<UnsignedCodec, uint>(ref writer, 0, value.TimeDelay);
+        AsduElement.Encode<RealCodec, float>(ref writer, 1, value.LowLimit);
+        AsduElement.Encode<RealCodec, float>(ref writer, 2, value.HighLimit);
+        AsduElement.Encode<RealCodec, float>(ref writer, 3, value.Deadband);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.EventParameter.TOutOfRange value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::EventParameter.TOutOfRange value)
+        => AsduConstructed.Encode<EventParameterTOutOfRangeCodec, T::EventParameter.TOutOfRange>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::EventParameter.TOutOfRange value)
     {
-        Asdu.EncodePrimitive<UnsignedCodec, uint>(ref writer, 0, value.TimeDelay);
-        Asdu.EncodePrimitive<RealCodec, float>(ref writer, 1, value.LowLimit);
-        Asdu.EncodePrimitive<RealCodec, float>(ref writer, 2, value.HighLimit);
-        Asdu.EncodePrimitive<RealCodec, float>(ref writer, 3, value.Deadband);
+        var length = 0;
+        length += AsduElement.GetEncodedLength<UnsignedCodec, uint>(0, value.TimeDelay);
+        length += AsduElement.GetEncodedLength<RealCodec, float>(1, value.LowLimit);
+        length += AsduElement.GetEncodedLength<RealCodec, float>(2, value.HighLimit);
+        length += AsduElement.GetEncodedLength<RealCodec, float>(3, value.Deadband);
+        return length;
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.EventParameter.TOutOfRange value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
+    public static int GetEncodedLength(in T::EventParameter.TOutOfRange value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<EventParameterTOutOfRangeCodec, T::EventParameter.TOutOfRange>(tagNumber, value);
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.EventParameter.TOutOfRange value)
+    public static bool Matches(ref AsduReader reader)
     {
-        return Asdu.GetPrimitiveLength<UnsignedCodec, uint>(0, value.TimeDelay) + Asdu.GetPrimitiveLength<RealCodec, float>(1, value.LowLimit) + Asdu.GetPrimitiveLength<RealCodec, float>(2, value.HighLimit) + Asdu.GetPrimitiveLength<RealCodec, float>(3, value.Deadband);
+        return reader.PeekContextTag(0);
     }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.EventParameter.TOutOfRange value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

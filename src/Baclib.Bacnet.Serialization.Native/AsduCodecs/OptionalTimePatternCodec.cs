@@ -7,88 +7,69 @@ public sealed class OptionalTimePatternCodec :
     IAsduElementCodec<global::Baclib.Bacnet.Types.Application.OptionalTimePattern>,
     IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.OptionalTimePattern>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static bool Matches(ref AsduReader reader)
     {
-        var applicationTagNumber = reader.PeekApplicationTagNumber();
-        switch (applicationTagNumber)
+        if (!reader.PeekApplicationTag(out var applicationTagNumber))
         {
-            case ApplicationTagNumber.Null:
-            case ApplicationTagNumber.TimePattern:
-                return true;
-            default:
-                return false;
+            return false;
         }
+        return applicationTagNumber switch
+        {
+            ApplicationTagNumber.Null or
+            ApplicationTagNumber.TimePattern => true,
+            _ => false
+        };
     }
 
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag(tagNumber);
-
-    public static global::Baclib.Bacnet.Types.Application.OptionalTimePattern Decode(ref NativeReader reader)
+    public static global::Baclib.Bacnet.Types.Application.OptionalTimePattern Decode(ref AsduReader reader)
     {
-        // info
-        if (reader.PeekTag(NullCodec.TagNumber))
+        if (NullCodec.Matches(ref reader))
         {
-            //var _null = Asdu.Decode<NullCodec, global::Baclib.Bacnet.Types.Application.Null>(ref reader);
-            var _null = NullCodec.Decode(ref reader);
-            return global::Baclib.Bacnet.Types.Application.OptionalTimePattern.FromNull(_null);
+            var @null = NullCodec.Decode(ref reader);
+            return global::Baclib.Bacnet.Types.Application.OptionalTimePattern.FromNull(@null);
         }
-        // info
-        if (reader.PeekTag(TimePatternCodec.TagNumber))
+        if (NullCodec.Matches(ref reader))
         {
-            //var _timeepattern = Asdu.Decode<TimePatternCodec, global::Baclib.Bacnet.Types.Application.TimePattern>(ref reader);
-            var _timeepattern = TimePatternCodec.Decode(ref reader);
-            return global::Baclib.Bacnet.Types.Application.OptionalTimePattern.FromTimeepattern(_timeepattern);
+            var @timeepattern = TimePatternCodec.Decode(ref reader);
+            return global::Baclib.Bacnet.Types.Application.OptionalTimePattern.FromTimeepattern(@timeepattern);
         }
 
         throw new FormatException(nameof(reader));
     }
 
-    public static global::Baclib.Bacnet.Types.Application.OptionalTimePattern Decode(ref NativeReader reader, byte tagNumber)
-    {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
-    }
+    public static global::Baclib.Bacnet.Types.Application.OptionalTimePattern Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<OptionalTimePatternCodec, global::Baclib.Bacnet.Types.Application.OptionalTimePattern>(ref reader, tagNumber);
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.OptionalTimePattern value)
+    public static void Encode(ref AsduWriter writer, in global::Baclib.Bacnet.Types.Application.OptionalTimePattern value)
     {
         switch (value.Choice)
         {
             case global::Baclib.Bacnet.Types.Application.OptionalTimePattern.Option.Null:
-                //Asdu.Encode<NullCodec, global::Baclib.Bacnet.Types.Application.Null>(ref writer, value.Null);
                 NullCodec.Encode(ref writer, value.Null);
                 return;
             case global::Baclib.Bacnet.Types.Application.OptionalTimePattern.Option.Timeepattern:
-                //Asdu.Encode<TimePatternCodec, global::Baclib.Bacnet.Types.Application.TimePattern>(ref writer, value.Timeepattern);
                 TimePatternCodec.Encode(ref writer, value.Timeepattern);
                 return;
-        }
-        throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported.");
-    }
-
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.OptionalTimePattern value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.OptionalTimePattern value)
-    {
-        switch (value.Choice)
-        {
-            case global::Baclib.Bacnet.Types.Application.OptionalTimePattern.Option.Null:
-                return Asdu.GetEncodedLength<NullCodec, global::Baclib.Bacnet.Types.Application.Null>(value.Null);
-            case global::Baclib.Bacnet.Types.Application.OptionalTimePattern.Option.Timeepattern:
-                return Asdu.GetEncodedLength<TimePatternCodec, global::Baclib.Bacnet.Types.Application.TimePattern>(value.Timeepattern);
             default:
                 throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported.");
         }
     }
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.OptionalTimePattern value, byte tagNumber)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.OptionalTimePattern value)
+        => AsduConstructed.Encode<OptionalTimePatternCodec, global::Baclib.Bacnet.Types.Application.OptionalTimePattern>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in global::Baclib.Bacnet.Types.Application.OptionalTimePattern value)
     {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
+        return value.Choice switch
+        {
+            global::Baclib.Bacnet.Types.Application.OptionalTimePattern.Option.Null
+                => NullCodec.GetEncodedLength(value.Null),
+            global::Baclib.Bacnet.Types.Application.OptionalTimePattern.Option.Timeepattern
+                => TimePatternCodec.GetEncodedLength(value.Timeepattern),
+            _ => throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported."),
+        };
     }
+
+    public static int GetEncodedLength(in global::Baclib.Bacnet.Types.Application.OptionalTimePattern value, byte tagNumber)
+        => AsduElement.GetEncodedLength<OptionalTimePatternCodec, global::Baclib.Bacnet.Types.Application.OptionalTimePattern>(tagNumber, value);
 }

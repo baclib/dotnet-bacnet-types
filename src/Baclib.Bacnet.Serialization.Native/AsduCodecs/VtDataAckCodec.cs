@@ -1,63 +1,48 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class VtDataAckCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.VtDataAck>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.VtDataAck>
+    IAsduElementCodec<T::VtDataAck>,
+    IAsduConstructedCodec<T::VtDataAck>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::VtDataAck Decode(ref AsduReader reader)
     {
-        return reader.PeekTag((byte)0);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.VtDataAck Decode(ref NativeReader reader)
-    {
-        var _allNewDataAccepted = Asdu.DecodePrimitive<BooleanCodec, bool>(ref reader, 0);
-        var _acceptedOctetCount = Asdu.DecodeOptional<UnsignedCodec, uint>(ref reader, 1);
-
-        return new global::Baclib.Bacnet.Types.Application.VtDataAck
+        return new T::VtDataAck
         {
-            AllNewDataAccepted = _allNewDataAccepted,
-            AcceptedOctetCount = _acceptedOctetCount
+            AllNewDataAccepted = AsduElement.Decode<BooleanCodec, bool>(ref reader, 0),
+            AcceptedOctetCount = AsduElement.DecodeOptional<UnsignedCodec, uint>(ref reader, 1)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.VtDataAck Decode(ref NativeReader reader, byte tagNumber)
+    public static T::VtDataAck Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<VtDataAckCodec, T::VtDataAck>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::VtDataAck value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.Encode<BooleanCodec, bool>(ref writer, 0, value.AllNewDataAccepted);
+        AsduElement.EncodeOptional<UnsignedCodec, uint>(ref writer, 1, value.AcceptedOctetCount);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.VtDataAck value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::VtDataAck value)
+        => AsduConstructed.Encode<VtDataAckCodec, T::VtDataAck>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::VtDataAck value)
     {
-        Asdu.EncodePrimitive<BooleanCodec, bool>(ref writer, 0, value.AllNewDataAccepted);
-        if (value.AcceptedOctetCount.HasValue)
-        {
-            Asdu.EncodePrimitive<UnsignedCodec, uint>(ref writer, 1, value.AcceptedOctetCount.Value);
-        }
+        var length = 0;
+        length += AsduElement.GetEncodedLength<BooleanCodec, bool>(0, value.AllNewDataAccepted);
+        length += AsduElement.GetOptionalEncodedLength<UnsignedCodec, uint>(1, value.AcceptedOctetCount);
+        return length;
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.VtDataAck value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
+    public static int GetEncodedLength(in T::VtDataAck value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<VtDataAckCodec, T::VtDataAck>(tagNumber, value);
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.VtDataAck value)
+    public static bool Matches(ref AsduReader reader)
     {
-        return Asdu.GetPrimitiveLength<BooleanCodec, bool>(0, value.AllNewDataAccepted) + (value.AcceptedOctetCount.HasValue ? Asdu.GetPrimitiveLength<UnsignedCodec, uint>(1, value.AcceptedOctetCount.Value) : 0);
+        return reader.PeekContextTag(0);
     }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.VtDataAck value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

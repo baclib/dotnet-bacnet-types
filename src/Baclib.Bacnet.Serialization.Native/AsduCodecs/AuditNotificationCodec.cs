@@ -1,147 +1,101 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class AuditNotificationCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.AuditNotification>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.AuditNotification>
+    IAsduElementCodec<T::AuditNotification>,
+    IAsduConstructedCodec<T::AuditNotification>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::AuditNotification Decode(ref AsduReader reader)
     {
-        return reader.PeekOpeningTag((byte)2);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.AuditNotification Decode(ref NativeReader reader)
-    {
-        var _sourceTimestamp = Asdu.DecodeOptionalElement<TimeStampCodec, global::Baclib.Bacnet.Types.Application.TimeStamp>(ref reader, 0);
-        var _targetTimestamp = Asdu.DecodeOptionalElement<TimeStampCodec, global::Baclib.Bacnet.Types.Application.TimeStamp>(ref reader, 1);
-        var _sourceDevice = Asdu.DecodeConstructed<RecipientCodec, global::Baclib.Bacnet.Types.Application.Recipient>(ref reader, 2);
-        var _sourceObject = Asdu.DecodeOptional<ObjectIdentifierCodec, global::Baclib.Bacnet.Types.Application.ObjectIdentifier>(ref reader, 3);
-        var _operation = Asdu.DecodePrimitive<AuditOperationCodec, global::Baclib.Bacnet.Types.Application.AuditOperation>(ref reader, 4);
-        var _sourceComment = Asdu.DecodeOptional<CharacterStringCodec, global::Baclib.Bacnet.Types.Application.CharacterString>(ref reader, 5);
-        var _targetComment = Asdu.DecodeOptional<CharacterStringCodec, global::Baclib.Bacnet.Types.Application.CharacterString>(ref reader, 6);
-        var _invokeId = Asdu.DecodeOptional<Unsigned8Codec, byte>(ref reader, 7);
-        var _sourceUserId = Asdu.DecodeOptional<Unsigned16Codec, ushort>(ref reader, 8);
-        var _sourceUserRole = Asdu.DecodeOptional<Unsigned8Codec, byte>(ref reader, 9);
-        var _targetDevice = Asdu.DecodeConstructed<RecipientCodec, global::Baclib.Bacnet.Types.Application.Recipient>(ref reader, 10);
-        var _targetObject = Asdu.DecodeOptional<ObjectIdentifierCodec, global::Baclib.Bacnet.Types.Application.ObjectIdentifier>(ref reader, 11);
-        var _targetProperty = Asdu.DecodeOptionalElement<PropertyReferenceCodec, global::Baclib.Bacnet.Types.Application.PropertyReference>(ref reader, 12);
-        var _targetPriority = Asdu.DecodeOptional<AuditNotificationTTargetPriorityCodec, global::Baclib.Bacnet.Types.Application.AuditNotification.TTargetPriority>(ref reader, 13);
-        var _targetValue = Asdu.DecodeOptional<AnyCodec, global::Baclib.Bacnet.Types.Application.Any>(ref reader, 14);
-        var _currentValue = Asdu.DecodeOptional<AnyCodec, global::Baclib.Bacnet.Types.Application.Any>(ref reader, 15);
-        var _result = Asdu.DecodeOptionalElement<ErrorCodec, global::Baclib.Bacnet.Types.Application.Error>(ref reader, 16);
-
-        return new global::Baclib.Bacnet.Types.Application.AuditNotification
+        return new T::AuditNotification
         {
-            SourceTimestamp = _sourceTimestamp,
-            TargetTimestamp = _targetTimestamp,
-            SourceDevice = _sourceDevice,
-            SourceObject = _sourceObject,
-            Operation = _operation,
-            SourceComment = _sourceComment,
-            TargetComment = _targetComment,
-            InvokeId = _invokeId,
-            SourceUserId = _sourceUserId,
-            SourceUserRole = _sourceUserRole,
-            TargetDevice = _targetDevice,
-            TargetObject = _targetObject,
-            TargetProperty = _targetProperty,
-            TargetPriority = _targetPriority,
-            TargetValue = _targetValue,
-            CurrentValue = _currentValue,
-            Result = _result
+            SourceTimestamp = AsduElement.DecodeOptional<TimeStampCodec, T::TimeStamp>(ref reader, 0),
+            TargetTimestamp = AsduElement.DecodeOptional<TimeStampCodec, T::TimeStamp>(ref reader, 1),
+            SourceDevice = AsduElement.Decode<RecipientCodec, T::Recipient>(ref reader, 2),
+            SourceObject = AsduElement.DecodeOptional<ObjectIdentifierCodec, T::ObjectIdentifier>(ref reader, 3),
+            Operation = AsduElement.Decode<AuditOperationCodec, T::AuditOperation>(ref reader, 4),
+            SourceComment = AsduElement.DecodeOptional<CharacterStringCodec, T::CharacterString>(ref reader, 5),
+            TargetComment = AsduElement.DecodeOptional<CharacterStringCodec, T::CharacterString>(ref reader, 6),
+            InvokeId = AsduElement.DecodeOptional<Unsigned8Codec, byte>(ref reader, 7),
+            SourceUserId = AsduElement.DecodeOptional<Unsigned16Codec, ushort>(ref reader, 8),
+            SourceUserRole = AsduElement.DecodeOptional<Unsigned8Codec, byte>(ref reader, 9),
+            TargetDevice = AsduElement.Decode<RecipientCodec, T::Recipient>(ref reader, 10),
+            TargetObject = AsduElement.DecodeOptional<ObjectIdentifierCodec, T::ObjectIdentifier>(ref reader, 11),
+            TargetProperty = AsduElement.DecodeOptional<PropertyReferenceCodec, T::PropertyReference>(ref reader, 12),
+            TargetPriority = AsduElement.DecodeOptional<AuditNotificationTTargetPriorityCodec, T::AuditNotification.TTargetPriority>(ref reader, 13),
+            TargetValue = AsduElement.DecodeOptional<AnyCodec, T::Any>(ref reader, 14),
+            CurrentValue = AsduElement.DecodeOptional<AnyCodec, T::Any>(ref reader, 15),
+            Result = AsduElement.DecodeOptional<ErrorCodec, T::Error>(ref reader, 16)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.AuditNotification Decode(ref NativeReader reader, byte tagNumber)
+    public static T::AuditNotification Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<AuditNotificationCodec, T::AuditNotification>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::AuditNotification value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.EncodeOptional<TimeStampCodec, T::TimeStamp>(ref writer, 0, value.SourceTimestamp);
+        AsduElement.EncodeOptional<TimeStampCodec, T::TimeStamp>(ref writer, 1, value.TargetTimestamp);
+        AsduElement.Encode<RecipientCodec, T::Recipient>(ref writer, 2, value.SourceDevice);
+        AsduElement.EncodeOptional<ObjectIdentifierCodec, T::ObjectIdentifier>(ref writer, 3, value.SourceObject);
+        AsduElement.Encode<AuditOperationCodec, T::AuditOperation>(ref writer, 4, value.Operation);
+        AsduElement.EncodeOptional<CharacterStringCodec, T::CharacterString>(ref writer, 5, value.SourceComment);
+        AsduElement.EncodeOptional<CharacterStringCodec, T::CharacterString>(ref writer, 6, value.TargetComment);
+        AsduElement.EncodeOptional<Unsigned8Codec, byte>(ref writer, 7, value.InvokeId);
+        AsduElement.EncodeOptional<Unsigned16Codec, ushort>(ref writer, 8, value.SourceUserId);
+        AsduElement.EncodeOptional<Unsigned8Codec, byte>(ref writer, 9, value.SourceUserRole);
+        AsduElement.Encode<RecipientCodec, T::Recipient>(ref writer, 10, value.TargetDevice);
+        AsduElement.EncodeOptional<ObjectIdentifierCodec, T::ObjectIdentifier>(ref writer, 11, value.TargetObject);
+        AsduElement.EncodeOptional<PropertyReferenceCodec, T::PropertyReference>(ref writer, 12, value.TargetProperty);
+        AsduElement.EncodeOptional<AuditNotificationTTargetPriorityCodec, T::AuditNotification.TTargetPriority>(ref writer, 13, value.TargetPriority);
+        AsduElement.EncodeOptional<AnyCodec, T::Any>(ref writer, 14, value.TargetValue);
+        AsduElement.EncodeOptional<AnyCodec, T::Any>(ref writer, 15, value.CurrentValue);
+        AsduElement.EncodeOptional<ErrorCodec, T::Error>(ref writer, 16, value.Result);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.AuditNotification value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::AuditNotification value)
+        => AsduConstructed.Encode<AuditNotificationCodec, T::AuditNotification>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::AuditNotification value)
     {
-        if (value.SourceTimestamp.HasValue)
-        {
-            Asdu.EncodeElement<TimeStampCodec, global::Baclib.Bacnet.Types.Application.TimeStamp>(ref writer, 0, value.SourceTimestamp.Value);
-        }
-        if (value.TargetTimestamp.HasValue)
-        {
-            Asdu.EncodeElement<TimeStampCodec, global::Baclib.Bacnet.Types.Application.TimeStamp>(ref writer, 1, value.TargetTimestamp.Value);
-        }
-        Asdu.EncodeElement<RecipientCodec, global::Baclib.Bacnet.Types.Application.Recipient>(ref writer, 2, value.SourceDevice);
-        if (value.SourceObject.HasValue)
-        {
-            Asdu.EncodePrimitive<ObjectIdentifierCodec, global::Baclib.Bacnet.Types.Application.ObjectIdentifier>(ref writer, 3, value.SourceObject.Value);
-        }
-        Asdu.EncodePrimitive<AuditOperationCodec, global::Baclib.Bacnet.Types.Application.AuditOperation>(ref writer, 4, value.Operation);
-        if (value.SourceComment.HasValue)
-        {
-            Asdu.EncodePrimitive<CharacterStringCodec, global::Baclib.Bacnet.Types.Application.CharacterString>(ref writer, 5, value.SourceComment.Value);
-        }
-        if (value.TargetComment.HasValue)
-        {
-            Asdu.EncodePrimitive<CharacterStringCodec, global::Baclib.Bacnet.Types.Application.CharacterString>(ref writer, 6, value.TargetComment.Value);
-        }
-        if (value.InvokeId.HasValue)
-        {
-            Asdu.EncodePrimitive<Unsigned8Codec, byte>(ref writer, 7, value.InvokeId.Value);
-        }
-        if (value.SourceUserId.HasValue)
-        {
-            Asdu.EncodePrimitive<Unsigned16Codec, ushort>(ref writer, 8, value.SourceUserId.Value);
-        }
-        if (value.SourceUserRole.HasValue)
-        {
-            Asdu.EncodePrimitive<Unsigned8Codec, byte>(ref writer, 9, value.SourceUserRole.Value);
-        }
-        Asdu.EncodeElement<RecipientCodec, global::Baclib.Bacnet.Types.Application.Recipient>(ref writer, 10, value.TargetDevice);
-        if (value.TargetObject.HasValue)
-        {
-            Asdu.EncodePrimitive<ObjectIdentifierCodec, global::Baclib.Bacnet.Types.Application.ObjectIdentifier>(ref writer, 11, value.TargetObject.Value);
-        }
-        if (value.TargetProperty.HasValue)
-        {
-            Asdu.EncodeElement<PropertyReferenceCodec, global::Baclib.Bacnet.Types.Application.PropertyReference>(ref writer, 12, value.TargetProperty.Value);
-        }
-        if (value.TargetPriority.HasValue)
-        {
-            Asdu.EncodePrimitive<AuditNotificationTTargetPriorityCodec, global::Baclib.Bacnet.Types.Application.AuditNotification.TTargetPriority>(ref writer, 13, value.TargetPriority.Value);
-        }
-        if (value.TargetValue.HasValue)
-        {
-            Asdu.EncodePrimitive<AnyCodec, global::Baclib.Bacnet.Types.Application.Any>(ref writer, 14, value.TargetValue.Value);
-        }
-        if (value.CurrentValue.HasValue)
-        {
-            Asdu.EncodePrimitive<AnyCodec, global::Baclib.Bacnet.Types.Application.Any>(ref writer, 15, value.CurrentValue.Value);
-        }
-        if (value.Result.HasValue)
-        {
-            Asdu.EncodeElement<ErrorCodec, global::Baclib.Bacnet.Types.Application.Error>(ref writer, 16, value.Result.Value);
-        }
+        var length = 0;
+        length += AsduElement.GetOptionalEncodedLength<TimeStampCodec, T::TimeStamp>(0, value.SourceTimestamp);
+        length += AsduElement.GetOptionalEncodedLength<TimeStampCodec, T::TimeStamp>(1, value.TargetTimestamp);
+        length += AsduElement.GetEncodedLength<RecipientCodec, T::Recipient>(2, value.SourceDevice);
+        length += AsduElement.GetOptionalEncodedLength<ObjectIdentifierCodec, T::ObjectIdentifier>(3, value.SourceObject);
+        length += AsduElement.GetEncodedLength<AuditOperationCodec, T::AuditOperation>(4, value.Operation);
+        length += AsduElement.GetOptionalEncodedLength<CharacterStringCodec, T::CharacterString>(5, value.SourceComment);
+        length += AsduElement.GetOptionalEncodedLength<CharacterStringCodec, T::CharacterString>(6, value.TargetComment);
+        length += AsduElement.GetOptionalEncodedLength<Unsigned8Codec, byte>(7, value.InvokeId);
+        length += AsduElement.GetOptionalEncodedLength<Unsigned16Codec, ushort>(8, value.SourceUserId);
+        length += AsduElement.GetOptionalEncodedLength<Unsigned8Codec, byte>(9, value.SourceUserRole);
+        length += AsduElement.GetEncodedLength<RecipientCodec, T::Recipient>(10, value.TargetDevice);
+        length += AsduElement.GetOptionalEncodedLength<ObjectIdentifierCodec, T::ObjectIdentifier>(11, value.TargetObject);
+        length += AsduElement.GetOptionalEncodedLength<PropertyReferenceCodec, T::PropertyReference>(12, value.TargetProperty);
+        length += AsduElement.GetOptionalEncodedLength<AuditNotificationTTargetPriorityCodec, T::AuditNotification.TTargetPriority>(13, value.TargetPriority);
+        length += AsduElement.GetOptionalEncodedLength<AnyCodec, T::Any>(14, value.TargetValue);
+        length += AsduElement.GetOptionalEncodedLength<AnyCodec, T::Any>(15, value.CurrentValue);
+        length += AsduElement.GetOptionalEncodedLength<ErrorCodec, T::Error>(16, value.Result);
+        return length;
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.AuditNotification value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
+    public static int GetEncodedLength(in T::AuditNotification value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<AuditNotificationCodec, T::AuditNotification>(tagNumber, value);
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.AuditNotification value)
+    public static bool Matches(ref AsduReader reader)
     {
-        return (value.SourceTimestamp.HasValue ? Asdu.GetElementLength<TimeStampCodec, global::Baclib.Bacnet.Types.Application.TimeStamp>(0, value.SourceTimestamp.Value) : 0) + (value.TargetTimestamp.HasValue ? Asdu.GetElementLength<TimeStampCodec, global::Baclib.Bacnet.Types.Application.TimeStamp>(1, value.TargetTimestamp.Value) : 0) + Asdu.GetElementLength<RecipientCodec, global::Baclib.Bacnet.Types.Application.Recipient>(2, value.SourceDevice) + (value.SourceObject.HasValue ? Asdu.GetPrimitiveLength<ObjectIdentifierCodec, global::Baclib.Bacnet.Types.Application.ObjectIdentifier>(3, value.SourceObject.Value) : 0) + Asdu.GetPrimitiveLength<AuditOperationCodec, global::Baclib.Bacnet.Types.Application.AuditOperation>(4, value.Operation) + (value.SourceComment.HasValue ? Asdu.GetPrimitiveLength<CharacterStringCodec, global::Baclib.Bacnet.Types.Application.CharacterString>(5, value.SourceComment.Value) : 0) + (value.TargetComment.HasValue ? Asdu.GetPrimitiveLength<CharacterStringCodec, global::Baclib.Bacnet.Types.Application.CharacterString>(6, value.TargetComment.Value) : 0) + (value.InvokeId.HasValue ? Asdu.GetPrimitiveLength<Unsigned8Codec, byte>(7, value.InvokeId.Value) : 0) + (value.SourceUserId.HasValue ? Asdu.GetPrimitiveLength<Unsigned16Codec, ushort>(8, value.SourceUserId.Value) : 0) + (value.SourceUserRole.HasValue ? Asdu.GetPrimitiveLength<Unsigned8Codec, byte>(9, value.SourceUserRole.Value) : 0) + Asdu.GetElementLength<RecipientCodec, global::Baclib.Bacnet.Types.Application.Recipient>(10, value.TargetDevice) + (value.TargetObject.HasValue ? Asdu.GetPrimitiveLength<ObjectIdentifierCodec, global::Baclib.Bacnet.Types.Application.ObjectIdentifier>(11, value.TargetObject.Value) : 0) + (value.TargetProperty.HasValue ? Asdu.GetElementLength<PropertyReferenceCodec, global::Baclib.Bacnet.Types.Application.PropertyReference>(12, value.TargetProperty.Value) : 0) + (value.TargetPriority.HasValue ? Asdu.GetPrimitiveLength<AuditNotificationTTargetPriorityCodec, global::Baclib.Bacnet.Types.Application.AuditNotification.TTargetPriority>(13, value.TargetPriority.Value) : 0) + (value.TargetValue.HasValue ? Asdu.GetPrimitiveLength<AnyCodec, global::Baclib.Bacnet.Types.Application.Any>(14, value.TargetValue.Value) : 0) + (value.CurrentValue.HasValue ? Asdu.GetPrimitiveLength<AnyCodec, global::Baclib.Bacnet.Types.Application.Any>(15, value.CurrentValue.Value) : 0) + (value.Result.HasValue ? Asdu.GetElementLength<ErrorCodec, global::Baclib.Bacnet.Types.Application.Error>(16, value.Result.Value) : 0);
+        if (reader.PeekContextTag(0))
+        {
+            return true;
+        }
+        if (reader.PeekContextTag(1))
+        {
+            return true;
+        }
+        return reader.PeekContextTag(2);
     }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.AuditNotification value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

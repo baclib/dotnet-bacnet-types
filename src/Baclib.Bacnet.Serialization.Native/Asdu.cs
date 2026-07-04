@@ -1,327 +1,271 @@
-﻿
-using System.Collections.Immutable;
+﻿// SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
+// SPDX-License-Identifier: EPL-2.0
 
 namespace Baclib.Bacnet.Serialization.Native;
 
 public static class Asdu
 {
-    public static T DecodePrimitive<TCodec, T>(ref NativeReader reader)
-        where TCodec : IAsduPrimitiveCodec<T>
+    public static bool PeekApplicationTag(ReadOnlySpan<byte> source, ApplicationTagNumber tagNumber)
     {
-        var source = reader.ReadBytes(TCodec.TagNumber);
-        return TCodec.DecodeValue(source);
-    }
-
-
-
-
-
-
-    public static T DecodePrimitive<TCodec, T>(ref NativeReader reader, byte tagNumber)
-        where TCodec : IAsduPrimitiveCodec<T>
-    {
-        var source = reader.ReadBytes(tagNumber);
-        return TCodec.DecodeValue(source);
-    }
-
-
-    public static T DecodeConstructed<TCodec, T>(ref NativeReader reader, byte tagNumber)
-        where TCodec : IAsduConstructedCodec<T>
-    {
-        reader.ReadOpeningTag();
-        var value = TCodec.Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
-    }
-
-
-
-
-    public static Optional<T> DecodeOptional<TCodec, T>(ref NativeReader reader)
-        where TCodec : IAsduPrimitiveCodec<T>
-    {
-        if (reader.PeekTag(TCodec.TagNumber))
+        if (source.Length == 0)
         {
-            return DecodePrimitive<TCodec, T>(ref reader);
+            return false;
         }
-        return Optional<T>.None;
+        var control = source[0];
+        return (control >> 4 == (byte)tagNumber && (control & 0x08) == 0);
     }
 
-    public static Optional<T> DecodeOptional<TCodec, T>(ref NativeReader reader, byte tagNumber)
-        where TCodec : IAsduPrimitiveCodec<T>
+    public static bool PeekApplicationTag(ReadOnlySpan<byte> source, out ApplicationTagNumber tagNumber)
     {
-        if (reader.PeekTag(tagNumber))
+        if (source.Length == 0)
         {
-            return DecodePrimitive<TCodec, T>(ref reader, tagNumber);
+            tagNumber = default;
+            return false;
         }
-        return Optional<T>.None;
+        var control = source[0];
+        tagNumber = (ApplicationTagNumber)(control >> 4);
+        return (control & 0x08) == 0;
     }
 
-
-
-
-
-
-    public static void EncodePrimitive<TCodec, T>(ref NativeWriter writer, in T value)
-        where TCodec : IAsduPrimitiveCodec<T>
+    public static int PeekApplicationTag(ReadOnlySpan<byte> source, ApplicationTagNumber tagNumber, out int dataLength)
     {
-        var destination = writer.WriteBlank(TCodec.TagNumber, TCodec.GetEncodedValueLength(value));
-        TCodec.EncodeValue(destination, value);
+        return PeekTag(source, (byte)tagNumber, false, out dataLength);
     }
 
-    public static void EncodePrimitive<TCodec, T>(ref NativeWriter writer, byte tagNumber, in T value)
-        where TCodec : IAsduPrimitiveCodec<T>
+    public static int PeekContextPrimitive(ReadOnlySpan<byte> source, byte tagNumber, out int dataLength)
     {
-        var destination = writer.WriteBlank(tagNumber, TCodec.GetEncodedValueLength(value));
-        TCodec.EncodeValue(destination, value);
+        return PeekTag(source, (byte)tagNumber, true, out dataLength);
     }
 
-    public static void EncodeConstructed<TCodec, T>(ref NativeWriter writer, byte tagNumber, in T value)
-        where TCodec : IAsduConstructedCodec<T>
+    public static bool PeekPrimitiveTag(ReadOnlySpan<byte> source, byte tagNumber)
     {
-        var destination = writer.WriteBlank(tagNumber, TCodec.GetLength(value));
-        //TCodec.EncodeContents(destination, value);
-        throw new NotImplementedException();
-    }
-
-
-
-
-
-
-
-
-
-
-
-    public static void EncodeOptional<TCodec, T>(ref NativeWriter writer, byte tagNumber, in Optional<T> value)
-            where TCodec : IAsduPrimitiveCodec<T>
-    {
-        if (value.HasValue)
+        if (tagNumber < 15)
         {
-            EncodePrimitive<TCodec, T>(ref writer, tagNumber, value.Value);
+            if (source.Length == 0)
+            {
+                return false;
+            }
+            var control = source[0];
+            return (((control >> 4) == tagNumber) && ((control & 0x07) >= 5));
         }
-    }
-
-
-
-
-
-
-
-    public static int GetEncodedLength<TCodec, T>(in T value)
-        where TCodec : IAsduPrimitiveCodec<T>
-    {
-        return 1 + TCodec.GetEncodedValueLength(value);
-    }
-
-    public static int GetPrimitiveLength<TCodec, T>(byte tagNumber, in T value)
-        where TCodec : IAsduPrimitiveCodec<T>
-    {
-        return (tagNumber < 15 ? 1 : 2) + TCodec.GetEncodedValueLength(value);
-    }
-
-
-    public static int GetConstructedLength<TCodec, T>(byte tagNumber, in T value)
-        where TCodec : IAsduConstructedCodec<T>
-    {
-        return (tagNumber < 15 ? 1 : 2) + TCodec.GetLength(value);
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-    public static int GetEncodedLengthOptional<TCodec, T>(byte tagNumber, in Optional<T> value)
-        where TCodec : IAsduPrimitiveCodec<T>
-    {
-        return value.HasValue ? GetPrimitiveLength<TCodec, T>(tagNumber, value.Value) : 0;
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    public static T DecodeElement<TCodec, T>(ref NativeReader reader)
-        where TCodec : IAsduElementCodec<T>
-    {
-        return TCodec.Decode(ref reader);
-    }
-
-    public static T DecodeElement<TCodec, T>(ref NativeReader reader, byte tagNumber)   
-        where TCodec : IAsduElementCodec<T>
-    {
-        return TCodec.Decode(ref reader, tagNumber);
-    }
-
-    public static Optional<T> DecodeOptionalElement<TCodec, T>(ref NativeReader reader)
-        where TCodec : IAsduElementCodec<T>
-    {
-        if (TCodec.Matches(ref reader))
+        if (source.Length > 1)
         {
-            return TCodec.Decode(ref reader);
+            var control = source[0];
+            return (((control & 0x07) >= 5) && source[1] == tagNumber);
         }
-        return Optional<T>.None;
+        return false;
     }
 
-    public static Optional<T> DecodeOptionalElement<TCodec, T>(ref NativeReader reader, byte tagNumber)
-        where TCodec : IAsduElementCodec<T>
+    public static bool PeekContextTag(ReadOnlySpan<byte> source, byte tagNumber)
     {
-        if (TCodec.Matches(ref reader))
+        if (tagNumber < 15)
         {
-            return TCodec.Decode(ref reader, tagNumber);
+            if (source.Length == 0)
+            {
+                return false;
+            }
+            byte expected = (byte)((tagNumber << 4) | 0x08);
+            return source[0] == expected;
         }
-        return Optional<T>.None;
-    }
-
-    public static SequenceOf<T> DecodeSequenceOf<TCodec, T>(ref NativeReader reader)
-        where TCodec : IAsduElementCodec<T>
-    {
-        var items = new List<T>();
-        while (!reader.End)
+        if (source.Length > 1)
         {
-            var item = TCodec.Decode(ref reader);
-            items.Add(item);
+            var control = source[0];
+            return ((control & 0xF8) == 0xF8 && source[1] == tagNumber);
         }
-        return new SequenceOf<T>([.. items]);
+        return false;
     }
 
-    public static SequenceOf<T> DecodeSequenceOf<TCodec, T>(ref NativeReader reader, byte tagNumber)
-        where TCodec : IAsduElementCodec<T>
+    public static bool PeekContextTag(ReadOnlySpan<byte> source, out byte tagNumber)
     {
-        var items = new List<T>();
-        reader.ReadOpeningTag(tagNumber);
-        while (!reader.ReadClosingTagOptional(tagNumber))
+        if (source.Length == 0)
         {
-            var item = TCodec.Decode(ref reader, tagNumber);
-            items.Add(item);
+            tagNumber = 0;
+            return false;
         }
-        reader.ReadClosingTag(tagNumber);
-        return new SequenceOf<T>([.. items]);
-    }
-
-    public static SequenceOf<T> DecodeOptionalSequenceOf<TCodec, T>(ref NativeReader reader)
-        where TCodec : IAsduElementCodec<T>
-    {
-        if (TCodec.Matches(ref reader))
+        var control = source[0];
+        if ((control & 0x08) == 0)
         {
-            return DecodeSequenceOf<TCodec, T>(ref reader);
+            tagNumber = 0;
+            return false;
         }
-        return SequenceOf<T>.Empty;
-    }
-
-    public static SequenceOf<T> DecodeOptionalSequenceOf<TCodec, T>(ref NativeReader reader, byte tagNumber)
-        where TCodec : IAsduElementCodec<T>
-    {
-        if (TCodec.Matches(ref reader))
+        tagNumber = (byte)(control >> 4);
+        if (tagNumber == 15)
         {
-            return DecodeSequenceOf<TCodec, T>(ref reader, tagNumber);
+            if (source.Length < 2)
+            {
+                tagNumber = 0;
+                return false;
+            }
+            tagNumber = source[1];
         }
-        return SequenceOf<T>.Empty;
+        return true;
     }
 
-
-
-
-
-
-
-
-    public static void EncodeElement<TCodec, T>(ref NativeWriter writer, in T value)
-        where TCodec : IAsduElementCodec<T>
+    public static bool PeekOpeningTag(ReadOnlySpan<byte> source, byte tagNumber)
     {
-        TCodec.Encode(ref writer, value);
-    }
-
-    public static void EncodeElement<TCodec, T>(ref NativeWriter writer, in Optional<T> value)
-        where TCodec : IAsduElementCodec<T>
-    {
-        if (value.HasValue)
+        if (tagNumber < 15)
         {
-            TCodec.Encode(ref writer, value.Value);
+            if (source.Length == 0)
+            {
+                return false;
+            }
+            byte expected = (byte)((tagNumber << 4) | 0x0E);
+            return source[0] == expected;
         }
-        throw new NotImplementedException();
-    }
-
-    public static void EncodeElement<TCodec, T>(ref NativeWriter writer, byte tagNumber, in T value)
-        where TCodec : IAsduElementCodec<T>
-    {
-        TCodec.Encode(ref writer, tagNumber, value);
-    }
-
-    public static void EncodeOptionalElement<TCodec, T>(ref NativeWriter writer, byte tagNumber, in Optional<T> value)
-        where TCodec : IAsduElementCodec<T>
-    {
-        if (value.HasValue)
+        if (source.Length > 1)
         {
-            TCodec.Encode(ref writer, tagNumber, value.Value);
+            var control = source[0];
+            return (control == 0xFE && source[1] == tagNumber);
         }
-        throw new NotImplementedException();
+        return false;
     }
 
-    public static int GetElementLength<TCodec, T>(in T value)
-        where TCodec : IAsduElementCodec<T>
+    public static bool PeekClosingTag(ReadOnlySpan<byte> source, byte tagNumber)
     {
-        return TCodec.GetLength(value);
-    }
-
-    public static int GetElementLength<TCodec, T>(in Optional<T> value)
-        where TCodec : IAsduElementCodec<T>
-    {
-        if (value.HasValue)
+        if (tagNumber < 15)
         {
-            return TCodec.GetLength(value.Value);
+            if (source.Length == 0)
+            {
+                return false;
+            }
+            byte expected = (byte)((tagNumber << 4) | 0x0F);
+            return source[0] == expected;
         }
+        if (source.Length > 1)
+        {
+            var control = source[0];
+            return (control == 0xFF && source[1] == tagNumber);
+        }
+        return false;
+    }
+
+    public static int ReadOpeningTag(ReadOnlySpan<byte> source, byte tagNumber)
+    {
+        if (!PeekOpeningTag(source, tagNumber))
+        {
+            throw new AsduException($"Expected opening tag {tagNumber} not found.");
+        }
+        return (tagNumber < 15 ? 1 : 2);
+    }
+
+    public static int ReadClosingTag(ReadOnlySpan<byte> source, byte tagNumber)
+    {
+        if (!PeekClosingTag(source, tagNumber))
+        {
+            throw new AsduException($"Expected closing tag {tagNumber} not found.");
+        }
+        return (tagNumber < 15 ? 1 : 2);
+    }
+
+    public static int PeekTag(ReadOnlySpan<byte> source, byte tagNumber, bool isContextTag, out int dataLength)
+    {
+        if (source.Length == 0)
+        {
+            dataLength = 0;
+            return 0;
+        }
+
+        var control = source[0];
+        var number = (byte)(control >> 4);
+        var index = 1;
+
+        if (number == 15)
+        {
+            if (source.Length < 2)
+            {
+                dataLength = 0;
+                return 0;
+            }
+            number = source[1];
+            index = 2;
+        }
+
+        if (number != tagNumber || ((control & 0x08) != 0) != isContextTag)
+        {
+            dataLength = 0;
+            return 0;
+        }
+
+        int lengthValue = control & 7;
+        if (lengthValue < 5)
+        {
+            dataLength = lengthValue;
+            return index;
+        }
+
+        if (lengthValue == 5)
+        {
+            if (source.Length <= index)
+            {
+                dataLength = 0;
+                return 0;
+            }
+
+            dataLength = source[index];
+            if (dataLength < 254)
+            {
+                return index + 1;
+            }
+
+            if (dataLength == 254)
+            {
+                if (source.Length < index + 3)
+                {
+                    dataLength = 0;
+                    return 0;
+                }
+                dataLength = AsduBinaryPrimitives.ReadUnsigned16(source.Slice(index + 1, 2));
+                return index + 3;
+            }
+
+            if (source.Length < index + 5)
+            {
+                dataLength = 0;
+                return 0;
+            }
+            dataLength = AsduBinaryPrimitives.ReadInteger32(source.Slice(index + 1, 4));
+            return index + 5;
+        }
+
+        dataLength = 0;
         return 0;
     }
 
-    public static int GetElementLength<TCodec, T>(byte tagNumber, in T value)
-        where TCodec : IAsduElementCodec<T>
+    public static int ReadTag(ReadOnlySpan<byte> source, bool isContextTag, byte tagNumber, out int dataLength)
     {
-        return TCodec.GetLength(value, tagNumber);
+        int tagLength = PeekTag(source, tagNumber, isContextTag, out dataLength);
+        if (tagLength == 0)
+        {
+            throw new AsduException($"Tag number {tagNumber} does not exist.");
+        }
+        return tagLength;
     }
 
-    public static int GetElementLength<TCodec, T>(byte tagNumber, in Optional<T> value)
-        where TCodec : IAsduElementCodec<T>
+    public static int ReadTag(ReadOnlySpan<byte> source, ApplicationTagNumber tagNumber, out int dataLength)
     {
-        if (value.HasValue)
+        return ReadTag(source, false, (byte)tagNumber, out dataLength);
+    }
+
+    public static int ReadTag(ReadOnlySpan<byte> source, byte tagNumber, out int dataLength)
+    {
+        return ReadTag(source, true, tagNumber, out dataLength);
+    }
+
+    public static int WriteTag(Span<byte> destination, byte tagNumber, AsduTagClass tagClass, int dataLength)
+    {
+        return AsduWriter.WriteTag(destination, tagClass, tagNumber, dataLength);
+    }
+
+    public static int WriteTag(Span<byte> destination, byte tagNumber, AsduTagType type)
+    {
+        if (tagNumber < 15)
         {
-            return TCodec.GetLength(value.Value, tagNumber);
+            destination[0] = (byte)((tagNumber << 4) | (type == AsduTagType.Opening ? 6 : 7));
+            return 1;
         }
-        return 0;
+
+        destination[0] = (byte)(type == AsduTagType.Opening ? 0xFE : 0xFF);
+        destination[1] = tagNumber;
+        return 2;
     }
 }

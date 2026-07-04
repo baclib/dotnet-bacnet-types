@@ -7,9 +7,12 @@ public sealed class EventParameterTChangeOfDiscreteValueTNewValueCodec :
     IAsduElementCodec<global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue>,
     IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static bool Matches(ref AsduReader reader)
     {
-        var applicationTagNumber = reader.PeekApplicationTagNumber();
+        if (!reader.PeekApplicationTag(out var applicationTagNumber))
+        {
+            return false;
+        }
         switch (applicationTagNumber)
         {
             case ApplicationTagNumber.Boolean:
@@ -25,189 +28,148 @@ public sealed class EventParameterTChangeOfDiscreteValueTNewValueCodec :
             default:
                 break;
         }
-
-        var contextTagNumber = reader.PeekContextTagNumber();
-        switch (contextTagNumber)
+        if (!reader.PeekContextTag(out var contextTagNumber))
         {
-            case 0:
-                return true;
-            default:
-                return false;
+            return false;
         }
+        return contextTagNumber switch
+        {
+            0 => true,
+            _ => false
+        };
     }
 
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag(tagNumber);
-
-    public static global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue Decode(ref NativeReader reader)
+    public static global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue Decode(ref AsduReader reader)
     {
-        // info
-        if (reader.PeekTag(BooleanCodec.TagNumber))
+        if (NullCodec.Matches(ref reader))
         {
-            //var _boolean = Asdu.Decode<BooleanCodec, bool>(ref reader);
-            var _boolean = BooleanCodec.Decode(ref reader);
-            return global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue.FromBoolean(_boolean);
+            var @boolean = BooleanCodec.Decode(ref reader);
+            return global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue.FromBoolean(@boolean);
         }
-        // info
-        if (reader.PeekTag(UnsignedCodec.TagNumber))
+        if (NullCodec.Matches(ref reader))
         {
-            //var _unsigned = Asdu.Decode<UnsignedCodec, uint>(ref reader);
-            var _unsigned = UnsignedCodec.Decode(ref reader);
-            return global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue.FromUnsigned(_unsigned);
+            var @unsigned = UnsignedCodec.Decode(ref reader);
+            return global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue.FromUnsigned(@unsigned);
         }
-        // info
-        if (reader.PeekTag(IntegerCodec.TagNumber))
+        if (NullCodec.Matches(ref reader))
         {
-            //var _integer = Asdu.Decode<IntegerCodec, int>(ref reader);
-            var _integer = IntegerCodec.Decode(ref reader);
-            return global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue.FromInteger(_integer);
+            var @integer = IntegerCodec.Decode(ref reader);
+            return global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue.FromInteger(@integer);
         }
-        // info
-        if (reader.PeekTag(Enumerated32Codec.TagNumber))
+        if (NullCodec.Matches(ref reader))
         {
-            //var _enumerated = Asdu.Decode<Enumerated32Codec, global::Baclib.Bacnet.Types.Application.Enumerated>(ref reader);
-            var _enumerated = Enumerated32Codec.Decode(ref reader);
-            return global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue.FromEnumerated(_enumerated);
+            var @enumerated = EnumeratedCodec.Decode(ref reader);
+            return global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue.FromEnumerated(@enumerated);
         }
-        // info
-        if (reader.PeekTag(CharacterStringCodec.TagNumber))
+        if (NullCodec.Matches(ref reader))
         {
-            //var _characterstring = Asdu.Decode<CharacterStringCodec, global::Baclib.Bacnet.Types.Application.CharacterString>(ref reader);
-            var _characterstring = CharacterStringCodec.Decode(ref reader);
-            return global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue.FromCharacterstring(_characterstring);
+            var @characterstring = CharacterStringCodec.Decode(ref reader);
+            return global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue.FromCharacterstring(@characterstring);
         }
-        // info
-        if (reader.PeekTag(OctetStringCodec.TagNumber))
+        if (NullCodec.Matches(ref reader))
         {
-            //var _octetstring = Asdu.Decode<OctetStringCodec, global::Baclib.Bacnet.Types.Application.OctetString>(ref reader);
-            var _octetstring = OctetStringCodec.Decode(ref reader);
-            return global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue.FromOctetstring(_octetstring);
+            var @octetstring = OctetStringCodec.Decode(ref reader);
+            return global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue.FromOctetstring(@octetstring);
         }
-        // info
-        if (reader.PeekTag(DateCodec.TagNumber))
+        if (NullCodec.Matches(ref reader))
         {
-            //var _datepattern = Asdu.Decode<DateCodec, global::Baclib.Bacnet.Types.Application.Date>(ref reader);
-            var _datepattern = DateCodec.Decode(ref reader);
-            return global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue.FromDatepattern(_datepattern);
+            var @datepattern = DateCodec.Decode(ref reader);
+            return global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue.FromDatepattern(@datepattern);
         }
-        // info
-        if (reader.PeekTag(TimeCodec.TagNumber))
+        if (NullCodec.Matches(ref reader))
         {
-            //var _timepattern = Asdu.Decode<TimeCodec, global::Baclib.Bacnet.Types.Application.Time>(ref reader);
-            var _timepattern = TimeCodec.Decode(ref reader);
-            return global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue.FromTimepattern(_timepattern);
+            var @timepattern = TimeCodec.Decode(ref reader);
+            return global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue.FromTimepattern(@timepattern);
         }
-        // info
-        if (reader.PeekTag(ObjectIdentifierCodec.TagNumber))
+        if (NullCodec.Matches(ref reader))
         {
-            //var _objectidentifier = Asdu.Decode<ObjectIdentifierCodec, global::Baclib.Bacnet.Types.Application.ObjectIdentifier>(ref reader);
-            var _objectidentifier = ObjectIdentifierCodec.Decode(ref reader);
-            return global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue.FromObjectidentifier(_objectidentifier);
+            var @objectidentifier = ObjectIdentifierCodec.Decode(ref reader);
+            return global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue.FromObjectidentifier(@objectidentifier);
         }
 
-        var tagNumber = reader.PeekContextTagNumber();
+        var tagNumber = reader.ReadContextTagNumber();
         switch (tagNumber)
         {
             case 0:
-                var _datetime = Asdu.DecodeConstructed<DateTimeCodec, global::Baclib.Bacnet.Types.Application.DateTime>(ref reader, 0);
-                return global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue.FromDatetime(_datetime);
+                var @datetime = DateTimeCodec.Decode(ref reader, 0);
+                return global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue.FromDatetime(@datetime);
         }
         throw new FormatException(nameof(reader));
     }
 
-    public static global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue Decode(ref NativeReader reader, byte tagNumber)
-    {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
-    }
+    public static global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<EventParameterTChangeOfDiscreteValueTNewValueCodec, global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue>(ref reader, tagNumber);
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue value)
+    public static void Encode(ref AsduWriter writer, in global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue value)
     {
         switch (value.Choice)
         {
             case global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue.Option.Boolean:
-                //Asdu.Encode<BooleanCodec, bool>(ref writer, value.Boolean);
                 BooleanCodec.Encode(ref writer, value.Boolean);
                 return;
             case global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue.Option.Unsigned:
-                //Asdu.Encode<UnsignedCodec, uint>(ref writer, value.Unsigned);
                 UnsignedCodec.Encode(ref writer, value.Unsigned);
                 return;
             case global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue.Option.Integer:
-                //Asdu.Encode<IntegerCodec, int>(ref writer, value.Integer);
                 IntegerCodec.Encode(ref writer, value.Integer);
                 return;
             case global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue.Option.Enumerated:
-                //Asdu.Encode<Enumerated32Codec, global::Baclib.Bacnet.Types.Application.Enumerated>(ref writer, value.Enumerated);
-                Enumerated32Codec.Encode(ref writer, value.Enumerated);
+                EnumeratedCodec.Encode(ref writer, value.Enumerated);
                 return;
             case global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue.Option.Characterstring:
-                //Asdu.Encode<CharacterStringCodec, global::Baclib.Bacnet.Types.Application.CharacterString>(ref writer, value.Characterstring);
                 CharacterStringCodec.Encode(ref writer, value.Characterstring);
                 return;
             case global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue.Option.Octetstring:
-                //Asdu.Encode<OctetStringCodec, global::Baclib.Bacnet.Types.Application.OctetString>(ref writer, value.Octetstring);
                 OctetStringCodec.Encode(ref writer, value.Octetstring);
                 return;
             case global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue.Option.Datepattern:
-                //Asdu.Encode<DateCodec, global::Baclib.Bacnet.Types.Application.Date>(ref writer, value.Datepattern);
                 DateCodec.Encode(ref writer, value.Datepattern);
                 return;
             case global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue.Option.Timepattern:
-                //Asdu.Encode<TimeCodec, global::Baclib.Bacnet.Types.Application.Time>(ref writer, value.Timepattern);
                 TimeCodec.Encode(ref writer, value.Timepattern);
                 return;
             case global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue.Option.Objectidentifier:
-                //Asdu.Encode<ObjectIdentifierCodec, global::Baclib.Bacnet.Types.Application.ObjectIdentifier>(ref writer, value.Objectidentifier);
                 ObjectIdentifierCodec.Encode(ref writer, value.Objectidentifier);
                 return;
             case global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue.Option.Datetime:
-                Asdu.EncodeConstructed<DateTimeCodec, global::Baclib.Bacnet.Types.Application.DateTime>(ref writer, 0, value.Datetime);
+                DateTimeCodec.Encode(ref writer, 0, value.Datetime);
                 return;
-        }
-        throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported.");
-    }
-
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue value)
-    {
-        switch (value.Choice)
-        {
-            case global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue.Option.Boolean:
-                return Asdu.GetEncodedLength<BooleanCodec, bool>(value.Boolean);
-            case global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue.Option.Unsigned:
-                return Asdu.GetEncodedLength<UnsignedCodec, uint>(value.Unsigned);
-            case global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue.Option.Integer:
-                return Asdu.GetEncodedLength<IntegerCodec, int>(value.Integer);
-            case global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue.Option.Enumerated:
-                return Asdu.GetEncodedLength<Enumerated32Codec, global::Baclib.Bacnet.Types.Application.Enumerated>(value.Enumerated);
-            case global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue.Option.Characterstring:
-                return Asdu.GetEncodedLength<CharacterStringCodec, global::Baclib.Bacnet.Types.Application.CharacterString>(value.Characterstring);
-            case global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue.Option.Octetstring:
-                return Asdu.GetEncodedLength<OctetStringCodec, global::Baclib.Bacnet.Types.Application.OctetString>(value.Octetstring);
-            case global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue.Option.Datepattern:
-                return Asdu.GetEncodedLength<DateCodec, global::Baclib.Bacnet.Types.Application.Date>(value.Datepattern);
-            case global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue.Option.Timepattern:
-                return Asdu.GetEncodedLength<TimeCodec, global::Baclib.Bacnet.Types.Application.Time>(value.Timepattern);
-            case global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue.Option.Objectidentifier:
-                return Asdu.GetEncodedLength<ObjectIdentifierCodec, global::Baclib.Bacnet.Types.Application.ObjectIdentifier>(value.Objectidentifier);
-            case global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue.Option.Datetime:
-                return Asdu.GetConstructedLength<DateTimeCodec, global::Baclib.Bacnet.Types.Application.DateTime>(0, value.Datetime);
             default:
                 throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported.");
         }
     }
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue value, byte tagNumber)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue value)
+        => AsduConstructed.Encode<EventParameterTChangeOfDiscreteValueTNewValueCodec, global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue value)
     {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
+        return value.Choice switch
+        {
+            global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue.Option.Boolean
+                => BooleanCodec.GetEncodedLength(value.Boolean),
+            global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue.Option.Unsigned
+                => UnsignedCodec.GetEncodedLength(value.Unsigned),
+            global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue.Option.Integer
+                => IntegerCodec.GetEncodedLength(value.Integer),
+            global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue.Option.Enumerated
+                => EnumeratedCodec.GetEncodedLength(value.Enumerated),
+            global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue.Option.Characterstring
+                => CharacterStringCodec.GetEncodedLength(value.Characterstring),
+            global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue.Option.Octetstring
+                => OctetStringCodec.GetEncodedLength(value.Octetstring),
+            global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue.Option.Datepattern
+                => DateCodec.GetEncodedLength(value.Datepattern),
+            global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue.Option.Timepattern
+                => TimeCodec.GetEncodedLength(value.Timepattern),
+            global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue.Option.Objectidentifier
+                => ObjectIdentifierCodec.GetEncodedLength(value.Objectidentifier),
+            global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue.Option.Datetime
+                => DateTimeCodec.GetEncodedLength(value.Datetime, 0),
+            _ => throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported."),
+        };
     }
+
+    public static int GetEncodedLength(in global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue value, byte tagNumber)
+        => AsduElement.GetEncodedLength<EventParameterTChangeOfDiscreteValueTNewValueCodec, global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue>(tagNumber, value);
 }

@@ -7,91 +7,77 @@ public sealed class HostAddressCodec :
     IAsduElementCodec<global::Baclib.Bacnet.Types.Application.HostAddress>,
     IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.HostAddress>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static bool Matches(ref AsduReader reader)
     {
-
-        var contextTagNumber = reader.PeekContextTagNumber();
-        switch (contextTagNumber)
+        if (!reader.PeekContextTag(out var contextTagNumber))
         {
-            case 0:
-            case 1:
-            case 2:
-                return true;
-            default:
-                return false;
+            return false;
         }
+        return contextTagNumber switch
+        {
+            0 or
+            1 or
+            2 => true,
+            _ => false
+        };
     }
 
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag(tagNumber);
-
-    public static global::Baclib.Bacnet.Types.Application.HostAddress Decode(ref NativeReader reader)
+    public static global::Baclib.Bacnet.Types.Application.HostAddress Decode(ref AsduReader reader)
     {
-        var tagNumber = reader.PeekContextTagNumber();
+        var tagNumber = reader.ReadContextTagNumber();
         switch (tagNumber)
         {
             case 0:
-                var _none = Asdu.DecodePrimitive<NullCodec, global::Baclib.Bacnet.Types.Application.Null>(ref reader, 0);
-                return global::Baclib.Bacnet.Types.Application.HostAddress.FromNone(_none);
+                var @none = NullCodec.Decode(ref reader, 0);
+                return global::Baclib.Bacnet.Types.Application.HostAddress.FromNone(@none);
             case 1:
-                var _ipAddress = Asdu.DecodePrimitive<OctetStringCodec, global::Baclib.Bacnet.Types.Application.OctetString>(ref reader, 1);
-                return global::Baclib.Bacnet.Types.Application.HostAddress.FromIpAddress(_ipAddress);
+                var @ipAddress = OctetStringCodec.Decode(ref reader, 1);
+                return global::Baclib.Bacnet.Types.Application.HostAddress.FromIpAddress(@ipAddress);
             case 2:
-                var _name = Asdu.DecodePrimitive<CharacterStringCodec, global::Baclib.Bacnet.Types.Application.CharacterString>(ref reader, 2);
-                return global::Baclib.Bacnet.Types.Application.HostAddress.FromName(_name);
+                var @name = CharacterStringCodec.Decode(ref reader, 2);
+                return global::Baclib.Bacnet.Types.Application.HostAddress.FromName(@name);
         }
         throw new FormatException(nameof(reader));
     }
 
-    public static global::Baclib.Bacnet.Types.Application.HostAddress Decode(ref NativeReader reader, byte tagNumber)
-    {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
-    }
+    public static global::Baclib.Bacnet.Types.Application.HostAddress Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<HostAddressCodec, global::Baclib.Bacnet.Types.Application.HostAddress>(ref reader, tagNumber);
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.HostAddress value)
+    public static void Encode(ref AsduWriter writer, in global::Baclib.Bacnet.Types.Application.HostAddress value)
     {
         switch (value.Choice)
         {
             case global::Baclib.Bacnet.Types.Application.HostAddress.Option.None:
-                Asdu.EncodePrimitive<NullCodec, global::Baclib.Bacnet.Types.Application.Null>(ref writer, 0, value.None);
+                NullCodec.Encode(ref writer, 0, value.None);
                 return;
             case global::Baclib.Bacnet.Types.Application.HostAddress.Option.IpAddress:
-                Asdu.EncodePrimitive<OctetStringCodec, global::Baclib.Bacnet.Types.Application.OctetString>(ref writer, 1, value.IpAddress);
+                OctetStringCodec.Encode(ref writer, 1, value.IpAddress);
                 return;
             case global::Baclib.Bacnet.Types.Application.HostAddress.Option.Name:
-                Asdu.EncodePrimitive<CharacterStringCodec, global::Baclib.Bacnet.Types.Application.CharacterString>(ref writer, 2, value.Name);
+                CharacterStringCodec.Encode(ref writer, 2, value.Name);
                 return;
-        }
-        throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported.");
-    }
-
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.HostAddress value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.HostAddress value)
-    {
-        switch (value.Choice)
-        {
-            case global::Baclib.Bacnet.Types.Application.HostAddress.Option.None:
-                return Asdu.GetPrimitiveLength<NullCodec, global::Baclib.Bacnet.Types.Application.Null>(0, value.None);
-            case global::Baclib.Bacnet.Types.Application.HostAddress.Option.IpAddress:
-                return Asdu.GetPrimitiveLength<OctetStringCodec, global::Baclib.Bacnet.Types.Application.OctetString>(1, value.IpAddress);
-            case global::Baclib.Bacnet.Types.Application.HostAddress.Option.Name:
-                return Asdu.GetPrimitiveLength<CharacterStringCodec, global::Baclib.Bacnet.Types.Application.CharacterString>(2, value.Name);
             default:
                 throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported.");
         }
     }
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.HostAddress value, byte tagNumber)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.HostAddress value)
+        => AsduConstructed.Encode<HostAddressCodec, global::Baclib.Bacnet.Types.Application.HostAddress>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in global::Baclib.Bacnet.Types.Application.HostAddress value)
     {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
+        return value.Choice switch
+        {
+            global::Baclib.Bacnet.Types.Application.HostAddress.Option.None
+                => NullCodec.GetEncodedLength(value.None, 0),
+            global::Baclib.Bacnet.Types.Application.HostAddress.Option.IpAddress
+                => OctetStringCodec.GetEncodedLength(value.IpAddress, 1),
+            global::Baclib.Bacnet.Types.Application.HostAddress.Option.Name
+                => CharacterStringCodec.GetEncodedLength(value.Name, 2),
+            _ => throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported."),
+        };
     }
+
+    public static int GetEncodedLength(in global::Baclib.Bacnet.Types.Application.HostAddress value, byte tagNumber)
+        => AsduElement.GetEncodedLength<HostAddressCodec, global::Baclib.Bacnet.Types.Application.HostAddress>(tagNumber, value);
 }

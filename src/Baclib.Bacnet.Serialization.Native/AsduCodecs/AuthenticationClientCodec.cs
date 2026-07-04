@@ -1,60 +1,48 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class AuthenticationClientCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.AuthenticationClient>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.AuthenticationClient>
+    IAsduElementCodec<T::AuthenticationClient>,
+    IAsduConstructedCodec<T::AuthenticationClient>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::AuthenticationClient Decode(ref AsduReader reader)
     {
-        return reader.PeekTag(BooleanCodec.TagNumber);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.AuthenticationClient Decode(ref NativeReader reader)
-    {
-        var _authenticated = Asdu.DecodePrimitive<BooleanCodec, bool>(ref reader);
-        var _device = Asdu.DecodePrimitive<Unsigned32Codec, uint>(ref reader);
-
-        return new global::Baclib.Bacnet.Types.Application.AuthenticationClient
+        return new T::AuthenticationClient
         {
-            Authenticated = _authenticated,
-            Device = _device
+            Authenticated = AsduElement.Decode<BooleanCodec, bool>(ref reader),
+            Device = AsduElement.Decode<Unsigned32Codec, uint>(ref reader)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.AuthenticationClient Decode(ref NativeReader reader, byte tagNumber)
+    public static T::AuthenticationClient Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<AuthenticationClientCodec, T::AuthenticationClient>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::AuthenticationClient value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.Encode<BooleanCodec, bool>(ref writer, value.Authenticated);
+        AsduElement.Encode<Unsigned32Codec, uint>(ref writer, value.Device);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.AuthenticationClient value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::AuthenticationClient value)
+        => AsduConstructed.Encode<AuthenticationClientCodec, T::AuthenticationClient>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::AuthenticationClient value)
     {
-        Asdu.EncodePrimitive<BooleanCodec, bool>(ref writer, value.Authenticated);
-        Asdu.EncodePrimitive<Unsigned32Codec, uint>(ref writer, value.Device);
+        var length = 0;
+        length += AsduElement.GetEncodedLength<BooleanCodec, bool>(value.Authenticated);
+        length += AsduElement.GetEncodedLength<Unsigned32Codec, uint>(value.Device);
+        return length;
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.AuthenticationClient value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
+    public static int GetEncodedLength(in T::AuthenticationClient value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<AuthenticationClientCodec, T::AuthenticationClient>(tagNumber, value);
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.AuthenticationClient value)
+    public static bool Matches(ref AsduReader reader)
     {
-        return Asdu.GetEncodedLength<BooleanCodec, bool>(value.Authenticated) + Asdu.GetEncodedLength<Unsigned32Codec, uint>(value.Device);
+        return BooleanCodec.Matches(ref reader);
     }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.AuthenticationClient value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

@@ -1,63 +1,51 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class StageLimitValueCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.StageLimitValue>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.StageLimitValue>
+    IAsduElementCodec<T::StageLimitValue>,
+    IAsduConstructedCodec<T::StageLimitValue>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::StageLimitValue Decode(ref AsduReader reader)
     {
-        return reader.PeekTag(RealCodec.TagNumber);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.StageLimitValue Decode(ref NativeReader reader)
-    {
-        var _limit = Asdu.DecodePrimitive<RealCodec, float>(ref reader);
-        var _values = Asdu.DecodePrimitive<BitStringCodec, global::Baclib.Bacnet.Types.Application.BitString>(ref reader);
-        var _deadband = Asdu.DecodePrimitive<RealCodec, float>(ref reader);
-
-        return new global::Baclib.Bacnet.Types.Application.StageLimitValue
+        return new T::StageLimitValue
         {
-            Limit = _limit,
-            Values = _values,
-            Deadband = _deadband
+            Limit = AsduElement.Decode<RealCodec, float>(ref reader),
+            Values = AsduElement.Decode<BitStringCodec, T::BitString>(ref reader),
+            Deadband = AsduElement.Decode<RealCodec, float>(ref reader)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.StageLimitValue Decode(ref NativeReader reader, byte tagNumber)
+    public static T::StageLimitValue Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<StageLimitValueCodec, T::StageLimitValue>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::StageLimitValue value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.Encode<RealCodec, float>(ref writer, value.Limit);
+        AsduElement.Encode<BitStringCodec, T::BitString>(ref writer, value.Values);
+        AsduElement.Encode<RealCodec, float>(ref writer, value.Deadband);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.StageLimitValue value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::StageLimitValue value)
+        => AsduConstructed.Encode<StageLimitValueCodec, T::StageLimitValue>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::StageLimitValue value)
     {
-        Asdu.EncodePrimitive<RealCodec, float>(ref writer, value.Limit);
-        Asdu.EncodePrimitive<BitStringCodec, global::Baclib.Bacnet.Types.Application.BitString>(ref writer, value.Values);
-        Asdu.EncodePrimitive<RealCodec, float>(ref writer, value.Deadband);
+        var length = 0;
+        length += AsduElement.GetEncodedLength<RealCodec, float>(value.Limit);
+        length += AsduElement.GetEncodedLength<BitStringCodec, T::BitString>(value.Values);
+        length += AsduElement.GetEncodedLength<RealCodec, float>(value.Deadband);
+        return length;
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.StageLimitValue value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
+    public static int GetEncodedLength(in T::StageLimitValue value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<StageLimitValueCodec, T::StageLimitValue>(tagNumber, value);
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.StageLimitValue value)
+    public static bool Matches(ref AsduReader reader)
     {
-        return Asdu.GetEncodedLength<RealCodec, float>(value.Limit) + Asdu.GetEncodedLength<BitStringCodec, global::Baclib.Bacnet.Types.Application.BitString>(value.Values) + Asdu.GetEncodedLength<RealCodec, float>(value.Deadband);
+        return RealCodec.Matches(ref reader);
     }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.StageLimitValue value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

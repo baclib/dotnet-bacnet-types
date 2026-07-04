@@ -7,116 +7,91 @@ public sealed class FaultParameterTFaultOutOfRangeTMinNormalValueCodec :
     IAsduElementCodec<global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultOutOfRange.TMinNormalValue>,
     IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultOutOfRange.TMinNormalValue>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static bool Matches(ref AsduReader reader)
     {
-        var applicationTagNumber = reader.PeekApplicationTagNumber();
-        switch (applicationTagNumber)
+        if (!reader.PeekApplicationTag(out var applicationTagNumber))
         {
-            case ApplicationTagNumber.Real:
-            case ApplicationTagNumber.Unsigned:
-            case ApplicationTagNumber.Double:
-            case ApplicationTagNumber.Signed:
-                return true;
-            default:
-                return false;
+            return false;
         }
+        return applicationTagNumber switch
+        {
+            ApplicationTagNumber.Real or
+            ApplicationTagNumber.Unsigned or
+            ApplicationTagNumber.Double or
+            ApplicationTagNumber.Signed => true,
+            _ => false
+        };
     }
 
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag(tagNumber);
-
-    public static global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultOutOfRange.TMinNormalValue Decode(ref NativeReader reader)
+    public static global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultOutOfRange.TMinNormalValue Decode(ref AsduReader reader)
     {
-        // info
-        if (reader.PeekTag(RealCodec.TagNumber))
+        if (NullCodec.Matches(ref reader))
         {
-            //var _real = Asdu.Decode<RealCodec, float>(ref reader);
-            var _real = RealCodec.Decode(ref reader);
-            return global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultOutOfRange.TMinNormalValue.FromReal(_real);
+            var @real = RealCodec.Decode(ref reader);
+            return global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultOutOfRange.TMinNormalValue.FromReal(@real);
         }
-        // info
-        if (reader.PeekTag(UnsignedCodec.TagNumber))
+        if (NullCodec.Matches(ref reader))
         {
-            //var _unsigned = Asdu.Decode<UnsignedCodec, uint>(ref reader);
-            var _unsigned = UnsignedCodec.Decode(ref reader);
-            return global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultOutOfRange.TMinNormalValue.FromUnsigned(_unsigned);
+            var @unsigned = UnsignedCodec.Decode(ref reader);
+            return global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultOutOfRange.TMinNormalValue.FromUnsigned(@unsigned);
         }
-        // info
-        if (reader.PeekTag(DoubleCodec.TagNumber))
+        if (NullCodec.Matches(ref reader))
         {
-            //var _double = Asdu.Decode<DoubleCodec, double>(ref reader);
-            var _double = DoubleCodec.Decode(ref reader);
-            return global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultOutOfRange.TMinNormalValue.FromDouble(_double);
+            var @double = DoubleCodec.Decode(ref reader);
+            return global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultOutOfRange.TMinNormalValue.FromDouble(@double);
         }
-        // info
-        if (reader.PeekTag(IntegerCodec.TagNumber))
+        if (NullCodec.Matches(ref reader))
         {
-            //var _integer = Asdu.Decode<IntegerCodec, int>(ref reader);
-            var _integer = IntegerCodec.Decode(ref reader);
-            return global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultOutOfRange.TMinNormalValue.FromInteger(_integer);
+            var @integer = IntegerCodec.Decode(ref reader);
+            return global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultOutOfRange.TMinNormalValue.FromInteger(@integer);
         }
 
         throw new FormatException(nameof(reader));
     }
 
-    public static global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultOutOfRange.TMinNormalValue Decode(ref NativeReader reader, byte tagNumber)
-    {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
-    }
+    public static global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultOutOfRange.TMinNormalValue Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<FaultParameterTFaultOutOfRangeTMinNormalValueCodec, global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultOutOfRange.TMinNormalValue>(ref reader, tagNumber);
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultOutOfRange.TMinNormalValue value)
+    public static void Encode(ref AsduWriter writer, in global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultOutOfRange.TMinNormalValue value)
     {
         switch (value.Choice)
         {
             case global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultOutOfRange.TMinNormalValue.Option.Real:
-                //Asdu.Encode<RealCodec, float>(ref writer, value.Real);
                 RealCodec.Encode(ref writer, value.Real);
                 return;
             case global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultOutOfRange.TMinNormalValue.Option.Unsigned:
-                //Asdu.Encode<UnsignedCodec, uint>(ref writer, value.Unsigned);
                 UnsignedCodec.Encode(ref writer, value.Unsigned);
                 return;
             case global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultOutOfRange.TMinNormalValue.Option.Double:
-                //Asdu.Encode<DoubleCodec, double>(ref writer, value.Double);
                 DoubleCodec.Encode(ref writer, value.Double);
                 return;
             case global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultOutOfRange.TMinNormalValue.Option.Integer:
-                //Asdu.Encode<IntegerCodec, int>(ref writer, value.Integer);
                 IntegerCodec.Encode(ref writer, value.Integer);
                 return;
-        }
-        throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported.");
-    }
-
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultOutOfRange.TMinNormalValue value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultOutOfRange.TMinNormalValue value)
-    {
-        switch (value.Choice)
-        {
-            case global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultOutOfRange.TMinNormalValue.Option.Real:
-                return Asdu.GetEncodedLength<RealCodec, float>(value.Real);
-            case global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultOutOfRange.TMinNormalValue.Option.Unsigned:
-                return Asdu.GetEncodedLength<UnsignedCodec, uint>(value.Unsigned);
-            case global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultOutOfRange.TMinNormalValue.Option.Double:
-                return Asdu.GetEncodedLength<DoubleCodec, double>(value.Double);
-            case global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultOutOfRange.TMinNormalValue.Option.Integer:
-                return Asdu.GetEncodedLength<IntegerCodec, int>(value.Integer);
             default:
                 throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported.");
         }
     }
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultOutOfRange.TMinNormalValue value, byte tagNumber)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultOutOfRange.TMinNormalValue value)
+        => AsduConstructed.Encode<FaultParameterTFaultOutOfRangeTMinNormalValueCodec, global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultOutOfRange.TMinNormalValue>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultOutOfRange.TMinNormalValue value)
     {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
+        return value.Choice switch
+        {
+            global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultOutOfRange.TMinNormalValue.Option.Real
+                => RealCodec.GetEncodedLength(value.Real),
+            global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultOutOfRange.TMinNormalValue.Option.Unsigned
+                => UnsignedCodec.GetEncodedLength(value.Unsigned),
+            global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultOutOfRange.TMinNormalValue.Option.Double
+                => DoubleCodec.GetEncodedLength(value.Double),
+            global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultOutOfRange.TMinNormalValue.Option.Integer
+                => IntegerCodec.GetEncodedLength(value.Integer),
+            _ => throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported."),
+        };
     }
+
+    public static int GetEncodedLength(in global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultOutOfRange.TMinNormalValue value, byte tagNumber)
+        => AsduElement.GetEncodedLength<FaultParameterTFaultOutOfRangeTMinNormalValueCodec, global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultOutOfRange.TMinNormalValue>(tagNumber, value);
 }

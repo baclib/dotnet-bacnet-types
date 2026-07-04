@@ -1,72 +1,54 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class HealthCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.Health>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.Health>
+    IAsduElementCodec<T::Health>,
+    IAsduConstructedCodec<T::Health>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::Health Decode(ref AsduReader reader)
     {
-        return reader.PeekOpeningTag((byte)0);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.Health Decode(ref NativeReader reader)
-    {
-        var _timestamp = Asdu.DecodeConstructed<DateTimeCodec, global::Baclib.Bacnet.Types.Application.DateTime>(ref reader, 0);
-        var _result = Asdu.DecodeConstructed<ErrorCodec, global::Baclib.Bacnet.Types.Application.Error>(ref reader, 1);
-        var _property = Asdu.DecodeOptional<PropertyIdentifierCodec, global::Baclib.Bacnet.Types.Application.PropertyIdentifier>(ref reader, 2);
-        var _details = Asdu.DecodeOptional<CharacterStringCodec, global::Baclib.Bacnet.Types.Application.CharacterString>(ref reader, 3);
-
-        return new global::Baclib.Bacnet.Types.Application.Health
+        return new T::Health
         {
-            Timestamp = _timestamp,
-            Result = _result,
-            Property = _property,
-            Details = _details
+            Timestamp = AsduElement.Decode<DateTimeCodec, T::DateTime>(ref reader, 0),
+            Result = AsduElement.Decode<ErrorCodec, T::Error>(ref reader, 1),
+            Property = AsduElement.DecodeOptional<PropertyIdentifierCodec, T::PropertyIdentifier>(ref reader, 2),
+            Details = AsduElement.DecodeOptional<CharacterStringCodec, T::CharacterString>(ref reader, 3)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.Health Decode(ref NativeReader reader, byte tagNumber)
+    public static T::Health Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<HealthCodec, T::Health>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::Health value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.Encode<DateTimeCodec, T::DateTime>(ref writer, 0, value.Timestamp);
+        AsduElement.Encode<ErrorCodec, T::Error>(ref writer, 1, value.Result);
+        AsduElement.EncodeOptional<PropertyIdentifierCodec, T::PropertyIdentifier>(ref writer, 2, value.Property);
+        AsduElement.EncodeOptional<CharacterStringCodec, T::CharacterString>(ref writer, 3, value.Details);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.Health value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::Health value)
+        => AsduConstructed.Encode<HealthCodec, T::Health>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::Health value)
     {
-        Asdu.EncodeElement<DateTimeCodec, global::Baclib.Bacnet.Types.Application.DateTime>(ref writer, 0, value.Timestamp);
-        Asdu.EncodeElement<ErrorCodec, global::Baclib.Bacnet.Types.Application.Error>(ref writer, 1, value.Result);
-        if (value.Property.HasValue)
-        {
-            Asdu.EncodePrimitive<PropertyIdentifierCodec, global::Baclib.Bacnet.Types.Application.PropertyIdentifier>(ref writer, 2, value.Property.Value);
-        }
-        if (value.Details.HasValue)
-        {
-            Asdu.EncodePrimitive<CharacterStringCodec, global::Baclib.Bacnet.Types.Application.CharacterString>(ref writer, 3, value.Details.Value);
-        }
+        var length = 0;
+        length += AsduElement.GetEncodedLength<DateTimeCodec, T::DateTime>(0, value.Timestamp);
+        length += AsduElement.GetEncodedLength<ErrorCodec, T::Error>(1, value.Result);
+        length += AsduElement.GetOptionalEncodedLength<PropertyIdentifierCodec, T::PropertyIdentifier>(2, value.Property);
+        length += AsduElement.GetOptionalEncodedLength<CharacterStringCodec, T::CharacterString>(3, value.Details);
+        return length;
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.Health value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
+    public static int GetEncodedLength(in T::Health value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<HealthCodec, T::Health>(tagNumber, value);
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.Health value)
+    public static bool Matches(ref AsduReader reader)
     {
-        return Asdu.GetElementLength<DateTimeCodec, global::Baclib.Bacnet.Types.Application.DateTime>(0, value.Timestamp) + Asdu.GetElementLength<ErrorCodec, global::Baclib.Bacnet.Types.Application.Error>(1, value.Result) + (value.Property.HasValue ? Asdu.GetPrimitiveLength<PropertyIdentifierCodec, global::Baclib.Bacnet.Types.Application.PropertyIdentifier>(2, value.Property.Value) : 0) + (value.Details.HasValue ? Asdu.GetPrimitiveLength<CharacterStringCodec, global::Baclib.Bacnet.Types.Application.CharacterString>(3, value.Details.Value) : 0);
+        return reader.PeekContextTag(0);
     }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.Health value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

@@ -1,63 +1,51 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class EventParameterTUnsignedRangeCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.EventParameter.TUnsignedRange>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.EventParameter.TUnsignedRange>
+    IAsduElementCodec<T::EventParameter.TUnsignedRange>,
+    IAsduConstructedCodec<T::EventParameter.TUnsignedRange>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::EventParameter.TUnsignedRange Decode(ref AsduReader reader)
     {
-        return reader.PeekTag((byte)0);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.EventParameter.TUnsignedRange Decode(ref NativeReader reader)
-    {
-        var _timeDelay = Asdu.DecodePrimitive<UnsignedCodec, uint>(ref reader, 0);
-        var _lowLimit = Asdu.DecodePrimitive<UnsignedCodec, uint>(ref reader, 1);
-        var _highLimit = Asdu.DecodePrimitive<UnsignedCodec, uint>(ref reader, 2);
-
-        return new global::Baclib.Bacnet.Types.Application.EventParameter.TUnsignedRange
+        return new T::EventParameter.TUnsignedRange
         {
-            TimeDelay = _timeDelay,
-            LowLimit = _lowLimit,
-            HighLimit = _highLimit
+            TimeDelay = AsduElement.Decode<UnsignedCodec, uint>(ref reader, 0),
+            LowLimit = AsduElement.Decode<UnsignedCodec, uint>(ref reader, 1),
+            HighLimit = AsduElement.Decode<UnsignedCodec, uint>(ref reader, 2)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.EventParameter.TUnsignedRange Decode(ref NativeReader reader, byte tagNumber)
+    public static T::EventParameter.TUnsignedRange Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<EventParameterTUnsignedRangeCodec, T::EventParameter.TUnsignedRange>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::EventParameter.TUnsignedRange value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.Encode<UnsignedCodec, uint>(ref writer, 0, value.TimeDelay);
+        AsduElement.Encode<UnsignedCodec, uint>(ref writer, 1, value.LowLimit);
+        AsduElement.Encode<UnsignedCodec, uint>(ref writer, 2, value.HighLimit);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.EventParameter.TUnsignedRange value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::EventParameter.TUnsignedRange value)
+        => AsduConstructed.Encode<EventParameterTUnsignedRangeCodec, T::EventParameter.TUnsignedRange>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::EventParameter.TUnsignedRange value)
     {
-        Asdu.EncodePrimitive<UnsignedCodec, uint>(ref writer, 0, value.TimeDelay);
-        Asdu.EncodePrimitive<UnsignedCodec, uint>(ref writer, 1, value.LowLimit);
-        Asdu.EncodePrimitive<UnsignedCodec, uint>(ref writer, 2, value.HighLimit);
+        var length = 0;
+        length += AsduElement.GetEncodedLength<UnsignedCodec, uint>(0, value.TimeDelay);
+        length += AsduElement.GetEncodedLength<UnsignedCodec, uint>(1, value.LowLimit);
+        length += AsduElement.GetEncodedLength<UnsignedCodec, uint>(2, value.HighLimit);
+        return length;
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.EventParameter.TUnsignedRange value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
+    public static int GetEncodedLength(in T::EventParameter.TUnsignedRange value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<EventParameterTUnsignedRangeCodec, T::EventParameter.TUnsignedRange>(tagNumber, value);
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.EventParameter.TUnsignedRange value)
+    public static bool Matches(ref AsduReader reader)
     {
-        return Asdu.GetPrimitiveLength<UnsignedCodec, uint>(0, value.TimeDelay) + Asdu.GetPrimitiveLength<UnsignedCodec, uint>(1, value.LowLimit) + Asdu.GetPrimitiveLength<UnsignedCodec, uint>(2, value.HighLimit);
+        return reader.PeekContextTag(0);
     }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.EventParameter.TUnsignedRange value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

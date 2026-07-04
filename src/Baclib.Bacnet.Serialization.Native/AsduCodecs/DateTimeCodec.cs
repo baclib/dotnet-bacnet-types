@@ -1,60 +1,48 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class DateTimeCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.DateTime>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.DateTime>
+    IAsduElementCodec<T::DateTime>,
+    IAsduConstructedCodec<T::DateTime>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::DateTime Decode(ref AsduReader reader)
     {
-        return reader.PeekTag(DateCodec.TagNumber);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.DateTime Decode(ref NativeReader reader)
-    {
-        var _date = Asdu.DecodePrimitive<DateCodec, global::Baclib.Bacnet.Types.Application.Date>(ref reader);
-        var _time = Asdu.DecodePrimitive<TimeCodec, global::Baclib.Bacnet.Types.Application.Time>(ref reader);
-
-        return new global::Baclib.Bacnet.Types.Application.DateTime
+        return new T::DateTime
         {
-            Date = _date,
-            Time = _time
+            Date = AsduElement.Decode<DateCodec, T::Date>(ref reader),
+            Time = AsduElement.Decode<TimeCodec, T::Time>(ref reader)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.DateTime Decode(ref NativeReader reader, byte tagNumber)
+    public static T::DateTime Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<DateTimeCodec, T::DateTime>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::DateTime value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.Encode<DateCodec, T::Date>(ref writer, value.Date);
+        AsduElement.Encode<TimeCodec, T::Time>(ref writer, value.Time);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.DateTime value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::DateTime value)
+        => AsduConstructed.Encode<DateTimeCodec, T::DateTime>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::DateTime value)
     {
-        Asdu.EncodePrimitive<DateCodec, global::Baclib.Bacnet.Types.Application.Date>(ref writer, value.Date);
-        Asdu.EncodePrimitive<TimeCodec, global::Baclib.Bacnet.Types.Application.Time>(ref writer, value.Time);
+        var length = 0;
+        length += AsduElement.GetEncodedLength<DateCodec, T::Date>(value.Date);
+        length += AsduElement.GetEncodedLength<TimeCodec, T::Time>(value.Time);
+        return length;
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.DateTime value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
+    public static int GetEncodedLength(in T::DateTime value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<DateTimeCodec, T::DateTime>(tagNumber, value);
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.DateTime value)
+    public static bool Matches(ref AsduReader reader)
     {
-        return Asdu.GetEncodedLength<DateCodec, global::Baclib.Bacnet.Types.Application.Date>(value.Date) + Asdu.GetEncodedLength<TimeCodec, global::Baclib.Bacnet.Types.Application.Time>(value.Time);
+        return DateCodec.Matches(ref reader);
     }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.DateTime value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

@@ -1,66 +1,54 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class NotificationParametersTDoubleOutOfRangeCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.NotificationParameters.TDoubleOutOfRange>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.NotificationParameters.TDoubleOutOfRange>
+    IAsduElementCodec<T::NotificationParameters.TDoubleOutOfRange>,
+    IAsduConstructedCodec<T::NotificationParameters.TDoubleOutOfRange>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::NotificationParameters.TDoubleOutOfRange Decode(ref AsduReader reader)
     {
-        return reader.PeekTag((byte)0);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.NotificationParameters.TDoubleOutOfRange Decode(ref NativeReader reader)
-    {
-        var _exceedingValue = Asdu.DecodePrimitive<DoubleCodec, double>(ref reader, 0);
-        var _statusFlags = Asdu.DecodePrimitive<StatusFlagsCodec, global::Baclib.Bacnet.Types.Application.StatusFlags>(ref reader, 1);
-        var _deadband = Asdu.DecodePrimitive<DoubleCodec, double>(ref reader, 2);
-        var _exceededLimit = Asdu.DecodePrimitive<DoubleCodec, double>(ref reader, 3);
-
-        return new global::Baclib.Bacnet.Types.Application.NotificationParameters.TDoubleOutOfRange
+        return new T::NotificationParameters.TDoubleOutOfRange
         {
-            ExceedingValue = _exceedingValue,
-            StatusFlags = _statusFlags,
-            Deadband = _deadband,
-            ExceededLimit = _exceededLimit
+            ExceedingValue = AsduElement.Decode<DoubleCodec, double>(ref reader, 0),
+            StatusFlags = AsduElement.Decode<StatusFlagsCodec, T::StatusFlags>(ref reader, 1),
+            Deadband = AsduElement.Decode<DoubleCodec, double>(ref reader, 2),
+            ExceededLimit = AsduElement.Decode<DoubleCodec, double>(ref reader, 3)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.NotificationParameters.TDoubleOutOfRange Decode(ref NativeReader reader, byte tagNumber)
+    public static T::NotificationParameters.TDoubleOutOfRange Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<NotificationParametersTDoubleOutOfRangeCodec, T::NotificationParameters.TDoubleOutOfRange>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::NotificationParameters.TDoubleOutOfRange value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.Encode<DoubleCodec, double>(ref writer, 0, value.ExceedingValue);
+        AsduElement.Encode<StatusFlagsCodec, T::StatusFlags>(ref writer, 1, value.StatusFlags);
+        AsduElement.Encode<DoubleCodec, double>(ref writer, 2, value.Deadband);
+        AsduElement.Encode<DoubleCodec, double>(ref writer, 3, value.ExceededLimit);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.NotificationParameters.TDoubleOutOfRange value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::NotificationParameters.TDoubleOutOfRange value)
+        => AsduConstructed.Encode<NotificationParametersTDoubleOutOfRangeCodec, T::NotificationParameters.TDoubleOutOfRange>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::NotificationParameters.TDoubleOutOfRange value)
     {
-        Asdu.EncodePrimitive<DoubleCodec, double>(ref writer, 0, value.ExceedingValue);
-        Asdu.EncodePrimitive<StatusFlagsCodec, global::Baclib.Bacnet.Types.Application.StatusFlags>(ref writer, 1, value.StatusFlags);
-        Asdu.EncodePrimitive<DoubleCodec, double>(ref writer, 2, value.Deadband);
-        Asdu.EncodePrimitive<DoubleCodec, double>(ref writer, 3, value.ExceededLimit);
+        var length = 0;
+        length += AsduElement.GetEncodedLength<DoubleCodec, double>(0, value.ExceedingValue);
+        length += AsduElement.GetEncodedLength<StatusFlagsCodec, T::StatusFlags>(1, value.StatusFlags);
+        length += AsduElement.GetEncodedLength<DoubleCodec, double>(2, value.Deadband);
+        length += AsduElement.GetEncodedLength<DoubleCodec, double>(3, value.ExceededLimit);
+        return length;
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.NotificationParameters.TDoubleOutOfRange value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
+    public static int GetEncodedLength(in T::NotificationParameters.TDoubleOutOfRange value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<NotificationParametersTDoubleOutOfRangeCodec, T::NotificationParameters.TDoubleOutOfRange>(tagNumber, value);
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.NotificationParameters.TDoubleOutOfRange value)
+    public static bool Matches(ref AsduReader reader)
     {
-        return Asdu.GetPrimitiveLength<DoubleCodec, double>(0, value.ExceedingValue) + Asdu.GetPrimitiveLength<StatusFlagsCodec, global::Baclib.Bacnet.Types.Application.StatusFlags>(1, value.StatusFlags) + Asdu.GetPrimitiveLength<DoubleCodec, double>(2, value.Deadband) + Asdu.GetPrimitiveLength<DoubleCodec, double>(3, value.ExceededLimit);
+        return reader.PeekContextTag(0);
     }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.NotificationParameters.TDoubleOutOfRange value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

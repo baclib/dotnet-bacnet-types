@@ -17,8 +17,8 @@ public sealed class BitString16Codec :
     /// </summary>
     /// <param name="reader">The reader positioned at a bit string primitive tag.</param>
     /// <returns>The decoded value.</returns>
-    public static T.BitString16 Decode(ref NativeReader reader)
-        => Asdu.DecodePrimitive<BitString16Codec, T.BitString16>(ref reader);
+    public static T.BitString16 Decode(ref AsduReader reader)
+        => AsduPrimitive.Decode<BitString16Codec, T.BitString16>(ref reader);
 
     /// <summary>
     /// Decodes a <see cref="T.BitString16"/> value from the current reader position using a specific context tag.
@@ -26,8 +26,8 @@ public sealed class BitString16Codec :
     /// <param name="reader">The reader positioned at a bit string primitive tag.</param>
     /// <param name="tagNumber">The expected context tag number.</param>
     /// <returns>The decoded value.</returns>
-    public static T.BitString16 Decode(ref NativeReader reader, byte tagNumber)
-        => Asdu.DecodePrimitive<BitString16Codec, T.BitString16>(ref reader, tagNumber);
+    public static T.BitString16 Decode(ref AsduReader reader, byte tagNumber)
+        => AsduPrimitive.Decode<BitString16Codec, T.BitString16>(ref reader, tagNumber);
 
     /// <summary>
     /// Decodes a <see cref="T.BitString16"/> value from raw encoded bytes.
@@ -46,8 +46,8 @@ public sealed class BitString16Codec :
     /// </summary>
     /// <param name="writer">The writer receiving the encoded value.</param>
     /// <param name="value">The value to encode.</param>
-    public static void Encode(ref NativeWriter writer, in T.BitString16 value)
-        => Asdu.EncodePrimitive<BitString16Codec, T.BitString16>(ref writer, value);
+    public static void Encode(ref AsduWriter writer, in T.BitString16 value)
+        => AsduPrimitive.Encode<BitString16Codec, T.BitString16>(ref writer, value);
 
     /// <summary>
     /// Encodes a <see cref="T.BitString16"/> value using a specific context tag.
@@ -55,8 +55,8 @@ public sealed class BitString16Codec :
     /// <param name="writer">The writer receiving the encoded value.</param>
     /// <param name="tagNumber">The context tag number.</param>
     /// <param name="value">The value to encode.</param>
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in T.BitString16 value)
-        => Asdu.EncodePrimitive<BitString16Codec, T.BitString16>(ref writer, tagNumber, value);
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T.BitString16 value)
+        => AsduPrimitive.Encode<BitString16Codec, T.BitString16>(ref writer, tagNumber, value);
 
     /// <summary>
     /// Encodes a <see cref="T.BitString16"/> value into an already allocated payload span.
@@ -86,8 +86,8 @@ public sealed class BitString16Codec :
     /// </summary>
     /// <param name="value">The value whose total encoded length is requested.</param>
     /// <returns>The total encoded length in bytes.</returns>
-    public static int GetLength(in T.BitString16 value)
-        => AsduLength.Sum(TagNumber, GetEncodedValueLength(value));
+    public static int GetEncodedLength(in T.BitString16 value)
+        => AsduPrimitive.GetEncodedLength<BitString16Codec, T.BitString16>(value);
 
     /// <summary>
     /// Gets the total encoded length including a specific context tag.
@@ -95,25 +95,16 @@ public sealed class BitString16Codec :
     /// <param name="value">The value whose total encoded length is requested.</param>
     /// <param name="tagNumber">The context tag number.</param>
     /// <returns>The total encoded length in bytes.</returns>
-    public static int GetLength(in T.BitString16 value, byte tagNumber)
-        => AsduLength.Sum(tagNumber, GetEncodedValueLength(value));
+    public static int GetEncodedLength(in T.BitString16 value, byte tagNumber)
+        => AsduPrimitive.GetEncodedLength<BitString16Codec, T.BitString16>(tagNumber, value);
 
     /// <summary>
     /// Determines whether the next value in the reader matches this codec's application tag.
     /// </summary>
     /// <param name="reader">The reader to inspect.</param>
     /// <returns><see langword="true"/> when the next tag matches; otherwise, <see langword="false"/>.</returns>
-    public static bool Matches(ref NativeReader reader)
-        => reader.PeekPrimitiveTag(TagNumber);
-
-    /// <summary>
-    /// Determines whether the next value in the reader matches a specific context tag.
-    /// </summary>
-    /// <param name="reader">The reader to inspect.</param>
-    /// <param name="tagNumber">The expected context tag number.</param>
-    /// <returns><see langword="true"/> when the next tag matches; otherwise, <see langword="false"/>.</returns>
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekPrimitiveTag(tagNumber);
+    public static bool Matches(ref AsduReader reader)
+        => reader.PeekApplicationTag(TagNumber);
 
     /// <summary>
     /// Gets the BACnet application tag number handled by this codec.

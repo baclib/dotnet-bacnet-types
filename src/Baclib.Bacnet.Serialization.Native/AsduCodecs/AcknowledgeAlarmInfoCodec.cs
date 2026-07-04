@@ -1,60 +1,48 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class AcknowledgeAlarmInfoCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.AcknowledgeAlarmInfo>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.AcknowledgeAlarmInfo>
+    IAsduElementCodec<T::AcknowledgeAlarmInfo>,
+    IAsduConstructedCodec<T::AcknowledgeAlarmInfo>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::AcknowledgeAlarmInfo Decode(ref AsduReader reader)
     {
-        return reader.PeekTag((byte)0);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.AcknowledgeAlarmInfo Decode(ref NativeReader reader)
-    {
-        var _eventStateAcknowledged = Asdu.DecodePrimitive<EventStateCodec, global::Baclib.Bacnet.Types.Application.EventState>(ref reader, 0);
-        var _timestamp = Asdu.DecodeConstructed<TimeStampCodec, global::Baclib.Bacnet.Types.Application.TimeStamp>(ref reader, 1);
-
-        return new global::Baclib.Bacnet.Types.Application.AcknowledgeAlarmInfo
+        return new T::AcknowledgeAlarmInfo
         {
-            EventStateAcknowledged = _eventStateAcknowledged,
-            Timestamp = _timestamp
+            EventStateAcknowledged = AsduElement.Decode<EventStateCodec, T::EventState>(ref reader, 0),
+            Timestamp = AsduElement.Decode<TimeStampCodec, T::TimeStamp>(ref reader, 1)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.AcknowledgeAlarmInfo Decode(ref NativeReader reader, byte tagNumber)
+    public static T::AcknowledgeAlarmInfo Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<AcknowledgeAlarmInfoCodec, T::AcknowledgeAlarmInfo>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::AcknowledgeAlarmInfo value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.Encode<EventStateCodec, T::EventState>(ref writer, 0, value.EventStateAcknowledged);
+        AsduElement.Encode<TimeStampCodec, T::TimeStamp>(ref writer, 1, value.Timestamp);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.AcknowledgeAlarmInfo value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::AcknowledgeAlarmInfo value)
+        => AsduConstructed.Encode<AcknowledgeAlarmInfoCodec, T::AcknowledgeAlarmInfo>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::AcknowledgeAlarmInfo value)
     {
-        Asdu.EncodePrimitive<EventStateCodec, global::Baclib.Bacnet.Types.Application.EventState>(ref writer, 0, value.EventStateAcknowledged);
-        Asdu.EncodeElement<TimeStampCodec, global::Baclib.Bacnet.Types.Application.TimeStamp>(ref writer, 1, value.Timestamp);
+        var length = 0;
+        length += AsduElement.GetEncodedLength<EventStateCodec, T::EventState>(0, value.EventStateAcknowledged);
+        length += AsduElement.GetEncodedLength<TimeStampCodec, T::TimeStamp>(1, value.Timestamp);
+        return length;
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.AcknowledgeAlarmInfo value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
+    public static int GetEncodedLength(in T::AcknowledgeAlarmInfo value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<AcknowledgeAlarmInfoCodec, T::AcknowledgeAlarmInfo>(tagNumber, value);
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.AcknowledgeAlarmInfo value)
+    public static bool Matches(ref AsduReader reader)
     {
-        return Asdu.GetPrimitiveLength<EventStateCodec, global::Baclib.Bacnet.Types.Application.EventState>(0, value.EventStateAcknowledged) + Asdu.GetElementLength<TimeStampCodec, global::Baclib.Bacnet.Types.Application.TimeStamp>(1, value.Timestamp);
+        return reader.PeekContextTag(0);
     }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.AcknowledgeAlarmInfo value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

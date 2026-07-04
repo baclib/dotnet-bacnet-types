@@ -1,69 +1,55 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class DeviceCommunicationControlRequestCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.DeviceCommunicationControlRequest>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.DeviceCommunicationControlRequest>
+    IAsduElementCodec<T::DeviceCommunicationControlRequest>,
+    IAsduConstructedCodec<T::DeviceCommunicationControlRequest>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::DeviceCommunicationControlRequest Decode(ref AsduReader reader)
     {
-        return reader.PeekTag((byte)1);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.DeviceCommunicationControlRequest Decode(ref NativeReader reader)
-    {
-        var _timeDuration = Asdu.DecodeOptional<Unsigned16Codec, ushort>(ref reader, 0);
-        var _enableDisable = Asdu.DecodePrimitive<DeviceCommunicationControlRequestTEnableDisableCodec, global::Baclib.Bacnet.Types.Application.DeviceCommunicationControlRequest.TEnableDisable>(ref reader, 1);
-        var _password = Asdu.DecodeOptional<DeviceCommunicationControlRequestTPasswordCodec, global::Baclib.Bacnet.Types.Application.DeviceCommunicationControlRequest.TPassword>(ref reader, 2);
-
-        return new global::Baclib.Bacnet.Types.Application.DeviceCommunicationControlRequest
+        return new T::DeviceCommunicationControlRequest
         {
-            TimeDuration = _timeDuration,
-            EnableDisable = _enableDisable,
-            Password = _password
+            TimeDuration = AsduElement.DecodeOptional<Unsigned16Codec, ushort>(ref reader, 0),
+            EnableDisable = AsduElement.Decode<DeviceCommunicationControlRequestTEnableDisableCodec, T::DeviceCommunicationControlRequest.TEnableDisable>(ref reader, 1),
+            Password = AsduElement.DecodeOptional<DeviceCommunicationControlRequestTPasswordCodec, T::DeviceCommunicationControlRequest.TPassword>(ref reader, 2)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.DeviceCommunicationControlRequest Decode(ref NativeReader reader, byte tagNumber)
+    public static T::DeviceCommunicationControlRequest Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<DeviceCommunicationControlRequestCodec, T::DeviceCommunicationControlRequest>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::DeviceCommunicationControlRequest value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.EncodeOptional<Unsigned16Codec, ushort>(ref writer, 0, value.TimeDuration);
+        AsduElement.Encode<DeviceCommunicationControlRequestTEnableDisableCodec, T::DeviceCommunicationControlRequest.TEnableDisable>(ref writer, 1, value.EnableDisable);
+        AsduElement.EncodeOptional<DeviceCommunicationControlRequestTPasswordCodec, T::DeviceCommunicationControlRequest.TPassword>(ref writer, 2, value.Password);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.DeviceCommunicationControlRequest value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::DeviceCommunicationControlRequest value)
+        => AsduConstructed.Encode<DeviceCommunicationControlRequestCodec, T::DeviceCommunicationControlRequest>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::DeviceCommunicationControlRequest value)
     {
-        if (value.TimeDuration.HasValue)
+        var length = 0;
+        length += AsduElement.GetOptionalEncodedLength<Unsigned16Codec, ushort>(0, value.TimeDuration);
+        length += AsduElement.GetEncodedLength<DeviceCommunicationControlRequestTEnableDisableCodec, T::DeviceCommunicationControlRequest.TEnableDisable>(1, value.EnableDisable);
+        length += AsduElement.GetOptionalEncodedLength<DeviceCommunicationControlRequestTPasswordCodec, T::DeviceCommunicationControlRequest.TPassword>(2, value.Password);
+        return length;
+    }
+
+    public static int GetEncodedLength(in T::DeviceCommunicationControlRequest value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<DeviceCommunicationControlRequestCodec, T::DeviceCommunicationControlRequest>(tagNumber, value);
+
+    public static bool Matches(ref AsduReader reader)
+    {
+        if (reader.PeekContextTag(0))
         {
-            Asdu.EncodePrimitive<Unsigned16Codec, ushort>(ref writer, 0, value.TimeDuration.Value);
+            return true;
         }
-        Asdu.EncodePrimitive<DeviceCommunicationControlRequestTEnableDisableCodec, global::Baclib.Bacnet.Types.Application.DeviceCommunicationControlRequest.TEnableDisable>(ref writer, 1, value.EnableDisable);
-        if (value.Password.HasValue)
-        {
-            Asdu.EncodePrimitive<DeviceCommunicationControlRequestTPasswordCodec, global::Baclib.Bacnet.Types.Application.DeviceCommunicationControlRequest.TPassword>(ref writer, 2, value.Password.Value);
-        }
+        return reader.PeekContextTag(1);
     }
-
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.DeviceCommunicationControlRequest value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.DeviceCommunicationControlRequest value)
-    {
-        return (value.TimeDuration.HasValue ? Asdu.GetPrimitiveLength<Unsigned16Codec, ushort>(0, value.TimeDuration.Value) : 0) + Asdu.GetPrimitiveLength<DeviceCommunicationControlRequestTEnableDisableCodec, global::Baclib.Bacnet.Types.Application.DeviceCommunicationControlRequest.TEnableDisable>(1, value.EnableDisable) + (value.Password.HasValue ? Asdu.GetPrimitiveLength<DeviceCommunicationControlRequestTPasswordCodec, global::Baclib.Bacnet.Types.Application.DeviceCommunicationControlRequest.TPassword>(2, value.Password.Value) : 0);
-    }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.DeviceCommunicationControlRequest value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

@@ -1,60 +1,48 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class AddressCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.Address>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.Address>
+    IAsduElementCodec<T::Address>,
+    IAsduConstructedCodec<T::Address>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::Address Decode(ref AsduReader reader)
     {
-        return reader.PeekTag(Unsigned16Codec.TagNumber);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.Address Decode(ref NativeReader reader)
-    {
-        var _networkNumber = Asdu.DecodePrimitive<Unsigned16Codec, ushort>(ref reader);
-        var _macAddress = Asdu.DecodePrimitive<OctetStringCodec, global::Baclib.Bacnet.Types.Application.OctetString>(ref reader);
-
-        return new global::Baclib.Bacnet.Types.Application.Address
+        return new T::Address
         {
-            NetworkNumber = _networkNumber,
-            MacAddress = _macAddress
+            NetworkNumber = AsduElement.Decode<Unsigned16Codec, ushort>(ref reader),
+            MacAddress = AsduElement.Decode<OctetStringCodec, T::OctetString>(ref reader)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.Address Decode(ref NativeReader reader, byte tagNumber)
+    public static T::Address Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<AddressCodec, T::Address>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::Address value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.Encode<Unsigned16Codec, ushort>(ref writer, value.NetworkNumber);
+        AsduElement.Encode<OctetStringCodec, T::OctetString>(ref writer, value.MacAddress);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.Address value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::Address value)
+        => AsduConstructed.Encode<AddressCodec, T::Address>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::Address value)
     {
-        Asdu.EncodePrimitive<Unsigned16Codec, ushort>(ref writer, value.NetworkNumber);
-        Asdu.EncodePrimitive<OctetStringCodec, global::Baclib.Bacnet.Types.Application.OctetString>(ref writer, value.MacAddress);
+        var length = 0;
+        length += AsduElement.GetEncodedLength<Unsigned16Codec, ushort>(value.NetworkNumber);
+        length += AsduElement.GetEncodedLength<OctetStringCodec, T::OctetString>(value.MacAddress);
+        return length;
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.Address value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
+    public static int GetEncodedLength(in T::Address value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<AddressCodec, T::Address>(tagNumber, value);
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.Address value)
+    public static bool Matches(ref AsduReader reader)
     {
-        return Asdu.GetEncodedLength<Unsigned16Codec, ushort>(value.NetworkNumber) + Asdu.GetEncodedLength<OctetStringCodec, global::Baclib.Bacnet.Types.Application.OctetString>(value.MacAddress);
+        return Unsigned16Codec.Matches(ref reader);
     }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.Address value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

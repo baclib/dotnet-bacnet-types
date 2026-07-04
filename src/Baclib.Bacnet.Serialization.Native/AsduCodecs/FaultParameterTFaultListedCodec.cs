@@ -1,57 +1,45 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class FaultParameterTFaultListedCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultListed>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultListed>
+    IAsduElementCodec<T::FaultParameter.TFaultListed>,
+    IAsduConstructedCodec<T::FaultParameter.TFaultListed>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::FaultParameter.TFaultListed Decode(ref AsduReader reader)
     {
-        return reader.PeekOpeningTag((byte)0);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultListed Decode(ref NativeReader reader)
-    {
-        var _faultListReference = Asdu.DecodeConstructed<DeviceObjectPropertyReferenceCodec, global::Baclib.Bacnet.Types.Application.DeviceObjectPropertyReference>(ref reader, 0);
-
-        return new global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultListed
+        return new T::FaultParameter.TFaultListed
         {
-            FaultListReference = _faultListReference
+            FaultListReference = AsduElement.Decode<DeviceObjectPropertyReferenceCodec, T::DeviceObjectPropertyReference>(ref reader, 0)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultListed Decode(ref NativeReader reader, byte tagNumber)
+    public static T::FaultParameter.TFaultListed Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<FaultParameterTFaultListedCodec, T::FaultParameter.TFaultListed>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::FaultParameter.TFaultListed value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.Encode<DeviceObjectPropertyReferenceCodec, T::DeviceObjectPropertyReference>(ref writer, 0, value.FaultListReference);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultListed value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::FaultParameter.TFaultListed value)
+        => AsduConstructed.Encode<FaultParameterTFaultListedCodec, T::FaultParameter.TFaultListed>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::FaultParameter.TFaultListed value)
     {
-        Asdu.EncodeElement<DeviceObjectPropertyReferenceCodec, global::Baclib.Bacnet.Types.Application.DeviceObjectPropertyReference>(ref writer, 0, value.FaultListReference);
+        var length = 0;
+        length += AsduElement.GetEncodedLength<DeviceObjectPropertyReferenceCodec, T::DeviceObjectPropertyReference>(0, value.FaultListReference);
+        return length;
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultListed value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
+    public static int GetEncodedLength(in T::FaultParameter.TFaultListed value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<FaultParameterTFaultListedCodec, T::FaultParameter.TFaultListed>(tagNumber, value);
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultListed value)
+    public static bool Matches(ref AsduReader reader)
     {
-        return Asdu.GetElementLength<DeviceObjectPropertyReferenceCodec, global::Baclib.Bacnet.Types.Application.DeviceObjectPropertyReference>(0, value.FaultListReference);
+        return reader.PeekContextTag(0);
     }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultListed value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

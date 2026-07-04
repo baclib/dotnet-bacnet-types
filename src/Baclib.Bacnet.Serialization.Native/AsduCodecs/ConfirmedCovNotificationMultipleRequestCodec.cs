@@ -1,77 +1,57 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class ConfirmedCovNotificationMultipleRequestCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.ConfirmedCovNotificationMultipleRequest>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.ConfirmedCovNotificationMultipleRequest>
+    IAsduElementCodec<T::ConfirmedCovNotificationMultipleRequest>,
+    IAsduConstructedCodec<T::ConfirmedCovNotificationMultipleRequest>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::ConfirmedCovNotificationMultipleRequest Decode(ref AsduReader reader)
     {
-        return reader.PeekTag((byte)0);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.ConfirmedCovNotificationMultipleRequest Decode(ref NativeReader reader)
-    {
-        var _subscriberProcessIdentifier = Asdu.DecodePrimitive<Unsigned32Codec, uint>(ref reader, 0);
-        var _initiatingDeviceIdentifier = Asdu.DecodePrimitive<ObjectIdentifierCodec, global::Baclib.Bacnet.Types.Application.ObjectIdentifier>(ref reader, 1);
-        var _timeRemaining = Asdu.DecodePrimitive<UnsignedCodec, uint>(ref reader, 2);
-        var _timestamp = Asdu.DecodeOptionalElement<DateTimeCodec, global::Baclib.Bacnet.Types.Application.DateTime>(ref reader, 3);
-        var _listOfCovNotifications = Asdu.DecodeSequenceOf<ConfirmedCovNotificationMultipleRequestTListOfCovNotificationsItemCodec, global::Baclib.Bacnet.Types.Application.ConfirmedCovNotificationMultipleRequest.TListOfCovNotificationsItem>(ref reader, 4);
-
-        return new global::Baclib.Bacnet.Types.Application.ConfirmedCovNotificationMultipleRequest
+        return new T::ConfirmedCovNotificationMultipleRequest
         {
-            SubscriberProcessIdentifier = _subscriberProcessIdentifier,
-            InitiatingDeviceIdentifier = _initiatingDeviceIdentifier,
-            TimeRemaining = _timeRemaining,
-            Timestamp = _timestamp,
-            ListOfCovNotifications = _listOfCovNotifications
+            SubscriberProcessIdentifier = AsduElement.Decode<Unsigned32Codec, uint>(ref reader, 0),
+            InitiatingDeviceIdentifier = AsduElement.Decode<ObjectIdentifierCodec, T::ObjectIdentifier>(ref reader, 1),
+            TimeRemaining = AsduElement.Decode<UnsignedCodec, uint>(ref reader, 2),
+            Timestamp = AsduElement.DecodeOptional<DateTimeCodec, T::DateTime>(ref reader, 3),
+            ListOfCovNotifications = AsduElement.DecodeSequenceOf<ConfirmedCovNotificationMultipleRequestTListOfCovNotificationsItemCodec, T::ConfirmedCovNotificationMultipleRequest.TListOfCovNotificationsItem>(ref reader, 4)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.ConfirmedCovNotificationMultipleRequest Decode(ref NativeReader reader, byte tagNumber)
+    public static T::ConfirmedCovNotificationMultipleRequest Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<ConfirmedCovNotificationMultipleRequestCodec, T::ConfirmedCovNotificationMultipleRequest>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::ConfirmedCovNotificationMultipleRequest value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.Encode<Unsigned32Codec, uint>(ref writer, 0, value.SubscriberProcessIdentifier);
+        AsduElement.Encode<ObjectIdentifierCodec, T::ObjectIdentifier>(ref writer, 1, value.InitiatingDeviceIdentifier);
+        AsduElement.Encode<UnsignedCodec, uint>(ref writer, 2, value.TimeRemaining);
+        AsduElement.EncodeOptional<DateTimeCodec, T::DateTime>(ref writer, 3, value.Timestamp);
+        AsduElement.EncodeSequenceOf<ConfirmedCovNotificationMultipleRequestTListOfCovNotificationsItemCodec, T::ConfirmedCovNotificationMultipleRequest.TListOfCovNotificationsItem>(ref writer, 4, value.ListOfCovNotifications);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.ConfirmedCovNotificationMultipleRequest value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::ConfirmedCovNotificationMultipleRequest value)
+        => AsduConstructed.Encode<ConfirmedCovNotificationMultipleRequestCodec, T::ConfirmedCovNotificationMultipleRequest>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::ConfirmedCovNotificationMultipleRequest value)
     {
-        Asdu.EncodePrimitive<Unsigned32Codec, uint>(ref writer, 0, value.SubscriberProcessIdentifier);
-        Asdu.EncodePrimitive<ObjectIdentifierCodec, global::Baclib.Bacnet.Types.Application.ObjectIdentifier>(ref writer, 1, value.InitiatingDeviceIdentifier);
-        Asdu.EncodePrimitive<UnsignedCodec, uint>(ref writer, 2, value.TimeRemaining);
-        if (value.Timestamp.HasValue)
-        {
-            Asdu.EncodeElement<DateTimeCodec, global::Baclib.Bacnet.Types.Application.DateTime>(ref writer, 3, value.Timestamp.Value);
-        }
-        writer.WriteOpeningTag(4);
-        foreach (var item in value.ListOfCovNotifications)
-        {
-            Asdu.EncodeElement<ConfirmedCovNotificationMultipleRequestTListOfCovNotificationsItemCodec, global::Baclib.Bacnet.Types.Application.ConfirmedCovNotificationMultipleRequest.TListOfCovNotificationsItem>(ref writer, 4, item);
-        }
-        writer.WriteClosingTag(4);
+        var length = 0;
+        length += AsduElement.GetEncodedLength<Unsigned32Codec, uint>(0, value.SubscriberProcessIdentifier);
+        length += AsduElement.GetEncodedLength<ObjectIdentifierCodec, T::ObjectIdentifier>(1, value.InitiatingDeviceIdentifier);
+        length += AsduElement.GetEncodedLength<UnsignedCodec, uint>(2, value.TimeRemaining);
+        length += AsduElement.GetOptionalEncodedLength<DateTimeCodec, T::DateTime>(3, value.Timestamp);
+        length += AsduElement.GetSequenceOfEncodedLength<ConfirmedCovNotificationMultipleRequestTListOfCovNotificationsItemCodec, T::ConfirmedCovNotificationMultipleRequest.TListOfCovNotificationsItem>(4, value.ListOfCovNotifications);
+        return length;
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.ConfirmedCovNotificationMultipleRequest value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
+    public static int GetEncodedLength(in T::ConfirmedCovNotificationMultipleRequest value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<ConfirmedCovNotificationMultipleRequestCodec, T::ConfirmedCovNotificationMultipleRequest>(tagNumber, value);
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.ConfirmedCovNotificationMultipleRequest value)
+    public static bool Matches(ref AsduReader reader)
     {
-        return Asdu.GetPrimitiveLength<Unsigned32Codec, uint>(0, value.SubscriberProcessIdentifier) + Asdu.GetPrimitiveLength<ObjectIdentifierCodec, global::Baclib.Bacnet.Types.Application.ObjectIdentifier>(1, value.InitiatingDeviceIdentifier) + Asdu.GetPrimitiveLength<UnsignedCodec, uint>(2, value.TimeRemaining) + (value.Timestamp.HasValue ? Asdu.GetElementLength<DateTimeCodec, global::Baclib.Bacnet.Types.Application.DateTime>(3, value.Timestamp.Value) : 0) + (AsduLength.FromTagNumber((byte)4) + (value.ListOfCovNotifications.Items.Sum(static item => Asdu.GetElementLength<ConfirmedCovNotificationMultipleRequestTListOfCovNotificationsItemCodec, global::Baclib.Bacnet.Types.Application.ConfirmedCovNotificationMultipleRequest.TListOfCovNotificationsItem>(4, item))) + AsduLength.FromTagNumber((byte)4));
+        return reader.PeekContextTag(0);
     }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.ConfirmedCovNotificationMultipleRequest value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

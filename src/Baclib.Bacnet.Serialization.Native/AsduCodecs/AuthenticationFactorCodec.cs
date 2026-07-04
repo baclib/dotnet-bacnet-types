@@ -1,63 +1,51 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class AuthenticationFactorCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.AuthenticationFactor>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.AuthenticationFactor>
+    IAsduElementCodec<T::AuthenticationFactor>,
+    IAsduConstructedCodec<T::AuthenticationFactor>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::AuthenticationFactor Decode(ref AsduReader reader)
     {
-        return reader.PeekTag((byte)0);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.AuthenticationFactor Decode(ref NativeReader reader)
-    {
-        var _formatType = Asdu.DecodePrimitive<AuthenticationFactorTypeCodec, global::Baclib.Bacnet.Types.Application.AuthenticationFactorType>(ref reader, 0);
-        var _formatClass = Asdu.DecodePrimitive<UnsignedCodec, uint>(ref reader, 1);
-        var _value = Asdu.DecodePrimitive<OctetStringCodec, global::Baclib.Bacnet.Types.Application.OctetString>(ref reader, 2);
-
-        return new global::Baclib.Bacnet.Types.Application.AuthenticationFactor
+        return new T::AuthenticationFactor
         {
-            FormatType = _formatType,
-            FormatClass = _formatClass,
-            Value = _value
+            FormatType = AsduElement.Decode<AuthenticationFactorTypeCodec, T::AuthenticationFactorType>(ref reader, 0),
+            FormatClass = AsduElement.Decode<UnsignedCodec, uint>(ref reader, 1),
+            Value = AsduElement.Decode<OctetStringCodec, T::OctetString>(ref reader, 2)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.AuthenticationFactor Decode(ref NativeReader reader, byte tagNumber)
+    public static T::AuthenticationFactor Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<AuthenticationFactorCodec, T::AuthenticationFactor>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::AuthenticationFactor value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.Encode<AuthenticationFactorTypeCodec, T::AuthenticationFactorType>(ref writer, 0, value.FormatType);
+        AsduElement.Encode<UnsignedCodec, uint>(ref writer, 1, value.FormatClass);
+        AsduElement.Encode<OctetStringCodec, T::OctetString>(ref writer, 2, value.Value);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.AuthenticationFactor value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::AuthenticationFactor value)
+        => AsduConstructed.Encode<AuthenticationFactorCodec, T::AuthenticationFactor>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::AuthenticationFactor value)
     {
-        Asdu.EncodePrimitive<AuthenticationFactorTypeCodec, global::Baclib.Bacnet.Types.Application.AuthenticationFactorType>(ref writer, 0, value.FormatType);
-        Asdu.EncodePrimitive<UnsignedCodec, uint>(ref writer, 1, value.FormatClass);
-        Asdu.EncodePrimitive<OctetStringCodec, global::Baclib.Bacnet.Types.Application.OctetString>(ref writer, 2, value.Value);
+        var length = 0;
+        length += AsduElement.GetEncodedLength<AuthenticationFactorTypeCodec, T::AuthenticationFactorType>(0, value.FormatType);
+        length += AsduElement.GetEncodedLength<UnsignedCodec, uint>(1, value.FormatClass);
+        length += AsduElement.GetEncodedLength<OctetStringCodec, T::OctetString>(2, value.Value);
+        return length;
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.AuthenticationFactor value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
+    public static int GetEncodedLength(in T::AuthenticationFactor value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<AuthenticationFactorCodec, T::AuthenticationFactor>(tagNumber, value);
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.AuthenticationFactor value)
+    public static bool Matches(ref AsduReader reader)
     {
-        return Asdu.GetPrimitiveLength<AuthenticationFactorTypeCodec, global::Baclib.Bacnet.Types.Application.AuthenticationFactorType>(0, value.FormatType) + Asdu.GetPrimitiveLength<UnsignedCodec, uint>(1, value.FormatClass) + Asdu.GetPrimitiveLength<OctetStringCodec, global::Baclib.Bacnet.Types.Application.OctetString>(2, value.Value);
+        return reader.PeekContextTag(0);
     }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.AuthenticationFactor value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

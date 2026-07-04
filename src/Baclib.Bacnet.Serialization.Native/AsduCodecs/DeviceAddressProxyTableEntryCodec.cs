@@ -1,63 +1,51 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class DeviceAddressProxyTableEntryCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.DeviceAddressProxyTableEntry>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.DeviceAddressProxyTableEntry>
+    IAsduElementCodec<T::DeviceAddressProxyTableEntry>,
+    IAsduConstructedCodec<T::DeviceAddressProxyTableEntry>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::DeviceAddressProxyTableEntry Decode(ref AsduReader reader)
     {
-        return reader.PeekOpeningTag((byte)0);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.DeviceAddressProxyTableEntry Decode(ref NativeReader reader)
-    {
-        var _address = Asdu.DecodeConstructed<AddressCodec, global::Baclib.Bacnet.Types.Application.Address>(ref reader, 0);
-        var _iAm = Asdu.DecodeConstructed<IAmRequestCodec, global::Baclib.Bacnet.Types.Application.IAmRequest>(ref reader, 1);
-        var _lastIAmTime = Asdu.DecodeConstructed<DateTimeCodec, global::Baclib.Bacnet.Types.Application.DateTime>(ref reader, 2);
-
-        return new global::Baclib.Bacnet.Types.Application.DeviceAddressProxyTableEntry
+        return new T::DeviceAddressProxyTableEntry
         {
-            Address = _address,
-            IAm = _iAm,
-            LastIAmTime = _lastIAmTime
+            Address = AsduElement.Decode<AddressCodec, T::Address>(ref reader, 0),
+            IAm = AsduElement.Decode<IAmRequestCodec, T::IAmRequest>(ref reader, 1),
+            LastIAmTime = AsduElement.Decode<DateTimeCodec, T::DateTime>(ref reader, 2)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.DeviceAddressProxyTableEntry Decode(ref NativeReader reader, byte tagNumber)
+    public static T::DeviceAddressProxyTableEntry Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<DeviceAddressProxyTableEntryCodec, T::DeviceAddressProxyTableEntry>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::DeviceAddressProxyTableEntry value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.Encode<AddressCodec, T::Address>(ref writer, 0, value.Address);
+        AsduElement.Encode<IAmRequestCodec, T::IAmRequest>(ref writer, 1, value.IAm);
+        AsduElement.Encode<DateTimeCodec, T::DateTime>(ref writer, 2, value.LastIAmTime);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.DeviceAddressProxyTableEntry value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::DeviceAddressProxyTableEntry value)
+        => AsduConstructed.Encode<DeviceAddressProxyTableEntryCodec, T::DeviceAddressProxyTableEntry>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::DeviceAddressProxyTableEntry value)
     {
-        Asdu.EncodeElement<AddressCodec, global::Baclib.Bacnet.Types.Application.Address>(ref writer, 0, value.Address);
-        Asdu.EncodeElement<IAmRequestCodec, global::Baclib.Bacnet.Types.Application.IAmRequest>(ref writer, 1, value.IAm);
-        Asdu.EncodeElement<DateTimeCodec, global::Baclib.Bacnet.Types.Application.DateTime>(ref writer, 2, value.LastIAmTime);
+        var length = 0;
+        length += AsduElement.GetEncodedLength<AddressCodec, T::Address>(0, value.Address);
+        length += AsduElement.GetEncodedLength<IAmRequestCodec, T::IAmRequest>(1, value.IAm);
+        length += AsduElement.GetEncodedLength<DateTimeCodec, T::DateTime>(2, value.LastIAmTime);
+        return length;
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.DeviceAddressProxyTableEntry value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
+    public static int GetEncodedLength(in T::DeviceAddressProxyTableEntry value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<DeviceAddressProxyTableEntryCodec, T::DeviceAddressProxyTableEntry>(tagNumber, value);
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.DeviceAddressProxyTableEntry value)
+    public static bool Matches(ref AsduReader reader)
     {
-        return Asdu.GetElementLength<AddressCodec, global::Baclib.Bacnet.Types.Application.Address>(0, value.Address) + Asdu.GetElementLength<IAmRequestCodec, global::Baclib.Bacnet.Types.Application.IAmRequest>(1, value.IAm) + Asdu.GetElementLength<DateTimeCodec, global::Baclib.Bacnet.Types.Application.DateTime>(2, value.LastIAmTime);
+        return reader.PeekContextTag(0);
     }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.DeviceAddressProxyTableEntry value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

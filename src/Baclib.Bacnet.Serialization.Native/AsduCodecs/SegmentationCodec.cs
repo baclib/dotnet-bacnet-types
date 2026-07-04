@@ -17,8 +17,8 @@ public sealed class SegmentationCodec :
     /// </summary>
     /// <param name="reader">The reader positioned at an enumerated primitive tag.</param>
     /// <returns>The decoded enumerated value.</returns>
-    public static T.Segmentation Decode(ref NativeReader reader)
-        => Asdu.DecodePrimitive<SegmentationCodec, T.Segmentation>(ref reader);
+    public static T.Segmentation Decode(ref AsduReader reader)
+        => AsduPrimitive.Decode<SegmentationCodec, T.Segmentation>(ref reader);
 
     /// <summary>
     /// Decodes an <see cref="T.Segmentation"/> value from the current reader position using a specific context tag.
@@ -26,8 +26,8 @@ public sealed class SegmentationCodec :
     /// <param name="reader">The reader positioned at an enumerated primitive tag.</param>
     /// <param name="tagNumber">The expected context tag number.</param>
     /// <returns>The decoded enumerated value.</returns>
-    public static T.Segmentation Decode(ref NativeReader reader, byte tagNumber)
-        => Asdu.DecodePrimitive<SegmentationCodec, T.Segmentation>(ref reader, tagNumber);
+    public static T.Segmentation Decode(ref AsduReader reader, byte tagNumber)
+        => AsduPrimitive.Decode<SegmentationCodec, T.Segmentation>(ref reader, tagNumber);
 
     /// <summary>
     /// Decodes an <see cref="T.Segmentation"/> value from raw encoded bytes.
@@ -49,8 +49,8 @@ public sealed class SegmentationCodec :
     /// </summary>
     /// <param name="writer">The writer receiving the encoded value.</param>
     /// <param name="value">The value to encode.</param>
-    public static void Encode(ref NativeWriter writer, in T.Segmentation value)
-        => Asdu.EncodePrimitive<SegmentationCodec, T.Segmentation>(ref writer, value);
+    public static void Encode(ref AsduWriter writer, in T.Segmentation value)
+        => AsduPrimitive.Encode<SegmentationCodec, T.Segmentation>(ref writer, value);
 
     /// <summary>
     /// Encodes an <see cref="T.Segmentation"/> value using a specific context tag.
@@ -58,8 +58,8 @@ public sealed class SegmentationCodec :
     /// <param name="writer">The writer receiving the encoded value.</param>
     /// <param name="tagNumber">The context tag number.</param>
     /// <param name="value">The value to encode.</param>
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in T.Segmentation value)
-        => Asdu.EncodePrimitive<SegmentationCodec, T.Segmentation>(ref writer, tagNumber, value);
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T.Segmentation value)
+        => AsduPrimitive.Encode<SegmentationCodec, T.Segmentation>(ref writer, tagNumber, value);
 
     /// <summary>
     /// Encodes an <see cref="T.Segmentation"/> value into an already allocated payload span.
@@ -92,7 +92,7 @@ public sealed class SegmentationCodec :
     /// </summary>
     /// <param name="value">The value whose total encoded length is requested.</param>
     /// <returns>The total encoded length in bytes.</returns>
-    public static int GetLength(in T.Segmentation value)
+    public static int GetEncodedLength(in T.Segmentation value)
         => AsduLength.Sum(TagNumber, GetEncodedValueLength(value));
 
     /// <summary>
@@ -101,7 +101,7 @@ public sealed class SegmentationCodec :
     /// <param name="value">The value whose total encoded length is requested.</param>
     /// <param name="tagNumber">The context tag number.</param>
     /// <returns>The total encoded length in bytes.</returns>
-    public static int GetLength(in T.Segmentation value, byte tagNumber)
+    public static int GetEncodedLength(in T.Segmentation value, byte tagNumber)
         => AsduLength.Sum(tagNumber, GetEncodedValueLength(value));
 
     /// <summary>
@@ -109,17 +109,8 @@ public sealed class SegmentationCodec :
     /// </summary>
     /// <param name="reader">The reader to inspect.</param>
     /// <returns><see langword="true"/> when the next tag matches; otherwise, <see langword="false"/>.</returns>
-    public static bool Matches(ref NativeReader reader)
-        => reader.PeekPrimitiveTag(TagNumber);
-
-    /// <summary>
-    /// Determines whether the next value in the reader matches a specific context tag.
-    /// </summary>
-    /// <param name="reader">The reader to inspect.</param>
-    /// <param name="tagNumber">The expected context tag number.</param>
-    /// <returns><see langword="true"/> when the next tag matches; otherwise, <see langword="false"/>.</returns>
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekPrimitiveTag(tagNumber);
+    public static bool Matches(ref AsduReader reader)
+        => reader.PeekApplicationTag(TagNumber);
 
     /// <summary>
     /// Gets the BACnet application tag number handled by this codec.

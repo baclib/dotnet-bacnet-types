@@ -7,91 +7,77 @@ public sealed class LogDataCodec :
     IAsduElementCodec<global::Baclib.Bacnet.Types.Application.LogData>,
     IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.LogData>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static bool Matches(ref AsduReader reader)
     {
-
-        var contextTagNumber = reader.PeekContextTagNumber();
-        switch (contextTagNumber)
+        if (!reader.PeekContextTag(out var contextTagNumber))
         {
-            case 0:
-            case 1:
-            case 2:
-                return true;
-            default:
-                return false;
+            return false;
         }
+        return contextTagNumber switch
+        {
+            0 or
+            1 or
+            2 => true,
+            _ => false
+        };
     }
 
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag(tagNumber);
-
-    public static global::Baclib.Bacnet.Types.Application.LogData Decode(ref NativeReader reader)
+    public static global::Baclib.Bacnet.Types.Application.LogData Decode(ref AsduReader reader)
     {
-        var tagNumber = reader.PeekContextTagNumber();
+        var tagNumber = reader.ReadContextTagNumber();
         switch (tagNumber)
         {
             case 0:
-                var _status = Asdu.DecodePrimitive<LogStatusCodec, global::Baclib.Bacnet.Types.Application.LogStatus>(ref reader, 0);
-                return global::Baclib.Bacnet.Types.Application.LogData.FromStatus(_status);
+                var @status = LogStatusCodec.Decode(ref reader, 0);
+                return global::Baclib.Bacnet.Types.Application.LogData.FromStatus(@status);
             case 1:
-                var _series = Asdu.DecodeConstructed<LogDataTSeriesCodec, global::Baclib.Bacnet.Types.Application.LogData.TSeries>(ref reader, 1);
-                return global::Baclib.Bacnet.Types.Application.LogData.FromSeries(_series);
+                var @series = LogDataTSeriesItemCodec.Decode(ref reader, 1);
+                return global::Baclib.Bacnet.Types.Application.LogData.FromSeries(@series);
             case 2:
-                var _timeChange = Asdu.DecodePrimitive<RealCodec, float>(ref reader, 2);
-                return global::Baclib.Bacnet.Types.Application.LogData.FromTimeChange(_timeChange);
+                var @timeChange = RealCodec.Decode(ref reader, 2);
+                return global::Baclib.Bacnet.Types.Application.LogData.FromTimeChange(@timeChange);
         }
         throw new FormatException(nameof(reader));
     }
 
-    public static global::Baclib.Bacnet.Types.Application.LogData Decode(ref NativeReader reader, byte tagNumber)
-    {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
-    }
+    public static global::Baclib.Bacnet.Types.Application.LogData Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<LogDataCodec, global::Baclib.Bacnet.Types.Application.LogData>(ref reader, tagNumber);
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.LogData value)
+    public static void Encode(ref AsduWriter writer, in global::Baclib.Bacnet.Types.Application.LogData value)
     {
         switch (value.Choice)
         {
             case global::Baclib.Bacnet.Types.Application.LogData.Option.Status:
-                Asdu.EncodePrimitive<LogStatusCodec, global::Baclib.Bacnet.Types.Application.LogStatus>(ref writer, 0, value.Status);
+                LogStatusCodec.Encode(ref writer, 0, value.Status);
                 return;
             case global::Baclib.Bacnet.Types.Application.LogData.Option.Series:
-                Asdu.EncodeConstructed<LogDataTSeriesCodec, global::Baclib.Bacnet.Types.Application.LogData.TSeries>(ref writer, 1, value.Series);
+                LogDataTSeriesItemCodec.Encode(ref writer, 1, value.Series);
                 return;
             case global::Baclib.Bacnet.Types.Application.LogData.Option.TimeChange:
-                Asdu.EncodePrimitive<RealCodec, float>(ref writer, 2, value.TimeChange);
+                RealCodec.Encode(ref writer, 2, value.TimeChange);
                 return;
-        }
-        throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported.");
-    }
-
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.LogData value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.LogData value)
-    {
-        switch (value.Choice)
-        {
-            case global::Baclib.Bacnet.Types.Application.LogData.Option.Status:
-                return Asdu.GetPrimitiveLength<LogStatusCodec, global::Baclib.Bacnet.Types.Application.LogStatus>(0, value.Status);
-            case global::Baclib.Bacnet.Types.Application.LogData.Option.Series:
-                return Asdu.GetConstructedLength<LogDataTSeriesCodec, global::Baclib.Bacnet.Types.Application.LogData.TSeries>(1, value.Series);
-            case global::Baclib.Bacnet.Types.Application.LogData.Option.TimeChange:
-                return Asdu.GetPrimitiveLength<RealCodec, float>(2, value.TimeChange);
             default:
                 throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported.");
         }
     }
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.LogData value, byte tagNumber)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.LogData value)
+        => AsduConstructed.Encode<LogDataCodec, global::Baclib.Bacnet.Types.Application.LogData>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in global::Baclib.Bacnet.Types.Application.LogData value)
     {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
+        return value.Choice switch
+        {
+            global::Baclib.Bacnet.Types.Application.LogData.Option.Status
+                => LogStatusCodec.GetEncodedLength(value.Status, 0),
+            global::Baclib.Bacnet.Types.Application.LogData.Option.Series
+                => LogDataTSeriesItemCodec.GetEncodedLength(value.Series, 1),
+            global::Baclib.Bacnet.Types.Application.LogData.Option.TimeChange
+                => RealCodec.GetEncodedLength(value.TimeChange, 2),
+            _ => throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported."),
+        };
     }
+
+    public static int GetEncodedLength(in global::Baclib.Bacnet.Types.Application.LogData value, byte tagNumber)
+        => AsduElement.GetEncodedLength<LogDataCodec, global::Baclib.Bacnet.Types.Application.LogData>(tagNumber, value);
 }

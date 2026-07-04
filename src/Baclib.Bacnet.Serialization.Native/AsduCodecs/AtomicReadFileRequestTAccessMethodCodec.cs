@@ -7,82 +7,68 @@ public sealed class AtomicReadFileRequestTAccessMethodCodec :
     IAsduElementCodec<global::Baclib.Bacnet.Types.Application.AtomicReadFileRequest.TAccessMethod>,
     IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.AtomicReadFileRequest.TAccessMethod>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static bool Matches(ref AsduReader reader)
     {
-
-        var contextTagNumber = reader.PeekContextTagNumber();
-        switch (contextTagNumber)
+        if (!reader.PeekContextTag(out var contextTagNumber))
         {
-            case 0:
-            case 1:
-                return true;
-            default:
-                return false;
+            return false;
         }
+        return contextTagNumber switch
+        {
+            0 or
+            1 => true,
+            _ => false
+        };
     }
 
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag(tagNumber);
-
-    public static global::Baclib.Bacnet.Types.Application.AtomicReadFileRequest.TAccessMethod Decode(ref NativeReader reader)
+    public static global::Baclib.Bacnet.Types.Application.AtomicReadFileRequest.TAccessMethod Decode(ref AsduReader reader)
     {
-        var tagNumber = reader.PeekContextTagNumber();
+        var tagNumber = reader.ReadContextTagNumber();
         switch (tagNumber)
         {
             case 0:
-                var _streamAccess = Asdu.DecodeConstructed<AtomicReadFileRequestTAccessMethodTStreamAccessCodec, global::Baclib.Bacnet.Types.Application.AtomicReadFileRequest.TAccessMethod.TStreamAccess>(ref reader, 0);
-                return global::Baclib.Bacnet.Types.Application.AtomicReadFileRequest.TAccessMethod.FromStreamAccess(_streamAccess);
+                var @streamAccess = AtomicReadFileRequestTAccessMethodTStreamAccessCodec.Decode(ref reader, 0);
+                return global::Baclib.Bacnet.Types.Application.AtomicReadFileRequest.TAccessMethod.FromStreamAccess(@streamAccess);
             case 1:
-                var _recordAccess = Asdu.DecodeConstructed<AtomicReadFileRequestTAccessMethodTRecordAccessCodec, global::Baclib.Bacnet.Types.Application.AtomicReadFileRequest.TAccessMethod.TRecordAccess>(ref reader, 1);
-                return global::Baclib.Bacnet.Types.Application.AtomicReadFileRequest.TAccessMethod.FromRecordAccess(_recordAccess);
+                var @recordAccess = AtomicReadFileRequestTAccessMethodTRecordAccessCodec.Decode(ref reader, 1);
+                return global::Baclib.Bacnet.Types.Application.AtomicReadFileRequest.TAccessMethod.FromRecordAccess(@recordAccess);
         }
         throw new FormatException(nameof(reader));
     }
 
-    public static global::Baclib.Bacnet.Types.Application.AtomicReadFileRequest.TAccessMethod Decode(ref NativeReader reader, byte tagNumber)
-    {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
-    }
+    public static global::Baclib.Bacnet.Types.Application.AtomicReadFileRequest.TAccessMethod Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<AtomicReadFileRequestTAccessMethodCodec, global::Baclib.Bacnet.Types.Application.AtomicReadFileRequest.TAccessMethod>(ref reader, tagNumber);
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.AtomicReadFileRequest.TAccessMethod value)
+    public static void Encode(ref AsduWriter writer, in global::Baclib.Bacnet.Types.Application.AtomicReadFileRequest.TAccessMethod value)
     {
         switch (value.Choice)
         {
             case global::Baclib.Bacnet.Types.Application.AtomicReadFileRequest.TAccessMethod.Option.StreamAccess:
-                Asdu.EncodeConstructed<AtomicReadFileRequestTAccessMethodTStreamAccessCodec, global::Baclib.Bacnet.Types.Application.AtomicReadFileRequest.TAccessMethod.TStreamAccess>(ref writer, 0, value.StreamAccess);
+                AtomicReadFileRequestTAccessMethodTStreamAccessCodec.Encode(ref writer, 0, value.StreamAccess);
                 return;
             case global::Baclib.Bacnet.Types.Application.AtomicReadFileRequest.TAccessMethod.Option.RecordAccess:
-                Asdu.EncodeConstructed<AtomicReadFileRequestTAccessMethodTRecordAccessCodec, global::Baclib.Bacnet.Types.Application.AtomicReadFileRequest.TAccessMethod.TRecordAccess>(ref writer, 1, value.RecordAccess);
+                AtomicReadFileRequestTAccessMethodTRecordAccessCodec.Encode(ref writer, 1, value.RecordAccess);
                 return;
-        }
-        throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported.");
-    }
-
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.AtomicReadFileRequest.TAccessMethod value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.AtomicReadFileRequest.TAccessMethod value)
-    {
-        switch (value.Choice)
-        {
-            case global::Baclib.Bacnet.Types.Application.AtomicReadFileRequest.TAccessMethod.Option.StreamAccess:
-                return Asdu.GetConstructedLength<AtomicReadFileRequestTAccessMethodTStreamAccessCodec, global::Baclib.Bacnet.Types.Application.AtomicReadFileRequest.TAccessMethod.TStreamAccess>(0, value.StreamAccess);
-            case global::Baclib.Bacnet.Types.Application.AtomicReadFileRequest.TAccessMethod.Option.RecordAccess:
-                return Asdu.GetConstructedLength<AtomicReadFileRequestTAccessMethodTRecordAccessCodec, global::Baclib.Bacnet.Types.Application.AtomicReadFileRequest.TAccessMethod.TRecordAccess>(1, value.RecordAccess);
             default:
                 throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported.");
         }
     }
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.AtomicReadFileRequest.TAccessMethod value, byte tagNumber)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.AtomicReadFileRequest.TAccessMethod value)
+        => AsduConstructed.Encode<AtomicReadFileRequestTAccessMethodCodec, global::Baclib.Bacnet.Types.Application.AtomicReadFileRequest.TAccessMethod>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in global::Baclib.Bacnet.Types.Application.AtomicReadFileRequest.TAccessMethod value)
     {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
+        return value.Choice switch
+        {
+            global::Baclib.Bacnet.Types.Application.AtomicReadFileRequest.TAccessMethod.Option.StreamAccess
+                => AtomicReadFileRequestTAccessMethodTStreamAccessCodec.GetEncodedLength(value.StreamAccess, 0),
+            global::Baclib.Bacnet.Types.Application.AtomicReadFileRequest.TAccessMethod.Option.RecordAccess
+                => AtomicReadFileRequestTAccessMethodTRecordAccessCodec.GetEncodedLength(value.RecordAccess, 1),
+            _ => throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported."),
+        };
     }
+
+    public static int GetEncodedLength(in global::Baclib.Bacnet.Types.Application.AtomicReadFileRequest.TAccessMethod value, byte tagNumber)
+        => AsduElement.GetEncodedLength<AtomicReadFileRequestTAccessMethodCodec, global::Baclib.Bacnet.Types.Application.AtomicReadFileRequest.TAccessMethod>(tagNumber, value);
 }

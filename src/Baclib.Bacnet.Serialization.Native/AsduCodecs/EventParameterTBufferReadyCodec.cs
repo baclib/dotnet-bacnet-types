@@ -1,60 +1,48 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class EventParameterTBufferReadyCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.EventParameter.TBufferReady>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.EventParameter.TBufferReady>
+    IAsduElementCodec<T::EventParameter.TBufferReady>,
+    IAsduConstructedCodec<T::EventParameter.TBufferReady>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::EventParameter.TBufferReady Decode(ref AsduReader reader)
     {
-        return reader.PeekTag((byte)0);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.EventParameter.TBufferReady Decode(ref NativeReader reader)
-    {
-        var _notificationThreshold = Asdu.DecodePrimitive<UnsignedCodec, uint>(ref reader, 0);
-        var _previousNotificationCount = Asdu.DecodePrimitive<Unsigned32Codec, uint>(ref reader, 1);
-
-        return new global::Baclib.Bacnet.Types.Application.EventParameter.TBufferReady
+        return new T::EventParameter.TBufferReady
         {
-            NotificationThreshold = _notificationThreshold,
-            PreviousNotificationCount = _previousNotificationCount
+            NotificationThreshold = AsduElement.Decode<UnsignedCodec, uint>(ref reader, 0),
+            PreviousNotificationCount = AsduElement.Decode<Unsigned32Codec, uint>(ref reader, 1)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.EventParameter.TBufferReady Decode(ref NativeReader reader, byte tagNumber)
+    public static T::EventParameter.TBufferReady Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<EventParameterTBufferReadyCodec, T::EventParameter.TBufferReady>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::EventParameter.TBufferReady value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.Encode<UnsignedCodec, uint>(ref writer, 0, value.NotificationThreshold);
+        AsduElement.Encode<Unsigned32Codec, uint>(ref writer, 1, value.PreviousNotificationCount);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.EventParameter.TBufferReady value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::EventParameter.TBufferReady value)
+        => AsduConstructed.Encode<EventParameterTBufferReadyCodec, T::EventParameter.TBufferReady>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::EventParameter.TBufferReady value)
     {
-        Asdu.EncodePrimitive<UnsignedCodec, uint>(ref writer, 0, value.NotificationThreshold);
-        Asdu.EncodePrimitive<Unsigned32Codec, uint>(ref writer, 1, value.PreviousNotificationCount);
+        var length = 0;
+        length += AsduElement.GetEncodedLength<UnsignedCodec, uint>(0, value.NotificationThreshold);
+        length += AsduElement.GetEncodedLength<Unsigned32Codec, uint>(1, value.PreviousNotificationCount);
+        return length;
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.EventParameter.TBufferReady value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
+    public static int GetEncodedLength(in T::EventParameter.TBufferReady value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<EventParameterTBufferReadyCodec, T::EventParameter.TBufferReady>(tagNumber, value);
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.EventParameter.TBufferReady value)
+    public static bool Matches(ref AsduReader reader)
     {
-        return Asdu.GetPrimitiveLength<UnsignedCodec, uint>(0, value.NotificationThreshold) + Asdu.GetPrimitiveLength<Unsigned32Codec, uint>(1, value.PreviousNotificationCount);
+        return reader.PeekContextTag(0);
     }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.EventParameter.TBufferReady value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

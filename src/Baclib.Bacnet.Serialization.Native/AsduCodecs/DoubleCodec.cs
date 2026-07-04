@@ -15,8 +15,8 @@ public sealed class DoubleCodec :
     /// </summary>
     /// <param name="reader">The reader positioned at a primitive tag.</param>
     /// <returns>The decoded value.</returns>
-    public static double Decode(ref NativeReader reader)
-        => Asdu.DecodePrimitive<DoubleCodec, double>(ref reader);
+    public static double Decode(ref AsduReader reader)
+        => AsduPrimitive.Decode<DoubleCodec, double>(ref reader);
 
     /// <summary>
     /// Decodes a <see cref="double"/> value from the current reader position using a specific context tag.
@@ -24,8 +24,8 @@ public sealed class DoubleCodec :
     /// <param name="reader">The reader positioned at a primitive tag.</param>
     /// <param name="tagNumber">The expected context tag number.</param>
     /// <returns>The decoded value.</returns>
-    public static double Decode(ref NativeReader reader, byte tagNumber)
-        => Asdu.DecodePrimitive<DoubleCodec, double>(ref reader, tagNumber);
+    public static double Decode(ref AsduReader reader, byte tagNumber)
+        => AsduPrimitive.Decode<DoubleCodec, double>(ref reader, tagNumber);
 
     /// <summary>
     /// Decodes a <see cref="double"/> value from raw encoded bytes.
@@ -34,7 +34,7 @@ public sealed class DoubleCodec :
     /// <returns>The decoded value.</returns>
     /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="source"/> length is not supported.</exception>
     public static double DecodeValue(ReadOnlySpan<byte> source)
-    { // infdo
+    {
         return source.Length switch
         {
             AsduLength.Double => AsduBinaryPrimitives.ReadDouble(source),
@@ -47,8 +47,8 @@ public sealed class DoubleCodec :
     /// </summary>
     /// <param name="writer">The writer receiving the encoded value.</param>
     /// <param name="value">The value to encode.</param>
-    public static void Encode(ref NativeWriter writer, in double value)
-        => Asdu.EncodePrimitive<DoubleCodec, double>(ref writer, value);
+    public static void Encode(ref AsduWriter writer, in double value)
+        => AsduPrimitive.Encode<DoubleCodec, double>(ref writer, value);
 
     /// <summary>
     /// Encodes a <see cref="double"/> value using a specific context tag.
@@ -56,8 +56,8 @@ public sealed class DoubleCodec :
     /// <param name="writer">The writer receiving the encoded value.</param>
     /// <param name="tagNumber">The context tag number.</param>
     /// <param name="value">The value to encode.</param>
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in double value)
-        => Asdu.EncodePrimitive<DoubleCodec, double>(ref writer, tagNumber, value);
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in double value)
+        => AsduPrimitive.Encode<DoubleCodec, double>(ref writer, tagNumber, value);
 
     /// <summary>
     /// Encodes a <see cref="double"/> value into an already allocated payload span.
@@ -90,8 +90,8 @@ public sealed class DoubleCodec :
     /// </summary>
     /// <param name="value">The value whose total encoded length is requested.</param>
     /// <returns>The total encoded length in bytes.</returns>
-    public static int GetLength(in double value)
-        => AsduLength.Sum(TagNumber, GetEncodedValueLength(value));
+    public static int GetEncodedLength(in double value)
+        => AsduPrimitive.GetEncodedLength<DoubleCodec, double>(value);
 
     /// <summary>
     /// Gets the total encoded length including a specific context tag.
@@ -99,25 +99,16 @@ public sealed class DoubleCodec :
     /// <param name="value">The value whose total encoded length is requested.</param>
     /// <param name="tagNumber">The context tag number.</param>
     /// <returns>The total encoded length in bytes.</returns>
-    public static int GetLength(in double value, byte tagNumber)
-        => AsduLength.Sum(tagNumber, GetEncodedValueLength(value));
+    public static int GetEncodedLength(in double value, byte tagNumber)
+        => AsduPrimitive.GetEncodedLength<DoubleCodec, double>(tagNumber, value);
 
     /// <summary>
     /// Determines whether the next value in the reader matches this codec's application tag.
     /// </summary>
     /// <param name="reader">The reader to inspect.</param>
     /// <returns><see langword="true"/> when the next tag matches; otherwise, <see langword="false"/>.</returns>
-    public static bool Matches(ref NativeReader reader)
-        => reader.PeekPrimitiveTag(TagNumber);
-
-    /// <summary>
-    /// Determines whether the next value in the reader matches a specific context tag.
-    /// </summary>
-    /// <param name="reader">The reader to inspect.</param>
-    /// <param name="tagNumber">The expected context tag number.</param>
-    /// <returns><see langword="true"/> when the next tag matches; otherwise, <see langword="false"/>.</returns>
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekPrimitiveTag(tagNumber);
+    public static bool Matches(ref AsduReader reader)
+        => reader.PeekApplicationTag(TagNumber);
 
     /// <summary>
     /// Gets the BACnet application tag number handled by this codec.

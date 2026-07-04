@@ -7,82 +7,68 @@ public sealed class WhoHasRequestTObjectCodec :
     IAsduElementCodec<global::Baclib.Bacnet.Types.Application.WhoHasRequest.TObject>,
     IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.WhoHasRequest.TObject>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static bool Matches(ref AsduReader reader)
     {
-
-        var contextTagNumber = reader.PeekContextTagNumber();
-        switch (contextTagNumber)
+        if (!reader.PeekContextTag(out var contextTagNumber))
         {
-            case 2:
-            case 3:
-                return true;
-            default:
-                return false;
+            return false;
         }
+        return contextTagNumber switch
+        {
+            2 or
+            3 => true,
+            _ => false
+        };
     }
 
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag(tagNumber);
-
-    public static global::Baclib.Bacnet.Types.Application.WhoHasRequest.TObject Decode(ref NativeReader reader)
+    public static global::Baclib.Bacnet.Types.Application.WhoHasRequest.TObject Decode(ref AsduReader reader)
     {
-        var tagNumber = reader.PeekContextTagNumber();
+        var tagNumber = reader.ReadContextTagNumber();
         switch (tagNumber)
         {
             case 2:
-                var _objectIdentifier = Asdu.DecodePrimitive<ObjectIdentifierCodec, global::Baclib.Bacnet.Types.Application.ObjectIdentifier>(ref reader, 2);
-                return global::Baclib.Bacnet.Types.Application.WhoHasRequest.TObject.FromObjectIdentifier(_objectIdentifier);
+                var @objectIdentifier = ObjectIdentifierCodec.Decode(ref reader, 2);
+                return global::Baclib.Bacnet.Types.Application.WhoHasRequest.TObject.FromObjectIdentifier(@objectIdentifier);
             case 3:
-                var _objectName = Asdu.DecodePrimitive<CharacterStringCodec, global::Baclib.Bacnet.Types.Application.CharacterString>(ref reader, 3);
-                return global::Baclib.Bacnet.Types.Application.WhoHasRequest.TObject.FromObjectName(_objectName);
+                var @objectName = CharacterStringCodec.Decode(ref reader, 3);
+                return global::Baclib.Bacnet.Types.Application.WhoHasRequest.TObject.FromObjectName(@objectName);
         }
         throw new FormatException(nameof(reader));
     }
 
-    public static global::Baclib.Bacnet.Types.Application.WhoHasRequest.TObject Decode(ref NativeReader reader, byte tagNumber)
-    {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
-    }
+    public static global::Baclib.Bacnet.Types.Application.WhoHasRequest.TObject Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<WhoHasRequestTObjectCodec, global::Baclib.Bacnet.Types.Application.WhoHasRequest.TObject>(ref reader, tagNumber);
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.WhoHasRequest.TObject value)
+    public static void Encode(ref AsduWriter writer, in global::Baclib.Bacnet.Types.Application.WhoHasRequest.TObject value)
     {
         switch (value.Choice)
         {
             case global::Baclib.Bacnet.Types.Application.WhoHasRequest.TObject.Option.ObjectIdentifier:
-                Asdu.EncodePrimitive<ObjectIdentifierCodec, global::Baclib.Bacnet.Types.Application.ObjectIdentifier>(ref writer, 2, value.ObjectIdentifier);
+                ObjectIdentifierCodec.Encode(ref writer, 2, value.ObjectIdentifier);
                 return;
             case global::Baclib.Bacnet.Types.Application.WhoHasRequest.TObject.Option.ObjectName:
-                Asdu.EncodePrimitive<CharacterStringCodec, global::Baclib.Bacnet.Types.Application.CharacterString>(ref writer, 3, value.ObjectName);
+                CharacterStringCodec.Encode(ref writer, 3, value.ObjectName);
                 return;
-        }
-        throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported.");
-    }
-
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.WhoHasRequest.TObject value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.WhoHasRequest.TObject value)
-    {
-        switch (value.Choice)
-        {
-            case global::Baclib.Bacnet.Types.Application.WhoHasRequest.TObject.Option.ObjectIdentifier:
-                return Asdu.GetPrimitiveLength<ObjectIdentifierCodec, global::Baclib.Bacnet.Types.Application.ObjectIdentifier>(2, value.ObjectIdentifier);
-            case global::Baclib.Bacnet.Types.Application.WhoHasRequest.TObject.Option.ObjectName:
-                return Asdu.GetPrimitiveLength<CharacterStringCodec, global::Baclib.Bacnet.Types.Application.CharacterString>(3, value.ObjectName);
             default:
                 throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported.");
         }
     }
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.WhoHasRequest.TObject value, byte tagNumber)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.WhoHasRequest.TObject value)
+        => AsduConstructed.Encode<WhoHasRequestTObjectCodec, global::Baclib.Bacnet.Types.Application.WhoHasRequest.TObject>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in global::Baclib.Bacnet.Types.Application.WhoHasRequest.TObject value)
     {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
+        return value.Choice switch
+        {
+            global::Baclib.Bacnet.Types.Application.WhoHasRequest.TObject.Option.ObjectIdentifier
+                => ObjectIdentifierCodec.GetEncodedLength(value.ObjectIdentifier, 2),
+            global::Baclib.Bacnet.Types.Application.WhoHasRequest.TObject.Option.ObjectName
+                => CharacterStringCodec.GetEncodedLength(value.ObjectName, 3),
+            _ => throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported."),
+        };
     }
+
+    public static int GetEncodedLength(in global::Baclib.Bacnet.Types.Application.WhoHasRequest.TObject value, byte tagNumber)
+        => AsduElement.GetEncodedLength<WhoHasRequestTObjectCodec, global::Baclib.Bacnet.Types.Application.WhoHasRequest.TObject>(tagNumber, value);
 }

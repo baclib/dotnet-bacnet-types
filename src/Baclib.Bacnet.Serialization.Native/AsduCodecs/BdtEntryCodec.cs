@@ -1,63 +1,48 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class BdtEntryCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.BdtEntry>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.BdtEntry>
+    IAsduElementCodec<T::BdtEntry>,
+    IAsduConstructedCodec<T::BdtEntry>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::BdtEntry Decode(ref AsduReader reader)
     {
-        return reader.PeekOpeningTag((byte)0);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.BdtEntry Decode(ref NativeReader reader)
-    {
-        var _bbmdAddress = Asdu.DecodeConstructed<HostNPortCodec, global::Baclib.Bacnet.Types.Application.HostNPort>(ref reader, 0);
-        var _broadcastMask = Asdu.DecodeOptional<OctetStringCodec, global::Baclib.Bacnet.Types.Application.OctetString>(ref reader, 1);
-
-        return new global::Baclib.Bacnet.Types.Application.BdtEntry
+        return new T::BdtEntry
         {
-            BbmdAddress = _bbmdAddress,
-            BroadcastMask = _broadcastMask
+            BbmdAddress = AsduElement.Decode<HostNPortCodec, T::HostNPort>(ref reader, 0),
+            BroadcastMask = AsduElement.DecodeOptional<OctetStringCodec, T::OctetString>(ref reader, 1)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.BdtEntry Decode(ref NativeReader reader, byte tagNumber)
+    public static T::BdtEntry Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<BdtEntryCodec, T::BdtEntry>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::BdtEntry value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.Encode<HostNPortCodec, T::HostNPort>(ref writer, 0, value.BbmdAddress);
+        AsduElement.EncodeOptional<OctetStringCodec, T::OctetString>(ref writer, 1, value.BroadcastMask);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.BdtEntry value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::BdtEntry value)
+        => AsduConstructed.Encode<BdtEntryCodec, T::BdtEntry>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::BdtEntry value)
     {
-        Asdu.EncodeElement<HostNPortCodec, global::Baclib.Bacnet.Types.Application.HostNPort>(ref writer, 0, value.BbmdAddress);
-        if (value.BroadcastMask.HasValue)
-        {
-            Asdu.EncodePrimitive<OctetStringCodec, global::Baclib.Bacnet.Types.Application.OctetString>(ref writer, 1, value.BroadcastMask.Value);
-        }
+        var length = 0;
+        length += AsduElement.GetEncodedLength<HostNPortCodec, T::HostNPort>(0, value.BbmdAddress);
+        length += AsduElement.GetOptionalEncodedLength<OctetStringCodec, T::OctetString>(1, value.BroadcastMask);
+        return length;
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.BdtEntry value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
+    public static int GetEncodedLength(in T::BdtEntry value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<BdtEntryCodec, T::BdtEntry>(tagNumber, value);
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.BdtEntry value)
+    public static bool Matches(ref AsduReader reader)
     {
-        return Asdu.GetElementLength<HostNPortCodec, global::Baclib.Bacnet.Types.Application.HostNPort>(0, value.BbmdAddress) + (value.BroadcastMask.HasValue ? Asdu.GetPrimitiveLength<OctetStringCodec, global::Baclib.Bacnet.Types.Application.OctetString>(1, value.BroadcastMask.Value) : 0);
+        return reader.PeekContextTag(0);
     }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.BdtEntry value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

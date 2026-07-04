@@ -1,68 +1,51 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class SpecialEventCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.SpecialEvent>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.SpecialEvent>
+    IAsduElementCodec<T::SpecialEvent>,
+    IAsduConstructedCodec<T::SpecialEvent>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::SpecialEvent Decode(ref AsduReader reader)
     {
-        return SpecialEventTPeriodCodec.Matches(ref reader);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.SpecialEvent Decode(ref NativeReader reader)
-    {
-        var _period = Asdu.DecodeElement<SpecialEventTPeriodCodec, global::Baclib.Bacnet.Types.Application.SpecialEvent.TPeriod>(ref reader);
-        var _listOfTimeValues = Asdu.DecodeSequenceOf<TimeValueCodec, global::Baclib.Bacnet.Types.Application.TimeValue>(ref reader, 2);
-        var _eventPriority = Asdu.DecodePrimitive<SpecialEventTEventPriorityCodec, global::Baclib.Bacnet.Types.Application.SpecialEvent.TEventPriority>(ref reader, 3);
-
-        return new global::Baclib.Bacnet.Types.Application.SpecialEvent
+        return new T::SpecialEvent
         {
-            Period = _period,
-            ListOfTimeValues = _listOfTimeValues,
-            EventPriority = _eventPriority
+            Period = AsduElement.Decode<SpecialEventTPeriodCodec, T::SpecialEvent.TPeriod>(ref reader),
+            ListOfTimeValues = AsduElement.DecodeSequenceOf<TimeValueCodec, T::TimeValue>(ref reader, 2),
+            EventPriority = AsduElement.Decode<SpecialEventTEventPriorityCodec, T::SpecialEvent.TEventPriority>(ref reader, 3)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.SpecialEvent Decode(ref NativeReader reader, byte tagNumber)
+    public static T::SpecialEvent Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<SpecialEventCodec, T::SpecialEvent>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::SpecialEvent value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.Encode<SpecialEventTPeriodCodec, T::SpecialEvent.TPeriod>(ref writer, value.Period);
+        AsduElement.EncodeSequenceOf<TimeValueCodec, T::TimeValue>(ref writer, 2, value.ListOfTimeValues);
+        AsduElement.Encode<SpecialEventTEventPriorityCodec, T::SpecialEvent.TEventPriority>(ref writer, 3, value.EventPriority);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.SpecialEvent value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::SpecialEvent value)
+        => AsduConstructed.Encode<SpecialEventCodec, T::SpecialEvent>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::SpecialEvent value)
     {
-        Asdu.EncodeElement<SpecialEventTPeriodCodec, global::Baclib.Bacnet.Types.Application.SpecialEvent.TPeriod>(ref writer, value.Period);
-        writer.WriteOpeningTag(2);
-        foreach (var item in value.ListOfTimeValues)
-        {
-            Asdu.EncodeElement<TimeValueCodec, global::Baclib.Bacnet.Types.Application.TimeValue>(ref writer, 2, item);
-        }
-        writer.WriteClosingTag(2);
-        Asdu.EncodePrimitive<SpecialEventTEventPriorityCodec, global::Baclib.Bacnet.Types.Application.SpecialEvent.TEventPriority>(ref writer, 3, value.EventPriority);
+        var length = 0;
+        length += AsduElement.GetEncodedLength<SpecialEventTPeriodCodec, T::SpecialEvent.TPeriod>(value.Period);
+        length += AsduElement.GetSequenceOfEncodedLength<TimeValueCodec, T::TimeValue>(2, value.ListOfTimeValues);
+        length += AsduElement.GetEncodedLength<SpecialEventTEventPriorityCodec, T::SpecialEvent.TEventPriority>(3, value.EventPriority);
+        return length;
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.SpecialEvent value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
+    public static int GetEncodedLength(in T::SpecialEvent value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<SpecialEventCodec, T::SpecialEvent>(tagNumber, value);
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.SpecialEvent value)
+    public static bool Matches(ref AsduReader reader)
     {
-        return Asdu.GetElementLength<SpecialEventTPeriodCodec, global::Baclib.Bacnet.Types.Application.SpecialEvent.TPeriod>(value.Period) + (AsduLength.FromTagNumber((byte)2) + (value.ListOfTimeValues.Items.Sum(static item => Asdu.GetElementLength<TimeValueCodec, global::Baclib.Bacnet.Types.Application.TimeValue>(2, item))) + AsduLength.FromTagNumber((byte)2)) + Asdu.GetPrimitiveLength<SpecialEventTEventPriorityCodec, global::Baclib.Bacnet.Types.Application.SpecialEvent.TEventPriority>(3, value.EventPriority);
+        return SpecialEventTPeriodCodec.Matches(ref reader);
     }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.SpecialEvent value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

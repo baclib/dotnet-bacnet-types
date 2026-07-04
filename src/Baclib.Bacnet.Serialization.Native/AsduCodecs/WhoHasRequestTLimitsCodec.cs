@@ -1,60 +1,48 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class WhoHasRequestTLimitsCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.WhoHasRequest.TLimits>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.WhoHasRequest.TLimits>
+    IAsduElementCodec<T::WhoHasRequest.TLimits>,
+    IAsduConstructedCodec<T::WhoHasRequest.TLimits>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::WhoHasRequest.TLimits Decode(ref AsduReader reader)
     {
-        return reader.PeekTag((byte)0);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.WhoHasRequest.TLimits Decode(ref NativeReader reader)
-    {
-        var _deviceInstanceRangeLowLimit = Asdu.DecodePrimitive<WhoHasRequestTLimitsTDeviceInstanceRangeLowLimitCodec, global::Baclib.Bacnet.Types.Application.WhoHasRequest.TLimits.TDeviceInstanceRangeLowLimit>(ref reader, 0);
-        var _deviceInstanceRangeHighLimit = Asdu.DecodePrimitive<WhoHasRequestTLimitsTDeviceInstanceRangeHighLimitCodec, global::Baclib.Bacnet.Types.Application.WhoHasRequest.TLimits.TDeviceInstanceRangeHighLimit>(ref reader, 1);
-
-        return new global::Baclib.Bacnet.Types.Application.WhoHasRequest.TLimits
+        return new T::WhoHasRequest.TLimits
         {
-            DeviceInstanceRangeLowLimit = _deviceInstanceRangeLowLimit,
-            DeviceInstanceRangeHighLimit = _deviceInstanceRangeHighLimit
+            DeviceInstanceRangeLowLimit = AsduElement.Decode<WhoHasRequestTLimitsTDeviceInstanceRangeLowLimitCodec, T::WhoHasRequest.TLimits.TDeviceInstanceRangeLowLimit>(ref reader, 0),
+            DeviceInstanceRangeHighLimit = AsduElement.Decode<WhoHasRequestTLimitsTDeviceInstanceRangeHighLimitCodec, T::WhoHasRequest.TLimits.TDeviceInstanceRangeHighLimit>(ref reader, 1)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.WhoHasRequest.TLimits Decode(ref NativeReader reader, byte tagNumber)
+    public static T::WhoHasRequest.TLimits Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<WhoHasRequestTLimitsCodec, T::WhoHasRequest.TLimits>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::WhoHasRequest.TLimits value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.Encode<WhoHasRequestTLimitsTDeviceInstanceRangeLowLimitCodec, T::WhoHasRequest.TLimits.TDeviceInstanceRangeLowLimit>(ref writer, 0, value.DeviceInstanceRangeLowLimit);
+        AsduElement.Encode<WhoHasRequestTLimitsTDeviceInstanceRangeHighLimitCodec, T::WhoHasRequest.TLimits.TDeviceInstanceRangeHighLimit>(ref writer, 1, value.DeviceInstanceRangeHighLimit);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.WhoHasRequest.TLimits value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::WhoHasRequest.TLimits value)
+        => AsduConstructed.Encode<WhoHasRequestTLimitsCodec, T::WhoHasRequest.TLimits>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::WhoHasRequest.TLimits value)
     {
-        Asdu.EncodePrimitive<WhoHasRequestTLimitsTDeviceInstanceRangeLowLimitCodec, global::Baclib.Bacnet.Types.Application.WhoHasRequest.TLimits.TDeviceInstanceRangeLowLimit>(ref writer, 0, value.DeviceInstanceRangeLowLimit);
-        Asdu.EncodePrimitive<WhoHasRequestTLimitsTDeviceInstanceRangeHighLimitCodec, global::Baclib.Bacnet.Types.Application.WhoHasRequest.TLimits.TDeviceInstanceRangeHighLimit>(ref writer, 1, value.DeviceInstanceRangeHighLimit);
+        var length = 0;
+        length += AsduElement.GetEncodedLength<WhoHasRequestTLimitsTDeviceInstanceRangeLowLimitCodec, T::WhoHasRequest.TLimits.TDeviceInstanceRangeLowLimit>(0, value.DeviceInstanceRangeLowLimit);
+        length += AsduElement.GetEncodedLength<WhoHasRequestTLimitsTDeviceInstanceRangeHighLimitCodec, T::WhoHasRequest.TLimits.TDeviceInstanceRangeHighLimit>(1, value.DeviceInstanceRangeHighLimit);
+        return length;
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.WhoHasRequest.TLimits value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
+    public static int GetEncodedLength(in T::WhoHasRequest.TLimits value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<WhoHasRequestTLimitsCodec, T::WhoHasRequest.TLimits>(tagNumber, value);
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.WhoHasRequest.TLimits value)
+    public static bool Matches(ref AsduReader reader)
     {
-        return Asdu.GetPrimitiveLength<WhoHasRequestTLimitsTDeviceInstanceRangeLowLimitCodec, global::Baclib.Bacnet.Types.Application.WhoHasRequest.TLimits.TDeviceInstanceRangeLowLimit>(0, value.DeviceInstanceRangeLowLimit) + Asdu.GetPrimitiveLength<WhoHasRequestTLimitsTDeviceInstanceRangeHighLimitCodec, global::Baclib.Bacnet.Types.Application.WhoHasRequest.TLimits.TDeviceInstanceRangeHighLimit>(1, value.DeviceInstanceRangeHighLimit);
+        return reader.PeekContextTag(0);
     }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.WhoHasRequest.TLimits value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

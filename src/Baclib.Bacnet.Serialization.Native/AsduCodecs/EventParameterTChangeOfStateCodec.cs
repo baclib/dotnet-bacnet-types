@@ -1,65 +1,48 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class EventParameterTChangeOfStateCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfState>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfState>
+    IAsduElementCodec<T::EventParameter.TChangeOfState>,
+    IAsduConstructedCodec<T::EventParameter.TChangeOfState>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::EventParameter.TChangeOfState Decode(ref AsduReader reader)
     {
-        return reader.PeekTag((byte)0);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfState Decode(ref NativeReader reader)
-    {
-        var _timeDelay = Asdu.DecodePrimitive<UnsignedCodec, uint>(ref reader, 0);
-        var _listOfValues = Asdu.DecodeSequenceOf<PropertyStatesCodec, global::Baclib.Bacnet.Types.Application.PropertyStates>(ref reader, 1);
-
-        return new global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfState
+        return new T::EventParameter.TChangeOfState
         {
-            TimeDelay = _timeDelay,
-            ListOfValues = _listOfValues
+            TimeDelay = AsduElement.Decode<UnsignedCodec, uint>(ref reader, 0),
+            ListOfValues = AsduElement.DecodeSequenceOf<PropertyStatesCodec, T::PropertyStates>(ref reader, 1)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfState Decode(ref NativeReader reader, byte tagNumber)
+    public static T::EventParameter.TChangeOfState Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<EventParameterTChangeOfStateCodec, T::EventParameter.TChangeOfState>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::EventParameter.TChangeOfState value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.Encode<UnsignedCodec, uint>(ref writer, 0, value.TimeDelay);
+        AsduElement.EncodeSequenceOf<PropertyStatesCodec, T::PropertyStates>(ref writer, 1, value.ListOfValues);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfState value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::EventParameter.TChangeOfState value)
+        => AsduConstructed.Encode<EventParameterTChangeOfStateCodec, T::EventParameter.TChangeOfState>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::EventParameter.TChangeOfState value)
     {
-        Asdu.EncodePrimitive<UnsignedCodec, uint>(ref writer, 0, value.TimeDelay);
-        writer.WriteOpeningTag(1);
-        foreach (var item in value.ListOfValues)
-        {
-            Asdu.EncodeElement<PropertyStatesCodec, global::Baclib.Bacnet.Types.Application.PropertyStates>(ref writer, 1, item);
-        }
-        writer.WriteClosingTag(1);
+        var length = 0;
+        length += AsduElement.GetEncodedLength<UnsignedCodec, uint>(0, value.TimeDelay);
+        length += AsduElement.GetSequenceOfEncodedLength<PropertyStatesCodec, T::PropertyStates>(1, value.ListOfValues);
+        return length;
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfState value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
+    public static int GetEncodedLength(in T::EventParameter.TChangeOfState value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<EventParameterTChangeOfStateCodec, T::EventParameter.TChangeOfState>(tagNumber, value);
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfState value)
+    public static bool Matches(ref AsduReader reader)
     {
-        return Asdu.GetPrimitiveLength<UnsignedCodec, uint>(0, value.TimeDelay) + (AsduLength.FromTagNumber((byte)1) + (value.ListOfValues.Items.Sum(static item => Asdu.GetElementLength<PropertyStatesCodec, global::Baclib.Bacnet.Types.Application.PropertyStates>(1, item))) + AsduLength.FromTagNumber((byte)1));
+        return reader.PeekContextTag(0);
     }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfState value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

@@ -1,96 +1,69 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class ScDirectConnectionCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.ScDirectConnection>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.ScDirectConnection>
+    IAsduElementCodec<T::ScDirectConnection>,
+    IAsduConstructedCodec<T::ScDirectConnection>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::ScDirectConnection Decode(ref AsduReader reader)
     {
-        return reader.PeekTag((byte)0);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.ScDirectConnection Decode(ref NativeReader reader)
-    {
-        var _uri = Asdu.DecodePrimitive<CharacterStringCodec, global::Baclib.Bacnet.Types.Application.CharacterString>(ref reader, 0);
-        var _connectionState = Asdu.DecodePrimitive<ScConnectionStateCodec, global::Baclib.Bacnet.Types.Application.ScConnectionState>(ref reader, 1);
-        var _connectTimestamp = Asdu.DecodeConstructed<DateTimeCodec, global::Baclib.Bacnet.Types.Application.DateTime>(ref reader, 2);
-        var _disconnectTimestamp = Asdu.DecodeConstructed<DateTimeCodec, global::Baclib.Bacnet.Types.Application.DateTime>(ref reader, 3);
-        var _peerAddress = Asdu.DecodeOptionalElement<HostNPortCodec, global::Baclib.Bacnet.Types.Application.HostNPort>(ref reader, 4);
-        var _peerVmac = Asdu.DecodeOptional<ScDirectConnectionTPeerVmacCodec, global::Baclib.Bacnet.Types.Application.ScDirectConnection.TPeerVmac>(ref reader, 5);
-        var _peerUuid = Asdu.DecodeOptional<ScDirectConnectionTPeerUuidCodec, global::Baclib.Bacnet.Types.Application.ScDirectConnection.TPeerUuid>(ref reader, 6);
-        var _error = Asdu.DecodeOptionalElement<ErrorCodec, global::Baclib.Bacnet.Types.Application.Error>(ref reader, 7);
-        var _errorDetails = Asdu.DecodeOptional<CharacterStringCodec, global::Baclib.Bacnet.Types.Application.CharacterString>(ref reader, 8);
-
-        return new global::Baclib.Bacnet.Types.Application.ScDirectConnection
+        return new T::ScDirectConnection
         {
-            Uri = _uri,
-            ConnectionState = _connectionState,
-            ConnectTimestamp = _connectTimestamp,
-            DisconnectTimestamp = _disconnectTimestamp,
-            PeerAddress = _peerAddress,
-            PeerVmac = _peerVmac,
-            PeerUuid = _peerUuid,
-            Error = _error,
-            ErrorDetails = _errorDetails
+            Uri = AsduElement.Decode<CharacterStringCodec, T::CharacterString>(ref reader, 0),
+            ConnectionState = AsduElement.Decode<ScConnectionStateCodec, T::ScConnectionState>(ref reader, 1),
+            ConnectTimestamp = AsduElement.Decode<DateTimeCodec, T::DateTime>(ref reader, 2),
+            DisconnectTimestamp = AsduElement.Decode<DateTimeCodec, T::DateTime>(ref reader, 3),
+            PeerAddress = AsduElement.DecodeOptional<HostNPortCodec, T::HostNPort>(ref reader, 4),
+            PeerVmac = AsduElement.DecodeOptional<ScDirectConnectionTPeerVmacCodec, T::ScDirectConnection.TPeerVmac>(ref reader, 5),
+            PeerUuid = AsduElement.DecodeOptional<ScDirectConnectionTPeerUuidCodec, T::ScDirectConnection.TPeerUuid>(ref reader, 6),
+            Error = AsduElement.DecodeOptional<ErrorCodec, T::Error>(ref reader, 7),
+            ErrorDetails = AsduElement.DecodeOptional<CharacterStringCodec, T::CharacterString>(ref reader, 8)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.ScDirectConnection Decode(ref NativeReader reader, byte tagNumber)
+    public static T::ScDirectConnection Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<ScDirectConnectionCodec, T::ScDirectConnection>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::ScDirectConnection value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.Encode<CharacterStringCodec, T::CharacterString>(ref writer, 0, value.Uri);
+        AsduElement.Encode<ScConnectionStateCodec, T::ScConnectionState>(ref writer, 1, value.ConnectionState);
+        AsduElement.Encode<DateTimeCodec, T::DateTime>(ref writer, 2, value.ConnectTimestamp);
+        AsduElement.Encode<DateTimeCodec, T::DateTime>(ref writer, 3, value.DisconnectTimestamp);
+        AsduElement.EncodeOptional<HostNPortCodec, T::HostNPort>(ref writer, 4, value.PeerAddress);
+        AsduElement.EncodeOptional<ScDirectConnectionTPeerVmacCodec, T::ScDirectConnection.TPeerVmac>(ref writer, 5, value.PeerVmac);
+        AsduElement.EncodeOptional<ScDirectConnectionTPeerUuidCodec, T::ScDirectConnection.TPeerUuid>(ref writer, 6, value.PeerUuid);
+        AsduElement.EncodeOptional<ErrorCodec, T::Error>(ref writer, 7, value.Error);
+        AsduElement.EncodeOptional<CharacterStringCodec, T::CharacterString>(ref writer, 8, value.ErrorDetails);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.ScDirectConnection value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::ScDirectConnection value)
+        => AsduConstructed.Encode<ScDirectConnectionCodec, T::ScDirectConnection>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::ScDirectConnection value)
     {
-        Asdu.EncodePrimitive<CharacterStringCodec, global::Baclib.Bacnet.Types.Application.CharacterString>(ref writer, 0, value.Uri);
-        Asdu.EncodePrimitive<ScConnectionStateCodec, global::Baclib.Bacnet.Types.Application.ScConnectionState>(ref writer, 1, value.ConnectionState);
-        Asdu.EncodeElement<DateTimeCodec, global::Baclib.Bacnet.Types.Application.DateTime>(ref writer, 2, value.ConnectTimestamp);
-        Asdu.EncodeElement<DateTimeCodec, global::Baclib.Bacnet.Types.Application.DateTime>(ref writer, 3, value.DisconnectTimestamp);
-        if (value.PeerAddress.HasValue)
-        {
-            Asdu.EncodeElement<HostNPortCodec, global::Baclib.Bacnet.Types.Application.HostNPort>(ref writer, 4, value.PeerAddress.Value);
-        }
-        if (value.PeerVmac.HasValue)
-        {
-            Asdu.EncodePrimitive<ScDirectConnectionTPeerVmacCodec, global::Baclib.Bacnet.Types.Application.ScDirectConnection.TPeerVmac>(ref writer, 5, value.PeerVmac.Value);
-        }
-        if (value.PeerUuid.HasValue)
-        {
-            Asdu.EncodePrimitive<ScDirectConnectionTPeerUuidCodec, global::Baclib.Bacnet.Types.Application.ScDirectConnection.TPeerUuid>(ref writer, 6, value.PeerUuid.Value);
-        }
-        if (value.Error.HasValue)
-        {
-            Asdu.EncodeElement<ErrorCodec, global::Baclib.Bacnet.Types.Application.Error>(ref writer, 7, value.Error.Value);
-        }
-        if (value.ErrorDetails.HasValue)
-        {
-            Asdu.EncodePrimitive<CharacterStringCodec, global::Baclib.Bacnet.Types.Application.CharacterString>(ref writer, 8, value.ErrorDetails.Value);
-        }
+        var length = 0;
+        length += AsduElement.GetEncodedLength<CharacterStringCodec, T::CharacterString>(0, value.Uri);
+        length += AsduElement.GetEncodedLength<ScConnectionStateCodec, T::ScConnectionState>(1, value.ConnectionState);
+        length += AsduElement.GetEncodedLength<DateTimeCodec, T::DateTime>(2, value.ConnectTimestamp);
+        length += AsduElement.GetEncodedLength<DateTimeCodec, T::DateTime>(3, value.DisconnectTimestamp);
+        length += AsduElement.GetOptionalEncodedLength<HostNPortCodec, T::HostNPort>(4, value.PeerAddress);
+        length += AsduElement.GetOptionalEncodedLength<ScDirectConnectionTPeerVmacCodec, T::ScDirectConnection.TPeerVmac>(5, value.PeerVmac);
+        length += AsduElement.GetOptionalEncodedLength<ScDirectConnectionTPeerUuidCodec, T::ScDirectConnection.TPeerUuid>(6, value.PeerUuid);
+        length += AsduElement.GetOptionalEncodedLength<ErrorCodec, T::Error>(7, value.Error);
+        length += AsduElement.GetOptionalEncodedLength<CharacterStringCodec, T::CharacterString>(8, value.ErrorDetails);
+        return length;
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.ScDirectConnection value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
+    public static int GetEncodedLength(in T::ScDirectConnection value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<ScDirectConnectionCodec, T::ScDirectConnection>(tagNumber, value);
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.ScDirectConnection value)
+    public static bool Matches(ref AsduReader reader)
     {
-        return Asdu.GetPrimitiveLength<CharacterStringCodec, global::Baclib.Bacnet.Types.Application.CharacterString>(0, value.Uri) + Asdu.GetPrimitiveLength<ScConnectionStateCodec, global::Baclib.Bacnet.Types.Application.ScConnectionState>(1, value.ConnectionState) + Asdu.GetElementLength<DateTimeCodec, global::Baclib.Bacnet.Types.Application.DateTime>(2, value.ConnectTimestamp) + Asdu.GetElementLength<DateTimeCodec, global::Baclib.Bacnet.Types.Application.DateTime>(3, value.DisconnectTimestamp) + (value.PeerAddress.HasValue ? Asdu.GetElementLength<HostNPortCodec, global::Baclib.Bacnet.Types.Application.HostNPort>(4, value.PeerAddress.Value) : 0) + (value.PeerVmac.HasValue ? Asdu.GetPrimitiveLength<ScDirectConnectionTPeerVmacCodec, global::Baclib.Bacnet.Types.Application.ScDirectConnection.TPeerVmac>(5, value.PeerVmac.Value) : 0) + (value.PeerUuid.HasValue ? Asdu.GetPrimitiveLength<ScDirectConnectionTPeerUuidCodec, global::Baclib.Bacnet.Types.Application.ScDirectConnection.TPeerUuid>(6, value.PeerUuid.Value) : 0) + (value.Error.HasValue ? Asdu.GetElementLength<ErrorCodec, global::Baclib.Bacnet.Types.Application.Error>(7, value.Error.Value) : 0) + (value.ErrorDetails.HasValue ? Asdu.GetPrimitiveLength<CharacterStringCodec, global::Baclib.Bacnet.Types.Application.CharacterString>(8, value.ErrorDetails.Value) : 0);
+        return reader.PeekContextTag(0);
     }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.ScDirectConnection value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

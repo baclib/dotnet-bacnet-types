@@ -1,86 +1,63 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class ReadRangeAckCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.ReadRangeAck>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.ReadRangeAck>
+    IAsduElementCodec<T::ReadRangeAck>,
+    IAsduConstructedCodec<T::ReadRangeAck>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::ReadRangeAck Decode(ref AsduReader reader)
     {
-        return reader.PeekTag((byte)0);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.ReadRangeAck Decode(ref NativeReader reader)
-    {
-        var _objectIdentifier = Asdu.DecodePrimitive<ObjectIdentifierCodec, global::Baclib.Bacnet.Types.Application.ObjectIdentifier>(ref reader, 0);
-        var _propertyIdentifier = Asdu.DecodePrimitive<PropertyIdentifierCodec, global::Baclib.Bacnet.Types.Application.PropertyIdentifier>(ref reader, 1);
-        var _propertyArrayIndex = Asdu.DecodeOptional<UnsignedCodec, uint>(ref reader, 2);
-        var _resultFlags = Asdu.DecodePrimitive<ResultFlagsCodec, global::Baclib.Bacnet.Types.Application.ResultFlags>(ref reader, 3);
-        var _itemCount = Asdu.DecodePrimitive<UnsignedCodec, uint>(ref reader, 4);
-        var _itemData = Asdu.DecodeSequenceOf<AnyCodec, global::Baclib.Bacnet.Types.Application.Any>(ref reader, 5);
-        var _firstSequenceNumber = Asdu.DecodeOptional<Unsigned32Codec, uint>(ref reader, 6);
-
-        return new global::Baclib.Bacnet.Types.Application.ReadRangeAck
+        return new T::ReadRangeAck
         {
-            ObjectIdentifier = _objectIdentifier,
-            PropertyIdentifier = _propertyIdentifier,
-            PropertyArrayIndex = _propertyArrayIndex,
-            ResultFlags = _resultFlags,
-            ItemCount = _itemCount,
-            ItemData = _itemData,
-            FirstSequenceNumber = _firstSequenceNumber
+            ObjectIdentifier = AsduElement.Decode<ObjectIdentifierCodec, T::ObjectIdentifier>(ref reader, 0),
+            PropertyIdentifier = AsduElement.Decode<PropertyIdentifierCodec, T::PropertyIdentifier>(ref reader, 1),
+            PropertyArrayIndex = AsduElement.DecodeOptional<UnsignedCodec, uint>(ref reader, 2),
+            ResultFlags = AsduElement.Decode<ResultFlagsCodec, T::ResultFlags>(ref reader, 3),
+            ItemCount = AsduElement.Decode<UnsignedCodec, uint>(ref reader, 4),
+            ItemData = AsduElement.DecodeSequenceOf<AnyCodec, T::Any>(ref reader, 5),
+            FirstSequenceNumber = AsduElement.DecodeOptional<Unsigned32Codec, uint>(ref reader, 6)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.ReadRangeAck Decode(ref NativeReader reader, byte tagNumber)
+    public static T::ReadRangeAck Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<ReadRangeAckCodec, T::ReadRangeAck>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::ReadRangeAck value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.Encode<ObjectIdentifierCodec, T::ObjectIdentifier>(ref writer, 0, value.ObjectIdentifier);
+        AsduElement.Encode<PropertyIdentifierCodec, T::PropertyIdentifier>(ref writer, 1, value.PropertyIdentifier);
+        AsduElement.EncodeOptional<UnsignedCodec, uint>(ref writer, 2, value.PropertyArrayIndex);
+        AsduElement.Encode<ResultFlagsCodec, T::ResultFlags>(ref writer, 3, value.ResultFlags);
+        AsduElement.Encode<UnsignedCodec, uint>(ref writer, 4, value.ItemCount);
+        AsduElement.EncodeSequenceOf<AnyCodec, T::Any>(ref writer, 5, value.ItemData);
+        AsduElement.EncodeOptional<Unsigned32Codec, uint>(ref writer, 6, value.FirstSequenceNumber);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.ReadRangeAck value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::ReadRangeAck value)
+        => AsduConstructed.Encode<ReadRangeAckCodec, T::ReadRangeAck>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::ReadRangeAck value)
     {
-        Asdu.EncodePrimitive<ObjectIdentifierCodec, global::Baclib.Bacnet.Types.Application.ObjectIdentifier>(ref writer, 0, value.ObjectIdentifier);
-        Asdu.EncodePrimitive<PropertyIdentifierCodec, global::Baclib.Bacnet.Types.Application.PropertyIdentifier>(ref writer, 1, value.PropertyIdentifier);
-        if (value.PropertyArrayIndex.HasValue)
-        {
-            Asdu.EncodePrimitive<UnsignedCodec, uint>(ref writer, 2, value.PropertyArrayIndex.Value);
-        }
-        Asdu.EncodePrimitive<ResultFlagsCodec, global::Baclib.Bacnet.Types.Application.ResultFlags>(ref writer, 3, value.ResultFlags);
-        Asdu.EncodePrimitive<UnsignedCodec, uint>(ref writer, 4, value.ItemCount);
-        writer.WriteOpeningTag(5);
-        foreach (var item in value.ItemData)
-        {
-            Asdu.EncodeElement<AnyCodec, global::Baclib.Bacnet.Types.Application.Any>(ref writer, 5, item);
-        }
-        writer.WriteClosingTag(5);
-        if (value.FirstSequenceNumber.HasValue)
-        {
-            Asdu.EncodePrimitive<Unsigned32Codec, uint>(ref writer, 6, value.FirstSequenceNumber.Value);
-        }
+        var length = 0;
+        length += AsduElement.GetEncodedLength<ObjectIdentifierCodec, T::ObjectIdentifier>(0, value.ObjectIdentifier);
+        length += AsduElement.GetEncodedLength<PropertyIdentifierCodec, T::PropertyIdentifier>(1, value.PropertyIdentifier);
+        length += AsduElement.GetOptionalEncodedLength<UnsignedCodec, uint>(2, value.PropertyArrayIndex);
+        length += AsduElement.GetEncodedLength<ResultFlagsCodec, T::ResultFlags>(3, value.ResultFlags);
+        length += AsduElement.GetEncodedLength<UnsignedCodec, uint>(4, value.ItemCount);
+        length += AsduElement.GetSequenceOfEncodedLength<AnyCodec, T::Any>(5, value.ItemData);
+        length += AsduElement.GetOptionalEncodedLength<Unsigned32Codec, uint>(6, value.FirstSequenceNumber);
+        return length;
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.ReadRangeAck value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
+    public static int GetEncodedLength(in T::ReadRangeAck value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<ReadRangeAckCodec, T::ReadRangeAck>(tagNumber, value);
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.ReadRangeAck value)
+    public static bool Matches(ref AsduReader reader)
     {
-        return Asdu.GetPrimitiveLength<ObjectIdentifierCodec, global::Baclib.Bacnet.Types.Application.ObjectIdentifier>(0, value.ObjectIdentifier) + Asdu.GetPrimitiveLength<PropertyIdentifierCodec, global::Baclib.Bacnet.Types.Application.PropertyIdentifier>(1, value.PropertyIdentifier) + (value.PropertyArrayIndex.HasValue ? Asdu.GetPrimitiveLength<UnsignedCodec, uint>(2, value.PropertyArrayIndex.Value) : 0) + Asdu.GetPrimitiveLength<ResultFlagsCodec, global::Baclib.Bacnet.Types.Application.ResultFlags>(3, value.ResultFlags) + Asdu.GetPrimitiveLength<UnsignedCodec, uint>(4, value.ItemCount) + (AsduLength.FromTagNumber((byte)5) + (value.ItemData.Items.Sum(static item => Asdu.GetElementLength<AnyCodec, global::Baclib.Bacnet.Types.Application.Any>(5, item))) + AsduLength.FromTagNumber((byte)5)) + (value.FirstSequenceNumber.HasValue ? Asdu.GetPrimitiveLength<Unsigned32Codec, uint>(6, value.FirstSequenceNumber.Value) : 0);
+        return reader.PeekContextTag(0);
     }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.ReadRangeAck value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

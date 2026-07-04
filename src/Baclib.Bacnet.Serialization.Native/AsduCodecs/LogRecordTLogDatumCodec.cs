@@ -7,163 +7,149 @@ public sealed class LogRecordTLogDatumCodec :
     IAsduElementCodec<global::Baclib.Bacnet.Types.Application.LogRecord.TLogDatum>,
     IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.LogRecord.TLogDatum>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static bool Matches(ref AsduReader reader)
     {
-
-        var contextTagNumber = reader.PeekContextTagNumber();
-        switch (contextTagNumber)
+        if (!reader.PeekContextTag(out var contextTagNumber))
         {
-            case 0:
-            case 1:
-            case 2:
-            case 3:
-            case 4:
-            case 5:
-            case 6:
-            case 7:
-            case 8:
-            case 9:
-            case 10:
-                return true;
-            default:
-                return false;
+            return false;
         }
+        return contextTagNumber switch
+        {
+            0 or
+            1 or
+            2 or
+            3 or
+            4 or
+            5 or
+            6 or
+            7 or
+            8 or
+            9 or
+            10 => true,
+            _ => false
+        };
     }
 
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag(tagNumber);
-
-    public static global::Baclib.Bacnet.Types.Application.LogRecord.TLogDatum Decode(ref NativeReader reader)
+    public static global::Baclib.Bacnet.Types.Application.LogRecord.TLogDatum Decode(ref AsduReader reader)
     {
-        var tagNumber = reader.PeekContextTagNumber();
+        var tagNumber = reader.ReadContextTagNumber();
         switch (tagNumber)
         {
             case 0:
-                var _logStatus = Asdu.DecodePrimitive<LogStatusCodec, global::Baclib.Bacnet.Types.Application.LogStatus>(ref reader, 0);
-                return global::Baclib.Bacnet.Types.Application.LogRecord.TLogDatum.FromLogStatus(_logStatus);
+                var @logStatus = LogStatusCodec.Decode(ref reader, 0);
+                return global::Baclib.Bacnet.Types.Application.LogRecord.TLogDatum.FromLogStatus(@logStatus);
             case 1:
-                var _booleanValue = Asdu.DecodePrimitive<BooleanCodec, bool>(ref reader, 1);
-                return global::Baclib.Bacnet.Types.Application.LogRecord.TLogDatum.FromBooleanValue(_booleanValue);
+                var @booleanValue = BooleanCodec.Decode(ref reader, 1);
+                return global::Baclib.Bacnet.Types.Application.LogRecord.TLogDatum.FromBooleanValue(@booleanValue);
             case 2:
-                var _realValue = Asdu.DecodePrimitive<RealCodec, float>(ref reader, 2);
-                return global::Baclib.Bacnet.Types.Application.LogRecord.TLogDatum.FromRealValue(_realValue);
+                var @realValue = RealCodec.Decode(ref reader, 2);
+                return global::Baclib.Bacnet.Types.Application.LogRecord.TLogDatum.FromRealValue(@realValue);
             case 3:
-                var _enumeratedValue = Asdu.DecodePrimitive<Enumerated32Codec, global::Baclib.Bacnet.Types.Application.Enumerated>(ref reader, 3);
-                return global::Baclib.Bacnet.Types.Application.LogRecord.TLogDatum.FromEnumeratedValue(_enumeratedValue);
+                var @enumeratedValue = EnumeratedCodec.Decode(ref reader, 3);
+                return global::Baclib.Bacnet.Types.Application.LogRecord.TLogDatum.FromEnumeratedValue(@enumeratedValue);
             case 4:
-                var _unsignedValue = Asdu.DecodePrimitive<UnsignedCodec, uint>(ref reader, 4);
-                return global::Baclib.Bacnet.Types.Application.LogRecord.TLogDatum.FromUnsignedValue(_unsignedValue);
+                var @unsignedValue = UnsignedCodec.Decode(ref reader, 4);
+                return global::Baclib.Bacnet.Types.Application.LogRecord.TLogDatum.FromUnsignedValue(@unsignedValue);
             case 5:
-                var _integerValue = Asdu.DecodePrimitive<IntegerCodec, int>(ref reader, 5);
-                return global::Baclib.Bacnet.Types.Application.LogRecord.TLogDatum.FromIntegerValue(_integerValue);
+                var @integerValue = IntegerCodec.Decode(ref reader, 5);
+                return global::Baclib.Bacnet.Types.Application.LogRecord.TLogDatum.FromIntegerValue(@integerValue);
             case 6:
-                var _bitstringValue = Asdu.DecodePrimitive<BitStringCodec, global::Baclib.Bacnet.Types.Application.BitString>(ref reader, 6);
-                return global::Baclib.Bacnet.Types.Application.LogRecord.TLogDatum.FromBitstringValue(_bitstringValue);
+                var @bitstringValue = BitStringCodec.Decode(ref reader, 6);
+                return global::Baclib.Bacnet.Types.Application.LogRecord.TLogDatum.FromBitstringValue(@bitstringValue);
             case 7:
-                var _nullValue = Asdu.DecodePrimitive<NullCodec, global::Baclib.Bacnet.Types.Application.Null>(ref reader, 7);
-                return global::Baclib.Bacnet.Types.Application.LogRecord.TLogDatum.FromNullValue(_nullValue);
+                var @nullValue = NullCodec.Decode(ref reader, 7);
+                return global::Baclib.Bacnet.Types.Application.LogRecord.TLogDatum.FromNullValue(@nullValue);
             case 8:
-                var _failure = Asdu.DecodeConstructed<ErrorCodec, global::Baclib.Bacnet.Types.Application.Error>(ref reader, 8);
-                return global::Baclib.Bacnet.Types.Application.LogRecord.TLogDatum.FromFailure(_failure);
+                var @failure = ErrorCodec.Decode(ref reader, 8);
+                return global::Baclib.Bacnet.Types.Application.LogRecord.TLogDatum.FromFailure(@failure);
             case 9:
-                var _timeChange = Asdu.DecodePrimitive<RealCodec, float>(ref reader, 9);
-                return global::Baclib.Bacnet.Types.Application.LogRecord.TLogDatum.FromTimeChange(_timeChange);
+                var @timeChange = RealCodec.Decode(ref reader, 9);
+                return global::Baclib.Bacnet.Types.Application.LogRecord.TLogDatum.FromTimeChange(@timeChange);
             case 10:
-                var _anyValue = Asdu.DecodePrimitive<AnyCodec, global::Baclib.Bacnet.Types.Application.Any>(ref reader, 10);
-                return global::Baclib.Bacnet.Types.Application.LogRecord.TLogDatum.FromAnyValue(_anyValue);
+                var @anyValue = AnyCodec.Decode(ref reader, 10);
+                return global::Baclib.Bacnet.Types.Application.LogRecord.TLogDatum.FromAnyValue(@anyValue);
         }
         throw new FormatException(nameof(reader));
     }
 
-    public static global::Baclib.Bacnet.Types.Application.LogRecord.TLogDatum Decode(ref NativeReader reader, byte tagNumber)
-    {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
-    }
+    public static global::Baclib.Bacnet.Types.Application.LogRecord.TLogDatum Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<LogRecordTLogDatumCodec, global::Baclib.Bacnet.Types.Application.LogRecord.TLogDatum>(ref reader, tagNumber);
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.LogRecord.TLogDatum value)
+    public static void Encode(ref AsduWriter writer, in global::Baclib.Bacnet.Types.Application.LogRecord.TLogDatum value)
     {
         switch (value.Choice)
         {
             case global::Baclib.Bacnet.Types.Application.LogRecord.TLogDatum.Option.LogStatus:
-                Asdu.EncodePrimitive<LogStatusCodec, global::Baclib.Bacnet.Types.Application.LogStatus>(ref writer, 0, value.LogStatus);
+                LogStatusCodec.Encode(ref writer, 0, value.LogStatus);
                 return;
             case global::Baclib.Bacnet.Types.Application.LogRecord.TLogDatum.Option.BooleanValue:
-                Asdu.EncodePrimitive<BooleanCodec, bool>(ref writer, 1, value.BooleanValue);
+                BooleanCodec.Encode(ref writer, 1, value.BooleanValue);
                 return;
             case global::Baclib.Bacnet.Types.Application.LogRecord.TLogDatum.Option.RealValue:
-                Asdu.EncodePrimitive<RealCodec, float>(ref writer, 2, value.RealValue);
+                RealCodec.Encode(ref writer, 2, value.RealValue);
                 return;
             case global::Baclib.Bacnet.Types.Application.LogRecord.TLogDatum.Option.EnumeratedValue:
-                Asdu.EncodePrimitive<Enumerated32Codec, global::Baclib.Bacnet.Types.Application.Enumerated>(ref writer, 3, value.EnumeratedValue);
+                EnumeratedCodec.Encode(ref writer, 3, value.EnumeratedValue);
                 return;
             case global::Baclib.Bacnet.Types.Application.LogRecord.TLogDatum.Option.UnsignedValue:
-                Asdu.EncodePrimitive<UnsignedCodec, uint>(ref writer, 4, value.UnsignedValue);
+                UnsignedCodec.Encode(ref writer, 4, value.UnsignedValue);
                 return;
             case global::Baclib.Bacnet.Types.Application.LogRecord.TLogDatum.Option.IntegerValue:
-                Asdu.EncodePrimitive<IntegerCodec, int>(ref writer, 5, value.IntegerValue);
+                IntegerCodec.Encode(ref writer, 5, value.IntegerValue);
                 return;
             case global::Baclib.Bacnet.Types.Application.LogRecord.TLogDatum.Option.BitstringValue:
-                Asdu.EncodePrimitive<BitStringCodec, global::Baclib.Bacnet.Types.Application.BitString>(ref writer, 6, value.BitstringValue);
+                BitStringCodec.Encode(ref writer, 6, value.BitstringValue);
                 return;
             case global::Baclib.Bacnet.Types.Application.LogRecord.TLogDatum.Option.NullValue:
-                Asdu.EncodePrimitive<NullCodec, global::Baclib.Bacnet.Types.Application.Null>(ref writer, 7, value.NullValue);
+                NullCodec.Encode(ref writer, 7, value.NullValue);
                 return;
             case global::Baclib.Bacnet.Types.Application.LogRecord.TLogDatum.Option.Failure:
-                Asdu.EncodeConstructed<ErrorCodec, global::Baclib.Bacnet.Types.Application.Error>(ref writer, 8, value.Failure);
+                ErrorCodec.Encode(ref writer, 8, value.Failure);
                 return;
             case global::Baclib.Bacnet.Types.Application.LogRecord.TLogDatum.Option.TimeChange:
-                Asdu.EncodePrimitive<RealCodec, float>(ref writer, 9, value.TimeChange);
+                RealCodec.Encode(ref writer, 9, value.TimeChange);
                 return;
             case global::Baclib.Bacnet.Types.Application.LogRecord.TLogDatum.Option.AnyValue:
-                Asdu.EncodePrimitive<AnyCodec, global::Baclib.Bacnet.Types.Application.Any>(ref writer, 10, value.AnyValue);
+                AnyCodec.Encode(ref writer, 10, value.AnyValue);
                 return;
-        }
-        throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported.");
-    }
-
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.LogRecord.TLogDatum value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.LogRecord.TLogDatum value)
-    {
-        switch (value.Choice)
-        {
-            case global::Baclib.Bacnet.Types.Application.LogRecord.TLogDatum.Option.LogStatus:
-                return Asdu.GetPrimitiveLength<LogStatusCodec, global::Baclib.Bacnet.Types.Application.LogStatus>(0, value.LogStatus);
-            case global::Baclib.Bacnet.Types.Application.LogRecord.TLogDatum.Option.BooleanValue:
-                return Asdu.GetPrimitiveLength<BooleanCodec, bool>(1, value.BooleanValue);
-            case global::Baclib.Bacnet.Types.Application.LogRecord.TLogDatum.Option.RealValue:
-                return Asdu.GetPrimitiveLength<RealCodec, float>(2, value.RealValue);
-            case global::Baclib.Bacnet.Types.Application.LogRecord.TLogDatum.Option.EnumeratedValue:
-                return Asdu.GetPrimitiveLength<Enumerated32Codec, global::Baclib.Bacnet.Types.Application.Enumerated>(3, value.EnumeratedValue);
-            case global::Baclib.Bacnet.Types.Application.LogRecord.TLogDatum.Option.UnsignedValue:
-                return Asdu.GetPrimitiveLength<UnsignedCodec, uint>(4, value.UnsignedValue);
-            case global::Baclib.Bacnet.Types.Application.LogRecord.TLogDatum.Option.IntegerValue:
-                return Asdu.GetPrimitiveLength<IntegerCodec, int>(5, value.IntegerValue);
-            case global::Baclib.Bacnet.Types.Application.LogRecord.TLogDatum.Option.BitstringValue:
-                return Asdu.GetPrimitiveLength<BitStringCodec, global::Baclib.Bacnet.Types.Application.BitString>(6, value.BitstringValue);
-            case global::Baclib.Bacnet.Types.Application.LogRecord.TLogDatum.Option.NullValue:
-                return Asdu.GetPrimitiveLength<NullCodec, global::Baclib.Bacnet.Types.Application.Null>(7, value.NullValue);
-            case global::Baclib.Bacnet.Types.Application.LogRecord.TLogDatum.Option.Failure:
-                return Asdu.GetConstructedLength<ErrorCodec, global::Baclib.Bacnet.Types.Application.Error>(8, value.Failure);
-            case global::Baclib.Bacnet.Types.Application.LogRecord.TLogDatum.Option.TimeChange:
-                return Asdu.GetPrimitiveLength<RealCodec, float>(9, value.TimeChange);
-            case global::Baclib.Bacnet.Types.Application.LogRecord.TLogDatum.Option.AnyValue:
-                return Asdu.GetPrimitiveLength<AnyCodec, global::Baclib.Bacnet.Types.Application.Any>(10, value.AnyValue);
             default:
                 throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported.");
         }
     }
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.LogRecord.TLogDatum value, byte tagNumber)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.LogRecord.TLogDatum value)
+        => AsduConstructed.Encode<LogRecordTLogDatumCodec, global::Baclib.Bacnet.Types.Application.LogRecord.TLogDatum>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in global::Baclib.Bacnet.Types.Application.LogRecord.TLogDatum value)
     {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
+        return value.Choice switch
+        {
+            global::Baclib.Bacnet.Types.Application.LogRecord.TLogDatum.Option.LogStatus
+                => LogStatusCodec.GetEncodedLength(value.LogStatus, 0),
+            global::Baclib.Bacnet.Types.Application.LogRecord.TLogDatum.Option.BooleanValue
+                => BooleanCodec.GetEncodedLength(value.BooleanValue, 1),
+            global::Baclib.Bacnet.Types.Application.LogRecord.TLogDatum.Option.RealValue
+                => RealCodec.GetEncodedLength(value.RealValue, 2),
+            global::Baclib.Bacnet.Types.Application.LogRecord.TLogDatum.Option.EnumeratedValue
+                => EnumeratedCodec.GetEncodedLength(value.EnumeratedValue, 3),
+            global::Baclib.Bacnet.Types.Application.LogRecord.TLogDatum.Option.UnsignedValue
+                => UnsignedCodec.GetEncodedLength(value.UnsignedValue, 4),
+            global::Baclib.Bacnet.Types.Application.LogRecord.TLogDatum.Option.IntegerValue
+                => IntegerCodec.GetEncodedLength(value.IntegerValue, 5),
+            global::Baclib.Bacnet.Types.Application.LogRecord.TLogDatum.Option.BitstringValue
+                => BitStringCodec.GetEncodedLength(value.BitstringValue, 6),
+            global::Baclib.Bacnet.Types.Application.LogRecord.TLogDatum.Option.NullValue
+                => NullCodec.GetEncodedLength(value.NullValue, 7),
+            global::Baclib.Bacnet.Types.Application.LogRecord.TLogDatum.Option.Failure
+                => ErrorCodec.GetEncodedLength(value.Failure, 8),
+            global::Baclib.Bacnet.Types.Application.LogRecord.TLogDatum.Option.TimeChange
+                => RealCodec.GetEncodedLength(value.TimeChange, 9),
+            global::Baclib.Bacnet.Types.Application.LogRecord.TLogDatum.Option.AnyValue
+                => AnyCodec.GetEncodedLength(value.AnyValue, 10),
+            _ => throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported."),
+        };
     }
+
+    public static int GetEncodedLength(in global::Baclib.Bacnet.Types.Application.LogRecord.TLogDatum value, byte tagNumber)
+        => AsduElement.GetEncodedLength<LogRecordTLogDatumCodec, global::Baclib.Bacnet.Types.Application.LogRecord.TLogDatum>(tagNumber, value);
 }

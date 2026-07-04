@@ -1,60 +1,48 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class EventParameterTChangeOfDiscreteValueCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue>
+    IAsduElementCodec<T::EventParameter.TChangeOfDiscreteValue>,
+    IAsduConstructedCodec<T::EventParameter.TChangeOfDiscreteValue>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::EventParameter.TChangeOfDiscreteValue Decode(ref AsduReader reader)
     {
-        return reader.PeekOpeningTag((byte)0);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue Decode(ref NativeReader reader)
-    {
-        var _newValue = Asdu.DecodeConstructed<EventParameterTChangeOfDiscreteValueTNewValueCodec, global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue>(ref reader, 0);
-        var _statusFlags = Asdu.DecodePrimitive<StatusFlagsCodec, global::Baclib.Bacnet.Types.Application.StatusFlags>(ref reader, 1);
-
-        return new global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue
+        return new T::EventParameter.TChangeOfDiscreteValue
         {
-            NewValue = _newValue,
-            StatusFlags = _statusFlags
+            NewValue = AsduElement.Decode<EventParameterTChangeOfDiscreteValueTNewValueCodec, T::EventParameter.TChangeOfDiscreteValue.TNewValue>(ref reader, 0),
+            StatusFlags = AsduElement.Decode<StatusFlagsCodec, T::StatusFlags>(ref reader, 1)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue Decode(ref NativeReader reader, byte tagNumber)
+    public static T::EventParameter.TChangeOfDiscreteValue Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<EventParameterTChangeOfDiscreteValueCodec, T::EventParameter.TChangeOfDiscreteValue>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::EventParameter.TChangeOfDiscreteValue value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.Encode<EventParameterTChangeOfDiscreteValueTNewValueCodec, T::EventParameter.TChangeOfDiscreteValue.TNewValue>(ref writer, 0, value.NewValue);
+        AsduElement.Encode<StatusFlagsCodec, T::StatusFlags>(ref writer, 1, value.StatusFlags);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::EventParameter.TChangeOfDiscreteValue value)
+        => AsduConstructed.Encode<EventParameterTChangeOfDiscreteValueCodec, T::EventParameter.TChangeOfDiscreteValue>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::EventParameter.TChangeOfDiscreteValue value)
     {
-        Asdu.EncodeElement<EventParameterTChangeOfDiscreteValueTNewValueCodec, global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue>(ref writer, 0, value.NewValue);
-        Asdu.EncodePrimitive<StatusFlagsCodec, global::Baclib.Bacnet.Types.Application.StatusFlags>(ref writer, 1, value.StatusFlags);
+        var length = 0;
+        length += AsduElement.GetEncodedLength<EventParameterTChangeOfDiscreteValueTNewValueCodec, T::EventParameter.TChangeOfDiscreteValue.TNewValue>(0, value.NewValue);
+        length += AsduElement.GetEncodedLength<StatusFlagsCodec, T::StatusFlags>(1, value.StatusFlags);
+        return length;
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
+    public static int GetEncodedLength(in T::EventParameter.TChangeOfDiscreteValue value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<EventParameterTChangeOfDiscreteValueCodec, T::EventParameter.TChangeOfDiscreteValue>(tagNumber, value);
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue value)
+    public static bool Matches(ref AsduReader reader)
     {
-        return Asdu.GetElementLength<EventParameterTChangeOfDiscreteValueTNewValueCodec, global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue>(0, value.NewValue) + Asdu.GetPrimitiveLength<StatusFlagsCodec, global::Baclib.Bacnet.Types.Application.StatusFlags>(1, value.StatusFlags);
+        return reader.PeekContextTag(0);
     }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

@@ -7,88 +7,69 @@ public sealed class OptionalPriorityFilterCodec :
     IAsduElementCodec<global::Baclib.Bacnet.Types.Application.OptionalPriorityFilter>,
     IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.OptionalPriorityFilter>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static bool Matches(ref AsduReader reader)
     {
-        var applicationTagNumber = reader.PeekApplicationTagNumber();
-        switch (applicationTagNumber)
+        if (!reader.PeekApplicationTag(out var applicationTagNumber))
         {
-            case ApplicationTagNumber.Null:
-            case ApplicationTagNumber.PriorityFilter:
-                return true;
-            default:
-                return false;
+            return false;
         }
+        return applicationTagNumber switch
+        {
+            ApplicationTagNumber.Null or
+            ApplicationTagNumber.BitString => true,
+            _ => false
+        };
     }
 
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag(tagNumber);
-
-    public static global::Baclib.Bacnet.Types.Application.OptionalPriorityFilter Decode(ref NativeReader reader)
+    public static global::Baclib.Bacnet.Types.Application.OptionalPriorityFilter Decode(ref AsduReader reader)
     {
-        // info
-        if (reader.PeekTag(NullCodec.TagNumber))
+        if (NullCodec.Matches(ref reader))
         {
-            //var _null = Asdu.Decode<NullCodec, global::Baclib.Bacnet.Types.Application.Null>(ref reader);
-            var _null = NullCodec.Decode(ref reader);
-            return global::Baclib.Bacnet.Types.Application.OptionalPriorityFilter.FromNull(_null);
+            var @null = NullCodec.Decode(ref reader);
+            return global::Baclib.Bacnet.Types.Application.OptionalPriorityFilter.FromNull(@null);
         }
-        // info
-        if (reader.PeekTag(PriorityFilterCodec.TagNumber))
+        if (NullCodec.Matches(ref reader))
         {
-            //var _filter = Asdu.Decode<PriorityFilterCodec, global::Baclib.Bacnet.Types.Application.PriorityFilter>(ref reader);
-            var _filter = PriorityFilterCodec.Decode(ref reader);
-            return global::Baclib.Bacnet.Types.Application.OptionalPriorityFilter.FromFilter(_filter);
+            var @filter = PriorityFilterCodec.Decode(ref reader);
+            return global::Baclib.Bacnet.Types.Application.OptionalPriorityFilter.FromFilter(@filter);
         }
 
         throw new FormatException(nameof(reader));
     }
 
-    public static global::Baclib.Bacnet.Types.Application.OptionalPriorityFilter Decode(ref NativeReader reader, byte tagNumber)
-    {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
-    }
+    public static global::Baclib.Bacnet.Types.Application.OptionalPriorityFilter Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<OptionalPriorityFilterCodec, global::Baclib.Bacnet.Types.Application.OptionalPriorityFilter>(ref reader, tagNumber);
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.OptionalPriorityFilter value)
+    public static void Encode(ref AsduWriter writer, in global::Baclib.Bacnet.Types.Application.OptionalPriorityFilter value)
     {
         switch (value.Choice)
         {
             case global::Baclib.Bacnet.Types.Application.OptionalPriorityFilter.Option.Null:
-                //Asdu.Encode<NullCodec, global::Baclib.Bacnet.Types.Application.Null>(ref writer, value.Null);
                 NullCodec.Encode(ref writer, value.Null);
                 return;
             case global::Baclib.Bacnet.Types.Application.OptionalPriorityFilter.Option.Filter:
-                //Asdu.Encode<PriorityFilterCodec, global::Baclib.Bacnet.Types.Application.PriorityFilter>(ref writer, value.Filter);
                 PriorityFilterCodec.Encode(ref writer, value.Filter);
                 return;
-        }
-        throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported.");
-    }
-
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.OptionalPriorityFilter value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.OptionalPriorityFilter value)
-    {
-        switch (value.Choice)
-        {
-            case global::Baclib.Bacnet.Types.Application.OptionalPriorityFilter.Option.Null:
-                return Asdu.GetEncodedLength<NullCodec, global::Baclib.Bacnet.Types.Application.Null>(value.Null);
-            case global::Baclib.Bacnet.Types.Application.OptionalPriorityFilter.Option.Filter:
-                return Asdu.GetEncodedLength<PriorityFilterCodec, global::Baclib.Bacnet.Types.Application.PriorityFilter>(value.Filter);
             default:
                 throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported.");
         }
     }
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.OptionalPriorityFilter value, byte tagNumber)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.OptionalPriorityFilter value)
+        => AsduConstructed.Encode<OptionalPriorityFilterCodec, global::Baclib.Bacnet.Types.Application.OptionalPriorityFilter>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in global::Baclib.Bacnet.Types.Application.OptionalPriorityFilter value)
     {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
+        return value.Choice switch
+        {
+            global::Baclib.Bacnet.Types.Application.OptionalPriorityFilter.Option.Null
+                => NullCodec.GetEncodedLength(value.Null),
+            global::Baclib.Bacnet.Types.Application.OptionalPriorityFilter.Option.Filter
+                => PriorityFilterCodec.GetEncodedLength(value.Filter),
+            _ => throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported."),
+        };
     }
+
+    public static int GetEncodedLength(in global::Baclib.Bacnet.Types.Application.OptionalPriorityFilter value, byte tagNumber)
+        => AsduElement.GetEncodedLength<OptionalPriorityFilterCodec, global::Baclib.Bacnet.Types.Application.OptionalPriorityFilter>(tagNumber, value);
 }

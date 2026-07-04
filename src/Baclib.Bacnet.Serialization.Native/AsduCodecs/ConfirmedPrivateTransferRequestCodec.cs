@@ -1,66 +1,51 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class ConfirmedPrivateTransferRequestCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.ConfirmedPrivateTransferRequest>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.ConfirmedPrivateTransferRequest>
+    IAsduElementCodec<T::ConfirmedPrivateTransferRequest>,
+    IAsduConstructedCodec<T::ConfirmedPrivateTransferRequest>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::ConfirmedPrivateTransferRequest Decode(ref AsduReader reader)
     {
-        return reader.PeekTag((byte)0);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.ConfirmedPrivateTransferRequest Decode(ref NativeReader reader)
-    {
-        var _vendorId = Asdu.DecodePrimitive<Unsigned16Codec, ushort>(ref reader, 0);
-        var _serviceNumber = Asdu.DecodePrimitive<UnsignedCodec, uint>(ref reader, 1);
-        var _serviceParameters = Asdu.DecodeOptional<AnyCodec, global::Baclib.Bacnet.Types.Application.Any>(ref reader, 2);
-
-        return new global::Baclib.Bacnet.Types.Application.ConfirmedPrivateTransferRequest
+        return new T::ConfirmedPrivateTransferRequest
         {
-            VendorId = _vendorId,
-            ServiceNumber = _serviceNumber,
-            ServiceParameters = _serviceParameters
+            VendorId = AsduElement.Decode<Unsigned16Codec, ushort>(ref reader, 0),
+            ServiceNumber = AsduElement.Decode<UnsignedCodec, uint>(ref reader, 1),
+            ServiceParameters = AsduElement.DecodeOptional<AnyCodec, T::Any>(ref reader, 2)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.ConfirmedPrivateTransferRequest Decode(ref NativeReader reader, byte tagNumber)
+    public static T::ConfirmedPrivateTransferRequest Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<ConfirmedPrivateTransferRequestCodec, T::ConfirmedPrivateTransferRequest>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::ConfirmedPrivateTransferRequest value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.Encode<Unsigned16Codec, ushort>(ref writer, 0, value.VendorId);
+        AsduElement.Encode<UnsignedCodec, uint>(ref writer, 1, value.ServiceNumber);
+        AsduElement.EncodeOptional<AnyCodec, T::Any>(ref writer, 2, value.ServiceParameters);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.ConfirmedPrivateTransferRequest value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::ConfirmedPrivateTransferRequest value)
+        => AsduConstructed.Encode<ConfirmedPrivateTransferRequestCodec, T::ConfirmedPrivateTransferRequest>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::ConfirmedPrivateTransferRequest value)
     {
-        Asdu.EncodePrimitive<Unsigned16Codec, ushort>(ref writer, 0, value.VendorId);
-        Asdu.EncodePrimitive<UnsignedCodec, uint>(ref writer, 1, value.ServiceNumber);
-        if (value.ServiceParameters.HasValue)
-        {
-            Asdu.EncodePrimitive<AnyCodec, global::Baclib.Bacnet.Types.Application.Any>(ref writer, 2, value.ServiceParameters.Value);
-        }
+        var length = 0;
+        length += AsduElement.GetEncodedLength<Unsigned16Codec, ushort>(0, value.VendorId);
+        length += AsduElement.GetEncodedLength<UnsignedCodec, uint>(1, value.ServiceNumber);
+        length += AsduElement.GetOptionalEncodedLength<AnyCodec, T::Any>(2, value.ServiceParameters);
+        return length;
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.ConfirmedPrivateTransferRequest value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
+    public static int GetEncodedLength(in T::ConfirmedPrivateTransferRequest value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<ConfirmedPrivateTransferRequestCodec, T::ConfirmedPrivateTransferRequest>(tagNumber, value);
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.ConfirmedPrivateTransferRequest value)
+    public static bool Matches(ref AsduReader reader)
     {
-        return Asdu.GetPrimitiveLength<Unsigned16Codec, ushort>(0, value.VendorId) + Asdu.GetPrimitiveLength<UnsignedCodec, uint>(1, value.ServiceNumber) + (value.ServiceParameters.HasValue ? Asdu.GetPrimitiveLength<AnyCodec, global::Baclib.Bacnet.Types.Application.Any>(2, value.ServiceParameters.Value) : 0);
+        return reader.PeekContextTag(0);
     }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.ConfirmedPrivateTransferRequest value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

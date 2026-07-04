@@ -1,81 +1,60 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class NotificationParametersTChangeOfTimerCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.NotificationParameters.TChangeOfTimer>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.NotificationParameters.TChangeOfTimer>
+    IAsduElementCodec<T::NotificationParameters.TChangeOfTimer>,
+    IAsduConstructedCodec<T::NotificationParameters.TChangeOfTimer>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::NotificationParameters.TChangeOfTimer Decode(ref AsduReader reader)
     {
-        return reader.PeekTag((byte)0);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.NotificationParameters.TChangeOfTimer Decode(ref NativeReader reader)
-    {
-        var _newState = Asdu.DecodePrimitive<TimerStateCodec, global::Baclib.Bacnet.Types.Application.TimerState>(ref reader, 0);
-        var _statusFlags = Asdu.DecodePrimitive<StatusFlagsCodec, global::Baclib.Bacnet.Types.Application.StatusFlags>(ref reader, 1);
-        var _updateTime = Asdu.DecodeConstructed<DateTimeCodec, global::Baclib.Bacnet.Types.Application.DateTime>(ref reader, 2);
-        var _lastStateChange = Asdu.DecodeOptional<TimerTransitionCodec, global::Baclib.Bacnet.Types.Application.TimerTransition>(ref reader, 3);
-        var _initialTimeout = Asdu.DecodeOptional<UnsignedCodec, uint>(ref reader, 4);
-        var _expirationTime = Asdu.DecodeOptionalElement<DateTimeCodec, global::Baclib.Bacnet.Types.Application.DateTime>(ref reader, 5);
-
-        return new global::Baclib.Bacnet.Types.Application.NotificationParameters.TChangeOfTimer
+        return new T::NotificationParameters.TChangeOfTimer
         {
-            NewState = _newState,
-            StatusFlags = _statusFlags,
-            UpdateTime = _updateTime,
-            LastStateChange = _lastStateChange,
-            InitialTimeout = _initialTimeout,
-            ExpirationTime = _expirationTime
+            NewState = AsduElement.Decode<TimerStateCodec, T::TimerState>(ref reader, 0),
+            StatusFlags = AsduElement.Decode<StatusFlagsCodec, T::StatusFlags>(ref reader, 1),
+            UpdateTime = AsduElement.Decode<DateTimeCodec, T::DateTime>(ref reader, 2),
+            LastStateChange = AsduElement.DecodeOptional<TimerTransitionCodec, T::TimerTransition>(ref reader, 3),
+            InitialTimeout = AsduElement.DecodeOptional<UnsignedCodec, uint>(ref reader, 4),
+            ExpirationTime = AsduElement.DecodeOptional<DateTimeCodec, T::DateTime>(ref reader, 5)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.NotificationParameters.TChangeOfTimer Decode(ref NativeReader reader, byte tagNumber)
+    public static T::NotificationParameters.TChangeOfTimer Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<NotificationParametersTChangeOfTimerCodec, T::NotificationParameters.TChangeOfTimer>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::NotificationParameters.TChangeOfTimer value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.Encode<TimerStateCodec, T::TimerState>(ref writer, 0, value.NewState);
+        AsduElement.Encode<StatusFlagsCodec, T::StatusFlags>(ref writer, 1, value.StatusFlags);
+        AsduElement.Encode<DateTimeCodec, T::DateTime>(ref writer, 2, value.UpdateTime);
+        AsduElement.EncodeOptional<TimerTransitionCodec, T::TimerTransition>(ref writer, 3, value.LastStateChange);
+        AsduElement.EncodeOptional<UnsignedCodec, uint>(ref writer, 4, value.InitialTimeout);
+        AsduElement.EncodeOptional<DateTimeCodec, T::DateTime>(ref writer, 5, value.ExpirationTime);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.NotificationParameters.TChangeOfTimer value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::NotificationParameters.TChangeOfTimer value)
+        => AsduConstructed.Encode<NotificationParametersTChangeOfTimerCodec, T::NotificationParameters.TChangeOfTimer>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::NotificationParameters.TChangeOfTimer value)
     {
-        Asdu.EncodePrimitive<TimerStateCodec, global::Baclib.Bacnet.Types.Application.TimerState>(ref writer, 0, value.NewState);
-        Asdu.EncodePrimitive<StatusFlagsCodec, global::Baclib.Bacnet.Types.Application.StatusFlags>(ref writer, 1, value.StatusFlags);
-        Asdu.EncodeElement<DateTimeCodec, global::Baclib.Bacnet.Types.Application.DateTime>(ref writer, 2, value.UpdateTime);
-        if (value.LastStateChange.HasValue)
-        {
-            Asdu.EncodePrimitive<TimerTransitionCodec, global::Baclib.Bacnet.Types.Application.TimerTransition>(ref writer, 3, value.LastStateChange.Value);
-        }
-        if (value.InitialTimeout.HasValue)
-        {
-            Asdu.EncodePrimitive<UnsignedCodec, uint>(ref writer, 4, value.InitialTimeout.Value);
-        }
-        if (value.ExpirationTime.HasValue)
-        {
-            Asdu.EncodeElement<DateTimeCodec, global::Baclib.Bacnet.Types.Application.DateTime>(ref writer, 5, value.ExpirationTime.Value);
-        }
+        var length = 0;
+        length += AsduElement.GetEncodedLength<TimerStateCodec, T::TimerState>(0, value.NewState);
+        length += AsduElement.GetEncodedLength<StatusFlagsCodec, T::StatusFlags>(1, value.StatusFlags);
+        length += AsduElement.GetEncodedLength<DateTimeCodec, T::DateTime>(2, value.UpdateTime);
+        length += AsduElement.GetOptionalEncodedLength<TimerTransitionCodec, T::TimerTransition>(3, value.LastStateChange);
+        length += AsduElement.GetOptionalEncodedLength<UnsignedCodec, uint>(4, value.InitialTimeout);
+        length += AsduElement.GetOptionalEncodedLength<DateTimeCodec, T::DateTime>(5, value.ExpirationTime);
+        return length;
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.NotificationParameters.TChangeOfTimer value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
+    public static int GetEncodedLength(in T::NotificationParameters.TChangeOfTimer value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<NotificationParametersTChangeOfTimerCodec, T::NotificationParameters.TChangeOfTimer>(tagNumber, value);
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.NotificationParameters.TChangeOfTimer value)
+    public static bool Matches(ref AsduReader reader)
     {
-        return Asdu.GetPrimitiveLength<TimerStateCodec, global::Baclib.Bacnet.Types.Application.TimerState>(0, value.NewState) + Asdu.GetPrimitiveLength<StatusFlagsCodec, global::Baclib.Bacnet.Types.Application.StatusFlags>(1, value.StatusFlags) + Asdu.GetElementLength<DateTimeCodec, global::Baclib.Bacnet.Types.Application.DateTime>(2, value.UpdateTime) + (value.LastStateChange.HasValue ? Asdu.GetPrimitiveLength<TimerTransitionCodec, global::Baclib.Bacnet.Types.Application.TimerTransition>(3, value.LastStateChange.Value) : 0) + (value.InitialTimeout.HasValue ? Asdu.GetPrimitiveLength<UnsignedCodec, uint>(4, value.InitialTimeout.Value) : 0) + (value.ExpirationTime.HasValue ? Asdu.GetElementLength<DateTimeCodec, global::Baclib.Bacnet.Types.Application.DateTime>(5, value.ExpirationTime.Value) : 0);
+        return reader.PeekContextTag(0);
     }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.NotificationParameters.TChangeOfTimer value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

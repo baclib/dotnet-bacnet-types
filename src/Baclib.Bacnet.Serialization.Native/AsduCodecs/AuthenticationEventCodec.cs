@@ -1,72 +1,57 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class AuthenticationEventCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.AuthenticationEvent>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.AuthenticationEvent>
+    IAsduElementCodec<T::AuthenticationEvent>,
+    IAsduConstructedCodec<T::AuthenticationEvent>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::AuthenticationEvent Decode(ref AsduReader reader)
     {
-        return reader.PeekOpeningTag((byte)0);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.AuthenticationEvent Decode(ref NativeReader reader)
-    {
-        var _timestamp = Asdu.DecodeConstructed<DateTimeCodec, global::Baclib.Bacnet.Types.Application.DateTime>(ref reader, 0);
-        var _peer = Asdu.DecodeConstructed<AuthenticationPeerCodec, global::Baclib.Bacnet.Types.Application.AuthenticationPeer>(ref reader, 1);
-        var _client = Asdu.DecodeConstructed<AuthenticationClientCodec, global::Baclib.Bacnet.Types.Application.AuthenticationClient>(ref reader, 2);
-        var _decision = Asdu.DecodePrimitive<AuthenticationDecisionCodec, global::Baclib.Bacnet.Types.Application.AuthenticationDecision>(ref reader, 3);
-        var _decisionDetails = Asdu.DecodeOptional<CharacterStringCodec, global::Baclib.Bacnet.Types.Application.CharacterString>(ref reader, 4);
-
-        return new global::Baclib.Bacnet.Types.Application.AuthenticationEvent
+        return new T::AuthenticationEvent
         {
-            Timestamp = _timestamp,
-            Peer = _peer,
-            Client = _client,
-            Decision = _decision,
-            DecisionDetails = _decisionDetails
+            Timestamp = AsduElement.Decode<DateTimeCodec, T::DateTime>(ref reader, 0),
+            Peer = AsduElement.Decode<AuthenticationPeerCodec, T::AuthenticationPeer>(ref reader, 1),
+            Client = AsduElement.Decode<AuthenticationClientCodec, T::AuthenticationClient>(ref reader, 2),
+            Decision = AsduElement.Decode<AuthenticationDecisionCodec, T::AuthenticationDecision>(ref reader, 3),
+            DecisionDetails = AsduElement.DecodeOptional<CharacterStringCodec, T::CharacterString>(ref reader, 4)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.AuthenticationEvent Decode(ref NativeReader reader, byte tagNumber)
+    public static T::AuthenticationEvent Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<AuthenticationEventCodec, T::AuthenticationEvent>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::AuthenticationEvent value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.Encode<DateTimeCodec, T::DateTime>(ref writer, 0, value.Timestamp);
+        AsduElement.Encode<AuthenticationPeerCodec, T::AuthenticationPeer>(ref writer, 1, value.Peer);
+        AsduElement.Encode<AuthenticationClientCodec, T::AuthenticationClient>(ref writer, 2, value.Client);
+        AsduElement.Encode<AuthenticationDecisionCodec, T::AuthenticationDecision>(ref writer, 3, value.Decision);
+        AsduElement.EncodeOptional<CharacterStringCodec, T::CharacterString>(ref writer, 4, value.DecisionDetails);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.AuthenticationEvent value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::AuthenticationEvent value)
+        => AsduConstructed.Encode<AuthenticationEventCodec, T::AuthenticationEvent>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::AuthenticationEvent value)
     {
-        Asdu.EncodeElement<DateTimeCodec, global::Baclib.Bacnet.Types.Application.DateTime>(ref writer, 0, value.Timestamp);
-        Asdu.EncodeElement<AuthenticationPeerCodec, global::Baclib.Bacnet.Types.Application.AuthenticationPeer>(ref writer, 1, value.Peer);
-        Asdu.EncodeElement<AuthenticationClientCodec, global::Baclib.Bacnet.Types.Application.AuthenticationClient>(ref writer, 2, value.Client);
-        Asdu.EncodePrimitive<AuthenticationDecisionCodec, global::Baclib.Bacnet.Types.Application.AuthenticationDecision>(ref writer, 3, value.Decision);
-        if (value.DecisionDetails.HasValue)
-        {
-            Asdu.EncodePrimitive<CharacterStringCodec, global::Baclib.Bacnet.Types.Application.CharacterString>(ref writer, 4, value.DecisionDetails.Value);
-        }
+        var length = 0;
+        length += AsduElement.GetEncodedLength<DateTimeCodec, T::DateTime>(0, value.Timestamp);
+        length += AsduElement.GetEncodedLength<AuthenticationPeerCodec, T::AuthenticationPeer>(1, value.Peer);
+        length += AsduElement.GetEncodedLength<AuthenticationClientCodec, T::AuthenticationClient>(2, value.Client);
+        length += AsduElement.GetEncodedLength<AuthenticationDecisionCodec, T::AuthenticationDecision>(3, value.Decision);
+        length += AsduElement.GetOptionalEncodedLength<CharacterStringCodec, T::CharacterString>(4, value.DecisionDetails);
+        return length;
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.AuthenticationEvent value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
+    public static int GetEncodedLength(in T::AuthenticationEvent value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<AuthenticationEventCodec, T::AuthenticationEvent>(tagNumber, value);
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.AuthenticationEvent value)
+    public static bool Matches(ref AsduReader reader)
     {
-        return Asdu.GetElementLength<DateTimeCodec, global::Baclib.Bacnet.Types.Application.DateTime>(0, value.Timestamp) + Asdu.GetElementLength<AuthenticationPeerCodec, global::Baclib.Bacnet.Types.Application.AuthenticationPeer>(1, value.Peer) + Asdu.GetElementLength<AuthenticationClientCodec, global::Baclib.Bacnet.Types.Application.AuthenticationClient>(2, value.Client) + Asdu.GetPrimitiveLength<AuthenticationDecisionCodec, global::Baclib.Bacnet.Types.Application.AuthenticationDecision>(3, value.Decision) + (value.DecisionDetails.HasValue ? Asdu.GetPrimitiveLength<CharacterStringCodec, global::Baclib.Bacnet.Types.Application.CharacterString>(4, value.DecisionDetails.Value) : 0);
+        return reader.PeekContextTag(0);
     }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.AuthenticationEvent value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

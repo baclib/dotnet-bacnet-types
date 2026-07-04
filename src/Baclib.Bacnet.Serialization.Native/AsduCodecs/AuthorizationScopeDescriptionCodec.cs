@@ -1,60 +1,48 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class AuthorizationScopeDescriptionCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.AuthorizationScopeDescription>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.AuthorizationScopeDescription>
+    IAsduElementCodec<T::AuthorizationScopeDescription>,
+    IAsduConstructedCodec<T::AuthorizationScopeDescription>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::AuthorizationScopeDescription Decode(ref AsduReader reader)
     {
-        return reader.PeekTag(CharacterStringCodec.TagNumber);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.AuthorizationScopeDescription Decode(ref NativeReader reader)
-    {
-        var _name = Asdu.DecodePrimitive<CharacterStringCodec, global::Baclib.Bacnet.Types.Application.CharacterString>(ref reader);
-        var _description = Asdu.DecodePrimitive<CharacterStringCodec, global::Baclib.Bacnet.Types.Application.CharacterString>(ref reader);
-
-        return new global::Baclib.Bacnet.Types.Application.AuthorizationScopeDescription
+        return new T::AuthorizationScopeDescription
         {
-            Name = _name,
-            Description = _description
+            Name = AsduElement.Decode<CharacterStringCodec, T::CharacterString>(ref reader),
+            Description = AsduElement.Decode<CharacterStringCodec, T::CharacterString>(ref reader)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.AuthorizationScopeDescription Decode(ref NativeReader reader, byte tagNumber)
+    public static T::AuthorizationScopeDescription Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<AuthorizationScopeDescriptionCodec, T::AuthorizationScopeDescription>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::AuthorizationScopeDescription value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.Encode<CharacterStringCodec, T::CharacterString>(ref writer, value.Name);
+        AsduElement.Encode<CharacterStringCodec, T::CharacterString>(ref writer, value.Description);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.AuthorizationScopeDescription value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::AuthorizationScopeDescription value)
+        => AsduConstructed.Encode<AuthorizationScopeDescriptionCodec, T::AuthorizationScopeDescription>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::AuthorizationScopeDescription value)
     {
-        Asdu.EncodePrimitive<CharacterStringCodec, global::Baclib.Bacnet.Types.Application.CharacterString>(ref writer, value.Name);
-        Asdu.EncodePrimitive<CharacterStringCodec, global::Baclib.Bacnet.Types.Application.CharacterString>(ref writer, value.Description);
+        var length = 0;
+        length += AsduElement.GetEncodedLength<CharacterStringCodec, T::CharacterString>(value.Name);
+        length += AsduElement.GetEncodedLength<CharacterStringCodec, T::CharacterString>(value.Description);
+        return length;
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.AuthorizationScopeDescription value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
+    public static int GetEncodedLength(in T::AuthorizationScopeDescription value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<AuthorizationScopeDescriptionCodec, T::AuthorizationScopeDescription>(tagNumber, value);
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.AuthorizationScopeDescription value)
+    public static bool Matches(ref AsduReader reader)
     {
-        return Asdu.GetEncodedLength<CharacterStringCodec, global::Baclib.Bacnet.Types.Application.CharacterString>(value.Name) + Asdu.GetEncodedLength<CharacterStringCodec, global::Baclib.Bacnet.Types.Application.CharacterString>(value.Description);
+        return CharacterStringCodec.Matches(ref reader);
     }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.AuthorizationScopeDescription value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

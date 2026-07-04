@@ -7,91 +7,77 @@ public sealed class EventLogRecordTLogDatumCodec :
     IAsduElementCodec<global::Baclib.Bacnet.Types.Application.EventLogRecord.TLogDatum>,
     IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.EventLogRecord.TLogDatum>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static bool Matches(ref AsduReader reader)
     {
-
-        var contextTagNumber = reader.PeekContextTagNumber();
-        switch (contextTagNumber)
+        if (!reader.PeekContextTag(out var contextTagNumber))
         {
-            case 0:
-            case 1:
-            case 2:
-                return true;
-            default:
-                return false;
+            return false;
         }
+        return contextTagNumber switch
+        {
+            0 or
+            1 or
+            2 => true,
+            _ => false
+        };
     }
 
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag(tagNumber);
-
-    public static global::Baclib.Bacnet.Types.Application.EventLogRecord.TLogDatum Decode(ref NativeReader reader)
+    public static global::Baclib.Bacnet.Types.Application.EventLogRecord.TLogDatum Decode(ref AsduReader reader)
     {
-        var tagNumber = reader.PeekContextTagNumber();
+        var tagNumber = reader.ReadContextTagNumber();
         switch (tagNumber)
         {
             case 0:
-                var _logStatus = Asdu.DecodePrimitive<LogStatusCodec, global::Baclib.Bacnet.Types.Application.LogStatus>(ref reader, 0);
-                return global::Baclib.Bacnet.Types.Application.EventLogRecord.TLogDatum.FromLogStatus(_logStatus);
+                var @logStatus = LogStatusCodec.Decode(ref reader, 0);
+                return global::Baclib.Bacnet.Types.Application.EventLogRecord.TLogDatum.FromLogStatus(@logStatus);
             case 1:
-                var _notification = Asdu.DecodeConstructed<ConfirmedEventNotificationRequestCodec, global::Baclib.Bacnet.Types.Application.ConfirmedEventNotificationRequest>(ref reader, 1);
-                return global::Baclib.Bacnet.Types.Application.EventLogRecord.TLogDatum.FromNotification(_notification);
+                var @notification = ConfirmedEventNotificationRequestCodec.Decode(ref reader, 1);
+                return global::Baclib.Bacnet.Types.Application.EventLogRecord.TLogDatum.FromNotification(@notification);
             case 2:
-                var _timeChange = Asdu.DecodePrimitive<RealCodec, float>(ref reader, 2);
-                return global::Baclib.Bacnet.Types.Application.EventLogRecord.TLogDatum.FromTimeChange(_timeChange);
+                var @timeChange = RealCodec.Decode(ref reader, 2);
+                return global::Baclib.Bacnet.Types.Application.EventLogRecord.TLogDatum.FromTimeChange(@timeChange);
         }
         throw new FormatException(nameof(reader));
     }
 
-    public static global::Baclib.Bacnet.Types.Application.EventLogRecord.TLogDatum Decode(ref NativeReader reader, byte tagNumber)
-    {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
-    }
+    public static global::Baclib.Bacnet.Types.Application.EventLogRecord.TLogDatum Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<EventLogRecordTLogDatumCodec, global::Baclib.Bacnet.Types.Application.EventLogRecord.TLogDatum>(ref reader, tagNumber);
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.EventLogRecord.TLogDatum value)
+    public static void Encode(ref AsduWriter writer, in global::Baclib.Bacnet.Types.Application.EventLogRecord.TLogDatum value)
     {
         switch (value.Choice)
         {
             case global::Baclib.Bacnet.Types.Application.EventLogRecord.TLogDatum.Option.LogStatus:
-                Asdu.EncodePrimitive<LogStatusCodec, global::Baclib.Bacnet.Types.Application.LogStatus>(ref writer, 0, value.LogStatus);
+                LogStatusCodec.Encode(ref writer, 0, value.LogStatus);
                 return;
             case global::Baclib.Bacnet.Types.Application.EventLogRecord.TLogDatum.Option.Notification:
-                Asdu.EncodeConstructed<ConfirmedEventNotificationRequestCodec, global::Baclib.Bacnet.Types.Application.ConfirmedEventNotificationRequest>(ref writer, 1, value.Notification);
+                ConfirmedEventNotificationRequestCodec.Encode(ref writer, 1, value.Notification);
                 return;
             case global::Baclib.Bacnet.Types.Application.EventLogRecord.TLogDatum.Option.TimeChange:
-                Asdu.EncodePrimitive<RealCodec, float>(ref writer, 2, value.TimeChange);
+                RealCodec.Encode(ref writer, 2, value.TimeChange);
                 return;
-        }
-        throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported.");
-    }
-
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.EventLogRecord.TLogDatum value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.EventLogRecord.TLogDatum value)
-    {
-        switch (value.Choice)
-        {
-            case global::Baclib.Bacnet.Types.Application.EventLogRecord.TLogDatum.Option.LogStatus:
-                return Asdu.GetPrimitiveLength<LogStatusCodec, global::Baclib.Bacnet.Types.Application.LogStatus>(0, value.LogStatus);
-            case global::Baclib.Bacnet.Types.Application.EventLogRecord.TLogDatum.Option.Notification:
-                return Asdu.GetConstructedLength<ConfirmedEventNotificationRequestCodec, global::Baclib.Bacnet.Types.Application.ConfirmedEventNotificationRequest>(1, value.Notification);
-            case global::Baclib.Bacnet.Types.Application.EventLogRecord.TLogDatum.Option.TimeChange:
-                return Asdu.GetPrimitiveLength<RealCodec, float>(2, value.TimeChange);
             default:
                 throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported.");
         }
     }
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.EventLogRecord.TLogDatum value, byte tagNumber)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.EventLogRecord.TLogDatum value)
+        => AsduConstructed.Encode<EventLogRecordTLogDatumCodec, global::Baclib.Bacnet.Types.Application.EventLogRecord.TLogDatum>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in global::Baclib.Bacnet.Types.Application.EventLogRecord.TLogDatum value)
     {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
+        return value.Choice switch
+        {
+            global::Baclib.Bacnet.Types.Application.EventLogRecord.TLogDatum.Option.LogStatus
+                => LogStatusCodec.GetEncodedLength(value.LogStatus, 0),
+            global::Baclib.Bacnet.Types.Application.EventLogRecord.TLogDatum.Option.Notification
+                => ConfirmedEventNotificationRequestCodec.GetEncodedLength(value.Notification, 1),
+            global::Baclib.Bacnet.Types.Application.EventLogRecord.TLogDatum.Option.TimeChange
+                => RealCodec.GetEncodedLength(value.TimeChange, 2),
+            _ => throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported."),
+        };
     }
+
+    public static int GetEncodedLength(in global::Baclib.Bacnet.Types.Application.EventLogRecord.TLogDatum value, byte tagNumber)
+        => AsduElement.GetEncodedLength<EventLogRecordTLogDatumCodec, global::Baclib.Bacnet.Types.Application.EventLogRecord.TLogDatum>(tagNumber, value);
 }

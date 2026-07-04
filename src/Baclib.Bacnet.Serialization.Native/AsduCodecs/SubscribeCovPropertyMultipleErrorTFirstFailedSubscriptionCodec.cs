@@ -1,63 +1,51 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class SubscribeCovPropertyMultipleErrorTFirstFailedSubscriptionCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.SubscribeCovPropertyMultipleError.TFirstFailedSubscription>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.SubscribeCovPropertyMultipleError.TFirstFailedSubscription>
+    IAsduElementCodec<T::SubscribeCovPropertyMultipleError.TFirstFailedSubscription>,
+    IAsduConstructedCodec<T::SubscribeCovPropertyMultipleError.TFirstFailedSubscription>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::SubscribeCovPropertyMultipleError.TFirstFailedSubscription Decode(ref AsduReader reader)
     {
-        return reader.PeekTag((byte)0);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.SubscribeCovPropertyMultipleError.TFirstFailedSubscription Decode(ref NativeReader reader)
-    {
-        var _monitoredObjectIdentifier = Asdu.DecodePrimitive<ObjectIdentifierCodec, global::Baclib.Bacnet.Types.Application.ObjectIdentifier>(ref reader, 0);
-        var _monitoredPropertyReference = Asdu.DecodeConstructed<PropertyReferenceCodec, global::Baclib.Bacnet.Types.Application.PropertyReference>(ref reader, 1);
-        var _errorType = Asdu.DecodeConstructed<ErrorCodec, global::Baclib.Bacnet.Types.Application.Error>(ref reader, 2);
-
-        return new global::Baclib.Bacnet.Types.Application.SubscribeCovPropertyMultipleError.TFirstFailedSubscription
+        return new T::SubscribeCovPropertyMultipleError.TFirstFailedSubscription
         {
-            MonitoredObjectIdentifier = _monitoredObjectIdentifier,
-            MonitoredPropertyReference = _monitoredPropertyReference,
-            ErrorType = _errorType
+            MonitoredObjectIdentifier = AsduElement.Decode<ObjectIdentifierCodec, T::ObjectIdentifier>(ref reader, 0),
+            MonitoredPropertyReference = AsduElement.Decode<PropertyReferenceCodec, T::PropertyReference>(ref reader, 1),
+            ErrorType = AsduElement.Decode<ErrorCodec, T::Error>(ref reader, 2)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.SubscribeCovPropertyMultipleError.TFirstFailedSubscription Decode(ref NativeReader reader, byte tagNumber)
+    public static T::SubscribeCovPropertyMultipleError.TFirstFailedSubscription Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<SubscribeCovPropertyMultipleErrorTFirstFailedSubscriptionCodec, T::SubscribeCovPropertyMultipleError.TFirstFailedSubscription>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::SubscribeCovPropertyMultipleError.TFirstFailedSubscription value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.Encode<ObjectIdentifierCodec, T::ObjectIdentifier>(ref writer, 0, value.MonitoredObjectIdentifier);
+        AsduElement.Encode<PropertyReferenceCodec, T::PropertyReference>(ref writer, 1, value.MonitoredPropertyReference);
+        AsduElement.Encode<ErrorCodec, T::Error>(ref writer, 2, value.ErrorType);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.SubscribeCovPropertyMultipleError.TFirstFailedSubscription value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::SubscribeCovPropertyMultipleError.TFirstFailedSubscription value)
+        => AsduConstructed.Encode<SubscribeCovPropertyMultipleErrorTFirstFailedSubscriptionCodec, T::SubscribeCovPropertyMultipleError.TFirstFailedSubscription>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::SubscribeCovPropertyMultipleError.TFirstFailedSubscription value)
     {
-        Asdu.EncodePrimitive<ObjectIdentifierCodec, global::Baclib.Bacnet.Types.Application.ObjectIdentifier>(ref writer, 0, value.MonitoredObjectIdentifier);
-        Asdu.EncodeElement<PropertyReferenceCodec, global::Baclib.Bacnet.Types.Application.PropertyReference>(ref writer, 1, value.MonitoredPropertyReference);
-        Asdu.EncodeElement<ErrorCodec, global::Baclib.Bacnet.Types.Application.Error>(ref writer, 2, value.ErrorType);
+        var length = 0;
+        length += AsduElement.GetEncodedLength<ObjectIdentifierCodec, T::ObjectIdentifier>(0, value.MonitoredObjectIdentifier);
+        length += AsduElement.GetEncodedLength<PropertyReferenceCodec, T::PropertyReference>(1, value.MonitoredPropertyReference);
+        length += AsduElement.GetEncodedLength<ErrorCodec, T::Error>(2, value.ErrorType);
+        return length;
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.SubscribeCovPropertyMultipleError.TFirstFailedSubscription value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
+    public static int GetEncodedLength(in T::SubscribeCovPropertyMultipleError.TFirstFailedSubscription value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<SubscribeCovPropertyMultipleErrorTFirstFailedSubscriptionCodec, T::SubscribeCovPropertyMultipleError.TFirstFailedSubscription>(tagNumber, value);
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.SubscribeCovPropertyMultipleError.TFirstFailedSubscription value)
+    public static bool Matches(ref AsduReader reader)
     {
-        return Asdu.GetPrimitiveLength<ObjectIdentifierCodec, global::Baclib.Bacnet.Types.Application.ObjectIdentifier>(0, value.MonitoredObjectIdentifier) + Asdu.GetElementLength<PropertyReferenceCodec, global::Baclib.Bacnet.Types.Application.PropertyReference>(1, value.MonitoredPropertyReference) + Asdu.GetElementLength<ErrorCodec, global::Baclib.Bacnet.Types.Application.Error>(2, value.ErrorType);
+        return reader.PeekContextTag(0);
     }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.SubscribeCovPropertyMultipleError.TFirstFailedSubscription value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

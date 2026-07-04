@@ -7,82 +7,68 @@ public sealed class EventParameterTChangeOfValueTCovCriteriaCodec :
     IAsduElementCodec<global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfValue.TCovCriteria>,
     IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfValue.TCovCriteria>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static bool Matches(ref AsduReader reader)
     {
-
-        var contextTagNumber = reader.PeekContextTagNumber();
-        switch (contextTagNumber)
+        if (!reader.PeekContextTag(out var contextTagNumber))
         {
-            case 0:
-            case 1:
-                return true;
-            default:
-                return false;
+            return false;
         }
+        return contextTagNumber switch
+        {
+            0 or
+            1 => true,
+            _ => false
+        };
     }
 
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag(tagNumber);
-
-    public static global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfValue.TCovCriteria Decode(ref NativeReader reader)
+    public static global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfValue.TCovCriteria Decode(ref AsduReader reader)
     {
-        var tagNumber = reader.PeekContextTagNumber();
+        var tagNumber = reader.ReadContextTagNumber();
         switch (tagNumber)
         {
             case 0:
-                var _bitmask = Asdu.DecodePrimitive<BitStringCodec, global::Baclib.Bacnet.Types.Application.BitString>(ref reader, 0);
-                return global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfValue.TCovCriteria.FromBitmask(_bitmask);
+                var @bitmask = BitStringCodec.Decode(ref reader, 0);
+                return global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfValue.TCovCriteria.FromBitmask(@bitmask);
             case 1:
-                var _referencedPropertyIncrement = Asdu.DecodePrimitive<RealCodec, float>(ref reader, 1);
-                return global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfValue.TCovCriteria.FromReferencedPropertyIncrement(_referencedPropertyIncrement);
+                var @referencedPropertyIncrement = RealCodec.Decode(ref reader, 1);
+                return global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfValue.TCovCriteria.FromReferencedPropertyIncrement(@referencedPropertyIncrement);
         }
         throw new FormatException(nameof(reader));
     }
 
-    public static global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfValue.TCovCriteria Decode(ref NativeReader reader, byte tagNumber)
-    {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
-    }
+    public static global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfValue.TCovCriteria Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<EventParameterTChangeOfValueTCovCriteriaCodec, global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfValue.TCovCriteria>(ref reader, tagNumber);
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfValue.TCovCriteria value)
+    public static void Encode(ref AsduWriter writer, in global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfValue.TCovCriteria value)
     {
         switch (value.Choice)
         {
             case global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfValue.TCovCriteria.Option.Bitmask:
-                Asdu.EncodePrimitive<BitStringCodec, global::Baclib.Bacnet.Types.Application.BitString>(ref writer, 0, value.Bitmask);
+                BitStringCodec.Encode(ref writer, 0, value.Bitmask);
                 return;
             case global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfValue.TCovCriteria.Option.ReferencedPropertyIncrement:
-                Asdu.EncodePrimitive<RealCodec, float>(ref writer, 1, value.ReferencedPropertyIncrement);
+                RealCodec.Encode(ref writer, 1, value.ReferencedPropertyIncrement);
                 return;
-        }
-        throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported.");
-    }
-
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfValue.TCovCriteria value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfValue.TCovCriteria value)
-    {
-        switch (value.Choice)
-        {
-            case global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfValue.TCovCriteria.Option.Bitmask:
-                return Asdu.GetPrimitiveLength<BitStringCodec, global::Baclib.Bacnet.Types.Application.BitString>(0, value.Bitmask);
-            case global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfValue.TCovCriteria.Option.ReferencedPropertyIncrement:
-                return Asdu.GetPrimitiveLength<RealCodec, float>(1, value.ReferencedPropertyIncrement);
             default:
                 throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported.");
         }
     }
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfValue.TCovCriteria value, byte tagNumber)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfValue.TCovCriteria value)
+        => AsduConstructed.Encode<EventParameterTChangeOfValueTCovCriteriaCodec, global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfValue.TCovCriteria>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfValue.TCovCriteria value)
     {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
+        return value.Choice switch
+        {
+            global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfValue.TCovCriteria.Option.Bitmask
+                => BitStringCodec.GetEncodedLength(value.Bitmask, 0),
+            global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfValue.TCovCriteria.Option.ReferencedPropertyIncrement
+                => RealCodec.GetEncodedLength(value.ReferencedPropertyIncrement, 1),
+            _ => throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported."),
+        };
     }
+
+    public static int GetEncodedLength(in global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfValue.TCovCriteria value, byte tagNumber)
+        => AsduElement.GetEncodedLength<EventParameterTChangeOfValueTCovCriteriaCodec, global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfValue.TCovCriteria>(tagNumber, value);
 }

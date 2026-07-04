@@ -7,82 +7,68 @@ public sealed class CreateObjectRequestTObjectSpecifierCodec :
     IAsduElementCodec<global::Baclib.Bacnet.Types.Application.CreateObjectRequest.TObjectSpecifier>,
     IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.CreateObjectRequest.TObjectSpecifier>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static bool Matches(ref AsduReader reader)
     {
-
-        var contextTagNumber = reader.PeekContextTagNumber();
-        switch (contextTagNumber)
+        if (!reader.PeekContextTag(out var contextTagNumber))
         {
-            case 0:
-            case 1:
-                return true;
-            default:
-                return false;
+            return false;
         }
+        return contextTagNumber switch
+        {
+            0 or
+            1 => true,
+            _ => false
+        };
     }
 
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag(tagNumber);
-
-    public static global::Baclib.Bacnet.Types.Application.CreateObjectRequest.TObjectSpecifier Decode(ref NativeReader reader)
+    public static global::Baclib.Bacnet.Types.Application.CreateObjectRequest.TObjectSpecifier Decode(ref AsduReader reader)
     {
-        var tagNumber = reader.PeekContextTagNumber();
+        var tagNumber = reader.ReadContextTagNumber();
         switch (tagNumber)
         {
             case 0:
-                var _objectType = Asdu.DecodePrimitive<ObjectTypeCodec, global::Baclib.Bacnet.Types.Application.ObjectType>(ref reader, 0);
-                return global::Baclib.Bacnet.Types.Application.CreateObjectRequest.TObjectSpecifier.FromObjectType(_objectType);
+                var @objectType = ObjectTypeCodec.Decode(ref reader, 0);
+                return global::Baclib.Bacnet.Types.Application.CreateObjectRequest.TObjectSpecifier.FromObjectType(@objectType);
             case 1:
-                var _objectIdentifier = Asdu.DecodePrimitive<ObjectIdentifierCodec, global::Baclib.Bacnet.Types.Application.ObjectIdentifier>(ref reader, 1);
-                return global::Baclib.Bacnet.Types.Application.CreateObjectRequest.TObjectSpecifier.FromObjectIdentifier(_objectIdentifier);
+                var @objectIdentifier = ObjectIdentifierCodec.Decode(ref reader, 1);
+                return global::Baclib.Bacnet.Types.Application.CreateObjectRequest.TObjectSpecifier.FromObjectIdentifier(@objectIdentifier);
         }
         throw new FormatException(nameof(reader));
     }
 
-    public static global::Baclib.Bacnet.Types.Application.CreateObjectRequest.TObjectSpecifier Decode(ref NativeReader reader, byte tagNumber)
-    {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
-    }
+    public static global::Baclib.Bacnet.Types.Application.CreateObjectRequest.TObjectSpecifier Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<CreateObjectRequestTObjectSpecifierCodec, global::Baclib.Bacnet.Types.Application.CreateObjectRequest.TObjectSpecifier>(ref reader, tagNumber);
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.CreateObjectRequest.TObjectSpecifier value)
+    public static void Encode(ref AsduWriter writer, in global::Baclib.Bacnet.Types.Application.CreateObjectRequest.TObjectSpecifier value)
     {
         switch (value.Choice)
         {
             case global::Baclib.Bacnet.Types.Application.CreateObjectRequest.TObjectSpecifier.Option.ObjectType:
-                Asdu.EncodePrimitive<ObjectTypeCodec, global::Baclib.Bacnet.Types.Application.ObjectType>(ref writer, 0, value.ObjectType);
+                ObjectTypeCodec.Encode(ref writer, 0, value.ObjectType);
                 return;
             case global::Baclib.Bacnet.Types.Application.CreateObjectRequest.TObjectSpecifier.Option.ObjectIdentifier:
-                Asdu.EncodePrimitive<ObjectIdentifierCodec, global::Baclib.Bacnet.Types.Application.ObjectIdentifier>(ref writer, 1, value.ObjectIdentifier);
+                ObjectIdentifierCodec.Encode(ref writer, 1, value.ObjectIdentifier);
                 return;
-        }
-        throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported.");
-    }
-
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.CreateObjectRequest.TObjectSpecifier value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.CreateObjectRequest.TObjectSpecifier value)
-    {
-        switch (value.Choice)
-        {
-            case global::Baclib.Bacnet.Types.Application.CreateObjectRequest.TObjectSpecifier.Option.ObjectType:
-                return Asdu.GetPrimitiveLength<ObjectTypeCodec, global::Baclib.Bacnet.Types.Application.ObjectType>(0, value.ObjectType);
-            case global::Baclib.Bacnet.Types.Application.CreateObjectRequest.TObjectSpecifier.Option.ObjectIdentifier:
-                return Asdu.GetPrimitiveLength<ObjectIdentifierCodec, global::Baclib.Bacnet.Types.Application.ObjectIdentifier>(1, value.ObjectIdentifier);
             default:
                 throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported.");
         }
     }
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.CreateObjectRequest.TObjectSpecifier value, byte tagNumber)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.CreateObjectRequest.TObjectSpecifier value)
+        => AsduConstructed.Encode<CreateObjectRequestTObjectSpecifierCodec, global::Baclib.Bacnet.Types.Application.CreateObjectRequest.TObjectSpecifier>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in global::Baclib.Bacnet.Types.Application.CreateObjectRequest.TObjectSpecifier value)
     {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
+        return value.Choice switch
+        {
+            global::Baclib.Bacnet.Types.Application.CreateObjectRequest.TObjectSpecifier.Option.ObjectType
+                => ObjectTypeCodec.GetEncodedLength(value.ObjectType, 0),
+            global::Baclib.Bacnet.Types.Application.CreateObjectRequest.TObjectSpecifier.Option.ObjectIdentifier
+                => ObjectIdentifierCodec.GetEncodedLength(value.ObjectIdentifier, 1),
+            _ => throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported."),
+        };
     }
+
+    public static int GetEncodedLength(in global::Baclib.Bacnet.Types.Application.CreateObjectRequest.TObjectSpecifier value, byte tagNumber)
+        => AsduElement.GetEncodedLength<CreateObjectRequestTObjectSpecifierCodec, global::Baclib.Bacnet.Types.Application.CreateObjectRequest.TObjectSpecifier>(tagNumber, value);
 }

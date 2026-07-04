@@ -7,73 +7,59 @@ public sealed class AuthRequestRequestCodec :
     IAsduElementCodec<global::Baclib.Bacnet.Types.Application.AuthRequestRequest>,
     IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.AuthRequestRequest>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static bool Matches(ref AsduReader reader)
     {
-
-        var contextTagNumber = reader.PeekContextTagNumber();
-        switch (contextTagNumber)
+        if (!reader.PeekContextTag(out var contextTagNumber))
         {
-            case 0:
-                return true;
-            default:
-                return false;
+            return false;
         }
+        return contextTagNumber switch
+        {
+            0 => true,
+            _ => false
+        };
     }
 
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag(tagNumber);
-
-    public static global::Baclib.Bacnet.Types.Application.AuthRequestRequest Decode(ref NativeReader reader)
+    public static global::Baclib.Bacnet.Types.Application.AuthRequestRequest Decode(ref AsduReader reader)
     {
-        var tagNumber = reader.PeekContextTagNumber();
+        var tagNumber = reader.ReadContextTagNumber();
         switch (tagNumber)
         {
             case 0:
-                var _tokenRequest = Asdu.DecodeConstructed<AuthRequestRequestTTokenRequestCodec, global::Baclib.Bacnet.Types.Application.AuthRequestRequest.TTokenRequest>(ref reader, 0);
-                return global::Baclib.Bacnet.Types.Application.AuthRequestRequest.FromTokenRequest(_tokenRequest);
+                var @tokenRequest = AuthRequestRequestTTokenRequestCodec.Decode(ref reader, 0);
+                return global::Baclib.Bacnet.Types.Application.AuthRequestRequest.FromTokenRequest(@tokenRequest);
         }
         throw new FormatException(nameof(reader));
     }
 
-    public static global::Baclib.Bacnet.Types.Application.AuthRequestRequest Decode(ref NativeReader reader, byte tagNumber)
-    {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
-    }
+    public static global::Baclib.Bacnet.Types.Application.AuthRequestRequest Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<AuthRequestRequestCodec, global::Baclib.Bacnet.Types.Application.AuthRequestRequest>(ref reader, tagNumber);
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.AuthRequestRequest value)
+    public static void Encode(ref AsduWriter writer, in global::Baclib.Bacnet.Types.Application.AuthRequestRequest value)
     {
         switch (value.Choice)
         {
             case global::Baclib.Bacnet.Types.Application.AuthRequestRequest.Option.TokenRequest:
-                Asdu.EncodeConstructed<AuthRequestRequestTTokenRequestCodec, global::Baclib.Bacnet.Types.Application.AuthRequestRequest.TTokenRequest>(ref writer, 0, value.TokenRequest);
+                AuthRequestRequestTTokenRequestCodec.Encode(ref writer, 0, value.TokenRequest);
                 return;
-        }
-        throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported.");
-    }
-
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.AuthRequestRequest value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.AuthRequestRequest value)
-    {
-        switch (value.Choice)
-        {
-            case global::Baclib.Bacnet.Types.Application.AuthRequestRequest.Option.TokenRequest:
-                return Asdu.GetConstructedLength<AuthRequestRequestTTokenRequestCodec, global::Baclib.Bacnet.Types.Application.AuthRequestRequest.TTokenRequest>(0, value.TokenRequest);
             default:
                 throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported.");
         }
     }
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.AuthRequestRequest value, byte tagNumber)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.AuthRequestRequest value)
+        => AsduConstructed.Encode<AuthRequestRequestCodec, global::Baclib.Bacnet.Types.Application.AuthRequestRequest>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in global::Baclib.Bacnet.Types.Application.AuthRequestRequest value)
     {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
+        return value.Choice switch
+        {
+            global::Baclib.Bacnet.Types.Application.AuthRequestRequest.Option.TokenRequest
+                => AuthRequestRequestTTokenRequestCodec.GetEncodedLength(value.TokenRequest, 0),
+            _ => throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported."),
+        };
     }
+
+    public static int GetEncodedLength(in global::Baclib.Bacnet.Types.Application.AuthRequestRequest value, byte tagNumber)
+        => AsduElement.GetEncodedLength<AuthRequestRequestCodec, global::Baclib.Bacnet.Types.Application.AuthRequestRequest>(tagNumber, value);
 }

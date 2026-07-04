@@ -1,60 +1,48 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class AuthorizationConstraintCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.AuthorizationConstraint>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.AuthorizationConstraint>
+    IAsduElementCodec<T::AuthorizationConstraint>,
+    IAsduConstructedCodec<T::AuthorizationConstraint>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::AuthorizationConstraint Decode(ref AsduReader reader)
     {
-        return reader.PeekTag(AuthorizationConstraintTOriginCodec.TagNumber);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.AuthorizationConstraint Decode(ref NativeReader reader)
-    {
-        var _origin = Asdu.DecodePrimitive<AuthorizationConstraintTOriginCodec, global::Baclib.Bacnet.Types.Application.AuthorizationConstraint.TOrigin>(ref reader);
-        var _authentication = Asdu.DecodePrimitive<AuthorizationConstraintTAuthenticationCodec, global::Baclib.Bacnet.Types.Application.AuthorizationConstraint.TAuthentication>(ref reader);
-
-        return new global::Baclib.Bacnet.Types.Application.AuthorizationConstraint
+        return new T::AuthorizationConstraint
         {
-            Origin = _origin,
-            Authentication = _authentication
+            Origin = AsduElement.Decode<AuthorizationConstraintTOriginCodec, T::AuthorizationConstraint.TOrigin>(ref reader),
+            Authentication = AsduElement.Decode<AuthorizationConstraintTAuthenticationCodec, T::AuthorizationConstraint.TAuthentication>(ref reader)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.AuthorizationConstraint Decode(ref NativeReader reader, byte tagNumber)
+    public static T::AuthorizationConstraint Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<AuthorizationConstraintCodec, T::AuthorizationConstraint>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::AuthorizationConstraint value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.Encode<AuthorizationConstraintTOriginCodec, T::AuthorizationConstraint.TOrigin>(ref writer, value.Origin);
+        AsduElement.Encode<AuthorizationConstraintTAuthenticationCodec, T::AuthorizationConstraint.TAuthentication>(ref writer, value.Authentication);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.AuthorizationConstraint value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::AuthorizationConstraint value)
+        => AsduConstructed.Encode<AuthorizationConstraintCodec, T::AuthorizationConstraint>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::AuthorizationConstraint value)
     {
-        Asdu.EncodePrimitive<AuthorizationConstraintTOriginCodec, global::Baclib.Bacnet.Types.Application.AuthorizationConstraint.TOrigin>(ref writer, value.Origin);
-        Asdu.EncodePrimitive<AuthorizationConstraintTAuthenticationCodec, global::Baclib.Bacnet.Types.Application.AuthorizationConstraint.TAuthentication>(ref writer, value.Authentication);
+        var length = 0;
+        length += AsduElement.GetEncodedLength<AuthorizationConstraintTOriginCodec, T::AuthorizationConstraint.TOrigin>(value.Origin);
+        length += AsduElement.GetEncodedLength<AuthorizationConstraintTAuthenticationCodec, T::AuthorizationConstraint.TAuthentication>(value.Authentication);
+        return length;
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.AuthorizationConstraint value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
+    public static int GetEncodedLength(in T::AuthorizationConstraint value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<AuthorizationConstraintCodec, T::AuthorizationConstraint>(tagNumber, value);
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.AuthorizationConstraint value)
+    public static bool Matches(ref AsduReader reader)
     {
-        return Asdu.GetEncodedLength<AuthorizationConstraintTOriginCodec, global::Baclib.Bacnet.Types.Application.AuthorizationConstraint.TOrigin>(value.Origin) + Asdu.GetEncodedLength<AuthorizationConstraintTAuthenticationCodec, global::Baclib.Bacnet.Types.Application.AuthorizationConstraint.TAuthentication>(value.Authentication);
+        return AuthorizationConstraintTOriginCodec.Matches(ref reader);
     }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.AuthorizationConstraint value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

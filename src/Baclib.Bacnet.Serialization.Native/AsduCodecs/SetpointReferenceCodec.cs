@@ -1,60 +1,45 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class SetpointReferenceCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.SetpointReference>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.SetpointReference>
+    IAsduElementCodec<T::SetpointReference>,
+    IAsduConstructedCodec<T::SetpointReference>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::SetpointReference Decode(ref AsduReader reader)
     {
-        return !reader.End;
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.SetpointReference Decode(ref NativeReader reader)
-    {
-        var _reference = Asdu.DecodeOptionalElement<ObjectPropertyReferenceCodec, global::Baclib.Bacnet.Types.Application.ObjectPropertyReference>(ref reader, 0);
-
-        return new global::Baclib.Bacnet.Types.Application.SetpointReference
+        return new T::SetpointReference
         {
-            Reference = _reference
+            Reference = AsduElement.DecodeOptional<ObjectPropertyReferenceCodec, T::ObjectPropertyReference>(ref reader, 0)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.SetpointReference Decode(ref NativeReader reader, byte tagNumber)
+    public static T::SetpointReference Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<SetpointReferenceCodec, T::SetpointReference>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::SetpointReference value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.EncodeOptional<ObjectPropertyReferenceCodec, T::ObjectPropertyReference>(ref writer, 0, value.Reference);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.SetpointReference value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::SetpointReference value)
+        => AsduConstructed.Encode<SetpointReferenceCodec, T::SetpointReference>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::SetpointReference value)
     {
-        if (value.Reference.HasValue)
-        {
-            Asdu.EncodeElement<ObjectPropertyReferenceCodec, global::Baclib.Bacnet.Types.Application.ObjectPropertyReference>(ref writer, 0, value.Reference.Value);
-        }
+        var length = 0;
+        length += AsduElement.GetOptionalEncodedLength<ObjectPropertyReferenceCodec, T::ObjectPropertyReference>(0, value.Reference);
+        return length;
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.SetpointReference value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
+    public static int GetEncodedLength(in T::SetpointReference value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<SetpointReferenceCodec, T::SetpointReference>(tagNumber, value);
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.SetpointReference value)
+    public static bool Matches(ref AsduReader reader)
     {
-        return (value.Reference.HasValue ? Asdu.GetElementLength<ObjectPropertyReferenceCodec, global::Baclib.Bacnet.Types.Application.ObjectPropertyReference>(0, value.Reference.Value) : 0);
+        return reader.PeekContextTag(0);
     }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.SetpointReference value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

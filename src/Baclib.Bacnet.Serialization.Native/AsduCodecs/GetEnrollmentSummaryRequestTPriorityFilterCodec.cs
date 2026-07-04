@@ -1,60 +1,48 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class GetEnrollmentSummaryRequestTPriorityFilterCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.GetEnrollmentSummaryRequest.TPriorityFilter>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.GetEnrollmentSummaryRequest.TPriorityFilter>
+    IAsduElementCodec<T::GetEnrollmentSummaryRequest.TPriorityFilter>,
+    IAsduConstructedCodec<T::GetEnrollmentSummaryRequest.TPriorityFilter>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::GetEnrollmentSummaryRequest.TPriorityFilter Decode(ref AsduReader reader)
     {
-        return reader.PeekTag((byte)0);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.GetEnrollmentSummaryRequest.TPriorityFilter Decode(ref NativeReader reader)
-    {
-        var _minPriority = Asdu.DecodePrimitive<Unsigned8Codec, byte>(ref reader, 0);
-        var _maxPriority = Asdu.DecodePrimitive<Unsigned8Codec, byte>(ref reader, 1);
-
-        return new global::Baclib.Bacnet.Types.Application.GetEnrollmentSummaryRequest.TPriorityFilter
+        return new T::GetEnrollmentSummaryRequest.TPriorityFilter
         {
-            MinPriority = _minPriority,
-            MaxPriority = _maxPriority
+            MinPriority = AsduElement.Decode<Unsigned8Codec, byte>(ref reader, 0),
+            MaxPriority = AsduElement.Decode<Unsigned8Codec, byte>(ref reader, 1)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.GetEnrollmentSummaryRequest.TPriorityFilter Decode(ref NativeReader reader, byte tagNumber)
+    public static T::GetEnrollmentSummaryRequest.TPriorityFilter Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<GetEnrollmentSummaryRequestTPriorityFilterCodec, T::GetEnrollmentSummaryRequest.TPriorityFilter>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::GetEnrollmentSummaryRequest.TPriorityFilter value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.Encode<Unsigned8Codec, byte>(ref writer, 0, value.MinPriority);
+        AsduElement.Encode<Unsigned8Codec, byte>(ref writer, 1, value.MaxPriority);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.GetEnrollmentSummaryRequest.TPriorityFilter value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::GetEnrollmentSummaryRequest.TPriorityFilter value)
+        => AsduConstructed.Encode<GetEnrollmentSummaryRequestTPriorityFilterCodec, T::GetEnrollmentSummaryRequest.TPriorityFilter>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::GetEnrollmentSummaryRequest.TPriorityFilter value)
     {
-        Asdu.EncodePrimitive<Unsigned8Codec, byte>(ref writer, 0, value.MinPriority);
-        Asdu.EncodePrimitive<Unsigned8Codec, byte>(ref writer, 1, value.MaxPriority);
+        var length = 0;
+        length += AsduElement.GetEncodedLength<Unsigned8Codec, byte>(0, value.MinPriority);
+        length += AsduElement.GetEncodedLength<Unsigned8Codec, byte>(1, value.MaxPriority);
+        return length;
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.GetEnrollmentSummaryRequest.TPriorityFilter value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
+    public static int GetEncodedLength(in T::GetEnrollmentSummaryRequest.TPriorityFilter value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<GetEnrollmentSummaryRequestTPriorityFilterCodec, T::GetEnrollmentSummaryRequest.TPriorityFilter>(tagNumber, value);
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.GetEnrollmentSummaryRequest.TPriorityFilter value)
+    public static bool Matches(ref AsduReader reader)
     {
-        return Asdu.GetPrimitiveLength<Unsigned8Codec, byte>(0, value.MinPriority) + Asdu.GetPrimitiveLength<Unsigned8Codec, byte>(1, value.MaxPriority);
+        return reader.PeekContextTag(0);
     }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.GetEnrollmentSummaryRequest.TPriorityFilter value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

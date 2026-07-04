@@ -7,88 +7,69 @@ public sealed class OptionalCharacterStringCodec :
     IAsduElementCodec<global::Baclib.Bacnet.Types.Application.OptionalCharacterString>,
     IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.OptionalCharacterString>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static bool Matches(ref AsduReader reader)
     {
-        var applicationTagNumber = reader.PeekApplicationTagNumber();
-        switch (applicationTagNumber)
+        if (!reader.PeekApplicationTag(out var applicationTagNumber))
         {
-            case ApplicationTagNumber.Null:
-            case ApplicationTagNumber.CharacterString:
-                return true;
-            default:
-                return false;
+            return false;
         }
+        return applicationTagNumber switch
+        {
+            ApplicationTagNumber.Null or
+            ApplicationTagNumber.CharacterString => true,
+            _ => false
+        };
     }
 
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag(tagNumber);
-
-    public static global::Baclib.Bacnet.Types.Application.OptionalCharacterString Decode(ref NativeReader reader)
+    public static global::Baclib.Bacnet.Types.Application.OptionalCharacterString Decode(ref AsduReader reader)
     {
-        // info
-        if (reader.PeekTag(NullCodec.TagNumber))
+        if (NullCodec.Matches(ref reader))
         {
-            //var _null = Asdu.Decode<NullCodec, global::Baclib.Bacnet.Types.Application.Null>(ref reader);
-            var _null = NullCodec.Decode(ref reader);
-            return global::Baclib.Bacnet.Types.Application.OptionalCharacterString.FromNull(_null);
+            var @null = NullCodec.Decode(ref reader);
+            return global::Baclib.Bacnet.Types.Application.OptionalCharacterString.FromNull(@null);
         }
-        // info
-        if (reader.PeekTag(CharacterStringCodec.TagNumber))
+        if (NullCodec.Matches(ref reader))
         {
-            //var _characterstring = Asdu.Decode<CharacterStringCodec, global::Baclib.Bacnet.Types.Application.CharacterString>(ref reader);
-            var _characterstring = CharacterStringCodec.Decode(ref reader);
-            return global::Baclib.Bacnet.Types.Application.OptionalCharacterString.FromCharacterstring(_characterstring);
+            var @characterstring = CharacterStringCodec.Decode(ref reader);
+            return global::Baclib.Bacnet.Types.Application.OptionalCharacterString.FromCharacterstring(@characterstring);
         }
 
         throw new FormatException(nameof(reader));
     }
 
-    public static global::Baclib.Bacnet.Types.Application.OptionalCharacterString Decode(ref NativeReader reader, byte tagNumber)
-    {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
-    }
+    public static global::Baclib.Bacnet.Types.Application.OptionalCharacterString Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<OptionalCharacterStringCodec, global::Baclib.Bacnet.Types.Application.OptionalCharacterString>(ref reader, tagNumber);
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.OptionalCharacterString value)
+    public static void Encode(ref AsduWriter writer, in global::Baclib.Bacnet.Types.Application.OptionalCharacterString value)
     {
         switch (value.Choice)
         {
             case global::Baclib.Bacnet.Types.Application.OptionalCharacterString.Option.Null:
-                //Asdu.Encode<NullCodec, global::Baclib.Bacnet.Types.Application.Null>(ref writer, value.Null);
                 NullCodec.Encode(ref writer, value.Null);
                 return;
             case global::Baclib.Bacnet.Types.Application.OptionalCharacterString.Option.Characterstring:
-                //Asdu.Encode<CharacterStringCodec, global::Baclib.Bacnet.Types.Application.CharacterString>(ref writer, value.Characterstring);
                 CharacterStringCodec.Encode(ref writer, value.Characterstring);
                 return;
-        }
-        throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported.");
-    }
-
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.OptionalCharacterString value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.OptionalCharacterString value)
-    {
-        switch (value.Choice)
-        {
-            case global::Baclib.Bacnet.Types.Application.OptionalCharacterString.Option.Null:
-                return Asdu.GetEncodedLength<NullCodec, global::Baclib.Bacnet.Types.Application.Null>(value.Null);
-            case global::Baclib.Bacnet.Types.Application.OptionalCharacterString.Option.Characterstring:
-                return Asdu.GetEncodedLength<CharacterStringCodec, global::Baclib.Bacnet.Types.Application.CharacterString>(value.Characterstring);
             default:
                 throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported.");
         }
     }
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.OptionalCharacterString value, byte tagNumber)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.OptionalCharacterString value)
+        => AsduConstructed.Encode<OptionalCharacterStringCodec, global::Baclib.Bacnet.Types.Application.OptionalCharacterString>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in global::Baclib.Bacnet.Types.Application.OptionalCharacterString value)
     {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
+        return value.Choice switch
+        {
+            global::Baclib.Bacnet.Types.Application.OptionalCharacterString.Option.Null
+                => NullCodec.GetEncodedLength(value.Null),
+            global::Baclib.Bacnet.Types.Application.OptionalCharacterString.Option.Characterstring
+                => CharacterStringCodec.GetEncodedLength(value.Characterstring),
+            _ => throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported."),
+        };
     }
+
+    public static int GetEncodedLength(in global::Baclib.Bacnet.Types.Application.OptionalCharacterString value, byte tagNumber)
+        => AsduElement.GetEncodedLength<OptionalCharacterStringCodec, global::Baclib.Bacnet.Types.Application.OptionalCharacterString>(tagNumber, value);
 }

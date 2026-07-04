@@ -1,68 +1,51 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class EventParameterTChangeOfTimerCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfTimer>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfTimer>
+    IAsduElementCodec<T::EventParameter.TChangeOfTimer>,
+    IAsduConstructedCodec<T::EventParameter.TChangeOfTimer>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::EventParameter.TChangeOfTimer Decode(ref AsduReader reader)
     {
-        return reader.PeekTag((byte)0);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfTimer Decode(ref NativeReader reader)
-    {
-        var _timeDelay = Asdu.DecodePrimitive<UnsignedCodec, uint>(ref reader, 0);
-        var _alarmValues = Asdu.DecodeSequenceOf<TimerStateCodec, global::Baclib.Bacnet.Types.Application.TimerState>(ref reader, 1);
-        var _updateTimeReference = Asdu.DecodeConstructed<DeviceObjectPropertyReferenceCodec, global::Baclib.Bacnet.Types.Application.DeviceObjectPropertyReference>(ref reader, 2);
-
-        return new global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfTimer
+        return new T::EventParameter.TChangeOfTimer
         {
-            TimeDelay = _timeDelay,
-            AlarmValues = _alarmValues,
-            UpdateTimeReference = _updateTimeReference
+            TimeDelay = AsduElement.Decode<UnsignedCodec, uint>(ref reader, 0),
+            AlarmValues = AsduElement.DecodeSequenceOf<TimerStateCodec, T::TimerState>(ref reader, 1),
+            UpdateTimeReference = AsduElement.Decode<DeviceObjectPropertyReferenceCodec, T::DeviceObjectPropertyReference>(ref reader, 2)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfTimer Decode(ref NativeReader reader, byte tagNumber)
+    public static T::EventParameter.TChangeOfTimer Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<EventParameterTChangeOfTimerCodec, T::EventParameter.TChangeOfTimer>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::EventParameter.TChangeOfTimer value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.Encode<UnsignedCodec, uint>(ref writer, 0, value.TimeDelay);
+        AsduElement.EncodeSequenceOf<TimerStateCodec, T::TimerState>(ref writer, 1, value.AlarmValues);
+        AsduElement.Encode<DeviceObjectPropertyReferenceCodec, T::DeviceObjectPropertyReference>(ref writer, 2, value.UpdateTimeReference);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfTimer value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::EventParameter.TChangeOfTimer value)
+        => AsduConstructed.Encode<EventParameterTChangeOfTimerCodec, T::EventParameter.TChangeOfTimer>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::EventParameter.TChangeOfTimer value)
     {
-        Asdu.EncodePrimitive<UnsignedCodec, uint>(ref writer, 0, value.TimeDelay);
-        writer.WriteOpeningTag(1);
-        foreach (var item in value.AlarmValues)
-        {
-            Asdu.EncodeElement<TimerStateCodec, global::Baclib.Bacnet.Types.Application.TimerState>(ref writer, 1, item);
-        }
-        writer.WriteClosingTag(1);
-        Asdu.EncodeElement<DeviceObjectPropertyReferenceCodec, global::Baclib.Bacnet.Types.Application.DeviceObjectPropertyReference>(ref writer, 2, value.UpdateTimeReference);
+        var length = 0;
+        length += AsduElement.GetEncodedLength<UnsignedCodec, uint>(0, value.TimeDelay);
+        length += AsduElement.GetSequenceOfEncodedLength<TimerStateCodec, T::TimerState>(1, value.AlarmValues);
+        length += AsduElement.GetEncodedLength<DeviceObjectPropertyReferenceCodec, T::DeviceObjectPropertyReference>(2, value.UpdateTimeReference);
+        return length;
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfTimer value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
+    public static int GetEncodedLength(in T::EventParameter.TChangeOfTimer value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<EventParameterTChangeOfTimerCodec, T::EventParameter.TChangeOfTimer>(tagNumber, value);
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfTimer value)
+    public static bool Matches(ref AsduReader reader)
     {
-        return Asdu.GetPrimitiveLength<UnsignedCodec, uint>(0, value.TimeDelay) + (AsduLength.FromTagNumber((byte)1) + (value.AlarmValues.Items.Sum(static item => Asdu.GetElementLength<TimerStateCodec, global::Baclib.Bacnet.Types.Application.TimerState>(1, item))) + AsduLength.FromTagNumber((byte)1)) + Asdu.GetElementLength<DeviceObjectPropertyReferenceCodec, global::Baclib.Bacnet.Types.Application.DeviceObjectPropertyReference>(2, value.UpdateTimeReference);
+        return reader.PeekContextTag(0);
     }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfTimer value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

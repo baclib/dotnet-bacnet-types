@@ -1,105 +1,81 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class ConfirmedEventNotificationRequestCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.ConfirmedEventNotificationRequest>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.ConfirmedEventNotificationRequest>
+    IAsduElementCodec<T::ConfirmedEventNotificationRequest>,
+    IAsduConstructedCodec<T::ConfirmedEventNotificationRequest>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::ConfirmedEventNotificationRequest Decode(ref AsduReader reader)
     {
-        return reader.PeekTag((byte)0);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.ConfirmedEventNotificationRequest Decode(ref NativeReader reader)
-    {
-        var _processIdentifier = Asdu.DecodePrimitive<Unsigned32Codec, uint>(ref reader, 0);
-        var _initiatingDeviceIdentifier = Asdu.DecodePrimitive<ObjectIdentifierCodec, global::Baclib.Bacnet.Types.Application.ObjectIdentifier>(ref reader, 1);
-        var _eventObjectIdentifier = Asdu.DecodePrimitive<ObjectIdentifierCodec, global::Baclib.Bacnet.Types.Application.ObjectIdentifier>(ref reader, 2);
-        var _timestamp = Asdu.DecodeConstructed<TimeStampCodec, global::Baclib.Bacnet.Types.Application.TimeStamp>(ref reader, 3);
-        var _notificationClass = Asdu.DecodePrimitive<UnsignedCodec, uint>(ref reader, 4);
-        var _priority = Asdu.DecodePrimitive<Unsigned8Codec, byte>(ref reader, 5);
-        var _eventType = Asdu.DecodePrimitive<EventTypeCodec, global::Baclib.Bacnet.Types.Application.EventType>(ref reader, 6);
-        var _messageText = Asdu.DecodeOptional<CharacterStringCodec, global::Baclib.Bacnet.Types.Application.CharacterString>(ref reader, 7);
-        var _notifyType = Asdu.DecodePrimitive<NotifyTypeCodec, global::Baclib.Bacnet.Types.Application.NotifyType>(ref reader, 8);
-        var _ackRequired = Asdu.DecodeOptional<BooleanCodec, bool>(ref reader, 9);
-        var _fromState = Asdu.DecodeOptional<EventStateCodec, global::Baclib.Bacnet.Types.Application.EventState>(ref reader, 10);
-        var _toState = Asdu.DecodePrimitive<EventStateCodec, global::Baclib.Bacnet.Types.Application.EventState>(ref reader, 11);
-        var _eventValues = Asdu.DecodeOptionalElement<NotificationParametersCodec, global::Baclib.Bacnet.Types.Application.NotificationParameters>(ref reader, 12);
-
-        return new global::Baclib.Bacnet.Types.Application.ConfirmedEventNotificationRequest
+        return new T::ConfirmedEventNotificationRequest
         {
-            ProcessIdentifier = _processIdentifier,
-            InitiatingDeviceIdentifier = _initiatingDeviceIdentifier,
-            EventObjectIdentifier = _eventObjectIdentifier,
-            Timestamp = _timestamp,
-            NotificationClass = _notificationClass,
-            Priority = _priority,
-            EventType = _eventType,
-            MessageText = _messageText,
-            NotifyType = _notifyType,
-            AckRequired = _ackRequired,
-            FromState = _fromState,
-            ToState = _toState,
-            EventValues = _eventValues
+            ProcessIdentifier = AsduElement.Decode<Unsigned32Codec, uint>(ref reader, 0),
+            InitiatingDeviceIdentifier = AsduElement.Decode<ObjectIdentifierCodec, T::ObjectIdentifier>(ref reader, 1),
+            EventObjectIdentifier = AsduElement.Decode<ObjectIdentifierCodec, T::ObjectIdentifier>(ref reader, 2),
+            Timestamp = AsduElement.Decode<TimeStampCodec, T::TimeStamp>(ref reader, 3),
+            NotificationClass = AsduElement.Decode<UnsignedCodec, uint>(ref reader, 4),
+            Priority = AsduElement.Decode<Unsigned8Codec, byte>(ref reader, 5),
+            EventType = AsduElement.Decode<EventTypeCodec, T::EventType>(ref reader, 6),
+            MessageText = AsduElement.DecodeOptional<CharacterStringCodec, T::CharacterString>(ref reader, 7),
+            NotifyType = AsduElement.Decode<NotifyTypeCodec, T::NotifyType>(ref reader, 8),
+            AckRequired = AsduElement.DecodeOptional<BooleanCodec, bool>(ref reader, 9),
+            FromState = AsduElement.DecodeOptional<EventStateCodec, T::EventState>(ref reader, 10),
+            ToState = AsduElement.Decode<EventStateCodec, T::EventState>(ref reader, 11),
+            EventValues = AsduElement.DecodeOptional<NotificationParametersCodec, T::NotificationParameters>(ref reader, 12)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.ConfirmedEventNotificationRequest Decode(ref NativeReader reader, byte tagNumber)
+    public static T::ConfirmedEventNotificationRequest Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<ConfirmedEventNotificationRequestCodec, T::ConfirmedEventNotificationRequest>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::ConfirmedEventNotificationRequest value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.Encode<Unsigned32Codec, uint>(ref writer, 0, value.ProcessIdentifier);
+        AsduElement.Encode<ObjectIdentifierCodec, T::ObjectIdentifier>(ref writer, 1, value.InitiatingDeviceIdentifier);
+        AsduElement.Encode<ObjectIdentifierCodec, T::ObjectIdentifier>(ref writer, 2, value.EventObjectIdentifier);
+        AsduElement.Encode<TimeStampCodec, T::TimeStamp>(ref writer, 3, value.Timestamp);
+        AsduElement.Encode<UnsignedCodec, uint>(ref writer, 4, value.NotificationClass);
+        AsduElement.Encode<Unsigned8Codec, byte>(ref writer, 5, value.Priority);
+        AsduElement.Encode<EventTypeCodec, T::EventType>(ref writer, 6, value.EventType);
+        AsduElement.EncodeOptional<CharacterStringCodec, T::CharacterString>(ref writer, 7, value.MessageText);
+        AsduElement.Encode<NotifyTypeCodec, T::NotifyType>(ref writer, 8, value.NotifyType);
+        AsduElement.EncodeOptional<BooleanCodec, bool>(ref writer, 9, value.AckRequired);
+        AsduElement.EncodeOptional<EventStateCodec, T::EventState>(ref writer, 10, value.FromState);
+        AsduElement.Encode<EventStateCodec, T::EventState>(ref writer, 11, value.ToState);
+        AsduElement.EncodeOptional<NotificationParametersCodec, T::NotificationParameters>(ref writer, 12, value.EventValues);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.ConfirmedEventNotificationRequest value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::ConfirmedEventNotificationRequest value)
+        => AsduConstructed.Encode<ConfirmedEventNotificationRequestCodec, T::ConfirmedEventNotificationRequest>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::ConfirmedEventNotificationRequest value)
     {
-        Asdu.EncodePrimitive<Unsigned32Codec, uint>(ref writer, 0, value.ProcessIdentifier);
-        Asdu.EncodePrimitive<ObjectIdentifierCodec, global::Baclib.Bacnet.Types.Application.ObjectIdentifier>(ref writer, 1, value.InitiatingDeviceIdentifier);
-        Asdu.EncodePrimitive<ObjectIdentifierCodec, global::Baclib.Bacnet.Types.Application.ObjectIdentifier>(ref writer, 2, value.EventObjectIdentifier);
-        Asdu.EncodeElement<TimeStampCodec, global::Baclib.Bacnet.Types.Application.TimeStamp>(ref writer, 3, value.Timestamp);
-        Asdu.EncodePrimitive<UnsignedCodec, uint>(ref writer, 4, value.NotificationClass);
-        Asdu.EncodePrimitive<Unsigned8Codec, byte>(ref writer, 5, value.Priority);
-        Asdu.EncodePrimitive<EventTypeCodec, global::Baclib.Bacnet.Types.Application.EventType>(ref writer, 6, value.EventType);
-        if (value.MessageText.HasValue)
-        {
-            Asdu.EncodePrimitive<CharacterStringCodec, global::Baclib.Bacnet.Types.Application.CharacterString>(ref writer, 7, value.MessageText.Value);
-        }
-        Asdu.EncodePrimitive<NotifyTypeCodec, global::Baclib.Bacnet.Types.Application.NotifyType>(ref writer, 8, value.NotifyType);
-        if (value.AckRequired.HasValue)
-        {
-            Asdu.EncodePrimitive<BooleanCodec, bool>(ref writer, 9, value.AckRequired.Value);
-        }
-        if (value.FromState.HasValue)
-        {
-            Asdu.EncodePrimitive<EventStateCodec, global::Baclib.Bacnet.Types.Application.EventState>(ref writer, 10, value.FromState.Value);
-        }
-        Asdu.EncodePrimitive<EventStateCodec, global::Baclib.Bacnet.Types.Application.EventState>(ref writer, 11, value.ToState);
-        if (value.EventValues.HasValue)
-        {
-            Asdu.EncodeElement<NotificationParametersCodec, global::Baclib.Bacnet.Types.Application.NotificationParameters>(ref writer, 12, value.EventValues.Value);
-        }
+        var length = 0;
+        length += AsduElement.GetEncodedLength<Unsigned32Codec, uint>(0, value.ProcessIdentifier);
+        length += AsduElement.GetEncodedLength<ObjectIdentifierCodec, T::ObjectIdentifier>(1, value.InitiatingDeviceIdentifier);
+        length += AsduElement.GetEncodedLength<ObjectIdentifierCodec, T::ObjectIdentifier>(2, value.EventObjectIdentifier);
+        length += AsduElement.GetEncodedLength<TimeStampCodec, T::TimeStamp>(3, value.Timestamp);
+        length += AsduElement.GetEncodedLength<UnsignedCodec, uint>(4, value.NotificationClass);
+        length += AsduElement.GetEncodedLength<Unsigned8Codec, byte>(5, value.Priority);
+        length += AsduElement.GetEncodedLength<EventTypeCodec, T::EventType>(6, value.EventType);
+        length += AsduElement.GetOptionalEncodedLength<CharacterStringCodec, T::CharacterString>(7, value.MessageText);
+        length += AsduElement.GetEncodedLength<NotifyTypeCodec, T::NotifyType>(8, value.NotifyType);
+        length += AsduElement.GetOptionalEncodedLength<BooleanCodec, bool>(9, value.AckRequired);
+        length += AsduElement.GetOptionalEncodedLength<EventStateCodec, T::EventState>(10, value.FromState);
+        length += AsduElement.GetEncodedLength<EventStateCodec, T::EventState>(11, value.ToState);
+        length += AsduElement.GetOptionalEncodedLength<NotificationParametersCodec, T::NotificationParameters>(12, value.EventValues);
+        return length;
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.ConfirmedEventNotificationRequest value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
+    public static int GetEncodedLength(in T::ConfirmedEventNotificationRequest value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<ConfirmedEventNotificationRequestCodec, T::ConfirmedEventNotificationRequest>(tagNumber, value);
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.ConfirmedEventNotificationRequest value)
+    public static bool Matches(ref AsduReader reader)
     {
-        return Asdu.GetPrimitiveLength<Unsigned32Codec, uint>(0, value.ProcessIdentifier) + Asdu.GetPrimitiveLength<ObjectIdentifierCodec, global::Baclib.Bacnet.Types.Application.ObjectIdentifier>(1, value.InitiatingDeviceIdentifier) + Asdu.GetPrimitiveLength<ObjectIdentifierCodec, global::Baclib.Bacnet.Types.Application.ObjectIdentifier>(2, value.EventObjectIdentifier) + Asdu.GetElementLength<TimeStampCodec, global::Baclib.Bacnet.Types.Application.TimeStamp>(3, value.Timestamp) + Asdu.GetPrimitiveLength<UnsignedCodec, uint>(4, value.NotificationClass) + Asdu.GetPrimitiveLength<Unsigned8Codec, byte>(5, value.Priority) + Asdu.GetPrimitiveLength<EventTypeCodec, global::Baclib.Bacnet.Types.Application.EventType>(6, value.EventType) + (value.MessageText.HasValue ? Asdu.GetPrimitiveLength<CharacterStringCodec, global::Baclib.Bacnet.Types.Application.CharacterString>(7, value.MessageText.Value) : 0) + Asdu.GetPrimitiveLength<NotifyTypeCodec, global::Baclib.Bacnet.Types.Application.NotifyType>(8, value.NotifyType) + (value.AckRequired.HasValue ? Asdu.GetPrimitiveLength<BooleanCodec, bool>(9, value.AckRequired.Value) : 0) + (value.FromState.HasValue ? Asdu.GetPrimitiveLength<EventStateCodec, global::Baclib.Bacnet.Types.Application.EventState>(10, value.FromState.Value) : 0) + Asdu.GetPrimitiveLength<EventStateCodec, global::Baclib.Bacnet.Types.Application.EventState>(11, value.ToState) + (value.EventValues.HasValue ? Asdu.GetElementLength<NotificationParametersCodec, global::Baclib.Bacnet.Types.Application.NotificationParameters>(12, value.EventValues.Value) : 0);
+        return reader.PeekContextTag(0);
     }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.ConfirmedEventNotificationRequest value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

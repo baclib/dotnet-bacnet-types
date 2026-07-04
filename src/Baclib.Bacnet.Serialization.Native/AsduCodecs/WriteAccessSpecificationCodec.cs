@@ -1,65 +1,48 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class WriteAccessSpecificationCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.WriteAccessSpecification>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.WriteAccessSpecification>
+    IAsduElementCodec<T::WriteAccessSpecification>,
+    IAsduConstructedCodec<T::WriteAccessSpecification>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::WriteAccessSpecification Decode(ref AsduReader reader)
     {
-        return reader.PeekTag((byte)0);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.WriteAccessSpecification Decode(ref NativeReader reader)
-    {
-        var _objectIdentifier = Asdu.DecodePrimitive<ObjectIdentifierCodec, global::Baclib.Bacnet.Types.Application.ObjectIdentifier>(ref reader, 0);
-        var _listOfProperties = Asdu.DecodeSequenceOf<PropertyValueCodec, global::Baclib.Bacnet.Types.Application.PropertyValue>(ref reader, 1);
-
-        return new global::Baclib.Bacnet.Types.Application.WriteAccessSpecification
+        return new T::WriteAccessSpecification
         {
-            ObjectIdentifier = _objectIdentifier,
-            ListOfProperties = _listOfProperties
+            ObjectIdentifier = AsduElement.Decode<ObjectIdentifierCodec, T::ObjectIdentifier>(ref reader, 0),
+            ListOfProperties = AsduElement.DecodeSequenceOf<PropertyValueCodec, T::PropertyValue>(ref reader, 1)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.WriteAccessSpecification Decode(ref NativeReader reader, byte tagNumber)
+    public static T::WriteAccessSpecification Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<WriteAccessSpecificationCodec, T::WriteAccessSpecification>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::WriteAccessSpecification value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.Encode<ObjectIdentifierCodec, T::ObjectIdentifier>(ref writer, 0, value.ObjectIdentifier);
+        AsduElement.EncodeSequenceOf<PropertyValueCodec, T::PropertyValue>(ref writer, 1, value.ListOfProperties);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.WriteAccessSpecification value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::WriteAccessSpecification value)
+        => AsduConstructed.Encode<WriteAccessSpecificationCodec, T::WriteAccessSpecification>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::WriteAccessSpecification value)
     {
-        Asdu.EncodePrimitive<ObjectIdentifierCodec, global::Baclib.Bacnet.Types.Application.ObjectIdentifier>(ref writer, 0, value.ObjectIdentifier);
-        writer.WriteOpeningTag(1);
-        foreach (var item in value.ListOfProperties)
-        {
-            Asdu.EncodeElement<PropertyValueCodec, global::Baclib.Bacnet.Types.Application.PropertyValue>(ref writer, 1, item);
-        }
-        writer.WriteClosingTag(1);
+        var length = 0;
+        length += AsduElement.GetEncodedLength<ObjectIdentifierCodec, T::ObjectIdentifier>(0, value.ObjectIdentifier);
+        length += AsduElement.GetSequenceOfEncodedLength<PropertyValueCodec, T::PropertyValue>(1, value.ListOfProperties);
+        return length;
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.WriteAccessSpecification value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
+    public static int GetEncodedLength(in T::WriteAccessSpecification value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<WriteAccessSpecificationCodec, T::WriteAccessSpecification>(tagNumber, value);
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.WriteAccessSpecification value)
+    public static bool Matches(ref AsduReader reader)
     {
-        return Asdu.GetPrimitiveLength<ObjectIdentifierCodec, global::Baclib.Bacnet.Types.Application.ObjectIdentifier>(0, value.ObjectIdentifier) + (AsduLength.FromTagNumber((byte)1) + (value.ListOfProperties.Items.Sum(static item => Asdu.GetElementLength<PropertyValueCodec, global::Baclib.Bacnet.Types.Application.PropertyValue>(1, item))) + AsduLength.FromTagNumber((byte)1));
+        return reader.PeekContextTag(0);
     }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.WriteAccessSpecification value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

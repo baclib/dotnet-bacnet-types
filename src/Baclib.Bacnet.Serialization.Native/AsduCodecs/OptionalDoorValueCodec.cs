@@ -7,88 +7,69 @@ public sealed class OptionalDoorValueCodec :
     IAsduElementCodec<global::Baclib.Bacnet.Types.Application.OptionalDoorValue>,
     IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.OptionalDoorValue>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static bool Matches(ref AsduReader reader)
     {
-        var applicationTagNumber = reader.PeekApplicationTagNumber();
-        switch (applicationTagNumber)
+        if (!reader.PeekApplicationTag(out var applicationTagNumber))
         {
-            case ApplicationTagNumber.Null:
-            case ApplicationTagNumber.DoorValue:
-                return true;
-            default:
-                return false;
+            return false;
         }
+        return applicationTagNumber switch
+        {
+            ApplicationTagNumber.Null or
+            ApplicationTagNumber.Enumerated => true,
+            _ => false
+        };
     }
 
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag(tagNumber);
-
-    public static global::Baclib.Bacnet.Types.Application.OptionalDoorValue Decode(ref NativeReader reader)
+    public static global::Baclib.Bacnet.Types.Application.OptionalDoorValue Decode(ref AsduReader reader)
     {
-        // info
-        if (reader.PeekTag(NullCodec.TagNumber))
+        if (NullCodec.Matches(ref reader))
         {
-            //var _null = Asdu.Decode<NullCodec, global::Baclib.Bacnet.Types.Application.Null>(ref reader);
-            var _null = NullCodec.Decode(ref reader);
-            return global::Baclib.Bacnet.Types.Application.OptionalDoorValue.FromNull(_null);
+            var @null = NullCodec.Decode(ref reader);
+            return global::Baclib.Bacnet.Types.Application.OptionalDoorValue.FromNull(@null);
         }
-        // info
-        if (reader.PeekTag(DoorValueCodec.TagNumber))
+        if (NullCodec.Matches(ref reader))
         {
-            //var _doorValue = Asdu.Decode<DoorValueCodec, global::Baclib.Bacnet.Types.Application.DoorValue>(ref reader);
-            var _doorValue = DoorValueCodec.Decode(ref reader);
-            return global::Baclib.Bacnet.Types.Application.OptionalDoorValue.FromDoorValue(_doorValue);
+            var @doorValue = DoorValueCodec.Decode(ref reader);
+            return global::Baclib.Bacnet.Types.Application.OptionalDoorValue.FromDoorValue(@doorValue);
         }
 
         throw new FormatException(nameof(reader));
     }
 
-    public static global::Baclib.Bacnet.Types.Application.OptionalDoorValue Decode(ref NativeReader reader, byte tagNumber)
-    {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
-    }
+    public static global::Baclib.Bacnet.Types.Application.OptionalDoorValue Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<OptionalDoorValueCodec, global::Baclib.Bacnet.Types.Application.OptionalDoorValue>(ref reader, tagNumber);
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.OptionalDoorValue value)
+    public static void Encode(ref AsduWriter writer, in global::Baclib.Bacnet.Types.Application.OptionalDoorValue value)
     {
         switch (value.Choice)
         {
             case global::Baclib.Bacnet.Types.Application.OptionalDoorValue.Option.Null:
-                //Asdu.Encode<NullCodec, global::Baclib.Bacnet.Types.Application.Null>(ref writer, value.Null);
                 NullCodec.Encode(ref writer, value.Null);
                 return;
             case global::Baclib.Bacnet.Types.Application.OptionalDoorValue.Option.DoorValue:
-                //Asdu.Encode<DoorValueCodec, global::Baclib.Bacnet.Types.Application.DoorValue>(ref writer, value.DoorValue);
                 DoorValueCodec.Encode(ref writer, value.DoorValue);
                 return;
-        }
-        throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported.");
-    }
-
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.OptionalDoorValue value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.OptionalDoorValue value)
-    {
-        switch (value.Choice)
-        {
-            case global::Baclib.Bacnet.Types.Application.OptionalDoorValue.Option.Null:
-                return Asdu.GetEncodedLength<NullCodec, global::Baclib.Bacnet.Types.Application.Null>(value.Null);
-            case global::Baclib.Bacnet.Types.Application.OptionalDoorValue.Option.DoorValue:
-                return Asdu.GetEncodedLength<DoorValueCodec, global::Baclib.Bacnet.Types.Application.DoorValue>(value.DoorValue);
             default:
                 throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported.");
         }
     }
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.OptionalDoorValue value, byte tagNumber)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.OptionalDoorValue value)
+        => AsduConstructed.Encode<OptionalDoorValueCodec, global::Baclib.Bacnet.Types.Application.OptionalDoorValue>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in global::Baclib.Bacnet.Types.Application.OptionalDoorValue value)
     {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
+        return value.Choice switch
+        {
+            global::Baclib.Bacnet.Types.Application.OptionalDoorValue.Option.Null
+                => NullCodec.GetEncodedLength(value.Null),
+            global::Baclib.Bacnet.Types.Application.OptionalDoorValue.Option.DoorValue
+                => DoorValueCodec.GetEncodedLength(value.DoorValue),
+            _ => throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported."),
+        };
     }
+
+    public static int GetEncodedLength(in global::Baclib.Bacnet.Types.Application.OptionalDoorValue value, byte tagNumber)
+        => AsduElement.GetEncodedLength<OptionalDoorValueCodec, global::Baclib.Bacnet.Types.Application.OptionalDoorValue>(tagNumber, value);
 }

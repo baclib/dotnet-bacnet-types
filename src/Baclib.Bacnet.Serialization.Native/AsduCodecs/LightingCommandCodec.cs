@@ -1,87 +1,60 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class LightingCommandCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.LightingCommand>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.LightingCommand>
+    IAsduElementCodec<T::LightingCommand>,
+    IAsduConstructedCodec<T::LightingCommand>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::LightingCommand Decode(ref AsduReader reader)
     {
-        return reader.PeekTag((byte)0);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.LightingCommand Decode(ref NativeReader reader)
-    {
-        var _operation = Asdu.DecodePrimitive<LightingOperationCodec, global::Baclib.Bacnet.Types.Application.LightingOperation>(ref reader, 0);
-        var _targetLevel = Asdu.DecodeOptional<LightingCommandTTargetLevelCodec, global::Baclib.Bacnet.Types.Application.LightingCommand.TTargetLevel>(ref reader, 1);
-        var _rampRate = Asdu.DecodeOptional<LightingCommandTRampRateCodec, global::Baclib.Bacnet.Types.Application.LightingCommand.TRampRate>(ref reader, 2);
-        var _stepIncrement = Asdu.DecodeOptional<LightingCommandTStepIncrementCodec, global::Baclib.Bacnet.Types.Application.LightingCommand.TStepIncrement>(ref reader, 3);
-        var _fadeTime = Asdu.DecodeOptional<LightingCommandTFadeTimeCodec, global::Baclib.Bacnet.Types.Application.LightingCommand.TFadeTime>(ref reader, 4);
-        var _priority = Asdu.DecodeOptional<LightingCommandTPriorityCodec, global::Baclib.Bacnet.Types.Application.LightingCommand.TPriority>(ref reader, 5);
-
-        return new global::Baclib.Bacnet.Types.Application.LightingCommand
+        return new T::LightingCommand
         {
-            Operation = _operation,
-            TargetLevel = _targetLevel,
-            RampRate = _rampRate,
-            StepIncrement = _stepIncrement,
-            FadeTime = _fadeTime,
-            Priority = _priority
+            Operation = AsduElement.Decode<LightingOperationCodec, T::LightingOperation>(ref reader, 0),
+            TargetLevel = AsduElement.DecodeOptional<LightingCommandTTargetLevelCodec, T::LightingCommand.TTargetLevel>(ref reader, 1),
+            RampRate = AsduElement.DecodeOptional<LightingCommandTRampRateCodec, T::LightingCommand.TRampRate>(ref reader, 2),
+            StepIncrement = AsduElement.DecodeOptional<LightingCommandTStepIncrementCodec, T::LightingCommand.TStepIncrement>(ref reader, 3),
+            FadeTime = AsduElement.DecodeOptional<LightingCommandTFadeTimeCodec, T::LightingCommand.TFadeTime>(ref reader, 4),
+            Priority = AsduElement.DecodeOptional<LightingCommandTPriorityCodec, T::LightingCommand.TPriority>(ref reader, 5)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.LightingCommand Decode(ref NativeReader reader, byte tagNumber)
+    public static T::LightingCommand Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<LightingCommandCodec, T::LightingCommand>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::LightingCommand value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.Encode<LightingOperationCodec, T::LightingOperation>(ref writer, 0, value.Operation);
+        AsduElement.EncodeOptional<LightingCommandTTargetLevelCodec, T::LightingCommand.TTargetLevel>(ref writer, 1, value.TargetLevel);
+        AsduElement.EncodeOptional<LightingCommandTRampRateCodec, T::LightingCommand.TRampRate>(ref writer, 2, value.RampRate);
+        AsduElement.EncodeOptional<LightingCommandTStepIncrementCodec, T::LightingCommand.TStepIncrement>(ref writer, 3, value.StepIncrement);
+        AsduElement.EncodeOptional<LightingCommandTFadeTimeCodec, T::LightingCommand.TFadeTime>(ref writer, 4, value.FadeTime);
+        AsduElement.EncodeOptional<LightingCommandTPriorityCodec, T::LightingCommand.TPriority>(ref writer, 5, value.Priority);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.LightingCommand value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::LightingCommand value)
+        => AsduConstructed.Encode<LightingCommandCodec, T::LightingCommand>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::LightingCommand value)
     {
-        Asdu.EncodePrimitive<LightingOperationCodec, global::Baclib.Bacnet.Types.Application.LightingOperation>(ref writer, 0, value.Operation);
-        if (value.TargetLevel.HasValue)
-        {
-            Asdu.EncodePrimitive<LightingCommandTTargetLevelCodec, global::Baclib.Bacnet.Types.Application.LightingCommand.TTargetLevel>(ref writer, 1, value.TargetLevel.Value);
-        }
-        if (value.RampRate.HasValue)
-        {
-            Asdu.EncodePrimitive<LightingCommandTRampRateCodec, global::Baclib.Bacnet.Types.Application.LightingCommand.TRampRate>(ref writer, 2, value.RampRate.Value);
-        }
-        if (value.StepIncrement.HasValue)
-        {
-            Asdu.EncodePrimitive<LightingCommandTStepIncrementCodec, global::Baclib.Bacnet.Types.Application.LightingCommand.TStepIncrement>(ref writer, 3, value.StepIncrement.Value);
-        }
-        if (value.FadeTime.HasValue)
-        {
-            Asdu.EncodePrimitive<LightingCommandTFadeTimeCodec, global::Baclib.Bacnet.Types.Application.LightingCommand.TFadeTime>(ref writer, 4, value.FadeTime.Value);
-        }
-        if (value.Priority.HasValue)
-        {
-            Asdu.EncodePrimitive<LightingCommandTPriorityCodec, global::Baclib.Bacnet.Types.Application.LightingCommand.TPriority>(ref writer, 5, value.Priority.Value);
-        }
+        var length = 0;
+        length += AsduElement.GetEncodedLength<LightingOperationCodec, T::LightingOperation>(0, value.Operation);
+        length += AsduElement.GetOptionalEncodedLength<LightingCommandTTargetLevelCodec, T::LightingCommand.TTargetLevel>(1, value.TargetLevel);
+        length += AsduElement.GetOptionalEncodedLength<LightingCommandTRampRateCodec, T::LightingCommand.TRampRate>(2, value.RampRate);
+        length += AsduElement.GetOptionalEncodedLength<LightingCommandTStepIncrementCodec, T::LightingCommand.TStepIncrement>(3, value.StepIncrement);
+        length += AsduElement.GetOptionalEncodedLength<LightingCommandTFadeTimeCodec, T::LightingCommand.TFadeTime>(4, value.FadeTime);
+        length += AsduElement.GetOptionalEncodedLength<LightingCommandTPriorityCodec, T::LightingCommand.TPriority>(5, value.Priority);
+        return length;
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.LightingCommand value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
+    public static int GetEncodedLength(in T::LightingCommand value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<LightingCommandCodec, T::LightingCommand>(tagNumber, value);
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.LightingCommand value)
+    public static bool Matches(ref AsduReader reader)
     {
-        return Asdu.GetPrimitiveLength<LightingOperationCodec, global::Baclib.Bacnet.Types.Application.LightingOperation>(0, value.Operation) + (value.TargetLevel.HasValue ? Asdu.GetPrimitiveLength<LightingCommandTTargetLevelCodec, global::Baclib.Bacnet.Types.Application.LightingCommand.TTargetLevel>(1, value.TargetLevel.Value) : 0) + (value.RampRate.HasValue ? Asdu.GetPrimitiveLength<LightingCommandTRampRateCodec, global::Baclib.Bacnet.Types.Application.LightingCommand.TRampRate>(2, value.RampRate.Value) : 0) + (value.StepIncrement.HasValue ? Asdu.GetPrimitiveLength<LightingCommandTStepIncrementCodec, global::Baclib.Bacnet.Types.Application.LightingCommand.TStepIncrement>(3, value.StepIncrement.Value) : 0) + (value.FadeTime.HasValue ? Asdu.GetPrimitiveLength<LightingCommandTFadeTimeCodec, global::Baclib.Bacnet.Types.Application.LightingCommand.TFadeTime>(4, value.FadeTime.Value) : 0) + (value.Priority.HasValue ? Asdu.GetPrimitiveLength<LightingCommandTPriorityCodec, global::Baclib.Bacnet.Types.Application.LightingCommand.TPriority>(5, value.Priority.Value) : 0);
+        return reader.PeekContextTag(0);
     }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.LightingCommand value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

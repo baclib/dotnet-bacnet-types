@@ -1,62 +1,45 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class DailyScheduleCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.DailySchedule>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.DailySchedule>
+    IAsduElementCodec<T::DailySchedule>,
+    IAsduConstructedCodec<T::DailySchedule>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::DailySchedule Decode(ref AsduReader reader)
     {
-        return reader.PeekOpeningTag(0);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.DailySchedule Decode(ref NativeReader reader)
-    {
-        var _daySchedule = Asdu.DecodeSequenceOf<TimeValueCodec, global::Baclib.Bacnet.Types.Application.TimeValue>(ref reader, 0);
-
-        return new global::Baclib.Bacnet.Types.Application.DailySchedule
+        return new T::DailySchedule
         {
-            DaySchedule = _daySchedule
+            DaySchedule = AsduElement.DecodeSequenceOf<TimeValueCodec, T::TimeValue>(ref reader, 0)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.DailySchedule Decode(ref NativeReader reader, byte tagNumber)
+    public static T::DailySchedule Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<DailyScheduleCodec, T::DailySchedule>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::DailySchedule value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.EncodeSequenceOf<TimeValueCodec, T::TimeValue>(ref writer, 0, value.DaySchedule);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.DailySchedule value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::DailySchedule value)
+        => AsduConstructed.Encode<DailyScheduleCodec, T::DailySchedule>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::DailySchedule value)
     {
-        writer.WriteOpeningTag(0);
-        foreach (var item in value.DaySchedule)
-        {
-            Asdu.EncodeElement<TimeValueCodec, global::Baclib.Bacnet.Types.Application.TimeValue>(ref writer, 0, item);
-        }
-        writer.WriteClosingTag(0);
+        var length = 0;
+        length += AsduElement.GetSequenceOfEncodedLength<TimeValueCodec, T::TimeValue>(0, value.DaySchedule);
+        return length;
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.DailySchedule value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
+    public static int GetEncodedLength(in T::DailySchedule value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<DailyScheduleCodec, T::DailySchedule>(tagNumber, value);
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.DailySchedule value)
+    public static bool Matches(ref AsduReader reader)
     {
-        return (AsduLength.FromTagNumber((byte)0) + (value.DaySchedule.Items.Sum(static item => Asdu.GetElementLength<TimeValueCodec, global::Baclib.Bacnet.Types.Application.TimeValue>(0, item))) + AsduLength.FromTagNumber((byte)0));
+        return reader.PeekContextTag(0);
     }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.DailySchedule value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

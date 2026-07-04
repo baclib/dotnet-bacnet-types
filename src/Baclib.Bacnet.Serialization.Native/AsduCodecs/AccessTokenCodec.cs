@@ -1,95 +1,72 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class AccessTokenCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.AccessToken>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.AccessToken>
+    IAsduElementCodec<T::AccessToken>,
+    IAsduConstructedCodec<T::AccessToken>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::AccessToken Decode(ref AsduReader reader)
     {
-        return reader.PeekTag((byte)0);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.AccessToken Decode(ref NativeReader reader)
-    {
-        var _issuer = Asdu.DecodePrimitive<Unsigned32Codec, uint>(ref reader, 0);
-        var _issued = Asdu.DecodeConstructed<DateTimeCodec, global::Baclib.Bacnet.Types.Application.DateTime>(ref reader, 1);
-        var _audience = Asdu.DecodeSequenceOf<Integer32Codec, int>(ref reader, 2);
-        var _notBefore = Asdu.DecodeOptionalElement<DateTimeCodec, global::Baclib.Bacnet.Types.Application.DateTime>(ref reader, 3);
-        var _notAfter = Asdu.DecodeOptionalElement<DateTimeCodec, global::Baclib.Bacnet.Types.Application.DateTime>(ref reader, 4);
-        var _client = Asdu.DecodePrimitive<Unsigned32Codec, uint>(ref reader, 5);
-        var _constraint = Asdu.DecodeConstructed<AuthorizationConstraintCodec, global::Baclib.Bacnet.Types.Application.AuthorizationConstraint>(ref reader, 6);
-        var _scope = Asdu.DecodeConstructed<AuthorizationScopeCodec, global::Baclib.Bacnet.Types.Application.AuthorizationScope>(ref reader, 7);
-        var _keyId = Asdu.DecodePrimitive<Unsigned8Codec, byte>(ref reader, 8);
-        var _signature = Asdu.DecodePrimitive<OctetStringCodec, global::Baclib.Bacnet.Types.Application.OctetString>(ref reader, 9);
-
-        return new global::Baclib.Bacnet.Types.Application.AccessToken
+        return new T::AccessToken
         {
-            Issuer = _issuer,
-            Issued = _issued,
-            Audience = _audience,
-            NotBefore = _notBefore,
-            NotAfter = _notAfter,
-            Client = _client,
-            Constraint = _constraint,
-            Scope = _scope,
-            KeyId = _keyId,
-            Signature = _signature
+            Issuer = AsduElement.Decode<Unsigned32Codec, uint>(ref reader, 0),
+            Issued = AsduElement.Decode<DateTimeCodec, T::DateTime>(ref reader, 1),
+            Audience = AsduElement.DecodeSequenceOf<Integer32Codec, int>(ref reader, 2),
+            NotBefore = AsduElement.DecodeOptional<DateTimeCodec, T::DateTime>(ref reader, 3),
+            NotAfter = AsduElement.DecodeOptional<DateTimeCodec, T::DateTime>(ref reader, 4),
+            Client = AsduElement.Decode<Unsigned32Codec, uint>(ref reader, 5),
+            Constraint = AsduElement.Decode<AuthorizationConstraintCodec, T::AuthorizationConstraint>(ref reader, 6),
+            Scope = AsduElement.Decode<AuthorizationScopeCodec, T::AuthorizationScope>(ref reader, 7),
+            KeyId = AsduElement.Decode<Unsigned8Codec, byte>(ref reader, 8),
+            Signature = AsduElement.Decode<OctetStringCodec, T::OctetString>(ref reader, 9)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.AccessToken Decode(ref NativeReader reader, byte tagNumber)
+    public static T::AccessToken Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<AccessTokenCodec, T::AccessToken>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::AccessToken value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.Encode<Unsigned32Codec, uint>(ref writer, 0, value.Issuer);
+        AsduElement.Encode<DateTimeCodec, T::DateTime>(ref writer, 1, value.Issued);
+        AsduElement.EncodeSequenceOf<Integer32Codec, int>(ref writer, 2, value.Audience);
+        AsduElement.EncodeOptional<DateTimeCodec, T::DateTime>(ref writer, 3, value.NotBefore);
+        AsduElement.EncodeOptional<DateTimeCodec, T::DateTime>(ref writer, 4, value.NotAfter);
+        AsduElement.Encode<Unsigned32Codec, uint>(ref writer, 5, value.Client);
+        AsduElement.Encode<AuthorizationConstraintCodec, T::AuthorizationConstraint>(ref writer, 6, value.Constraint);
+        AsduElement.Encode<AuthorizationScopeCodec, T::AuthorizationScope>(ref writer, 7, value.Scope);
+        AsduElement.Encode<Unsigned8Codec, byte>(ref writer, 8, value.KeyId);
+        AsduElement.Encode<OctetStringCodec, T::OctetString>(ref writer, 9, value.Signature);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.AccessToken value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::AccessToken value)
+        => AsduConstructed.Encode<AccessTokenCodec, T::AccessToken>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::AccessToken value)
     {
-        Asdu.EncodePrimitive<Unsigned32Codec, uint>(ref writer, 0, value.Issuer);
-        Asdu.EncodeElement<DateTimeCodec, global::Baclib.Bacnet.Types.Application.DateTime>(ref writer, 1, value.Issued);
-        writer.WriteOpeningTag(2);
-        foreach (var item in value.Audience)
-        {
-            Asdu.EncodeElement<Integer32Codec, int>(ref writer, 2, item);
-        }
-        writer.WriteClosingTag(2);
-        if (value.NotBefore.HasValue)
-        {
-            Asdu.EncodeElement<DateTimeCodec, global::Baclib.Bacnet.Types.Application.DateTime>(ref writer, 3, value.NotBefore.Value);
-        }
-        if (value.NotAfter.HasValue)
-        {
-            Asdu.EncodeElement<DateTimeCodec, global::Baclib.Bacnet.Types.Application.DateTime>(ref writer, 4, value.NotAfter.Value);
-        }
-        Asdu.EncodePrimitive<Unsigned32Codec, uint>(ref writer, 5, value.Client);
-        Asdu.EncodeElement<AuthorizationConstraintCodec, global::Baclib.Bacnet.Types.Application.AuthorizationConstraint>(ref writer, 6, value.Constraint);
-        Asdu.EncodeElement<AuthorizationScopeCodec, global::Baclib.Bacnet.Types.Application.AuthorizationScope>(ref writer, 7, value.Scope);
-        Asdu.EncodePrimitive<Unsigned8Codec, byte>(ref writer, 8, value.KeyId);
-        Asdu.EncodePrimitive<OctetStringCodec, global::Baclib.Bacnet.Types.Application.OctetString>(ref writer, 9, value.Signature);
+        var length = 0;
+        length += AsduElement.GetEncodedLength<Unsigned32Codec, uint>(0, value.Issuer);
+        length += AsduElement.GetEncodedLength<DateTimeCodec, T::DateTime>(1, value.Issued);
+        length += AsduElement.GetSequenceOfEncodedLength<Integer32Codec, int>(2, value.Audience);
+        length += AsduElement.GetOptionalEncodedLength<DateTimeCodec, T::DateTime>(3, value.NotBefore);
+        length += AsduElement.GetOptionalEncodedLength<DateTimeCodec, T::DateTime>(4, value.NotAfter);
+        length += AsduElement.GetEncodedLength<Unsigned32Codec, uint>(5, value.Client);
+        length += AsduElement.GetEncodedLength<AuthorizationConstraintCodec, T::AuthorizationConstraint>(6, value.Constraint);
+        length += AsduElement.GetEncodedLength<AuthorizationScopeCodec, T::AuthorizationScope>(7, value.Scope);
+        length += AsduElement.GetEncodedLength<Unsigned8Codec, byte>(8, value.KeyId);
+        length += AsduElement.GetEncodedLength<OctetStringCodec, T::OctetString>(9, value.Signature);
+        return length;
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.AccessToken value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
+    public static int GetEncodedLength(in T::AccessToken value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<AccessTokenCodec, T::AccessToken>(tagNumber, value);
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.AccessToken value)
+    public static bool Matches(ref AsduReader reader)
     {
-        return Asdu.GetPrimitiveLength<Unsigned32Codec, uint>(0, value.Issuer) + Asdu.GetElementLength<DateTimeCodec, global::Baclib.Bacnet.Types.Application.DateTime>(1, value.Issued) + (AsduLength.FromTagNumber((byte)2) + (value.Audience.Items.Sum(static item => Asdu.GetElementLength<Integer32Codec, int>(2, item))) + AsduLength.FromTagNumber((byte)2)) + (value.NotBefore.HasValue ? Asdu.GetElementLength<DateTimeCodec, global::Baclib.Bacnet.Types.Application.DateTime>(3, value.NotBefore.Value) : 0) + (value.NotAfter.HasValue ? Asdu.GetElementLength<DateTimeCodec, global::Baclib.Bacnet.Types.Application.DateTime>(4, value.NotAfter.Value) : 0) + Asdu.GetPrimitiveLength<Unsigned32Codec, uint>(5, value.Client) + Asdu.GetElementLength<AuthorizationConstraintCodec, global::Baclib.Bacnet.Types.Application.AuthorizationConstraint>(6, value.Constraint) + Asdu.GetElementLength<AuthorizationScopeCodec, global::Baclib.Bacnet.Types.Application.AuthorizationScope>(7, value.Scope) + Asdu.GetPrimitiveLength<Unsigned8Codec, byte>(8, value.KeyId) + Asdu.GetPrimitiveLength<OctetStringCodec, global::Baclib.Bacnet.Types.Application.OctetString>(9, value.Signature);
+        return reader.PeekContextTag(0);
     }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.AccessToken value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

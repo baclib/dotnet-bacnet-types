@@ -1,57 +1,45 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class VtOpenAckCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.VtOpenAck>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.VtOpenAck>
+    IAsduElementCodec<T::VtOpenAck>,
+    IAsduConstructedCodec<T::VtOpenAck>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::VtOpenAck Decode(ref AsduReader reader)
     {
-        return reader.PeekTag(Unsigned8Codec.TagNumber);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.VtOpenAck Decode(ref NativeReader reader)
-    {
-        var _remoteVtSessionIdentifier = Asdu.DecodePrimitive<Unsigned8Codec, byte>(ref reader);
-
-        return new global::Baclib.Bacnet.Types.Application.VtOpenAck
+        return new T::VtOpenAck
         {
-            RemoteVtSessionIdentifier = _remoteVtSessionIdentifier
+            RemoteVtSessionIdentifier = AsduElement.Decode<Unsigned8Codec, byte>(ref reader)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.VtOpenAck Decode(ref NativeReader reader, byte tagNumber)
+    public static T::VtOpenAck Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<VtOpenAckCodec, T::VtOpenAck>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::VtOpenAck value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.Encode<Unsigned8Codec, byte>(ref writer, value.RemoteVtSessionIdentifier);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.VtOpenAck value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::VtOpenAck value)
+        => AsduConstructed.Encode<VtOpenAckCodec, T::VtOpenAck>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::VtOpenAck value)
     {
-        Asdu.EncodePrimitive<Unsigned8Codec, byte>(ref writer, value.RemoteVtSessionIdentifier);
+        var length = 0;
+        length += AsduElement.GetEncodedLength<Unsigned8Codec, byte>(value.RemoteVtSessionIdentifier);
+        return length;
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.VtOpenAck value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
+    public static int GetEncodedLength(in T::VtOpenAck value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<VtOpenAckCodec, T::VtOpenAck>(tagNumber, value);
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.VtOpenAck value)
+    public static bool Matches(ref AsduReader reader)
     {
-        return Asdu.GetEncodedLength<Unsigned8Codec, byte>(value.RemoteVtSessionIdentifier);
+        return Unsigned8Codec.Matches(ref reader);
     }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.VtOpenAck value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

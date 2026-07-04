@@ -17,8 +17,8 @@ public sealed class ProgramErrorCodec :
     /// </summary>
     /// <param name="reader">The reader positioned at an enumerated primitive tag.</param>
     /// <returns>The decoded enumerated value.</returns>
-    public static T.ProgramError Decode(ref NativeReader reader)
-        => Asdu.DecodePrimitive<ProgramErrorCodec, T.ProgramError>(ref reader);
+    public static T.ProgramError Decode(ref AsduReader reader)
+        => AsduPrimitive.Decode<ProgramErrorCodec, T.ProgramError>(ref reader);
 
     /// <summary>
     /// Decodes an <see cref="T.ProgramError"/> value from the current reader position using a specific context tag.
@@ -26,8 +26,8 @@ public sealed class ProgramErrorCodec :
     /// <param name="reader">The reader positioned at an enumerated primitive tag.</param>
     /// <param name="tagNumber">The expected context tag number.</param>
     /// <returns>The decoded enumerated value.</returns>
-    public static T.ProgramError Decode(ref NativeReader reader, byte tagNumber)
-        => Asdu.DecodePrimitive<ProgramErrorCodec, T.ProgramError>(ref reader, tagNumber);
+    public static T.ProgramError Decode(ref AsduReader reader, byte tagNumber)
+        => AsduPrimitive.Decode<ProgramErrorCodec, T.ProgramError>(ref reader, tagNumber);
 
     /// <summary>
     /// Decodes an <see cref="T.ProgramError"/> value from raw encoded bytes.
@@ -50,8 +50,8 @@ public sealed class ProgramErrorCodec :
     /// </summary>
     /// <param name="writer">The writer receiving the encoded value.</param>
     /// <param name="value">The value to encode.</param>
-    public static void Encode(ref NativeWriter writer, in T.ProgramError value)
-        => Asdu.EncodePrimitive<ProgramErrorCodec, T.ProgramError>(ref writer, value);
+    public static void Encode(ref AsduWriter writer, in T.ProgramError value)
+        => AsduPrimitive.Encode<ProgramErrorCodec, T.ProgramError>(ref writer, value);
 
     /// <summary>
     /// Encodes an <see cref="T.ProgramError"/> value using a specific context tag.
@@ -59,8 +59,8 @@ public sealed class ProgramErrorCodec :
     /// <param name="writer">The writer receiving the encoded value.</param>
     /// <param name="tagNumber">The context tag number.</param>
     /// <param name="value">The value to encode.</param>
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in T.ProgramError value)
-        => Asdu.EncodePrimitive<ProgramErrorCodec, T.ProgramError>(ref writer, tagNumber, value);
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T.ProgramError value)
+        => AsduPrimitive.Encode<ProgramErrorCodec, T.ProgramError>(ref writer, tagNumber, value);
 
     /// <summary>
     /// Encodes an <see cref="T.ProgramError"/> value into an already allocated payload span.
@@ -96,7 +96,7 @@ public sealed class ProgramErrorCodec :
     /// </summary>
     /// <param name="value">The value whose total encoded length is requested.</param>
     /// <returns>The total encoded length in bytes.</returns>
-    public static int GetLength(in T.ProgramError value)
+    public static int GetEncodedLength(in T.ProgramError value)
         => AsduLength.Sum(TagNumber, GetEncodedValueLength(value));
 
     /// <summary>
@@ -105,7 +105,7 @@ public sealed class ProgramErrorCodec :
     /// <param name="value">The value whose total encoded length is requested.</param>
     /// <param name="tagNumber">The context tag number.</param>
     /// <returns>The total encoded length in bytes.</returns>
-    public static int GetLength(in T.ProgramError value, byte tagNumber)
+    public static int GetEncodedLength(in T.ProgramError value, byte tagNumber)
         => AsduLength.Sum(tagNumber, GetEncodedValueLength(value));
 
     /// <summary>
@@ -113,17 +113,8 @@ public sealed class ProgramErrorCodec :
     /// </summary>
     /// <param name="reader">The reader to inspect.</param>
     /// <returns><see langword="true"/> when the next tag matches; otherwise, <see langword="false"/>.</returns>
-    public static bool Matches(ref NativeReader reader)
-        => reader.PeekPrimitiveTag(TagNumber);
-
-    /// <summary>
-    /// Determines whether the next value in the reader matches a specific context tag.
-    /// </summary>
-    /// <param name="reader">The reader to inspect.</param>
-    /// <param name="tagNumber">The expected context tag number.</param>
-    /// <returns><see langword="true"/> when the next tag matches; otherwise, <see langword="false"/>.</returns>
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekPrimitiveTag(tagNumber);
+    public static bool Matches(ref AsduReader reader)
+        => reader.PeekApplicationTag(TagNumber);
 
     /// <summary>
     /// Gets the BACnet application tag number handled by this codec.

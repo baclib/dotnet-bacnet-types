@@ -7,9 +7,12 @@ public sealed class ChannelValueCodec :
     IAsduElementCodec<global::Baclib.Bacnet.Types.Application.ChannelValue>,
     IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.ChannelValue>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static bool Matches(ref AsduReader reader)
     {
-        var applicationTagNumber = reader.PeekApplicationTagNumber();
+        if (!reader.PeekApplicationTag(out var applicationTagNumber))
+        {
+            return false;
+        }
         switch (applicationTagNumber)
         {
             case ApplicationTagNumber.Null:
@@ -29,259 +32,206 @@ public sealed class ChannelValueCodec :
             default:
                 break;
         }
-
-        var contextTagNumber = reader.PeekContextTagNumber();
-        switch (contextTagNumber)
+        if (!reader.PeekContextTag(out var contextTagNumber))
         {
-            case 0:
-            case 1:
-            case 2:
-                return true;
-            default:
-                return false;
+            return false;
         }
+        return contextTagNumber switch
+        {
+            0 or
+            1 or
+            2 => true,
+            _ => false
+        };
     }
 
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag(tagNumber);
-
-    public static global::Baclib.Bacnet.Types.Application.ChannelValue Decode(ref NativeReader reader)
+    public static global::Baclib.Bacnet.Types.Application.ChannelValue Decode(ref AsduReader reader)
     {
-        // info
-        if (reader.PeekTag(NullCodec.TagNumber))
+        if (NullCodec.Matches(ref reader))
         {
-            //var _null = Asdu.Decode<NullCodec, global::Baclib.Bacnet.Types.Application.Null>(ref reader);
-            var _null = NullCodec.Decode(ref reader);
-            return global::Baclib.Bacnet.Types.Application.ChannelValue.FromNull(_null);
+            var @null = NullCodec.Decode(ref reader);
+            return global::Baclib.Bacnet.Types.Application.ChannelValue.FromNull(@null);
         }
-        // info
-        if (reader.PeekTag(RealCodec.TagNumber))
+        if (NullCodec.Matches(ref reader))
         {
-            //var _real = Asdu.Decode<RealCodec, float>(ref reader);
-            var _real = RealCodec.Decode(ref reader);
-            return global::Baclib.Bacnet.Types.Application.ChannelValue.FromReal(_real);
+            var @real = RealCodec.Decode(ref reader);
+            return global::Baclib.Bacnet.Types.Application.ChannelValue.FromReal(@real);
         }
-        // info
-        if (reader.PeekTag(Enumerated32Codec.TagNumber))
+        if (NullCodec.Matches(ref reader))
         {
-            //var _enumerated = Asdu.Decode<Enumerated32Codec, global::Baclib.Bacnet.Types.Application.Enumerated>(ref reader);
-            var _enumerated = Enumerated32Codec.Decode(ref reader);
-            return global::Baclib.Bacnet.Types.Application.ChannelValue.FromEnumerated(_enumerated);
+            var @enumerated = EnumeratedCodec.Decode(ref reader);
+            return global::Baclib.Bacnet.Types.Application.ChannelValue.FromEnumerated(@enumerated);
         }
-        // info
-        if (reader.PeekTag(UnsignedCodec.TagNumber))
+        if (NullCodec.Matches(ref reader))
         {
-            //var _unsigned = Asdu.Decode<UnsignedCodec, uint>(ref reader);
-            var _unsigned = UnsignedCodec.Decode(ref reader);
-            return global::Baclib.Bacnet.Types.Application.ChannelValue.FromUnsigned(_unsigned);
+            var @unsigned = UnsignedCodec.Decode(ref reader);
+            return global::Baclib.Bacnet.Types.Application.ChannelValue.FromUnsigned(@unsigned);
         }
-        // info
-        if (reader.PeekTag(BooleanCodec.TagNumber))
+        if (NullCodec.Matches(ref reader))
         {
-            //var _boolean = Asdu.Decode<BooleanCodec, bool>(ref reader);
-            var _boolean = BooleanCodec.Decode(ref reader);
-            return global::Baclib.Bacnet.Types.Application.ChannelValue.FromBoolean(_boolean);
+            var @boolean = BooleanCodec.Decode(ref reader);
+            return global::Baclib.Bacnet.Types.Application.ChannelValue.FromBoolean(@boolean);
         }
-        // info
-        if (reader.PeekTag(IntegerCodec.TagNumber))
+        if (NullCodec.Matches(ref reader))
         {
-            //var _integer = Asdu.Decode<IntegerCodec, int>(ref reader);
-            var _integer = IntegerCodec.Decode(ref reader);
-            return global::Baclib.Bacnet.Types.Application.ChannelValue.FromInteger(_integer);
+            var @integer = IntegerCodec.Decode(ref reader);
+            return global::Baclib.Bacnet.Types.Application.ChannelValue.FromInteger(@integer);
         }
-        // info
-        if (reader.PeekTag(DoubleCodec.TagNumber))
+        if (NullCodec.Matches(ref reader))
         {
-            //var _double = Asdu.Decode<DoubleCodec, double>(ref reader);
-            var _double = DoubleCodec.Decode(ref reader);
-            return global::Baclib.Bacnet.Types.Application.ChannelValue.FromDouble(_double);
+            var @double = DoubleCodec.Decode(ref reader);
+            return global::Baclib.Bacnet.Types.Application.ChannelValue.FromDouble(@double);
         }
-        // info
-        if (reader.PeekTag(TimeCodec.TagNumber))
+        if (NullCodec.Matches(ref reader))
         {
-            //var _time = Asdu.Decode<TimeCodec, global::Baclib.Bacnet.Types.Application.Time>(ref reader);
-            var _time = TimeCodec.Decode(ref reader);
-            return global::Baclib.Bacnet.Types.Application.ChannelValue.FromTime(_time);
+            var @time = TimeCodec.Decode(ref reader);
+            return global::Baclib.Bacnet.Types.Application.ChannelValue.FromTime(@time);
         }
-        // info
-        if (reader.PeekTag(CharacterStringCodec.TagNumber))
+        if (NullCodec.Matches(ref reader))
         {
-            //var _characterstring = Asdu.Decode<CharacterStringCodec, global::Baclib.Bacnet.Types.Application.CharacterString>(ref reader);
-            var _characterstring = CharacterStringCodec.Decode(ref reader);
-            return global::Baclib.Bacnet.Types.Application.ChannelValue.FromCharacterstring(_characterstring);
+            var @characterstring = CharacterStringCodec.Decode(ref reader);
+            return global::Baclib.Bacnet.Types.Application.ChannelValue.FromCharacterstring(@characterstring);
         }
-        // info
-        if (reader.PeekTag(OctetStringCodec.TagNumber))
+        if (NullCodec.Matches(ref reader))
         {
-            //var _octetstring = Asdu.Decode<OctetStringCodec, global::Baclib.Bacnet.Types.Application.OctetString>(ref reader);
-            var _octetstring = OctetStringCodec.Decode(ref reader);
-            return global::Baclib.Bacnet.Types.Application.ChannelValue.FromOctetstring(_octetstring);
+            var @octetstring = OctetStringCodec.Decode(ref reader);
+            return global::Baclib.Bacnet.Types.Application.ChannelValue.FromOctetstring(@octetstring);
         }
-        // info
-        if (reader.PeekTag(BitStringCodec.TagNumber))
+        if (NullCodec.Matches(ref reader))
         {
-            //var _bitstring = Asdu.Decode<BitStringCodec, global::Baclib.Bacnet.Types.Application.BitString>(ref reader);
-            var _bitstring = BitStringCodec.Decode(ref reader);
-            return global::Baclib.Bacnet.Types.Application.ChannelValue.FromBitstring(_bitstring);
+            var @bitstring = BitStringCodec.Decode(ref reader);
+            return global::Baclib.Bacnet.Types.Application.ChannelValue.FromBitstring(@bitstring);
         }
-        // info
-        if (reader.PeekTag(DateCodec.TagNumber))
+        if (NullCodec.Matches(ref reader))
         {
-            //var _date = Asdu.Decode<DateCodec, global::Baclib.Bacnet.Types.Application.Date>(ref reader);
-            var _date = DateCodec.Decode(ref reader);
-            return global::Baclib.Bacnet.Types.Application.ChannelValue.FromDate(_date);
+            var @date = DateCodec.Decode(ref reader);
+            return global::Baclib.Bacnet.Types.Application.ChannelValue.FromDate(@date);
         }
-        // info
-        if (reader.PeekTag(ObjectIdentifierCodec.TagNumber))
+        if (NullCodec.Matches(ref reader))
         {
-            //var _objectidentifier = Asdu.Decode<ObjectIdentifierCodec, global::Baclib.Bacnet.Types.Application.ObjectIdentifier>(ref reader);
-            var _objectidentifier = ObjectIdentifierCodec.Decode(ref reader);
-            return global::Baclib.Bacnet.Types.Application.ChannelValue.FromObjectidentifier(_objectidentifier);
+            var @objectidentifier = ObjectIdentifierCodec.Decode(ref reader);
+            return global::Baclib.Bacnet.Types.Application.ChannelValue.FromObjectidentifier(@objectidentifier);
         }
 
-        var tagNumber = reader.PeekContextTagNumber();
+        var tagNumber = reader.ReadContextTagNumber();
         switch (tagNumber)
         {
             case 0:
-                var _lightingCommand = Asdu.DecodeConstructed<LightingCommandCodec, global::Baclib.Bacnet.Types.Application.LightingCommand>(ref reader, 0);
-                return global::Baclib.Bacnet.Types.Application.ChannelValue.FromLightingCommand(_lightingCommand);
+                var @lightingCommand = LightingCommandCodec.Decode(ref reader, 0);
+                return global::Baclib.Bacnet.Types.Application.ChannelValue.FromLightingCommand(@lightingCommand);
             case 1:
-                var _xycolor = Asdu.DecodeConstructed<XyColorCodec, global::Baclib.Bacnet.Types.Application.XyColor>(ref reader, 1);
-                return global::Baclib.Bacnet.Types.Application.ChannelValue.FromXycolor(_xycolor);
+                var @xycolor = XyColorCodec.Decode(ref reader, 1);
+                return global::Baclib.Bacnet.Types.Application.ChannelValue.FromXycolor(@xycolor);
             case 2:
-                var _colorCommand = Asdu.DecodeConstructed<ColorCommandCodec, global::Baclib.Bacnet.Types.Application.ColorCommand>(ref reader, 2);
-                return global::Baclib.Bacnet.Types.Application.ChannelValue.FromColorCommand(_colorCommand);
+                var @colorCommand = ColorCommandCodec.Decode(ref reader, 2);
+                return global::Baclib.Bacnet.Types.Application.ChannelValue.FromColorCommand(@colorCommand);
         }
         throw new FormatException(nameof(reader));
     }
 
-    public static global::Baclib.Bacnet.Types.Application.ChannelValue Decode(ref NativeReader reader, byte tagNumber)
-    {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
-    }
+    public static global::Baclib.Bacnet.Types.Application.ChannelValue Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<ChannelValueCodec, global::Baclib.Bacnet.Types.Application.ChannelValue>(ref reader, tagNumber);
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.ChannelValue value)
+    public static void Encode(ref AsduWriter writer, in global::Baclib.Bacnet.Types.Application.ChannelValue value)
     {
         switch (value.Choice)
         {
             case global::Baclib.Bacnet.Types.Application.ChannelValue.Option.Null:
-                //Asdu.Encode<NullCodec, global::Baclib.Bacnet.Types.Application.Null>(ref writer, value.Null);
                 NullCodec.Encode(ref writer, value.Null);
                 return;
             case global::Baclib.Bacnet.Types.Application.ChannelValue.Option.Real:
-                //Asdu.Encode<RealCodec, float>(ref writer, value.Real);
                 RealCodec.Encode(ref writer, value.Real);
                 return;
             case global::Baclib.Bacnet.Types.Application.ChannelValue.Option.Enumerated:
-                //Asdu.Encode<Enumerated32Codec, global::Baclib.Bacnet.Types.Application.Enumerated>(ref writer, value.Enumerated);
-                Enumerated32Codec.Encode(ref writer, value.Enumerated);
+                EnumeratedCodec.Encode(ref writer, value.Enumerated);
                 return;
             case global::Baclib.Bacnet.Types.Application.ChannelValue.Option.Unsigned:
-                //Asdu.Encode<UnsignedCodec, uint>(ref writer, value.Unsigned);
                 UnsignedCodec.Encode(ref writer, value.Unsigned);
                 return;
             case global::Baclib.Bacnet.Types.Application.ChannelValue.Option.Boolean:
-                //Asdu.Encode<BooleanCodec, bool>(ref writer, value.Boolean);
                 BooleanCodec.Encode(ref writer, value.Boolean);
                 return;
             case global::Baclib.Bacnet.Types.Application.ChannelValue.Option.Integer:
-                //Asdu.Encode<IntegerCodec, int>(ref writer, value.Integer);
                 IntegerCodec.Encode(ref writer, value.Integer);
                 return;
             case global::Baclib.Bacnet.Types.Application.ChannelValue.Option.Double:
-                //Asdu.Encode<DoubleCodec, double>(ref writer, value.Double);
                 DoubleCodec.Encode(ref writer, value.Double);
                 return;
             case global::Baclib.Bacnet.Types.Application.ChannelValue.Option.Time:
-                //Asdu.Encode<TimeCodec, global::Baclib.Bacnet.Types.Application.Time>(ref writer, value.Time);
                 TimeCodec.Encode(ref writer, value.Time);
                 return;
             case global::Baclib.Bacnet.Types.Application.ChannelValue.Option.Characterstring:
-                //Asdu.Encode<CharacterStringCodec, global::Baclib.Bacnet.Types.Application.CharacterString>(ref writer, value.Characterstring);
                 CharacterStringCodec.Encode(ref writer, value.Characterstring);
                 return;
             case global::Baclib.Bacnet.Types.Application.ChannelValue.Option.Octetstring:
-                //Asdu.Encode<OctetStringCodec, global::Baclib.Bacnet.Types.Application.OctetString>(ref writer, value.Octetstring);
                 OctetStringCodec.Encode(ref writer, value.Octetstring);
                 return;
             case global::Baclib.Bacnet.Types.Application.ChannelValue.Option.Bitstring:
-                //Asdu.Encode<BitStringCodec, global::Baclib.Bacnet.Types.Application.BitString>(ref writer, value.Bitstring);
                 BitStringCodec.Encode(ref writer, value.Bitstring);
                 return;
             case global::Baclib.Bacnet.Types.Application.ChannelValue.Option.Date:
-                //Asdu.Encode<DateCodec, global::Baclib.Bacnet.Types.Application.Date>(ref writer, value.Date);
                 DateCodec.Encode(ref writer, value.Date);
                 return;
             case global::Baclib.Bacnet.Types.Application.ChannelValue.Option.Objectidentifier:
-                //Asdu.Encode<ObjectIdentifierCodec, global::Baclib.Bacnet.Types.Application.ObjectIdentifier>(ref writer, value.Objectidentifier);
                 ObjectIdentifierCodec.Encode(ref writer, value.Objectidentifier);
                 return;
             case global::Baclib.Bacnet.Types.Application.ChannelValue.Option.LightingCommand:
-                Asdu.EncodeConstructed<LightingCommandCodec, global::Baclib.Bacnet.Types.Application.LightingCommand>(ref writer, 0, value.LightingCommand);
+                LightingCommandCodec.Encode(ref writer, 0, value.LightingCommand);
                 return;
             case global::Baclib.Bacnet.Types.Application.ChannelValue.Option.Xycolor:
-                Asdu.EncodeConstructed<XyColorCodec, global::Baclib.Bacnet.Types.Application.XyColor>(ref writer, 1, value.Xycolor);
+                XyColorCodec.Encode(ref writer, 1, value.Xycolor);
                 return;
             case global::Baclib.Bacnet.Types.Application.ChannelValue.Option.ColorCommand:
-                Asdu.EncodeConstructed<ColorCommandCodec, global::Baclib.Bacnet.Types.Application.ColorCommand>(ref writer, 2, value.ColorCommand);
+                ColorCommandCodec.Encode(ref writer, 2, value.ColorCommand);
                 return;
-        }
-        throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported.");
-    }
-
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.ChannelValue value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.ChannelValue value)
-    {
-        switch (value.Choice)
-        {
-            case global::Baclib.Bacnet.Types.Application.ChannelValue.Option.Null:
-                return Asdu.GetEncodedLength<NullCodec, global::Baclib.Bacnet.Types.Application.Null>(value.Null);
-            case global::Baclib.Bacnet.Types.Application.ChannelValue.Option.Real:
-                return Asdu.GetEncodedLength<RealCodec, float>(value.Real);
-            case global::Baclib.Bacnet.Types.Application.ChannelValue.Option.Enumerated:
-                return Asdu.GetEncodedLength<Enumerated32Codec, global::Baclib.Bacnet.Types.Application.Enumerated>(value.Enumerated);
-            case global::Baclib.Bacnet.Types.Application.ChannelValue.Option.Unsigned:
-                return Asdu.GetEncodedLength<UnsignedCodec, uint>(value.Unsigned);
-            case global::Baclib.Bacnet.Types.Application.ChannelValue.Option.Boolean:
-                return Asdu.GetEncodedLength<BooleanCodec, bool>(value.Boolean);
-            case global::Baclib.Bacnet.Types.Application.ChannelValue.Option.Integer:
-                return Asdu.GetEncodedLength<IntegerCodec, int>(value.Integer);
-            case global::Baclib.Bacnet.Types.Application.ChannelValue.Option.Double:
-                return Asdu.GetEncodedLength<DoubleCodec, double>(value.Double);
-            case global::Baclib.Bacnet.Types.Application.ChannelValue.Option.Time:
-                return Asdu.GetEncodedLength<TimeCodec, global::Baclib.Bacnet.Types.Application.Time>(value.Time);
-            case global::Baclib.Bacnet.Types.Application.ChannelValue.Option.Characterstring:
-                return Asdu.GetEncodedLength<CharacterStringCodec, global::Baclib.Bacnet.Types.Application.CharacterString>(value.Characterstring);
-            case global::Baclib.Bacnet.Types.Application.ChannelValue.Option.Octetstring:
-                return Asdu.GetEncodedLength<OctetStringCodec, global::Baclib.Bacnet.Types.Application.OctetString>(value.Octetstring);
-            case global::Baclib.Bacnet.Types.Application.ChannelValue.Option.Bitstring:
-                return Asdu.GetEncodedLength<BitStringCodec, global::Baclib.Bacnet.Types.Application.BitString>(value.Bitstring);
-            case global::Baclib.Bacnet.Types.Application.ChannelValue.Option.Date:
-                return Asdu.GetEncodedLength<DateCodec, global::Baclib.Bacnet.Types.Application.Date>(value.Date);
-            case global::Baclib.Bacnet.Types.Application.ChannelValue.Option.Objectidentifier:
-                return Asdu.GetEncodedLength<ObjectIdentifierCodec, global::Baclib.Bacnet.Types.Application.ObjectIdentifier>(value.Objectidentifier);
-            case global::Baclib.Bacnet.Types.Application.ChannelValue.Option.LightingCommand:
-                return Asdu.GetConstructedLength<LightingCommandCodec, global::Baclib.Bacnet.Types.Application.LightingCommand>(0, value.LightingCommand);
-            case global::Baclib.Bacnet.Types.Application.ChannelValue.Option.Xycolor:
-                return Asdu.GetConstructedLength<XyColorCodec, global::Baclib.Bacnet.Types.Application.XyColor>(1, value.Xycolor);
-            case global::Baclib.Bacnet.Types.Application.ChannelValue.Option.ColorCommand:
-                return Asdu.GetConstructedLength<ColorCommandCodec, global::Baclib.Bacnet.Types.Application.ColorCommand>(2, value.ColorCommand);
             default:
                 throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported.");
         }
     }
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.ChannelValue value, byte tagNumber)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.ChannelValue value)
+        => AsduConstructed.Encode<ChannelValueCodec, global::Baclib.Bacnet.Types.Application.ChannelValue>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in global::Baclib.Bacnet.Types.Application.ChannelValue value)
     {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
+        return value.Choice switch
+        {
+            global::Baclib.Bacnet.Types.Application.ChannelValue.Option.Null
+                => NullCodec.GetEncodedLength(value.Null),
+            global::Baclib.Bacnet.Types.Application.ChannelValue.Option.Real
+                => RealCodec.GetEncodedLength(value.Real),
+            global::Baclib.Bacnet.Types.Application.ChannelValue.Option.Enumerated
+                => EnumeratedCodec.GetEncodedLength(value.Enumerated),
+            global::Baclib.Bacnet.Types.Application.ChannelValue.Option.Unsigned
+                => UnsignedCodec.GetEncodedLength(value.Unsigned),
+            global::Baclib.Bacnet.Types.Application.ChannelValue.Option.Boolean
+                => BooleanCodec.GetEncodedLength(value.Boolean),
+            global::Baclib.Bacnet.Types.Application.ChannelValue.Option.Integer
+                => IntegerCodec.GetEncodedLength(value.Integer),
+            global::Baclib.Bacnet.Types.Application.ChannelValue.Option.Double
+                => DoubleCodec.GetEncodedLength(value.Double),
+            global::Baclib.Bacnet.Types.Application.ChannelValue.Option.Time
+                => TimeCodec.GetEncodedLength(value.Time),
+            global::Baclib.Bacnet.Types.Application.ChannelValue.Option.Characterstring
+                => CharacterStringCodec.GetEncodedLength(value.Characterstring),
+            global::Baclib.Bacnet.Types.Application.ChannelValue.Option.Octetstring
+                => OctetStringCodec.GetEncodedLength(value.Octetstring),
+            global::Baclib.Bacnet.Types.Application.ChannelValue.Option.Bitstring
+                => BitStringCodec.GetEncodedLength(value.Bitstring),
+            global::Baclib.Bacnet.Types.Application.ChannelValue.Option.Date
+                => DateCodec.GetEncodedLength(value.Date),
+            global::Baclib.Bacnet.Types.Application.ChannelValue.Option.Objectidentifier
+                => ObjectIdentifierCodec.GetEncodedLength(value.Objectidentifier),
+            global::Baclib.Bacnet.Types.Application.ChannelValue.Option.LightingCommand
+                => LightingCommandCodec.GetEncodedLength(value.LightingCommand, 0),
+            global::Baclib.Bacnet.Types.Application.ChannelValue.Option.Xycolor
+                => XyColorCodec.GetEncodedLength(value.Xycolor, 1),
+            global::Baclib.Bacnet.Types.Application.ChannelValue.Option.ColorCommand
+                => ColorCommandCodec.GetEncodedLength(value.ColorCommand, 2),
+            _ => throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported."),
+        };
     }
+
+    public static int GetEncodedLength(in global::Baclib.Bacnet.Types.Application.ChannelValue value, byte tagNumber)
+        => AsduElement.GetEncodedLength<ChannelValueCodec, global::Baclib.Bacnet.Types.Application.ChannelValue>(tagNumber, value);
 }

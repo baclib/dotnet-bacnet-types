@@ -1,76 +1,54 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class EventParameterTChangeOfLifeSafetyCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfLifeSafety>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfLifeSafety>
+    IAsduElementCodec<T::EventParameter.TChangeOfLifeSafety>,
+    IAsduConstructedCodec<T::EventParameter.TChangeOfLifeSafety>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::EventParameter.TChangeOfLifeSafety Decode(ref AsduReader reader)
     {
-        return reader.PeekTag((byte)0);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfLifeSafety Decode(ref NativeReader reader)
-    {
-        var _timeDelay = Asdu.DecodePrimitive<UnsignedCodec, uint>(ref reader, 0);
-        var _listOfLifeSafetyAlarmValues = Asdu.DecodeSequenceOf<LifeSafetyStateCodec, global::Baclib.Bacnet.Types.Application.LifeSafetyState>(ref reader, 1);
-        var _listOfAlarmValues = Asdu.DecodeSequenceOf<LifeSafetyStateCodec, global::Baclib.Bacnet.Types.Application.LifeSafetyState>(ref reader, 2);
-        var _modePropertyReference = Asdu.DecodeConstructed<DeviceObjectPropertyReferenceCodec, global::Baclib.Bacnet.Types.Application.DeviceObjectPropertyReference>(ref reader, 3);
-
-        return new global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfLifeSafety
+        return new T::EventParameter.TChangeOfLifeSafety
         {
-            TimeDelay = _timeDelay,
-            ListOfLifeSafetyAlarmValues = _listOfLifeSafetyAlarmValues,
-            ListOfAlarmValues = _listOfAlarmValues,
-            ModePropertyReference = _modePropertyReference
+            TimeDelay = AsduElement.Decode<UnsignedCodec, uint>(ref reader, 0),
+            ListOfLifeSafetyAlarmValues = AsduElement.DecodeSequenceOf<LifeSafetyStateCodec, T::LifeSafetyState>(ref reader, 1),
+            ListOfAlarmValues = AsduElement.DecodeSequenceOf<LifeSafetyStateCodec, T::LifeSafetyState>(ref reader, 2),
+            ModePropertyReference = AsduElement.Decode<DeviceObjectPropertyReferenceCodec, T::DeviceObjectPropertyReference>(ref reader, 3)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfLifeSafety Decode(ref NativeReader reader, byte tagNumber)
+    public static T::EventParameter.TChangeOfLifeSafety Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<EventParameterTChangeOfLifeSafetyCodec, T::EventParameter.TChangeOfLifeSafety>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::EventParameter.TChangeOfLifeSafety value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.Encode<UnsignedCodec, uint>(ref writer, 0, value.TimeDelay);
+        AsduElement.EncodeSequenceOf<LifeSafetyStateCodec, T::LifeSafetyState>(ref writer, 1, value.ListOfLifeSafetyAlarmValues);
+        AsduElement.EncodeSequenceOf<LifeSafetyStateCodec, T::LifeSafetyState>(ref writer, 2, value.ListOfAlarmValues);
+        AsduElement.Encode<DeviceObjectPropertyReferenceCodec, T::DeviceObjectPropertyReference>(ref writer, 3, value.ModePropertyReference);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfLifeSafety value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::EventParameter.TChangeOfLifeSafety value)
+        => AsduConstructed.Encode<EventParameterTChangeOfLifeSafetyCodec, T::EventParameter.TChangeOfLifeSafety>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::EventParameter.TChangeOfLifeSafety value)
     {
-        Asdu.EncodePrimitive<UnsignedCodec, uint>(ref writer, 0, value.TimeDelay);
-        writer.WriteOpeningTag(1);
-        foreach (var item in value.ListOfLifeSafetyAlarmValues)
-        {
-            Asdu.EncodeElement<LifeSafetyStateCodec, global::Baclib.Bacnet.Types.Application.LifeSafetyState>(ref writer, 1, item);
-        }
-        writer.WriteClosingTag(1);
-        writer.WriteOpeningTag(2);
-        foreach (var item in value.ListOfAlarmValues)
-        {
-            Asdu.EncodeElement<LifeSafetyStateCodec, global::Baclib.Bacnet.Types.Application.LifeSafetyState>(ref writer, 2, item);
-        }
-        writer.WriteClosingTag(2);
-        Asdu.EncodeElement<DeviceObjectPropertyReferenceCodec, global::Baclib.Bacnet.Types.Application.DeviceObjectPropertyReference>(ref writer, 3, value.ModePropertyReference);
+        var length = 0;
+        length += AsduElement.GetEncodedLength<UnsignedCodec, uint>(0, value.TimeDelay);
+        length += AsduElement.GetSequenceOfEncodedLength<LifeSafetyStateCodec, T::LifeSafetyState>(1, value.ListOfLifeSafetyAlarmValues);
+        length += AsduElement.GetSequenceOfEncodedLength<LifeSafetyStateCodec, T::LifeSafetyState>(2, value.ListOfAlarmValues);
+        length += AsduElement.GetEncodedLength<DeviceObjectPropertyReferenceCodec, T::DeviceObjectPropertyReference>(3, value.ModePropertyReference);
+        return length;
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfLifeSafety value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
+    public static int GetEncodedLength(in T::EventParameter.TChangeOfLifeSafety value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<EventParameterTChangeOfLifeSafetyCodec, T::EventParameter.TChangeOfLifeSafety>(tagNumber, value);
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfLifeSafety value)
+    public static bool Matches(ref AsduReader reader)
     {
-        return Asdu.GetPrimitiveLength<UnsignedCodec, uint>(0, value.TimeDelay) + (AsduLength.FromTagNumber((byte)1) + (value.ListOfLifeSafetyAlarmValues.Items.Sum(static item => Asdu.GetElementLength<LifeSafetyStateCodec, global::Baclib.Bacnet.Types.Application.LifeSafetyState>(1, item))) + AsduLength.FromTagNumber((byte)1)) + (AsduLength.FromTagNumber((byte)2) + (value.ListOfAlarmValues.Items.Sum(static item => Asdu.GetElementLength<LifeSafetyStateCodec, global::Baclib.Bacnet.Types.Application.LifeSafetyState>(2, item))) + AsduLength.FromTagNumber((byte)2)) + Asdu.GetElementLength<DeviceObjectPropertyReferenceCodec, global::Baclib.Bacnet.Types.Application.DeviceObjectPropertyReference>(3, value.ModePropertyReference);
+        return reader.PeekContextTag(0);
     }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfLifeSafety value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

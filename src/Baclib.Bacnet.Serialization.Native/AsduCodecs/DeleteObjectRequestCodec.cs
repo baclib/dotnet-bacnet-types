@@ -1,57 +1,45 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class DeleteObjectRequestCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.DeleteObjectRequest>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.DeleteObjectRequest>
+    IAsduElementCodec<T::DeleteObjectRequest>,
+    IAsduConstructedCodec<T::DeleteObjectRequest>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::DeleteObjectRequest Decode(ref AsduReader reader)
     {
-        return reader.PeekTag(ObjectIdentifierCodec.TagNumber);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.DeleteObjectRequest Decode(ref NativeReader reader)
-    {
-        var _objectIdentifier = Asdu.DecodePrimitive<ObjectIdentifierCodec, global::Baclib.Bacnet.Types.Application.ObjectIdentifier>(ref reader);
-
-        return new global::Baclib.Bacnet.Types.Application.DeleteObjectRequest
+        return new T::DeleteObjectRequest
         {
-            ObjectIdentifier = _objectIdentifier
+            ObjectIdentifier = AsduElement.Decode<ObjectIdentifierCodec, T::ObjectIdentifier>(ref reader)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.DeleteObjectRequest Decode(ref NativeReader reader, byte tagNumber)
+    public static T::DeleteObjectRequest Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<DeleteObjectRequestCodec, T::DeleteObjectRequest>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::DeleteObjectRequest value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.Encode<ObjectIdentifierCodec, T::ObjectIdentifier>(ref writer, value.ObjectIdentifier);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.DeleteObjectRequest value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::DeleteObjectRequest value)
+        => AsduConstructed.Encode<DeleteObjectRequestCodec, T::DeleteObjectRequest>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::DeleteObjectRequest value)
     {
-        Asdu.EncodePrimitive<ObjectIdentifierCodec, global::Baclib.Bacnet.Types.Application.ObjectIdentifier>(ref writer, value.ObjectIdentifier);
+        var length = 0;
+        length += AsduElement.GetEncodedLength<ObjectIdentifierCodec, T::ObjectIdentifier>(value.ObjectIdentifier);
+        return length;
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.DeleteObjectRequest value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
+    public static int GetEncodedLength(in T::DeleteObjectRequest value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<DeleteObjectRequestCodec, T::DeleteObjectRequest>(tagNumber, value);
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.DeleteObjectRequest value)
+    public static bool Matches(ref AsduReader reader)
     {
-        return Asdu.GetEncodedLength<ObjectIdentifierCodec, global::Baclib.Bacnet.Types.Application.ObjectIdentifier>(value.ObjectIdentifier);
+        return ObjectIdentifierCodec.Matches(ref reader);
     }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.DeleteObjectRequest value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

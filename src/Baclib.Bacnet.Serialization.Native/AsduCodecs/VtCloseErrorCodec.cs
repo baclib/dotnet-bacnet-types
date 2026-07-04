@@ -1,68 +1,48 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class VtCloseErrorCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.VtCloseError>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.VtCloseError>
+    IAsduElementCodec<T::VtCloseError>,
+    IAsduConstructedCodec<T::VtCloseError>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::VtCloseError Decode(ref AsduReader reader)
     {
-        return reader.PeekOpeningTag((byte)0);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.VtCloseError Decode(ref NativeReader reader)
-    {
-        var _errorType = Asdu.DecodeConstructed<ErrorCodec, global::Baclib.Bacnet.Types.Application.Error>(ref reader, 0);
-        var _listOfVtSessionIdentifiers = reader.PeekOpeningTag(1) ? Asdu.DecodeSequenceOf<Unsigned8Codec, byte>(ref reader, 1) : Optional<SequenceOf<byte>>.None;
-
-        return new global::Baclib.Bacnet.Types.Application.VtCloseError
+        return new T::VtCloseError
         {
-            ErrorType = _errorType,
-            ListOfVtSessionIdentifiers = _listOfVtSessionIdentifiers
+            ErrorType = AsduElement.Decode<ErrorCodec, T::Error>(ref reader, 0),
+            ListOfVtSessionIdentifiers = AsduElement.DecodeOptionalSequenceOf<Unsigned8Codec, byte>(ref reader, 1)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.VtCloseError Decode(ref NativeReader reader, byte tagNumber)
+    public static T::VtCloseError Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<VtCloseErrorCodec, T::VtCloseError>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::VtCloseError value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.Encode<ErrorCodec, T::Error>(ref writer, 0, value.ErrorType);
+        AsduElement.EncodeOptionalSequenceOf<Unsigned8Codec, byte>(ref writer, 1, value.ListOfVtSessionIdentifiers);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.VtCloseError value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::VtCloseError value)
+        => AsduConstructed.Encode<VtCloseErrorCodec, T::VtCloseError>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::VtCloseError value)
     {
-        Asdu.EncodeElement<ErrorCodec, global::Baclib.Bacnet.Types.Application.Error>(ref writer, 0, value.ErrorType);
-        if (value.ListOfVtSessionIdentifiers.HasValue)
-        {
-            writer.WriteOpeningTag(1);
-            foreach (var item in value.ListOfVtSessionIdentifiers.Value)
-            {
-                Asdu.EncodeElement<Unsigned8Codec, byte>(ref writer, 1, item);
-            }
-            writer.WriteClosingTag(1);
-        }
+        var length = 0;
+        length += AsduElement.GetEncodedLength<ErrorCodec, T::Error>(0, value.ErrorType);
+        length += AsduElement.GetOptionalSequenceOfEncodedLength<Unsigned8Codec, byte>(1, value.ListOfVtSessionIdentifiers);
+        return length;
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.VtCloseError value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
+    public static int GetEncodedLength(in T::VtCloseError value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<VtCloseErrorCodec, T::VtCloseError>(tagNumber, value);
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.VtCloseError value)
+    public static bool Matches(ref AsduReader reader)
     {
-        return Asdu.GetElementLength<ErrorCodec, global::Baclib.Bacnet.Types.Application.Error>(0, value.ErrorType) + (value.ListOfVtSessionIdentifiers.HasValue ? (AsduLength.FromTagNumber((byte)1) + (value.ListOfVtSessionIdentifiers.Value.Items.Sum(static item => Asdu.GetElementLength<Unsigned8Codec, byte>(1, item))) + AsduLength.FromTagNumber((byte)1)) : 0);
+        return reader.PeekContextTag(0);
     }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.VtCloseError value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

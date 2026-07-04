@@ -1,74 +1,54 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class WriteGroupRequestCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.WriteGroupRequest>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.WriteGroupRequest>
+    IAsduElementCodec<T::WriteGroupRequest>,
+    IAsduConstructedCodec<T::WriteGroupRequest>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::WriteGroupRequest Decode(ref AsduReader reader)
     {
-        return reader.PeekTag((byte)0);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.WriteGroupRequest Decode(ref NativeReader reader)
-    {
-        var _groupNumber = Asdu.DecodePrimitive<Unsigned32Codec, uint>(ref reader, 0);
-        var _writePriority = Asdu.DecodePrimitive<WriteGroupRequestTWritePriorityCodec, global::Baclib.Bacnet.Types.Application.WriteGroupRequest.TWritePriority>(ref reader, 1);
-        var _changeList = Asdu.DecodeSequenceOf<GroupChannelValueCodec, global::Baclib.Bacnet.Types.Application.GroupChannelValue>(ref reader, 2);
-        var _inhibitDelay = Asdu.DecodeOptional<BooleanCodec, bool>(ref reader, 3);
-
-        return new global::Baclib.Bacnet.Types.Application.WriteGroupRequest
+        return new T::WriteGroupRequest
         {
-            GroupNumber = _groupNumber,
-            WritePriority = _writePriority,
-            ChangeList = _changeList,
-            InhibitDelay = _inhibitDelay
+            GroupNumber = AsduElement.Decode<Unsigned32Codec, uint>(ref reader, 0),
+            WritePriority = AsduElement.Decode<WriteGroupRequestTWritePriorityCodec, T::WriteGroupRequest.TWritePriority>(ref reader, 1),
+            ChangeList = AsduElement.DecodeSequenceOf<GroupChannelValueCodec, T::GroupChannelValue>(ref reader, 2),
+            InhibitDelay = AsduElement.DecodeOptional<BooleanCodec, bool>(ref reader, 3)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.WriteGroupRequest Decode(ref NativeReader reader, byte tagNumber)
+    public static T::WriteGroupRequest Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<WriteGroupRequestCodec, T::WriteGroupRequest>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::WriteGroupRequest value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.Encode<Unsigned32Codec, uint>(ref writer, 0, value.GroupNumber);
+        AsduElement.Encode<WriteGroupRequestTWritePriorityCodec, T::WriteGroupRequest.TWritePriority>(ref writer, 1, value.WritePriority);
+        AsduElement.EncodeSequenceOf<GroupChannelValueCodec, T::GroupChannelValue>(ref writer, 2, value.ChangeList);
+        AsduElement.EncodeOptional<BooleanCodec, bool>(ref writer, 3, value.InhibitDelay);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.WriteGroupRequest value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::WriteGroupRequest value)
+        => AsduConstructed.Encode<WriteGroupRequestCodec, T::WriteGroupRequest>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::WriteGroupRequest value)
     {
-        Asdu.EncodePrimitive<Unsigned32Codec, uint>(ref writer, 0, value.GroupNumber);
-        Asdu.EncodePrimitive<WriteGroupRequestTWritePriorityCodec, global::Baclib.Bacnet.Types.Application.WriteGroupRequest.TWritePriority>(ref writer, 1, value.WritePriority);
-        writer.WriteOpeningTag(2);
-        foreach (var item in value.ChangeList)
-        {
-            Asdu.EncodeElement<GroupChannelValueCodec, global::Baclib.Bacnet.Types.Application.GroupChannelValue>(ref writer, 2, item);
-        }
-        writer.WriteClosingTag(2);
-        if (value.InhibitDelay.HasValue)
-        {
-            Asdu.EncodePrimitive<BooleanCodec, bool>(ref writer, 3, value.InhibitDelay.Value);
-        }
+        var length = 0;
+        length += AsduElement.GetEncodedLength<Unsigned32Codec, uint>(0, value.GroupNumber);
+        length += AsduElement.GetEncodedLength<WriteGroupRequestTWritePriorityCodec, T::WriteGroupRequest.TWritePriority>(1, value.WritePriority);
+        length += AsduElement.GetSequenceOfEncodedLength<GroupChannelValueCodec, T::GroupChannelValue>(2, value.ChangeList);
+        length += AsduElement.GetOptionalEncodedLength<BooleanCodec, bool>(3, value.InhibitDelay);
+        return length;
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.WriteGroupRequest value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
+    public static int GetEncodedLength(in T::WriteGroupRequest value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<WriteGroupRequestCodec, T::WriteGroupRequest>(tagNumber, value);
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.WriteGroupRequest value)
+    public static bool Matches(ref AsduReader reader)
     {
-        return Asdu.GetPrimitiveLength<Unsigned32Codec, uint>(0, value.GroupNumber) + Asdu.GetPrimitiveLength<WriteGroupRequestTWritePriorityCodec, global::Baclib.Bacnet.Types.Application.WriteGroupRequest.TWritePriority>(1, value.WritePriority) + (AsduLength.FromTagNumber((byte)2) + (value.ChangeList.Items.Sum(static item => Asdu.GetElementLength<GroupChannelValueCodec, global::Baclib.Bacnet.Types.Application.GroupChannelValue>(2, item))) + AsduLength.FromTagNumber((byte)2)) + (value.InhibitDelay.HasValue ? Asdu.GetPrimitiveLength<BooleanCodec, bool>(3, value.InhibitDelay.Value) : 0);
+        return reader.PeekContextTag(0);
     }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.WriteGroupRequest value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

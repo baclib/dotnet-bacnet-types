@@ -1,60 +1,48 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class EventLogRecordCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.EventLogRecord>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.EventLogRecord>
+    IAsduElementCodec<T::EventLogRecord>,
+    IAsduConstructedCodec<T::EventLogRecord>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::EventLogRecord Decode(ref AsduReader reader)
     {
-        return reader.PeekOpeningTag((byte)0);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.EventLogRecord Decode(ref NativeReader reader)
-    {
-        var _timestamp = Asdu.DecodeConstructed<DateTimeCodec, global::Baclib.Bacnet.Types.Application.DateTime>(ref reader, 0);
-        var _logDatum = Asdu.DecodeConstructed<EventLogRecordTLogDatumCodec, global::Baclib.Bacnet.Types.Application.EventLogRecord.TLogDatum>(ref reader, 1);
-
-        return new global::Baclib.Bacnet.Types.Application.EventLogRecord
+        return new T::EventLogRecord
         {
-            Timestamp = _timestamp,
-            LogDatum = _logDatum
+            Timestamp = AsduElement.Decode<DateTimeCodec, T::DateTime>(ref reader, 0),
+            LogDatum = AsduElement.Decode<EventLogRecordTLogDatumCodec, T::EventLogRecord.TLogDatum>(ref reader, 1)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.EventLogRecord Decode(ref NativeReader reader, byte tagNumber)
+    public static T::EventLogRecord Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<EventLogRecordCodec, T::EventLogRecord>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::EventLogRecord value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.Encode<DateTimeCodec, T::DateTime>(ref writer, 0, value.Timestamp);
+        AsduElement.Encode<EventLogRecordTLogDatumCodec, T::EventLogRecord.TLogDatum>(ref writer, 1, value.LogDatum);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.EventLogRecord value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::EventLogRecord value)
+        => AsduConstructed.Encode<EventLogRecordCodec, T::EventLogRecord>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::EventLogRecord value)
     {
-        Asdu.EncodeElement<DateTimeCodec, global::Baclib.Bacnet.Types.Application.DateTime>(ref writer, 0, value.Timestamp);
-        Asdu.EncodeElement<EventLogRecordTLogDatumCodec, global::Baclib.Bacnet.Types.Application.EventLogRecord.TLogDatum>(ref writer, 1, value.LogDatum);
+        var length = 0;
+        length += AsduElement.GetEncodedLength<DateTimeCodec, T::DateTime>(0, value.Timestamp);
+        length += AsduElement.GetEncodedLength<EventLogRecordTLogDatumCodec, T::EventLogRecord.TLogDatum>(1, value.LogDatum);
+        return length;
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.EventLogRecord value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
+    public static int GetEncodedLength(in T::EventLogRecord value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<EventLogRecordCodec, T::EventLogRecord>(tagNumber, value);
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.EventLogRecord value)
+    public static bool Matches(ref AsduReader reader)
     {
-        return Asdu.GetElementLength<DateTimeCodec, global::Baclib.Bacnet.Types.Application.DateTime>(0, value.Timestamp) + Asdu.GetElementLength<EventLogRecordTLogDatumCodec, global::Baclib.Bacnet.Types.Application.EventLogRecord.TLogDatum>(1, value.LogDatum);
+        return reader.PeekContextTag(0);
     }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.EventLogRecord value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

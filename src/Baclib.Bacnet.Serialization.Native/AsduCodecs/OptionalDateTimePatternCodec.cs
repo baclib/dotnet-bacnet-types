@@ -7,9 +7,12 @@ public sealed class OptionalDateTimePatternCodec :
     IAsduElementCodec<global::Baclib.Bacnet.Types.Application.OptionalDateTimePattern>,
     IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.OptionalDateTimePattern>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static bool Matches(ref AsduReader reader)
     {
-        var applicationTagNumber = reader.PeekApplicationTagNumber();
+        if (!reader.PeekApplicationTag(out var applicationTagNumber))
+        {
+            return false;
+        }
         switch (applicationTagNumber)
         {
             case ApplicationTagNumber.Null:
@@ -17,85 +20,68 @@ public sealed class OptionalDateTimePatternCodec :
             default:
                 break;
         }
-
-        var contextTagNumber = reader.PeekContextTagNumber();
-        switch (contextTagNumber)
+        if (!reader.PeekContextTag(out var contextTagNumber))
         {
-            case 1:
-                return true;
-            default:
-                return false;
+            return false;
         }
+        return contextTagNumber switch
+        {
+            1 => true,
+            _ => false
+        };
     }
 
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag(tagNumber);
-
-    public static global::Baclib.Bacnet.Types.Application.OptionalDateTimePattern Decode(ref NativeReader reader)
+    public static global::Baclib.Bacnet.Types.Application.OptionalDateTimePattern Decode(ref AsduReader reader)
     {
-        // info
-        if (reader.PeekTag(NullCodec.TagNumber))
+        if (NullCodec.Matches(ref reader))
         {
-            //var _null = Asdu.Decode<NullCodec, global::Baclib.Bacnet.Types.Application.Null>(ref reader);
-            var _null = NullCodec.Decode(ref reader);
-            return global::Baclib.Bacnet.Types.Application.OptionalDateTimePattern.FromNull(_null);
+            var @null = NullCodec.Decode(ref reader);
+            return global::Baclib.Bacnet.Types.Application.OptionalDateTimePattern.FromNull(@null);
         }
 
-        var tagNumber = reader.PeekContextTagNumber();
+        var tagNumber = reader.ReadContextTagNumber();
         switch (tagNumber)
         {
             case 1:
-                var _datetimepattern = Asdu.DecodeConstructed<DateTimePatternCodec, global::Baclib.Bacnet.Types.Application.DateTimePattern>(ref reader, 1);
-                return global::Baclib.Bacnet.Types.Application.OptionalDateTimePattern.FromDatetimepattern(_datetimepattern);
+                var @datetimepattern = DateTimePatternCodec.Decode(ref reader, 1);
+                return global::Baclib.Bacnet.Types.Application.OptionalDateTimePattern.FromDatetimepattern(@datetimepattern);
         }
         throw new FormatException(nameof(reader));
     }
 
-    public static global::Baclib.Bacnet.Types.Application.OptionalDateTimePattern Decode(ref NativeReader reader, byte tagNumber)
-    {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
-    }
+    public static global::Baclib.Bacnet.Types.Application.OptionalDateTimePattern Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<OptionalDateTimePatternCodec, global::Baclib.Bacnet.Types.Application.OptionalDateTimePattern>(ref reader, tagNumber);
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.OptionalDateTimePattern value)
+    public static void Encode(ref AsduWriter writer, in global::Baclib.Bacnet.Types.Application.OptionalDateTimePattern value)
     {
         switch (value.Choice)
         {
             case global::Baclib.Bacnet.Types.Application.OptionalDateTimePattern.Option.Null:
-                //Asdu.Encode<NullCodec, global::Baclib.Bacnet.Types.Application.Null>(ref writer, value.Null);
                 NullCodec.Encode(ref writer, value.Null);
                 return;
             case global::Baclib.Bacnet.Types.Application.OptionalDateTimePattern.Option.Datetimepattern:
-                Asdu.EncodeConstructed<DateTimePatternCodec, global::Baclib.Bacnet.Types.Application.DateTimePattern>(ref writer, 1, value.Datetimepattern);
+                DateTimePatternCodec.Encode(ref writer, 1, value.Datetimepattern);
                 return;
-        }
-        throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported.");
-    }
-
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.OptionalDateTimePattern value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.OptionalDateTimePattern value)
-    {
-        switch (value.Choice)
-        {
-            case global::Baclib.Bacnet.Types.Application.OptionalDateTimePattern.Option.Null:
-                return Asdu.GetEncodedLength<NullCodec, global::Baclib.Bacnet.Types.Application.Null>(value.Null);
-            case global::Baclib.Bacnet.Types.Application.OptionalDateTimePattern.Option.Datetimepattern:
-                return Asdu.GetConstructedLength<DateTimePatternCodec, global::Baclib.Bacnet.Types.Application.DateTimePattern>(1, value.Datetimepattern);
             default:
                 throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported.");
         }
     }
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.OptionalDateTimePattern value, byte tagNumber)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.OptionalDateTimePattern value)
+        => AsduConstructed.Encode<OptionalDateTimePatternCodec, global::Baclib.Bacnet.Types.Application.OptionalDateTimePattern>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in global::Baclib.Bacnet.Types.Application.OptionalDateTimePattern value)
     {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
+        return value.Choice switch
+        {
+            global::Baclib.Bacnet.Types.Application.OptionalDateTimePattern.Option.Null
+                => NullCodec.GetEncodedLength(value.Null),
+            global::Baclib.Bacnet.Types.Application.OptionalDateTimePattern.Option.Datetimepattern
+                => DateTimePatternCodec.GetEncodedLength(value.Datetimepattern, 1),
+            _ => throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported."),
+        };
     }
+
+    public static int GetEncodedLength(in global::Baclib.Bacnet.Types.Application.OptionalDateTimePattern value, byte tagNumber)
+        => AsduElement.GetEncodedLength<OptionalDateTimePatternCodec, global::Baclib.Bacnet.Types.Application.OptionalDateTimePattern>(tagNumber, value);
 }

@@ -10,20 +10,20 @@ public sealed class AnyCodec :
     IAsduElementCodec<T.Any>,
     IAsduPrimitiveCodec<T.Any>
 {
-    public static T.Any Decode(ref NativeReader reader)
-        => Asdu.DecodePrimitive<AnyCodec, T.Any>(ref reader);
+    public static T.Any Decode(ref AsduReader reader)
+        => AsduPrimitive.Decode<AnyCodec, T.Any>(ref reader);
 
-    public static T.Any Decode(ref NativeReader reader, byte tagNumber)
-        => Asdu.DecodePrimitive<AnyCodec, T.Any>(ref reader, tagNumber);
+    public static T.Any Decode(ref AsduReader reader, byte tagNumber)
+        => AsduPrimitive.Decode<AnyCodec, T.Any>(ref reader, tagNumber);
 
     public static T.Any DecodeValue(ReadOnlySpan<byte> source)
         => throw new NotImplementedException("AnyCodec is a placeholder. Provide a full Any decoder.");
 
-    public static void Encode(ref NativeWriter writer, in T.Any value)
-        => Asdu.EncodePrimitive<AnyCodec, T.Any>(ref writer, value);
+    public static void Encode(ref AsduWriter writer, in T.Any value)
+        => AsduPrimitive.Encode<AnyCodec, T.Any>(ref writer, value);
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in T.Any value)
-        => Asdu.EncodePrimitive<AnyCodec, T.Any>(ref writer, tagNumber, value);
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T.Any value)
+        => AsduPrimitive.Encode<AnyCodec, T.Any>(ref writer, tagNumber, value);
 
     public static void EncodeValue(Span<byte> destination, in T.Any value)
         => throw new NotImplementedException("AnyCodec is a placeholder. Provide a full Any encoder.");
@@ -31,17 +31,14 @@ public sealed class AnyCodec :
     public static int GetEncodedValueLength(in T.Any value)
         => throw new NotImplementedException("AnyCodec is a placeholder. Provide a full Any length calculator.");
 
-    public static int GetLength(in T.Any value)
+    public static int GetEncodedLength(in T.Any value)
         => AsduLength.Sum(TagNumber, GetEncodedValueLength(value));
 
-    public static int GetLength(in T.Any value, byte tagNumber)
+    public static int GetEncodedLength(in T.Any value, byte tagNumber)
         => AsduLength.Sum(tagNumber, GetEncodedValueLength(value));
 
-    public static bool Matches(ref NativeReader reader)
-        => reader.PeekPrimitiveTag(TagNumber);
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekPrimitiveTag(tagNumber);
+    public static bool Matches(ref AsduReader reader)
+        => reader.PeekApplicationTag(TagNumber);
 
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Null;

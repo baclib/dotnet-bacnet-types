@@ -7,82 +7,68 @@ public sealed class LandingCallStatusTCommandCodec :
     IAsduElementCodec<global::Baclib.Bacnet.Types.Application.LandingCallStatus.TCommand>,
     IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.LandingCallStatus.TCommand>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static bool Matches(ref AsduReader reader)
     {
-
-        var contextTagNumber = reader.PeekContextTagNumber();
-        switch (contextTagNumber)
+        if (!reader.PeekContextTag(out var contextTagNumber))
         {
-            case 1:
-            case 2:
-                return true;
-            default:
-                return false;
+            return false;
         }
+        return contextTagNumber switch
+        {
+            1 or
+            2 => true,
+            _ => false
+        };
     }
 
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag(tagNumber);
-
-    public static global::Baclib.Bacnet.Types.Application.LandingCallStatus.TCommand Decode(ref NativeReader reader)
+    public static global::Baclib.Bacnet.Types.Application.LandingCallStatus.TCommand Decode(ref AsduReader reader)
     {
-        var tagNumber = reader.PeekContextTagNumber();
+        var tagNumber = reader.ReadContextTagNumber();
         switch (tagNumber)
         {
             case 1:
-                var _direction = Asdu.DecodePrimitive<LiftCarDirectionCodec, global::Baclib.Bacnet.Types.Application.LiftCarDirection>(ref reader, 1);
-                return global::Baclib.Bacnet.Types.Application.LandingCallStatus.TCommand.FromDirection(_direction);
+                var @direction = LiftCarDirectionCodec.Decode(ref reader, 1);
+                return global::Baclib.Bacnet.Types.Application.LandingCallStatus.TCommand.FromDirection(@direction);
             case 2:
-                var _destination = Asdu.DecodePrimitive<Unsigned8Codec, byte>(ref reader, 2);
-                return global::Baclib.Bacnet.Types.Application.LandingCallStatus.TCommand.FromDestination(_destination);
+                var @destination = Unsigned8Codec.Decode(ref reader, 2);
+                return global::Baclib.Bacnet.Types.Application.LandingCallStatus.TCommand.FromDestination(@destination);
         }
         throw new FormatException(nameof(reader));
     }
 
-    public static global::Baclib.Bacnet.Types.Application.LandingCallStatus.TCommand Decode(ref NativeReader reader, byte tagNumber)
-    {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
-    }
+    public static global::Baclib.Bacnet.Types.Application.LandingCallStatus.TCommand Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<LandingCallStatusTCommandCodec, global::Baclib.Bacnet.Types.Application.LandingCallStatus.TCommand>(ref reader, tagNumber);
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.LandingCallStatus.TCommand value)
+    public static void Encode(ref AsduWriter writer, in global::Baclib.Bacnet.Types.Application.LandingCallStatus.TCommand value)
     {
         switch (value.Choice)
         {
             case global::Baclib.Bacnet.Types.Application.LandingCallStatus.TCommand.Option.Direction:
-                Asdu.EncodePrimitive<LiftCarDirectionCodec, global::Baclib.Bacnet.Types.Application.LiftCarDirection>(ref writer, 1, value.Direction);
+                LiftCarDirectionCodec.Encode(ref writer, 1, value.Direction);
                 return;
             case global::Baclib.Bacnet.Types.Application.LandingCallStatus.TCommand.Option.Destination:
-                Asdu.EncodePrimitive<Unsigned8Codec, byte>(ref writer, 2, value.Destination);
+                Unsigned8Codec.Encode(ref writer, 2, value.Destination);
                 return;
-        }
-        throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported.");
-    }
-
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.LandingCallStatus.TCommand value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.LandingCallStatus.TCommand value)
-    {
-        switch (value.Choice)
-        {
-            case global::Baclib.Bacnet.Types.Application.LandingCallStatus.TCommand.Option.Direction:
-                return Asdu.GetPrimitiveLength<LiftCarDirectionCodec, global::Baclib.Bacnet.Types.Application.LiftCarDirection>(1, value.Direction);
-            case global::Baclib.Bacnet.Types.Application.LandingCallStatus.TCommand.Option.Destination:
-                return Asdu.GetPrimitiveLength<Unsigned8Codec, byte>(2, value.Destination);
             default:
                 throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported.");
         }
     }
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.LandingCallStatus.TCommand value, byte tagNumber)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.LandingCallStatus.TCommand value)
+        => AsduConstructed.Encode<LandingCallStatusTCommandCodec, global::Baclib.Bacnet.Types.Application.LandingCallStatus.TCommand>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in global::Baclib.Bacnet.Types.Application.LandingCallStatus.TCommand value)
     {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
+        return value.Choice switch
+        {
+            global::Baclib.Bacnet.Types.Application.LandingCallStatus.TCommand.Option.Direction
+                => LiftCarDirectionCodec.GetEncodedLength(value.Direction, 1),
+            global::Baclib.Bacnet.Types.Application.LandingCallStatus.TCommand.Option.Destination
+                => Unsigned8Codec.GetEncodedLength(value.Destination, 2),
+            _ => throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported."),
+        };
     }
+
+    public static int GetEncodedLength(in global::Baclib.Bacnet.Types.Application.LandingCallStatus.TCommand value, byte tagNumber)
+        => AsduElement.GetEncodedLength<LandingCallStatusTCommandCodec, global::Baclib.Bacnet.Types.Application.LandingCallStatus.TCommand>(tagNumber, value);
 }

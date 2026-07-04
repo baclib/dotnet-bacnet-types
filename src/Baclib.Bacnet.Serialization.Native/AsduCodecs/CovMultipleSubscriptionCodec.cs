@@ -1,74 +1,57 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class CovMultipleSubscriptionCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.CovMultipleSubscription>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.CovMultipleSubscription>
+    IAsduElementCodec<T::CovMultipleSubscription>,
+    IAsduConstructedCodec<T::CovMultipleSubscription>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::CovMultipleSubscription Decode(ref AsduReader reader)
     {
-        return reader.PeekOpeningTag((byte)0);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.CovMultipleSubscription Decode(ref NativeReader reader)
-    {
-        var _recipient = Asdu.DecodeConstructed<RecipientProcessCodec, global::Baclib.Bacnet.Types.Application.RecipientProcess>(ref reader, 0);
-        var _issueConfirmedNotifications = Asdu.DecodePrimitive<BooleanCodec, bool>(ref reader, 1);
-        var _timeRemaining = Asdu.DecodePrimitive<UnsignedCodec, uint>(ref reader, 2);
-        var _maxNotificationDelay = Asdu.DecodePrimitive<UnsignedCodec, uint>(ref reader, 3);
-        var _listOfCovSubscriptionSpecifications = Asdu.DecodeSequenceOf<CovMultipleSubscriptionTListOfCovSubscriptionSpecificationsItemCodec, global::Baclib.Bacnet.Types.Application.CovMultipleSubscription.TListOfCovSubscriptionSpecificationsItem>(ref reader, 4);
-
-        return new global::Baclib.Bacnet.Types.Application.CovMultipleSubscription
+        return new T::CovMultipleSubscription
         {
-            Recipient = _recipient,
-            IssueConfirmedNotifications = _issueConfirmedNotifications,
-            TimeRemaining = _timeRemaining,
-            MaxNotificationDelay = _maxNotificationDelay,
-            ListOfCovSubscriptionSpecifications = _listOfCovSubscriptionSpecifications
+            Recipient = AsduElement.Decode<RecipientProcessCodec, T::RecipientProcess>(ref reader, 0),
+            IssueConfirmedNotifications = AsduElement.Decode<BooleanCodec, bool>(ref reader, 1),
+            TimeRemaining = AsduElement.Decode<UnsignedCodec, uint>(ref reader, 2),
+            MaxNotificationDelay = AsduElement.Decode<UnsignedCodec, uint>(ref reader, 3),
+            ListOfCovSubscriptionSpecifications = AsduElement.DecodeSequenceOf<CovMultipleSubscriptionTListOfCovSubscriptionSpecificationsItemCodec, T::CovMultipleSubscription.TListOfCovSubscriptionSpecificationsItem>(ref reader, 4)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.CovMultipleSubscription Decode(ref NativeReader reader, byte tagNumber)
+    public static T::CovMultipleSubscription Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<CovMultipleSubscriptionCodec, T::CovMultipleSubscription>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::CovMultipleSubscription value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.Encode<RecipientProcessCodec, T::RecipientProcess>(ref writer, 0, value.Recipient);
+        AsduElement.Encode<BooleanCodec, bool>(ref writer, 1, value.IssueConfirmedNotifications);
+        AsduElement.Encode<UnsignedCodec, uint>(ref writer, 2, value.TimeRemaining);
+        AsduElement.Encode<UnsignedCodec, uint>(ref writer, 3, value.MaxNotificationDelay);
+        AsduElement.EncodeSequenceOf<CovMultipleSubscriptionTListOfCovSubscriptionSpecificationsItemCodec, T::CovMultipleSubscription.TListOfCovSubscriptionSpecificationsItem>(ref writer, 4, value.ListOfCovSubscriptionSpecifications);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.CovMultipleSubscription value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::CovMultipleSubscription value)
+        => AsduConstructed.Encode<CovMultipleSubscriptionCodec, T::CovMultipleSubscription>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::CovMultipleSubscription value)
     {
-        Asdu.EncodeElement<RecipientProcessCodec, global::Baclib.Bacnet.Types.Application.RecipientProcess>(ref writer, 0, value.Recipient);
-        Asdu.EncodePrimitive<BooleanCodec, bool>(ref writer, 1, value.IssueConfirmedNotifications);
-        Asdu.EncodePrimitive<UnsignedCodec, uint>(ref writer, 2, value.TimeRemaining);
-        Asdu.EncodePrimitive<UnsignedCodec, uint>(ref writer, 3, value.MaxNotificationDelay);
-        writer.WriteOpeningTag(4);
-        foreach (var item in value.ListOfCovSubscriptionSpecifications)
-        {
-            Asdu.EncodeElement<CovMultipleSubscriptionTListOfCovSubscriptionSpecificationsItemCodec, global::Baclib.Bacnet.Types.Application.CovMultipleSubscription.TListOfCovSubscriptionSpecificationsItem>(ref writer, 4, item);
-        }
-        writer.WriteClosingTag(4);
+        var length = 0;
+        length += AsduElement.GetEncodedLength<RecipientProcessCodec, T::RecipientProcess>(0, value.Recipient);
+        length += AsduElement.GetEncodedLength<BooleanCodec, bool>(1, value.IssueConfirmedNotifications);
+        length += AsduElement.GetEncodedLength<UnsignedCodec, uint>(2, value.TimeRemaining);
+        length += AsduElement.GetEncodedLength<UnsignedCodec, uint>(3, value.MaxNotificationDelay);
+        length += AsduElement.GetSequenceOfEncodedLength<CovMultipleSubscriptionTListOfCovSubscriptionSpecificationsItemCodec, T::CovMultipleSubscription.TListOfCovSubscriptionSpecificationsItem>(4, value.ListOfCovSubscriptionSpecifications);
+        return length;
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.CovMultipleSubscription value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
+    public static int GetEncodedLength(in T::CovMultipleSubscription value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<CovMultipleSubscriptionCodec, T::CovMultipleSubscription>(tagNumber, value);
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.CovMultipleSubscription value)
+    public static bool Matches(ref AsduReader reader)
     {
-        return Asdu.GetElementLength<RecipientProcessCodec, global::Baclib.Bacnet.Types.Application.RecipientProcess>(0, value.Recipient) + Asdu.GetPrimitiveLength<BooleanCodec, bool>(1, value.IssueConfirmedNotifications) + Asdu.GetPrimitiveLength<UnsignedCodec, uint>(2, value.TimeRemaining) + Asdu.GetPrimitiveLength<UnsignedCodec, uint>(3, value.MaxNotificationDelay) + (AsduLength.FromTagNumber((byte)4) + (value.ListOfCovSubscriptionSpecifications.Items.Sum(static item => Asdu.GetElementLength<CovMultipleSubscriptionTListOfCovSubscriptionSpecificationsItemCodec, global::Baclib.Bacnet.Types.Application.CovMultipleSubscription.TListOfCovSubscriptionSpecificationsItem>(4, item))) + AsduLength.FromTagNumber((byte)4));
+        return reader.PeekContextTag(0);
     }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.CovMultipleSubscription value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

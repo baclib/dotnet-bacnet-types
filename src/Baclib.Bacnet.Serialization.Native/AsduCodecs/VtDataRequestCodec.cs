@@ -1,63 +1,51 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class VtDataRequestCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.VtDataRequest>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.VtDataRequest>
+    IAsduElementCodec<T::VtDataRequest>,
+    IAsduConstructedCodec<T::VtDataRequest>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::VtDataRequest Decode(ref AsduReader reader)
     {
-        return reader.PeekTag(Unsigned8Codec.TagNumber);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.VtDataRequest Decode(ref NativeReader reader)
-    {
-        var _vtSessionIdentifier = Asdu.DecodePrimitive<Unsigned8Codec, byte>(ref reader);
-        var _vtNewData = Asdu.DecodePrimitive<OctetStringCodec, global::Baclib.Bacnet.Types.Application.OctetString>(ref reader);
-        var _vtDataFlag = Asdu.DecodePrimitive<VtDataRequestTVtDataFlagCodec, global::Baclib.Bacnet.Types.Application.VtDataRequest.TVtDataFlag>(ref reader);
-
-        return new global::Baclib.Bacnet.Types.Application.VtDataRequest
+        return new T::VtDataRequest
         {
-            VtSessionIdentifier = _vtSessionIdentifier,
-            VtNewData = _vtNewData,
-            VtDataFlag = _vtDataFlag
+            VtSessionIdentifier = AsduElement.Decode<Unsigned8Codec, byte>(ref reader),
+            VtNewData = AsduElement.Decode<OctetStringCodec, T::OctetString>(ref reader),
+            VtDataFlag = AsduElement.Decode<VtDataRequestTVtDataFlagCodec, T::VtDataRequest.TVtDataFlag>(ref reader)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.VtDataRequest Decode(ref NativeReader reader, byte tagNumber)
+    public static T::VtDataRequest Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<VtDataRequestCodec, T::VtDataRequest>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::VtDataRequest value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.Encode<Unsigned8Codec, byte>(ref writer, value.VtSessionIdentifier);
+        AsduElement.Encode<OctetStringCodec, T::OctetString>(ref writer, value.VtNewData);
+        AsduElement.Encode<VtDataRequestTVtDataFlagCodec, T::VtDataRequest.TVtDataFlag>(ref writer, value.VtDataFlag);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.VtDataRequest value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::VtDataRequest value)
+        => AsduConstructed.Encode<VtDataRequestCodec, T::VtDataRequest>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::VtDataRequest value)
     {
-        Asdu.EncodePrimitive<Unsigned8Codec, byte>(ref writer, value.VtSessionIdentifier);
-        Asdu.EncodePrimitive<OctetStringCodec, global::Baclib.Bacnet.Types.Application.OctetString>(ref writer, value.VtNewData);
-        Asdu.EncodePrimitive<VtDataRequestTVtDataFlagCodec, global::Baclib.Bacnet.Types.Application.VtDataRequest.TVtDataFlag>(ref writer, value.VtDataFlag);
+        var length = 0;
+        length += AsduElement.GetEncodedLength<Unsigned8Codec, byte>(value.VtSessionIdentifier);
+        length += AsduElement.GetEncodedLength<OctetStringCodec, T::OctetString>(value.VtNewData);
+        length += AsduElement.GetEncodedLength<VtDataRequestTVtDataFlagCodec, T::VtDataRequest.TVtDataFlag>(value.VtDataFlag);
+        return length;
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.VtDataRequest value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
+    public static int GetEncodedLength(in T::VtDataRequest value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<VtDataRequestCodec, T::VtDataRequest>(tagNumber, value);
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.VtDataRequest value)
+    public static bool Matches(ref AsduReader reader)
     {
-        return Asdu.GetEncodedLength<Unsigned8Codec, byte>(value.VtSessionIdentifier) + Asdu.GetEncodedLength<OctetStringCodec, global::Baclib.Bacnet.Types.Application.OctetString>(value.VtNewData) + Asdu.GetEncodedLength<VtDataRequestTVtDataFlagCodec, global::Baclib.Bacnet.Types.Application.VtDataRequest.TVtDataFlag>(value.VtDataFlag);
+        return Unsigned8Codec.Matches(ref reader);
     }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.VtDataRequest value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

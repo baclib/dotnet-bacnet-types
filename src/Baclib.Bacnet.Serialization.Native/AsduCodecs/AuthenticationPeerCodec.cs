@@ -1,69 +1,57 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class AuthenticationPeerCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.AuthenticationPeer>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.AuthenticationPeer>
+    IAsduElementCodec<T::AuthenticationPeer>,
+    IAsduConstructedCodec<T::AuthenticationPeer>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::AuthenticationPeer Decode(ref AsduReader reader)
     {
-        return HostNPortCodec.Matches(ref reader);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.AuthenticationPeer Decode(ref NativeReader reader)
-    {
-        var _host = Asdu.DecodeElement<HostNPortCodec, global::Baclib.Bacnet.Types.Application.HostNPort>(ref reader);
-        var _device = Asdu.DecodePrimitive<Unsigned32Codec, uint>(ref reader);
-        var _authAware = Asdu.DecodePrimitive<BooleanCodec, bool>(ref reader);
-        var _router = Asdu.DecodePrimitive<BooleanCodec, bool>(ref reader);
-        var _hub = Asdu.DecodePrimitive<BooleanCodec, bool>(ref reader);
-
-        return new global::Baclib.Bacnet.Types.Application.AuthenticationPeer
+        return new T::AuthenticationPeer
         {
-            Host = _host,
-            Device = _device,
-            AuthAware = _authAware,
-            Router = _router,
-            Hub = _hub
+            Host = AsduElement.Decode<HostNPortCodec, T::HostNPort>(ref reader),
+            Device = AsduElement.Decode<Unsigned32Codec, uint>(ref reader),
+            AuthAware = AsduElement.Decode<BooleanCodec, bool>(ref reader),
+            Router = AsduElement.Decode<BooleanCodec, bool>(ref reader),
+            Hub = AsduElement.Decode<BooleanCodec, bool>(ref reader)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.AuthenticationPeer Decode(ref NativeReader reader, byte tagNumber)
+    public static T::AuthenticationPeer Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<AuthenticationPeerCodec, T::AuthenticationPeer>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::AuthenticationPeer value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.Encode<HostNPortCodec, T::HostNPort>(ref writer, value.Host);
+        AsduElement.Encode<Unsigned32Codec, uint>(ref writer, value.Device);
+        AsduElement.Encode<BooleanCodec, bool>(ref writer, value.AuthAware);
+        AsduElement.Encode<BooleanCodec, bool>(ref writer, value.Router);
+        AsduElement.Encode<BooleanCodec, bool>(ref writer, value.Hub);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.AuthenticationPeer value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::AuthenticationPeer value)
+        => AsduConstructed.Encode<AuthenticationPeerCodec, T::AuthenticationPeer>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::AuthenticationPeer value)
     {
-        Asdu.EncodeElement<HostNPortCodec, global::Baclib.Bacnet.Types.Application.HostNPort>(ref writer, value.Host);
-        Asdu.EncodePrimitive<Unsigned32Codec, uint>(ref writer, value.Device);
-        Asdu.EncodePrimitive<BooleanCodec, bool>(ref writer, value.AuthAware);
-        Asdu.EncodePrimitive<BooleanCodec, bool>(ref writer, value.Router);
-        Asdu.EncodePrimitive<BooleanCodec, bool>(ref writer, value.Hub);
+        var length = 0;
+        length += AsduElement.GetEncodedLength<HostNPortCodec, T::HostNPort>(value.Host);
+        length += AsduElement.GetEncodedLength<Unsigned32Codec, uint>(value.Device);
+        length += AsduElement.GetEncodedLength<BooleanCodec, bool>(value.AuthAware);
+        length += AsduElement.GetEncodedLength<BooleanCodec, bool>(value.Router);
+        length += AsduElement.GetEncodedLength<BooleanCodec, bool>(value.Hub);
+        return length;
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.AuthenticationPeer value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
+    public static int GetEncodedLength(in T::AuthenticationPeer value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<AuthenticationPeerCodec, T::AuthenticationPeer>(tagNumber, value);
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.AuthenticationPeer value)
+    public static bool Matches(ref AsduReader reader)
     {
-        return Asdu.GetElementLength<HostNPortCodec, global::Baclib.Bacnet.Types.Application.HostNPort>(value.Host) + Asdu.GetEncodedLength<Unsigned32Codec, uint>(value.Device) + Asdu.GetEncodedLength<BooleanCodec, bool>(value.AuthAware) + Asdu.GetEncodedLength<BooleanCodec, bool>(value.Router) + Asdu.GetEncodedLength<BooleanCodec, bool>(value.Hub);
+        return HostNPortCodec.Matches(ref reader);
     }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.AuthenticationPeer value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

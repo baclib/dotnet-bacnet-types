@@ -1,72 +1,54 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class PropertyValueCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.PropertyValue>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.PropertyValue>
+    IAsduElementCodec<T::PropertyValue>,
+    IAsduConstructedCodec<T::PropertyValue>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::PropertyValue Decode(ref AsduReader reader)
     {
-        return reader.PeekTag((byte)0);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.PropertyValue Decode(ref NativeReader reader)
-    {
-        var _identifier = Asdu.DecodePrimitive<PropertyIdentifierCodec, global::Baclib.Bacnet.Types.Application.PropertyIdentifier>(ref reader, 0);
-        var _index = Asdu.DecodeOptional<UnsignedCodec, uint>(ref reader, 1);
-        var _value = Asdu.DecodePrimitive<AnyCodec, global::Baclib.Bacnet.Types.Application.Any>(ref reader, 2);
-        var _priority = Asdu.DecodeOptional<PropertyValueTPriorityCodec, global::Baclib.Bacnet.Types.Application.PropertyValue.TPriority>(ref reader, 3);
-
-        return new global::Baclib.Bacnet.Types.Application.PropertyValue
+        return new T::PropertyValue
         {
-            Identifier = _identifier,
-            Index = _index,
-            Value = _value,
-            Priority = _priority
+            Identifier = AsduElement.Decode<PropertyIdentifierCodec, T::PropertyIdentifier>(ref reader, 0),
+            Index = AsduElement.DecodeOptional<UnsignedCodec, uint>(ref reader, 1),
+            Value = AsduElement.Decode<AnyCodec, T::Any>(ref reader, 2),
+            Priority = AsduElement.DecodeOptional<PropertyValueTPriorityCodec, T::PropertyValue.TPriority>(ref reader, 3)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.PropertyValue Decode(ref NativeReader reader, byte tagNumber)
+    public static T::PropertyValue Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<PropertyValueCodec, T::PropertyValue>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::PropertyValue value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.Encode<PropertyIdentifierCodec, T::PropertyIdentifier>(ref writer, 0, value.Identifier);
+        AsduElement.EncodeOptional<UnsignedCodec, uint>(ref writer, 1, value.Index);
+        AsduElement.Encode<AnyCodec, T::Any>(ref writer, 2, value.Value);
+        AsduElement.EncodeOptional<PropertyValueTPriorityCodec, T::PropertyValue.TPriority>(ref writer, 3, value.Priority);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.PropertyValue value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::PropertyValue value)
+        => AsduConstructed.Encode<PropertyValueCodec, T::PropertyValue>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::PropertyValue value)
     {
-        Asdu.EncodePrimitive<PropertyIdentifierCodec, global::Baclib.Bacnet.Types.Application.PropertyIdentifier>(ref writer, 0, value.Identifier);
-        if (value.Index.HasValue)
-        {
-            Asdu.EncodePrimitive<UnsignedCodec, uint>(ref writer, 1, value.Index.Value);
-        }
-        Asdu.EncodePrimitive<AnyCodec, global::Baclib.Bacnet.Types.Application.Any>(ref writer, 2, value.Value);
-        if (value.Priority.HasValue)
-        {
-            Asdu.EncodePrimitive<PropertyValueTPriorityCodec, global::Baclib.Bacnet.Types.Application.PropertyValue.TPriority>(ref writer, 3, value.Priority.Value);
-        }
+        var length = 0;
+        length += AsduElement.GetEncodedLength<PropertyIdentifierCodec, T::PropertyIdentifier>(0, value.Identifier);
+        length += AsduElement.GetOptionalEncodedLength<UnsignedCodec, uint>(1, value.Index);
+        length += AsduElement.GetEncodedLength<AnyCodec, T::Any>(2, value.Value);
+        length += AsduElement.GetOptionalEncodedLength<PropertyValueTPriorityCodec, T::PropertyValue.TPriority>(3, value.Priority);
+        return length;
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.PropertyValue value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
+    public static int GetEncodedLength(in T::PropertyValue value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<PropertyValueCodec, T::PropertyValue>(tagNumber, value);
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.PropertyValue value)
+    public static bool Matches(ref AsduReader reader)
     {
-        return Asdu.GetPrimitiveLength<PropertyIdentifierCodec, global::Baclib.Bacnet.Types.Application.PropertyIdentifier>(0, value.Identifier) + (value.Index.HasValue ? Asdu.GetPrimitiveLength<UnsignedCodec, uint>(1, value.Index.Value) : 0) + Asdu.GetPrimitiveLength<AnyCodec, global::Baclib.Bacnet.Types.Application.Any>(2, value.Value) + (value.Priority.HasValue ? Asdu.GetPrimitiveLength<PropertyValueTPriorityCodec, global::Baclib.Bacnet.Types.Application.PropertyValue.TPriority>(3, value.Priority.Value) : 0);
+        return reader.PeekContextTag(0);
     }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.PropertyValue value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

@@ -1,66 +1,51 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class LandingCallStatusCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.LandingCallStatus>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.LandingCallStatus>
+    IAsduElementCodec<T::LandingCallStatus>,
+    IAsduConstructedCodec<T::LandingCallStatus>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::LandingCallStatus Decode(ref AsduReader reader)
     {
-        return reader.PeekTag((byte)0);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.LandingCallStatus Decode(ref NativeReader reader)
-    {
-        var _floorNumber = Asdu.DecodePrimitive<Unsigned8Codec, byte>(ref reader, 0);
-        var _command = Asdu.DecodeElement<LandingCallStatusTCommandCodec, global::Baclib.Bacnet.Types.Application.LandingCallStatus.TCommand>(ref reader);
-        var _floorText = Asdu.DecodeOptional<CharacterStringCodec, global::Baclib.Bacnet.Types.Application.CharacterString>(ref reader, 3);
-
-        return new global::Baclib.Bacnet.Types.Application.LandingCallStatus
+        return new T::LandingCallStatus
         {
-            FloorNumber = _floorNumber,
-            Command = _command,
-            FloorText = _floorText
+            FloorNumber = AsduElement.Decode<Unsigned8Codec, byte>(ref reader, 0),
+            Command = AsduElement.Decode<LandingCallStatusTCommandCodec, T::LandingCallStatus.TCommand>(ref reader),
+            FloorText = AsduElement.DecodeOptional<CharacterStringCodec, T::CharacterString>(ref reader, 3)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.LandingCallStatus Decode(ref NativeReader reader, byte tagNumber)
+    public static T::LandingCallStatus Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<LandingCallStatusCodec, T::LandingCallStatus>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::LandingCallStatus value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.Encode<Unsigned8Codec, byte>(ref writer, 0, value.FloorNumber);
+        AsduElement.Encode<LandingCallStatusTCommandCodec, T::LandingCallStatus.TCommand>(ref writer, value.Command);
+        AsduElement.EncodeOptional<CharacterStringCodec, T::CharacterString>(ref writer, 3, value.FloorText);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.LandingCallStatus value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::LandingCallStatus value)
+        => AsduConstructed.Encode<LandingCallStatusCodec, T::LandingCallStatus>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::LandingCallStatus value)
     {
-        Asdu.EncodePrimitive<Unsigned8Codec, byte>(ref writer, 0, value.FloorNumber);
-        Asdu.EncodeElement<LandingCallStatusTCommandCodec, global::Baclib.Bacnet.Types.Application.LandingCallStatus.TCommand>(ref writer, value.Command);
-        if (value.FloorText.HasValue)
-        {
-            Asdu.EncodePrimitive<CharacterStringCodec, global::Baclib.Bacnet.Types.Application.CharacterString>(ref writer, 3, value.FloorText.Value);
-        }
+        var length = 0;
+        length += AsduElement.GetEncodedLength<Unsigned8Codec, byte>(0, value.FloorNumber);
+        length += AsduElement.GetEncodedLength<LandingCallStatusTCommandCodec, T::LandingCallStatus.TCommand>(value.Command);
+        length += AsduElement.GetOptionalEncodedLength<CharacterStringCodec, T::CharacterString>(3, value.FloorText);
+        return length;
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.LandingCallStatus value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
+    public static int GetEncodedLength(in T::LandingCallStatus value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<LandingCallStatusCodec, T::LandingCallStatus>(tagNumber, value);
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.LandingCallStatus value)
+    public static bool Matches(ref AsduReader reader)
     {
-        return Asdu.GetPrimitiveLength<Unsigned8Codec, byte>(0, value.FloorNumber) + Asdu.GetElementLength<LandingCallStatusTCommandCodec, global::Baclib.Bacnet.Types.Application.LandingCallStatus.TCommand>(value.Command) + (value.FloorText.HasValue ? Asdu.GetPrimitiveLength<CharacterStringCodec, global::Baclib.Bacnet.Types.Application.CharacterString>(3, value.FloorText.Value) : 0);
+        return reader.PeekContextTag(0);
     }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.LandingCallStatus value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

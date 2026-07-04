@@ -1,65 +1,48 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class EventParameterTAccessEventCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.EventParameter.TAccessEvent>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.EventParameter.TAccessEvent>
+    IAsduElementCodec<T::EventParameter.TAccessEvent>,
+    IAsduConstructedCodec<T::EventParameter.TAccessEvent>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::EventParameter.TAccessEvent Decode(ref AsduReader reader)
     {
-        return reader.PeekOpeningTag(0);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.EventParameter.TAccessEvent Decode(ref NativeReader reader)
-    {
-        var _listOfAccessEvents = Asdu.DecodeSequenceOf<AccessEventCodec, global::Baclib.Bacnet.Types.Application.AccessEvent>(ref reader, 0);
-        var _accessEventTimeReference = Asdu.DecodeConstructed<DeviceObjectPropertyReferenceCodec, global::Baclib.Bacnet.Types.Application.DeviceObjectPropertyReference>(ref reader, 1);
-
-        return new global::Baclib.Bacnet.Types.Application.EventParameter.TAccessEvent
+        return new T::EventParameter.TAccessEvent
         {
-            ListOfAccessEvents = _listOfAccessEvents,
-            AccessEventTimeReference = _accessEventTimeReference
+            ListOfAccessEvents = AsduElement.DecodeSequenceOf<AccessEventCodec, T::AccessEvent>(ref reader, 0),
+            AccessEventTimeReference = AsduElement.Decode<DeviceObjectPropertyReferenceCodec, T::DeviceObjectPropertyReference>(ref reader, 1)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.EventParameter.TAccessEvent Decode(ref NativeReader reader, byte tagNumber)
+    public static T::EventParameter.TAccessEvent Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<EventParameterTAccessEventCodec, T::EventParameter.TAccessEvent>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::EventParameter.TAccessEvent value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.EncodeSequenceOf<AccessEventCodec, T::AccessEvent>(ref writer, 0, value.ListOfAccessEvents);
+        AsduElement.Encode<DeviceObjectPropertyReferenceCodec, T::DeviceObjectPropertyReference>(ref writer, 1, value.AccessEventTimeReference);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.EventParameter.TAccessEvent value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::EventParameter.TAccessEvent value)
+        => AsduConstructed.Encode<EventParameterTAccessEventCodec, T::EventParameter.TAccessEvent>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::EventParameter.TAccessEvent value)
     {
-        writer.WriteOpeningTag(0);
-        foreach (var item in value.ListOfAccessEvents)
-        {
-            Asdu.EncodeElement<AccessEventCodec, global::Baclib.Bacnet.Types.Application.AccessEvent>(ref writer, 0, item);
-        }
-        writer.WriteClosingTag(0);
-        Asdu.EncodeElement<DeviceObjectPropertyReferenceCodec, global::Baclib.Bacnet.Types.Application.DeviceObjectPropertyReference>(ref writer, 1, value.AccessEventTimeReference);
+        var length = 0;
+        length += AsduElement.GetSequenceOfEncodedLength<AccessEventCodec, T::AccessEvent>(0, value.ListOfAccessEvents);
+        length += AsduElement.GetEncodedLength<DeviceObjectPropertyReferenceCodec, T::DeviceObjectPropertyReference>(1, value.AccessEventTimeReference);
+        return length;
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.EventParameter.TAccessEvent value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
+    public static int GetEncodedLength(in T::EventParameter.TAccessEvent value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<EventParameterTAccessEventCodec, T::EventParameter.TAccessEvent>(tagNumber, value);
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.EventParameter.TAccessEvent value)
+    public static bool Matches(ref AsduReader reader)
     {
-        return (AsduLength.FromTagNumber((byte)0) + (value.ListOfAccessEvents.Items.Sum(static item => Asdu.GetElementLength<AccessEventCodec, global::Baclib.Bacnet.Types.Application.AccessEvent>(0, item))) + AsduLength.FromTagNumber((byte)0)) + Asdu.GetElementLength<DeviceObjectPropertyReferenceCodec, global::Baclib.Bacnet.Types.Application.DeviceObjectPropertyReference>(1, value.AccessEventTimeReference);
+        return reader.PeekContextTag(0);
     }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.EventParameter.TAccessEvent value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

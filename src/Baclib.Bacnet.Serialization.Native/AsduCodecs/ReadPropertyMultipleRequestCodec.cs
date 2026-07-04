@@ -1,60 +1,45 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class ReadPropertyMultipleRequestCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.ReadPropertyMultipleRequest>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.ReadPropertyMultipleRequest>
+    IAsduElementCodec<T::ReadPropertyMultipleRequest>,
+    IAsduConstructedCodec<T::ReadPropertyMultipleRequest>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::ReadPropertyMultipleRequest Decode(ref AsduReader reader)
     {
-        return ReadAccessSpecificationCodec.Matches(ref reader);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.ReadPropertyMultipleRequest Decode(ref NativeReader reader)
-    {
-        var _listOfReadAccessSpecifications = Asdu.DecodeSequenceOf<ReadAccessSpecificationCodec, global::Baclib.Bacnet.Types.Application.ReadAccessSpecification>(ref reader);
-
-        return new global::Baclib.Bacnet.Types.Application.ReadPropertyMultipleRequest
+        return new T::ReadPropertyMultipleRequest
         {
-            ListOfReadAccessSpecifications = _listOfReadAccessSpecifications
+            ListOfReadAccessSpecifications = AsduElement.DecodeSequenceOf<ReadAccessSpecificationCodec, T::ReadAccessSpecification>(ref reader)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.ReadPropertyMultipleRequest Decode(ref NativeReader reader, byte tagNumber)
+    public static T::ReadPropertyMultipleRequest Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<ReadPropertyMultipleRequestCodec, T::ReadPropertyMultipleRequest>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::ReadPropertyMultipleRequest value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.EncodeSequenceOf<ReadAccessSpecificationCodec, T::ReadAccessSpecification>(ref writer, value.ListOfReadAccessSpecifications);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.ReadPropertyMultipleRequest value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::ReadPropertyMultipleRequest value)
+        => AsduConstructed.Encode<ReadPropertyMultipleRequestCodec, T::ReadPropertyMultipleRequest>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::ReadPropertyMultipleRequest value)
     {
-        foreach (var item in value.ListOfReadAccessSpecifications)
-        {
-            Asdu.EncodeElement<ReadAccessSpecificationCodec, global::Baclib.Bacnet.Types.Application.ReadAccessSpecification>(ref writer, item);
-        }
+        var length = 0;
+        length += AsduElement.GetSequenceOfEncodedLength<ReadAccessSpecificationCodec, T::ReadAccessSpecification>(value.ListOfReadAccessSpecifications);
+        return length;
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.ReadPropertyMultipleRequest value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
+    public static int GetEncodedLength(in T::ReadPropertyMultipleRequest value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<ReadPropertyMultipleRequestCodec, T::ReadPropertyMultipleRequest>(tagNumber, value);
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.ReadPropertyMultipleRequest value)
+    public static bool Matches(ref AsduReader reader)
     {
-        return (value.ListOfReadAccessSpecifications.Items.Sum(static item => Asdu.GetElementLength<ReadAccessSpecificationCodec, global::Baclib.Bacnet.Types.Application.ReadAccessSpecification>(item)));
+        return ReadAccessSpecificationCodec.Matches(ref reader);
     }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.ReadPropertyMultipleRequest value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

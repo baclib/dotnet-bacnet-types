@@ -1,66 +1,51 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class GroupChannelValueCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.GroupChannelValue>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.GroupChannelValue>
+    IAsduElementCodec<T::GroupChannelValue>,
+    IAsduConstructedCodec<T::GroupChannelValue>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::GroupChannelValue Decode(ref AsduReader reader)
     {
-        return reader.PeekTag((byte)0);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.GroupChannelValue Decode(ref NativeReader reader)
-    {
-        var _channel = Asdu.DecodePrimitive<Unsigned16Codec, ushort>(ref reader, 0);
-        var _value = Asdu.DecodeConstructed<ChannelValueCodec, global::Baclib.Bacnet.Types.Application.ChannelValue>(ref reader, 1);
-        var _overridingPriority = Asdu.DecodeOptional<GroupChannelValueTOverridingPriorityCodec, global::Baclib.Bacnet.Types.Application.GroupChannelValue.TOverridingPriority>(ref reader, 2);
-
-        return new global::Baclib.Bacnet.Types.Application.GroupChannelValue
+        return new T::GroupChannelValue
         {
-            Channel = _channel,
-            Value = _value,
-            OverridingPriority = _overridingPriority
+            Channel = AsduElement.Decode<Unsigned16Codec, ushort>(ref reader, 0),
+            Value = AsduElement.Decode<ChannelValueCodec, T::ChannelValue>(ref reader, 1),
+            OverridingPriority = AsduElement.DecodeOptional<GroupChannelValueTOverridingPriorityCodec, T::GroupChannelValue.TOverridingPriority>(ref reader, 2)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.GroupChannelValue Decode(ref NativeReader reader, byte tagNumber)
+    public static T::GroupChannelValue Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<GroupChannelValueCodec, T::GroupChannelValue>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::GroupChannelValue value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.Encode<Unsigned16Codec, ushort>(ref writer, 0, value.Channel);
+        AsduElement.Encode<ChannelValueCodec, T::ChannelValue>(ref writer, 1, value.Value);
+        AsduElement.EncodeOptional<GroupChannelValueTOverridingPriorityCodec, T::GroupChannelValue.TOverridingPriority>(ref writer, 2, value.OverridingPriority);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.GroupChannelValue value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::GroupChannelValue value)
+        => AsduConstructed.Encode<GroupChannelValueCodec, T::GroupChannelValue>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::GroupChannelValue value)
     {
-        Asdu.EncodePrimitive<Unsigned16Codec, ushort>(ref writer, 0, value.Channel);
-        Asdu.EncodeElement<ChannelValueCodec, global::Baclib.Bacnet.Types.Application.ChannelValue>(ref writer, 1, value.Value);
-        if (value.OverridingPriority.HasValue)
-        {
-            Asdu.EncodePrimitive<GroupChannelValueTOverridingPriorityCodec, global::Baclib.Bacnet.Types.Application.GroupChannelValue.TOverridingPriority>(ref writer, 2, value.OverridingPriority.Value);
-        }
+        var length = 0;
+        length += AsduElement.GetEncodedLength<Unsigned16Codec, ushort>(0, value.Channel);
+        length += AsduElement.GetEncodedLength<ChannelValueCodec, T::ChannelValue>(1, value.Value);
+        length += AsduElement.GetOptionalEncodedLength<GroupChannelValueTOverridingPriorityCodec, T::GroupChannelValue.TOverridingPriority>(2, value.OverridingPriority);
+        return length;
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.GroupChannelValue value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
+    public static int GetEncodedLength(in T::GroupChannelValue value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<GroupChannelValueCodec, T::GroupChannelValue>(tagNumber, value);
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.GroupChannelValue value)
+    public static bool Matches(ref AsduReader reader)
     {
-        return Asdu.GetPrimitiveLength<Unsigned16Codec, ushort>(0, value.Channel) + Asdu.GetElementLength<ChannelValueCodec, global::Baclib.Bacnet.Types.Application.ChannelValue>(1, value.Value) + (value.OverridingPriority.HasValue ? Asdu.GetPrimitiveLength<GroupChannelValueTOverridingPriorityCodec, global::Baclib.Bacnet.Types.Application.GroupChannelValue.TOverridingPriority>(2, value.OverridingPriority.Value) : 0);
+        return reader.PeekContextTag(0);
     }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.GroupChannelValue value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

@@ -7,82 +7,68 @@ public sealed class AtomicWriteFileAckCodec :
     IAsduElementCodec<global::Baclib.Bacnet.Types.Application.AtomicWriteFileAck>,
     IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.AtomicWriteFileAck>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static bool Matches(ref AsduReader reader)
     {
-
-        var contextTagNumber = reader.PeekContextTagNumber();
-        switch (contextTagNumber)
+        if (!reader.PeekContextTag(out var contextTagNumber))
         {
-            case 0:
-            case 1:
-                return true;
-            default:
-                return false;
+            return false;
         }
+        return contextTagNumber switch
+        {
+            0 or
+            1 => true,
+            _ => false
+        };
     }
 
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag(tagNumber);
-
-    public static global::Baclib.Bacnet.Types.Application.AtomicWriteFileAck Decode(ref NativeReader reader)
+    public static global::Baclib.Bacnet.Types.Application.AtomicWriteFileAck Decode(ref AsduReader reader)
     {
-        var tagNumber = reader.PeekContextTagNumber();
+        var tagNumber = reader.ReadContextTagNumber();
         switch (tagNumber)
         {
             case 0:
-                var _fileStartPosition = Asdu.DecodePrimitive<IntegerCodec, int>(ref reader, 0);
-                return global::Baclib.Bacnet.Types.Application.AtomicWriteFileAck.FromFileStartPosition(_fileStartPosition);
+                var @fileStartPosition = IntegerCodec.Decode(ref reader, 0);
+                return global::Baclib.Bacnet.Types.Application.AtomicWriteFileAck.FromFileStartPosition(@fileStartPosition);
             case 1:
-                var _fileStartRecord = Asdu.DecodePrimitive<IntegerCodec, int>(ref reader, 1);
-                return global::Baclib.Bacnet.Types.Application.AtomicWriteFileAck.FromFileStartRecord(_fileStartRecord);
+                var @fileStartRecord = IntegerCodec.Decode(ref reader, 1);
+                return global::Baclib.Bacnet.Types.Application.AtomicWriteFileAck.FromFileStartRecord(@fileStartRecord);
         }
         throw new FormatException(nameof(reader));
     }
 
-    public static global::Baclib.Bacnet.Types.Application.AtomicWriteFileAck Decode(ref NativeReader reader, byte tagNumber)
-    {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
-    }
+    public static global::Baclib.Bacnet.Types.Application.AtomicWriteFileAck Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<AtomicWriteFileAckCodec, global::Baclib.Bacnet.Types.Application.AtomicWriteFileAck>(ref reader, tagNumber);
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.AtomicWriteFileAck value)
+    public static void Encode(ref AsduWriter writer, in global::Baclib.Bacnet.Types.Application.AtomicWriteFileAck value)
     {
         switch (value.Choice)
         {
             case global::Baclib.Bacnet.Types.Application.AtomicWriteFileAck.Option.FileStartPosition:
-                Asdu.EncodePrimitive<IntegerCodec, int>(ref writer, 0, value.FileStartPosition);
+                IntegerCodec.Encode(ref writer, 0, value.FileStartPosition);
                 return;
             case global::Baclib.Bacnet.Types.Application.AtomicWriteFileAck.Option.FileStartRecord:
-                Asdu.EncodePrimitive<IntegerCodec, int>(ref writer, 1, value.FileStartRecord);
+                IntegerCodec.Encode(ref writer, 1, value.FileStartRecord);
                 return;
-        }
-        throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported.");
-    }
-
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.AtomicWriteFileAck value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.AtomicWriteFileAck value)
-    {
-        switch (value.Choice)
-        {
-            case global::Baclib.Bacnet.Types.Application.AtomicWriteFileAck.Option.FileStartPosition:
-                return Asdu.GetPrimitiveLength<IntegerCodec, int>(0, value.FileStartPosition);
-            case global::Baclib.Bacnet.Types.Application.AtomicWriteFileAck.Option.FileStartRecord:
-                return Asdu.GetPrimitiveLength<IntegerCodec, int>(1, value.FileStartRecord);
             default:
                 throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported.");
         }
     }
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.AtomicWriteFileAck value, byte tagNumber)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.AtomicWriteFileAck value)
+        => AsduConstructed.Encode<AtomicWriteFileAckCodec, global::Baclib.Bacnet.Types.Application.AtomicWriteFileAck>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in global::Baclib.Bacnet.Types.Application.AtomicWriteFileAck value)
     {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
+        return value.Choice switch
+        {
+            global::Baclib.Bacnet.Types.Application.AtomicWriteFileAck.Option.FileStartPosition
+                => IntegerCodec.GetEncodedLength(value.FileStartPosition, 0),
+            global::Baclib.Bacnet.Types.Application.AtomicWriteFileAck.Option.FileStartRecord
+                => IntegerCodec.GetEncodedLength(value.FileStartRecord, 1),
+            _ => throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported."),
+        };
     }
+
+    public static int GetEncodedLength(in global::Baclib.Bacnet.Types.Application.AtomicWriteFileAck value, byte tagNumber)
+        => AsduElement.GetEncodedLength<AtomicWriteFileAckCodec, global::Baclib.Bacnet.Types.Application.AtomicWriteFileAck>(tagNumber, value);
 }

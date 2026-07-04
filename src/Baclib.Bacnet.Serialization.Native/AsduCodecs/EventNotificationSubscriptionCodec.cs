@@ -1,66 +1,54 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class EventNotificationSubscriptionCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.EventNotificationSubscription>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.EventNotificationSubscription>
+    IAsduElementCodec<T::EventNotificationSubscription>,
+    IAsduConstructedCodec<T::EventNotificationSubscription>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::EventNotificationSubscription Decode(ref AsduReader reader)
     {
-        return reader.PeekOpeningTag((byte)0);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.EventNotificationSubscription Decode(ref NativeReader reader)
-    {
-        var _recipient = Asdu.DecodeConstructed<RecipientCodec, global::Baclib.Bacnet.Types.Application.Recipient>(ref reader, 0);
-        var _processIdentifier = Asdu.DecodePrimitive<Unsigned32Codec, uint>(ref reader, 1);
-        var _issueConfirmedNotifications = Asdu.DecodePrimitive<BooleanCodec, bool>(ref reader, 2);
-        var _timeRemaining = Asdu.DecodePrimitive<UnsignedCodec, uint>(ref reader, 3);
-
-        return new global::Baclib.Bacnet.Types.Application.EventNotificationSubscription
+        return new T::EventNotificationSubscription
         {
-            Recipient = _recipient,
-            ProcessIdentifier = _processIdentifier,
-            IssueConfirmedNotifications = _issueConfirmedNotifications,
-            TimeRemaining = _timeRemaining
+            Recipient = AsduElement.Decode<RecipientCodec, T::Recipient>(ref reader, 0),
+            ProcessIdentifier = AsduElement.Decode<Unsigned32Codec, uint>(ref reader, 1),
+            IssueConfirmedNotifications = AsduElement.Decode<BooleanCodec, bool>(ref reader, 2),
+            TimeRemaining = AsduElement.Decode<UnsignedCodec, uint>(ref reader, 3)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.EventNotificationSubscription Decode(ref NativeReader reader, byte tagNumber)
+    public static T::EventNotificationSubscription Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<EventNotificationSubscriptionCodec, T::EventNotificationSubscription>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::EventNotificationSubscription value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.Encode<RecipientCodec, T::Recipient>(ref writer, 0, value.Recipient);
+        AsduElement.Encode<Unsigned32Codec, uint>(ref writer, 1, value.ProcessIdentifier);
+        AsduElement.Encode<BooleanCodec, bool>(ref writer, 2, value.IssueConfirmedNotifications);
+        AsduElement.Encode<UnsignedCodec, uint>(ref writer, 3, value.TimeRemaining);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.EventNotificationSubscription value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::EventNotificationSubscription value)
+        => AsduConstructed.Encode<EventNotificationSubscriptionCodec, T::EventNotificationSubscription>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::EventNotificationSubscription value)
     {
-        Asdu.EncodeElement<RecipientCodec, global::Baclib.Bacnet.Types.Application.Recipient>(ref writer, 0, value.Recipient);
-        Asdu.EncodePrimitive<Unsigned32Codec, uint>(ref writer, 1, value.ProcessIdentifier);
-        Asdu.EncodePrimitive<BooleanCodec, bool>(ref writer, 2, value.IssueConfirmedNotifications);
-        Asdu.EncodePrimitive<UnsignedCodec, uint>(ref writer, 3, value.TimeRemaining);
+        var length = 0;
+        length += AsduElement.GetEncodedLength<RecipientCodec, T::Recipient>(0, value.Recipient);
+        length += AsduElement.GetEncodedLength<Unsigned32Codec, uint>(1, value.ProcessIdentifier);
+        length += AsduElement.GetEncodedLength<BooleanCodec, bool>(2, value.IssueConfirmedNotifications);
+        length += AsduElement.GetEncodedLength<UnsignedCodec, uint>(3, value.TimeRemaining);
+        return length;
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.EventNotificationSubscription value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
+    public static int GetEncodedLength(in T::EventNotificationSubscription value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<EventNotificationSubscriptionCodec, T::EventNotificationSubscription>(tagNumber, value);
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.EventNotificationSubscription value)
+    public static bool Matches(ref AsduReader reader)
     {
-        return Asdu.GetElementLength<RecipientCodec, global::Baclib.Bacnet.Types.Application.Recipient>(0, value.Recipient) + Asdu.GetPrimitiveLength<Unsigned32Codec, uint>(1, value.ProcessIdentifier) + Asdu.GetPrimitiveLength<BooleanCodec, bool>(2, value.IssueConfirmedNotifications) + Asdu.GetPrimitiveLength<UnsignedCodec, uint>(3, value.TimeRemaining);
+        return reader.PeekContextTag(0);
     }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.EventNotificationSubscription value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

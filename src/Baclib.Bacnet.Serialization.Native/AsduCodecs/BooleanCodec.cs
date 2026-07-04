@@ -16,7 +16,7 @@ public sealed class BooleanCodec :
     /// <param name="reader">The reader positioned at a boolean primitive tag.</param>
     /// <returns>The decoded boolean value.</returns>
     /// <exception cref="FormatException">Thrown when the encoded value is not 0 or 1.</exception>
-    public static bool Decode(ref NativeReader reader)
+    public static bool Decode(ref AsduReader reader)
     {
         var value = reader.ReadByte();
         return value switch
@@ -33,8 +33,8 @@ public sealed class BooleanCodec :
     /// <param name="reader">The reader positioned at a boolean primitive tag.</param>
     /// <param name="tagNumber">The expected context tag number.</param>
     /// <returns>The decoded boolean value.</returns>
-    public static bool Decode(ref NativeReader reader, byte tagNumber)
-        => Asdu.DecodePrimitive<BooleanCodec, bool>(ref reader, tagNumber);
+    public static bool Decode(ref AsduReader reader, byte tagNumber)
+        => AsduPrimitive.Decode<BooleanCodec, bool>(ref reader, tagNumber);
 
     /// <summary>
     /// Decodes a <see cref="bool"/> value from raw encoded bytes.
@@ -64,7 +64,7 @@ public sealed class BooleanCodec :
     /// </summary>
     /// <param name="writer">The writer receiving the encoded value.</param>
     /// <param name="value">The value to encode.</param>
-    public static void Encode(ref NativeWriter writer, in bool value)
+    public static void Encode(ref AsduWriter writer, in bool value)
         => writer.WriteByte(value ? (byte)0x11 : (byte)0x10);
 
     /// <summary>
@@ -73,8 +73,8 @@ public sealed class BooleanCodec :
     /// <param name="writer">The writer receiving the encoded value.</param>
     /// <param name="tagNumber">The context tag number.</param>
     /// <param name="value">The value to encode.</param>
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in bool value)
-        => Asdu.EncodePrimitive<BooleanCodec, bool>(ref writer, tagNumber, value);
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in bool value)
+        => AsduPrimitive.Encode<BooleanCodec, bool>(ref writer, tagNumber, value);
 
     /// <summary>
     /// Encodes a <see cref="bool"/> value into an already allocated payload span.
@@ -105,7 +105,7 @@ public sealed class BooleanCodec :
     /// </summary>
     /// <param name="value">The value whose total encoded length is requested.</param>
     /// <returns>The total encoded length in bytes.</returns>
-    public static int GetLength(in bool value)
+    public static int GetEncodedLength(in bool value)
         => AsduLength.Sum(TagNumber, GetEncodedValueLength(value));
 
     /// <summary>
@@ -114,7 +114,7 @@ public sealed class BooleanCodec :
     /// <param name="value">The value whose total encoded length is requested.</param>
     /// <param name="tagNumber">The context tag number.</param>
     /// <returns>The total encoded length in bytes.</returns>
-    public static int GetLength(in bool value, byte tagNumber)
+    public static int GetEncodedLength(in bool value, byte tagNumber)
         => AsduLength.Sum(tagNumber, GetEncodedValueLength(value));
 
     /// <summary>
@@ -122,17 +122,8 @@ public sealed class BooleanCodec :
     /// </summary>
     /// <param name="reader">The reader to inspect.</param>
     /// <returns><see langword="true"/> when the next tag matches; otherwise, <see langword="false"/>.</returns>
-    public static bool Matches(ref NativeReader reader)
-        => reader.PeekPrimitiveTag(TagNumber);
-
-    /// <summary>
-    /// Determines whether the next value in the reader matches a specific context tag.
-    /// </summary>
-    /// <param name="reader">The reader to inspect.</param>
-    /// <param name="tagNumber">The expected context tag number.</param>
-    /// <returns><see langword="true"/> when the next tag matches; otherwise, <see langword="false"/>.</returns>
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekPrimitiveTag(tagNumber);
+    public static bool Matches(ref AsduReader reader)
+        => reader.PeekApplicationTag(TagNumber);
 
     /// <summary>
     /// Gets the BACnet application tag number handled by this codec.

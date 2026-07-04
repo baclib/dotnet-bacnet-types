@@ -1,75 +1,60 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class NotificationParametersTAccessEventCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.NotificationParameters.TAccessEvent>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.NotificationParameters.TAccessEvent>
+    IAsduElementCodec<T::NotificationParameters.TAccessEvent>,
+    IAsduConstructedCodec<T::NotificationParameters.TAccessEvent>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::NotificationParameters.TAccessEvent Decode(ref AsduReader reader)
     {
-        return reader.PeekTag((byte)0);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.NotificationParameters.TAccessEvent Decode(ref NativeReader reader)
-    {
-        var _accessEvent = Asdu.DecodePrimitive<AccessEventCodec, global::Baclib.Bacnet.Types.Application.AccessEvent>(ref reader, 0);
-        var _statusFlags = Asdu.DecodePrimitive<StatusFlagsCodec, global::Baclib.Bacnet.Types.Application.StatusFlags>(ref reader, 1);
-        var _accessEventTag = Asdu.DecodePrimitive<UnsignedCodec, uint>(ref reader, 2);
-        var _accessEventTime = Asdu.DecodeConstructed<TimeStampCodec, global::Baclib.Bacnet.Types.Application.TimeStamp>(ref reader, 3);
-        var _accessCredential = Asdu.DecodeConstructed<DeviceObjectReferenceCodec, global::Baclib.Bacnet.Types.Application.DeviceObjectReference>(ref reader, 4);
-        var _authenticationFactor = Asdu.DecodeOptionalElement<AuthenticationFactorCodec, global::Baclib.Bacnet.Types.Application.AuthenticationFactor>(ref reader, 5);
-
-        return new global::Baclib.Bacnet.Types.Application.NotificationParameters.TAccessEvent
+        return new T::NotificationParameters.TAccessEvent
         {
-            AccessEvent = _accessEvent,
-            StatusFlags = _statusFlags,
-            AccessEventTag = _accessEventTag,
-            AccessEventTime = _accessEventTime,
-            AccessCredential = _accessCredential,
-            AuthenticationFactor = _authenticationFactor
+            AccessEvent = AsduElement.Decode<AccessEventCodec, T::AccessEvent>(ref reader, 0),
+            StatusFlags = AsduElement.Decode<StatusFlagsCodec, T::StatusFlags>(ref reader, 1),
+            AccessEventTag = AsduElement.Decode<UnsignedCodec, uint>(ref reader, 2),
+            AccessEventTime = AsduElement.Decode<TimeStampCodec, T::TimeStamp>(ref reader, 3),
+            AccessCredential = AsduElement.Decode<DeviceObjectReferenceCodec, T::DeviceObjectReference>(ref reader, 4),
+            AuthenticationFactor = AsduElement.DecodeOptional<AuthenticationFactorCodec, T::AuthenticationFactor>(ref reader, 5)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.NotificationParameters.TAccessEvent Decode(ref NativeReader reader, byte tagNumber)
+    public static T::NotificationParameters.TAccessEvent Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<NotificationParametersTAccessEventCodec, T::NotificationParameters.TAccessEvent>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::NotificationParameters.TAccessEvent value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.Encode<AccessEventCodec, T::AccessEvent>(ref writer, 0, value.AccessEvent);
+        AsduElement.Encode<StatusFlagsCodec, T::StatusFlags>(ref writer, 1, value.StatusFlags);
+        AsduElement.Encode<UnsignedCodec, uint>(ref writer, 2, value.AccessEventTag);
+        AsduElement.Encode<TimeStampCodec, T::TimeStamp>(ref writer, 3, value.AccessEventTime);
+        AsduElement.Encode<DeviceObjectReferenceCodec, T::DeviceObjectReference>(ref writer, 4, value.AccessCredential);
+        AsduElement.EncodeOptional<AuthenticationFactorCodec, T::AuthenticationFactor>(ref writer, 5, value.AuthenticationFactor);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.NotificationParameters.TAccessEvent value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::NotificationParameters.TAccessEvent value)
+        => AsduConstructed.Encode<NotificationParametersTAccessEventCodec, T::NotificationParameters.TAccessEvent>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::NotificationParameters.TAccessEvent value)
     {
-        Asdu.EncodePrimitive<AccessEventCodec, global::Baclib.Bacnet.Types.Application.AccessEvent>(ref writer, 0, value.AccessEvent);
-        Asdu.EncodePrimitive<StatusFlagsCodec, global::Baclib.Bacnet.Types.Application.StatusFlags>(ref writer, 1, value.StatusFlags);
-        Asdu.EncodePrimitive<UnsignedCodec, uint>(ref writer, 2, value.AccessEventTag);
-        Asdu.EncodeElement<TimeStampCodec, global::Baclib.Bacnet.Types.Application.TimeStamp>(ref writer, 3, value.AccessEventTime);
-        Asdu.EncodeElement<DeviceObjectReferenceCodec, global::Baclib.Bacnet.Types.Application.DeviceObjectReference>(ref writer, 4, value.AccessCredential);
-        if (value.AuthenticationFactor.HasValue)
-        {
-            Asdu.EncodeElement<AuthenticationFactorCodec, global::Baclib.Bacnet.Types.Application.AuthenticationFactor>(ref writer, 5, value.AuthenticationFactor.Value);
-        }
+        var length = 0;
+        length += AsduElement.GetEncodedLength<AccessEventCodec, T::AccessEvent>(0, value.AccessEvent);
+        length += AsduElement.GetEncodedLength<StatusFlagsCodec, T::StatusFlags>(1, value.StatusFlags);
+        length += AsduElement.GetEncodedLength<UnsignedCodec, uint>(2, value.AccessEventTag);
+        length += AsduElement.GetEncodedLength<TimeStampCodec, T::TimeStamp>(3, value.AccessEventTime);
+        length += AsduElement.GetEncodedLength<DeviceObjectReferenceCodec, T::DeviceObjectReference>(4, value.AccessCredential);
+        length += AsduElement.GetOptionalEncodedLength<AuthenticationFactorCodec, T::AuthenticationFactor>(5, value.AuthenticationFactor);
+        return length;
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.NotificationParameters.TAccessEvent value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
+    public static int GetEncodedLength(in T::NotificationParameters.TAccessEvent value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<NotificationParametersTAccessEventCodec, T::NotificationParameters.TAccessEvent>(tagNumber, value);
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.NotificationParameters.TAccessEvent value)
+    public static bool Matches(ref AsduReader reader)
     {
-        return Asdu.GetPrimitiveLength<AccessEventCodec, global::Baclib.Bacnet.Types.Application.AccessEvent>(0, value.AccessEvent) + Asdu.GetPrimitiveLength<StatusFlagsCodec, global::Baclib.Bacnet.Types.Application.StatusFlags>(1, value.StatusFlags) + Asdu.GetPrimitiveLength<UnsignedCodec, uint>(2, value.AccessEventTag) + Asdu.GetElementLength<TimeStampCodec, global::Baclib.Bacnet.Types.Application.TimeStamp>(3, value.AccessEventTime) + Asdu.GetElementLength<DeviceObjectReferenceCodec, global::Baclib.Bacnet.Types.Application.DeviceObjectReference>(4, value.AccessCredential) + (value.AuthenticationFactor.HasValue ? Asdu.GetElementLength<AuthenticationFactorCodec, global::Baclib.Bacnet.Types.Application.AuthenticationFactor>(5, value.AuthenticationFactor.Value) : 0);
+        return reader.PeekContextTag(0);
     }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.NotificationParameters.TAccessEvent value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

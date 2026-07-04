@@ -1,60 +1,48 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class HostNPortCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.HostNPort>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.HostNPort>
+    IAsduElementCodec<T::HostNPort>,
+    IAsduConstructedCodec<T::HostNPort>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::HostNPort Decode(ref AsduReader reader)
     {
-        return reader.PeekOpeningTag((byte)0);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.HostNPort Decode(ref NativeReader reader)
-    {
-        var _host = Asdu.DecodeConstructed<HostAddressCodec, global::Baclib.Bacnet.Types.Application.HostAddress>(ref reader, 0);
-        var _port = Asdu.DecodePrimitive<Unsigned16Codec, ushort>(ref reader, 1);
-
-        return new global::Baclib.Bacnet.Types.Application.HostNPort
+        return new T::HostNPort
         {
-            Host = _host,
-            Port = _port
+            Host = AsduElement.Decode<HostAddressCodec, T::HostAddress>(ref reader, 0),
+            Port = AsduElement.Decode<Unsigned16Codec, ushort>(ref reader, 1)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.HostNPort Decode(ref NativeReader reader, byte tagNumber)
+    public static T::HostNPort Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<HostNPortCodec, T::HostNPort>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::HostNPort value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.Encode<HostAddressCodec, T::HostAddress>(ref writer, 0, value.Host);
+        AsduElement.Encode<Unsigned16Codec, ushort>(ref writer, 1, value.Port);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.HostNPort value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::HostNPort value)
+        => AsduConstructed.Encode<HostNPortCodec, T::HostNPort>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::HostNPort value)
     {
-        Asdu.EncodeElement<HostAddressCodec, global::Baclib.Bacnet.Types.Application.HostAddress>(ref writer, 0, value.Host);
-        Asdu.EncodePrimitive<Unsigned16Codec, ushort>(ref writer, 1, value.Port);
+        var length = 0;
+        length += AsduElement.GetEncodedLength<HostAddressCodec, T::HostAddress>(0, value.Host);
+        length += AsduElement.GetEncodedLength<Unsigned16Codec, ushort>(1, value.Port);
+        return length;
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.HostNPort value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
+    public static int GetEncodedLength(in T::HostNPort value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<HostNPortCodec, T::HostNPort>(tagNumber, value);
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.HostNPort value)
+    public static bool Matches(ref AsduReader reader)
     {
-        return Asdu.GetElementLength<HostAddressCodec, global::Baclib.Bacnet.Types.Application.HostAddress>(0, value.Host) + Asdu.GetPrimitiveLength<Unsigned16Codec, ushort>(1, value.Port);
+        return reader.PeekContextTag(0);
     }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.HostNPort value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

@@ -1,68 +1,51 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class NotificationParametersTExtendedCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.NotificationParameters.TExtended>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.NotificationParameters.TExtended>
+    IAsduElementCodec<T::NotificationParameters.TExtended>,
+    IAsduConstructedCodec<T::NotificationParameters.TExtended>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::NotificationParameters.TExtended Decode(ref AsduReader reader)
     {
-        return reader.PeekTag((byte)0);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.NotificationParameters.TExtended Decode(ref NativeReader reader)
-    {
-        var _vendorId = Asdu.DecodePrimitive<Unsigned16Codec, ushort>(ref reader, 0);
-        var _extendedEventType = Asdu.DecodePrimitive<UnsignedCodec, uint>(ref reader, 1);
-        var _parameters = Asdu.DecodeSequenceOf<NotificationParametersTExtendedTParametersTParametersItemCodec, global::Baclib.Bacnet.Types.Application.NotificationParameters.TExtended.TParameters.TParametersItem>(ref reader, 2);
-
-        return new global::Baclib.Bacnet.Types.Application.NotificationParameters.TExtended
+        return new T::NotificationParameters.TExtended
         {
-            VendorId = _vendorId,
-            ExtendedEventType = _extendedEventType,
-            Parameters = _parameters
+            VendorId = AsduElement.Decode<Unsigned16Codec, ushort>(ref reader, 0),
+            ExtendedEventType = AsduElement.Decode<UnsignedCodec, uint>(ref reader, 1),
+            Parameters = AsduElement.DecodeSequenceOf<NotificationParametersTExtendedTParametersItemCodec, T::NotificationParameters.TExtended.TParametersItem>(ref reader, 2)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.NotificationParameters.TExtended Decode(ref NativeReader reader, byte tagNumber)
+    public static T::NotificationParameters.TExtended Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<NotificationParametersTExtendedCodec, T::NotificationParameters.TExtended>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::NotificationParameters.TExtended value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.Encode<Unsigned16Codec, ushort>(ref writer, 0, value.VendorId);
+        AsduElement.Encode<UnsignedCodec, uint>(ref writer, 1, value.ExtendedEventType);
+        AsduElement.EncodeSequenceOf<NotificationParametersTExtendedTParametersItemCodec, T::NotificationParameters.TExtended.TParametersItem>(ref writer, 2, value.Parameters);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.NotificationParameters.TExtended value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::NotificationParameters.TExtended value)
+        => AsduConstructed.Encode<NotificationParametersTExtendedCodec, T::NotificationParameters.TExtended>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::NotificationParameters.TExtended value)
     {
-        Asdu.EncodePrimitive<Unsigned16Codec, ushort>(ref writer, 0, value.VendorId);
-        Asdu.EncodePrimitive<UnsignedCodec, uint>(ref writer, 1, value.ExtendedEventType);
-        writer.WriteOpeningTag(2);
-        foreach (var item in value.Parameters)
-        {
-            Asdu.EncodeElement<NotificationParametersTExtendedTParametersTParametersItemCodec, global::Baclib.Bacnet.Types.Application.NotificationParameters.TExtended.TParameters.TParametersItem>(ref writer, 2, item);
-        }
-        writer.WriteClosingTag(2);
+        var length = 0;
+        length += AsduElement.GetEncodedLength<Unsigned16Codec, ushort>(0, value.VendorId);
+        length += AsduElement.GetEncodedLength<UnsignedCodec, uint>(1, value.ExtendedEventType);
+        length += AsduElement.GetSequenceOfEncodedLength<NotificationParametersTExtendedTParametersItemCodec, T::NotificationParameters.TExtended.TParametersItem>(2, value.Parameters);
+        return length;
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.NotificationParameters.TExtended value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
+    public static int GetEncodedLength(in T::NotificationParameters.TExtended value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<NotificationParametersTExtendedCodec, T::NotificationParameters.TExtended>(tagNumber, value);
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.NotificationParameters.TExtended value)
+    public static bool Matches(ref AsduReader reader)
     {
-        return Asdu.GetPrimitiveLength<Unsigned16Codec, ushort>(0, value.VendorId) + Asdu.GetPrimitiveLength<UnsignedCodec, uint>(1, value.ExtendedEventType) + (AsduLength.FromTagNumber((byte)2) + (value.Parameters.Items.Sum(static item => Asdu.GetElementLength<NotificationParametersTExtendedTParametersTParametersItemCodec, global::Baclib.Bacnet.Types.Application.NotificationParameters.TExtended.TParameters.TParametersItem>(2, item))) + AsduLength.FromTagNumber((byte)2));
+        return reader.PeekContextTag(0);
     }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.NotificationParameters.TExtended value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

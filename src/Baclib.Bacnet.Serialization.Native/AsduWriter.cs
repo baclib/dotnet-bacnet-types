@@ -13,7 +13,7 @@ namespace Baclib.Bacnet.Serialization.Native;
 /// It supports all BACnet primitive types, constructed types, and context-specific encoding.
 /// The writer maintains an internal position index that advances as data is written.
 /// </remarks>
-public ref struct NativeWriter
+public ref struct AsduWriter
 {
     /// <summary>
     /// Backing buffer used for encoded output.
@@ -70,11 +70,11 @@ public ref struct NativeWriter
     private int _index = 0;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="NativeWriter"/> class with the specified buffer size.
+    /// Initializes a new instance of the <see cref="AsduWriter"/> class with the specified buffer size.
     /// </summary>
     /// <param name="size">The size of the buffer to allocate.</param>
     /// <exception cref="ArgumentOutOfRangeException">Thrown when size is negative.</exception>
-    public NativeWriter(int size)
+    public AsduWriter(int size)
     {
         if (size < 0)
         {
@@ -168,6 +168,23 @@ public ref struct NativeWriter
 
 
     /// <summary>
+    /// Specifies the kind of BACnet ASN.1 tag used in APDU encoding.
+    /// </summary>
+    private enum AsduTagKind
+    {
+        /// <summary>
+        /// Opening tag: marks the start of a constructed value.
+        /// </summary>
+        Opening = 0xE00,
+
+        /// <summary>
+        /// Closing tag: marks the end of a constructed value.
+        /// </summary>
+        Closing = 0xF00
+    }
+
+
+    /// <summary>
     /// Writes an enclosing context tag (opening or closing).
     /// </summary>
     /// <param name="number">The context tag number to encode.</param>
@@ -212,7 +229,7 @@ public ref struct NativeWriter
     /// <typeparam name="T">The value type encoded by the codec.</typeparam>
     /// <param name="codec">The codec used to encode the value.</param>
     /// <param name="value">The value to encode.</param>
-    public void Encode<T>(INativeCodec<T> codec, in T value)
+    public void Encode<T>(IAsduElementDynamicCodec<T> codec, in T value)
     {
         codec.Encode(ref this, in value);
     }
@@ -224,9 +241,9 @@ public ref struct NativeWriter
     /// <param name="codec">The codec used to encode the value.</param>
     /// <param name="contextTagNumber">The context tag number to encode with.</param>
     /// <param name="value">The value to encode.</param>
-    public void Encode<T>(INativeCodec<T> codec, byte contextTagNumber, in T value)
+    public void Encode<T>(IAsduElementDynamicCodec<T> codec, byte contextTagNumber, in T value)
     {
-        codec.Encode(ref this, contextTagNumber, in value);
+        //codec.Encode(ref this, contextTagNumber, in value);
     }
 
     /// <summary>
@@ -235,7 +252,7 @@ public ref struct NativeWriter
     /// <typeparam name="T">The value type encoded by the codec.</typeparam>
     /// <param name="codec">The codec used to encode each value.</param>
     /// <param name="values">The values to encode.</param>
-    public void EncodeSeries<T>(INativeCodec<T> codec, IEnumerable<T> values)
+    public void EncodeSeries<T>(IAsduElementDynamicCodec<T> codec, IEnumerable<T> values)
     {
         foreach (var value in values)
         {
@@ -250,7 +267,7 @@ public ref struct NativeWriter
     /// <param name="codec">The codec used to encode each value.</param>
     /// <param name="openingTagNumber">The opening/closing context tag number.</param>
     /// <param name="values">The values to encode.</param>
-    public void EncodeSeries<T>(INativeCodec<T> codec, byte openingTagNumber, IEnumerable<T> values)
+    public void EncodeSeries<T>(IAsduElementDynamicCodec<T> codec, byte openingTagNumber, IEnumerable<T> values)
     {
         WriteOpeningTag(openingTagNumber);
         EncodeSeries(codec, values);

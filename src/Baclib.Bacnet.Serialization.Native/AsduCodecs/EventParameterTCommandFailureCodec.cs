@@ -1,60 +1,48 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class EventParameterTCommandFailureCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.EventParameter.TCommandFailure>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.EventParameter.TCommandFailure>
+    IAsduElementCodec<T::EventParameter.TCommandFailure>,
+    IAsduConstructedCodec<T::EventParameter.TCommandFailure>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::EventParameter.TCommandFailure Decode(ref AsduReader reader)
     {
-        return reader.PeekTag((byte)0);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.EventParameter.TCommandFailure Decode(ref NativeReader reader)
-    {
-        var _timeDelay = Asdu.DecodePrimitive<UnsignedCodec, uint>(ref reader, 0);
-        var _feedbackPropertyReference = Asdu.DecodeConstructed<DeviceObjectPropertyReferenceCodec, global::Baclib.Bacnet.Types.Application.DeviceObjectPropertyReference>(ref reader, 1);
-
-        return new global::Baclib.Bacnet.Types.Application.EventParameter.TCommandFailure
+        return new T::EventParameter.TCommandFailure
         {
-            TimeDelay = _timeDelay,
-            FeedbackPropertyReference = _feedbackPropertyReference
+            TimeDelay = AsduElement.Decode<UnsignedCodec, uint>(ref reader, 0),
+            FeedbackPropertyReference = AsduElement.Decode<DeviceObjectPropertyReferenceCodec, T::DeviceObjectPropertyReference>(ref reader, 1)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.EventParameter.TCommandFailure Decode(ref NativeReader reader, byte tagNumber)
+    public static T::EventParameter.TCommandFailure Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<EventParameterTCommandFailureCodec, T::EventParameter.TCommandFailure>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::EventParameter.TCommandFailure value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.Encode<UnsignedCodec, uint>(ref writer, 0, value.TimeDelay);
+        AsduElement.Encode<DeviceObjectPropertyReferenceCodec, T::DeviceObjectPropertyReference>(ref writer, 1, value.FeedbackPropertyReference);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.EventParameter.TCommandFailure value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::EventParameter.TCommandFailure value)
+        => AsduConstructed.Encode<EventParameterTCommandFailureCodec, T::EventParameter.TCommandFailure>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::EventParameter.TCommandFailure value)
     {
-        Asdu.EncodePrimitive<UnsignedCodec, uint>(ref writer, 0, value.TimeDelay);
-        Asdu.EncodeElement<DeviceObjectPropertyReferenceCodec, global::Baclib.Bacnet.Types.Application.DeviceObjectPropertyReference>(ref writer, 1, value.FeedbackPropertyReference);
+        var length = 0;
+        length += AsduElement.GetEncodedLength<UnsignedCodec, uint>(0, value.TimeDelay);
+        length += AsduElement.GetEncodedLength<DeviceObjectPropertyReferenceCodec, T::DeviceObjectPropertyReference>(1, value.FeedbackPropertyReference);
+        return length;
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.EventParameter.TCommandFailure value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
+    public static int GetEncodedLength(in T::EventParameter.TCommandFailure value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<EventParameterTCommandFailureCodec, T::EventParameter.TCommandFailure>(tagNumber, value);
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.EventParameter.TCommandFailure value)
+    public static bool Matches(ref AsduReader reader)
     {
-        return Asdu.GetPrimitiveLength<UnsignedCodec, uint>(0, value.TimeDelay) + Asdu.GetElementLength<DeviceObjectPropertyReferenceCodec, global::Baclib.Bacnet.Types.Application.DeviceObjectPropertyReference>(1, value.FeedbackPropertyReference);
+        return reader.PeekContextTag(0);
     }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.EventParameter.TCommandFailure value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

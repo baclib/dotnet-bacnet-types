@@ -4,70 +4,70 @@
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 /// <summary>
-/// Provides BACnet ASDU primitive decoding and encoding for <see cref="Time"/> values.
+/// Provides BACnet ASDU primitive decoding and encoding for <see cref="global::Baclib.Bacnet.Types.Application.Time"/> values.
 /// </summary>
 public sealed class TimeCodec :
-    IAsduElementCodec<Time>,
-    IAsduPrimitiveCodec<Time>
+    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.Time>,
+    IAsduPrimitiveCodec<global::Baclib.Bacnet.Types.Application.Time>
 {
     /// <summary>
-    /// Decodes a <see cref="Time"/> value from the current reader position using the application tag.
+    /// Decodes a <see cref="global::Baclib.Bacnet.Types.Application.Time"/> value from the current reader position using the application tag.
     /// </summary>
     /// <param name="reader">The reader positioned at a time primitive tag.</param>
     /// <returns>The decoded value.</returns>
-    public static Time Decode(ref NativeReader reader)
-        => Asdu.DecodePrimitive<TimeCodec, Time>(ref reader);
+    public static global::Baclib.Bacnet.Types.Application.Time Decode(ref AsduReader reader)
+        => AsduPrimitive.Decode<TimeCodec, global::Baclib.Bacnet.Types.Application.Time>(ref reader);
 
     /// <summary>
-    /// Decodes a <see cref="Time"/> value from the current reader position using a specific context tag.
+    /// Decodes a <see cref="global::Baclib.Bacnet.Types.Application.Time"/> value from the current reader position using a specific context tag.
     /// </summary>
     /// <param name="reader">The reader positioned at a time primitive tag.</param>
     /// <param name="tagNumber">The expected context tag number.</param>
     /// <returns>The decoded value.</returns>
-    public static Time Decode(ref NativeReader reader, byte tagNumber)
-        => Asdu.DecodePrimitive<TimeCodec, Time>(ref reader, tagNumber);
+    public static global::Baclib.Bacnet.Types.Application.Time Decode(ref AsduReader reader, byte tagNumber)
+        => AsduPrimitive.Decode<TimeCodec, global::Baclib.Bacnet.Types.Application.Time>(ref reader, tagNumber);
 
     /// <summary>
-    /// Decodes a <see cref="Time"/> value from raw encoded bytes.
+    /// Decodes a <see cref="global::Baclib.Bacnet.Types.Application.Time"/> value from raw encoded bytes.
     /// </summary>
     /// <param name="source">The source payload bytes for the value.</param>
     /// <returns>The decoded value.</returns>
     /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="source"/> length is not supported.</exception>
-    public static Time DecodeValue(ReadOnlySpan<byte> source)
+    public static global::Baclib.Bacnet.Types.Application.Time DecodeValue(ReadOnlySpan<byte> source)
     {
         if (source.Length != AsduLength.Time)
         {
             throw new ArgumentOutOfRangeException(nameof(source));
         }
 
-        var value = new Time(source[0], source[1], source[2], source[3]);
+        var value = new global::Baclib.Bacnet.Types.Application.Time(source[0], source[1], source[2], source[3]);
         return value.IsValid ? value : throw new ArgumentOutOfRangeException(nameof(source));
     }
 
     /// <summary>
-    /// Encodes a <see cref="Time"/> value using the application tag.
+    /// Encodes a <see cref="global::Baclib.Bacnet.Types.Application.Time"/> value using the application tag.
     /// </summary>
     /// <param name="writer">The writer receiving the encoded value.</param>
     /// <param name="value">The value to encode.</param>
-    public static void Encode(ref NativeWriter writer, in Time value)
-        => Asdu.EncodePrimitive<TimeCodec, Time>(ref writer, value);
+    public static void Encode(ref AsduWriter writer, in global::Baclib.Bacnet.Types.Application.Time value)
+        => AsduPrimitive.Encode<TimeCodec, global::Baclib.Bacnet.Types.Application.Time>(ref writer, value);
 
     /// <summary>
-    /// Encodes a <see cref="Time"/> value using a specific context tag.
+    /// Encodes a <see cref="global::Baclib.Bacnet.Types.Application.Time"/> value using a specific context tag.
     /// </summary>
     /// <param name="writer">The writer receiving the encoded value.</param>
     /// <param name="tagNumber">The context tag number.</param>
     /// <param name="value">The value to encode.</param>
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in Time value)
-        => Asdu.EncodePrimitive<TimeCodec, Time>(ref writer, tagNumber, value);
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.Time value)
+        => AsduPrimitive.Encode<TimeCodec, global::Baclib.Bacnet.Types.Application.Time>(ref writer, tagNumber, value);
 
     /// <summary>
-    /// Encodes a <see cref="Time"/> value into an already allocated payload span.
+    /// Encodes a <see cref="global::Baclib.Bacnet.Types.Application.Time"/> value into an already allocated payload span.
     /// </summary>
     /// <param name="destination">The destination payload bytes.</param>
     /// <param name="value">The value to encode.</param>
     /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="destination"/> length is not supported.</exception>
-    public static void EncodeValue(Span<byte> destination, in Time value)
+    public static void EncodeValue(Span<byte> destination, in global::Baclib.Bacnet.Types.Application.Time value)
     {
         if (destination.Length != AsduLength.Time)
         {
@@ -81,11 +81,11 @@ public sealed class TimeCodec :
     }
 
     /// <summary>
-    /// Gets the encoded payload length for a <see cref="Time"/> value.
+    /// Gets the encoded payload length for a <see cref="global::Baclib.Bacnet.Types.Application.Time"/> value.
     /// </summary>
     /// <param name="value">The value whose payload length is requested.</param>
     /// <returns>The encoded payload length in bytes.</returns>
-    public static int GetEncodedValueLength(in Time value)
+    public static int GetEncodedValueLength(in global::Baclib.Bacnet.Types.Application.Time value)
         => AsduLength.Time;
 
     /// <summary>
@@ -93,7 +93,7 @@ public sealed class TimeCodec :
     /// </summary>
     /// <param name="value">The value whose total encoded length is requested.</param>
     /// <returns>The total encoded length in bytes.</returns>
-    public static int GetLength(in Time value)
+    public static int GetEncodedLength(in global::Baclib.Bacnet.Types.Application.Time value)
         => AsduLength.Sum(TagNumber, GetEncodedValueLength(value));
 
     /// <summary>
@@ -102,7 +102,7 @@ public sealed class TimeCodec :
     /// <param name="value">The value whose total encoded length is requested.</param>
     /// <param name="tagNumber">The context tag number.</param>
     /// <returns>The total encoded length in bytes.</returns>
-    public static int GetLength(in Time value, byte tagNumber)
+    public static int GetEncodedLength(in global::Baclib.Bacnet.Types.Application.Time value, byte tagNumber)
         => AsduLength.Sum(tagNumber, GetEncodedValueLength(value));
 
     /// <summary>
@@ -110,17 +110,8 @@ public sealed class TimeCodec :
     /// </summary>
     /// <param name="reader">The reader to inspect.</param>
     /// <returns><see langword="true"/> when the next tag matches; otherwise, <see langword="false"/>.</returns>
-    public static bool Matches(ref NativeReader reader)
-        => reader.PeekPrimitiveTag(TagNumber);
-
-    /// <summary>
-    /// Determines whether the next value in the reader matches a specific context tag.
-    /// </summary>
-    /// <param name="reader">The reader to inspect.</param>
-    /// <param name="tagNumber">The expected context tag number.</param>
-    /// <returns><see langword="true"/> when the next tag matches; otherwise, <see langword="false"/>.</returns>
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekPrimitiveTag(tagNumber);
+    public static bool Matches(ref AsduReader reader)
+        => reader.PeekApplicationTag(TagNumber);
 
     /// <summary>
     /// Gets the BACnet application tag number handled by this codec.

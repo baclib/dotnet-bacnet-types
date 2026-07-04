@@ -17,8 +17,8 @@ public sealed class DoorAlarmStateCodec :
     /// </summary>
     /// <param name="reader">The reader positioned at an enumerated primitive tag.</param>
     /// <returns>The decoded enumerated value.</returns>
-    public static T.DoorAlarmState Decode(ref NativeReader reader)
-        => Asdu.DecodePrimitive<DoorAlarmStateCodec, T.DoorAlarmState>(ref reader);
+    public static T.DoorAlarmState Decode(ref AsduReader reader)
+        => AsduPrimitive.Decode<DoorAlarmStateCodec, T.DoorAlarmState>(ref reader);
 
     /// <summary>
     /// Decodes an <see cref="T.DoorAlarmState"/> value from the current reader position using a specific context tag.
@@ -26,8 +26,8 @@ public sealed class DoorAlarmStateCodec :
     /// <param name="reader">The reader positioned at an enumerated primitive tag.</param>
     /// <param name="tagNumber">The expected context tag number.</param>
     /// <returns>The decoded enumerated value.</returns>
-    public static T.DoorAlarmState Decode(ref NativeReader reader, byte tagNumber)
-        => Asdu.DecodePrimitive<DoorAlarmStateCodec, T.DoorAlarmState>(ref reader, tagNumber);
+    public static T.DoorAlarmState Decode(ref AsduReader reader, byte tagNumber)
+        => AsduPrimitive.Decode<DoorAlarmStateCodec, T.DoorAlarmState>(ref reader, tagNumber);
 
     /// <summary>
     /// Decodes an <see cref="T.DoorAlarmState"/> value from raw encoded bytes.
@@ -50,8 +50,8 @@ public sealed class DoorAlarmStateCodec :
     /// </summary>
     /// <param name="writer">The writer receiving the encoded value.</param>
     /// <param name="value">The value to encode.</param>
-    public static void Encode(ref NativeWriter writer, in T.DoorAlarmState value)
-        => Asdu.EncodePrimitive<DoorAlarmStateCodec, T.DoorAlarmState>(ref writer, value);
+    public static void Encode(ref AsduWriter writer, in T.DoorAlarmState value)
+        => AsduPrimitive.Encode<DoorAlarmStateCodec, T.DoorAlarmState>(ref writer, value);
 
     /// <summary>
     /// Encodes an <see cref="T.DoorAlarmState"/> value using a specific context tag.
@@ -59,8 +59,8 @@ public sealed class DoorAlarmStateCodec :
     /// <param name="writer">The writer receiving the encoded value.</param>
     /// <param name="tagNumber">The context tag number.</param>
     /// <param name="value">The value to encode.</param>
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in T.DoorAlarmState value)
-        => Asdu.EncodePrimitive<DoorAlarmStateCodec, T.DoorAlarmState>(ref writer, tagNumber, value);
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T.DoorAlarmState value)
+        => AsduPrimitive.Encode<DoorAlarmStateCodec, T.DoorAlarmState>(ref writer, tagNumber, value);
 
     /// <summary>
     /// Encodes an <see cref="T.DoorAlarmState"/> value into an already allocated payload span.
@@ -96,7 +96,7 @@ public sealed class DoorAlarmStateCodec :
     /// </summary>
     /// <param name="value">The value whose total encoded length is requested.</param>
     /// <returns>The total encoded length in bytes.</returns>
-    public static int GetLength(in T.DoorAlarmState value)
+    public static int GetEncodedLength(in T.DoorAlarmState value)
         => AsduLength.Sum(TagNumber, GetEncodedValueLength(value));
 
     /// <summary>
@@ -105,7 +105,7 @@ public sealed class DoorAlarmStateCodec :
     /// <param name="value">The value whose total encoded length is requested.</param>
     /// <param name="tagNumber">The context tag number.</param>
     /// <returns>The total encoded length in bytes.</returns>
-    public static int GetLength(in T.DoorAlarmState value, byte tagNumber)
+    public static int GetEncodedLength(in T.DoorAlarmState value, byte tagNumber)
         => AsduLength.Sum(tagNumber, GetEncodedValueLength(value));
 
     /// <summary>
@@ -113,17 +113,8 @@ public sealed class DoorAlarmStateCodec :
     /// </summary>
     /// <param name="reader">The reader to inspect.</param>
     /// <returns><see langword="true"/> when the next tag matches; otherwise, <see langword="false"/>.</returns>
-    public static bool Matches(ref NativeReader reader)
-        => reader.PeekPrimitiveTag(TagNumber);
-
-    /// <summary>
-    /// Determines whether the next value in the reader matches a specific context tag.
-    /// </summary>
-    /// <param name="reader">The reader to inspect.</param>
-    /// <param name="tagNumber">The expected context tag number.</param>
-    /// <returns><see langword="true"/> when the next tag matches; otherwise, <see langword="false"/>.</returns>
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekPrimitiveTag(tagNumber);
+    public static bool Matches(ref AsduReader reader)
+        => reader.PeekApplicationTag(TagNumber);
 
     /// <summary>
     /// Gets the BACnet application tag number handled by this codec.

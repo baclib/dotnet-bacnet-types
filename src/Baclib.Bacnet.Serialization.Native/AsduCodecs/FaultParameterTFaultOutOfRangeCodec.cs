@@ -1,60 +1,48 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class FaultParameterTFaultOutOfRangeCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultOutOfRange>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultOutOfRange>
+    IAsduElementCodec<T::FaultParameter.TFaultOutOfRange>,
+    IAsduConstructedCodec<T::FaultParameter.TFaultOutOfRange>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::FaultParameter.TFaultOutOfRange Decode(ref AsduReader reader)
     {
-        return reader.PeekOpeningTag((byte)0);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultOutOfRange Decode(ref NativeReader reader)
-    {
-        var _minNormalValue = Asdu.DecodeConstructed<FaultParameterTFaultOutOfRangeTMinNormalValueCodec, global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultOutOfRange.TMinNormalValue>(ref reader, 0);
-        var _maxNormalValue = Asdu.DecodeConstructed<FaultParameterTFaultOutOfRangeTMaxNormalValueCodec, global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultOutOfRange.TMaxNormalValue>(ref reader, 1);
-
-        return new global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultOutOfRange
+        return new T::FaultParameter.TFaultOutOfRange
         {
-            MinNormalValue = _minNormalValue,
-            MaxNormalValue = _maxNormalValue
+            MinNormalValue = AsduElement.Decode<FaultParameterTFaultOutOfRangeTMinNormalValueCodec, T::FaultParameter.TFaultOutOfRange.TMinNormalValue>(ref reader, 0),
+            MaxNormalValue = AsduElement.Decode<FaultParameterTFaultOutOfRangeTMaxNormalValueCodec, T::FaultParameter.TFaultOutOfRange.TMaxNormalValue>(ref reader, 1)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultOutOfRange Decode(ref NativeReader reader, byte tagNumber)
+    public static T::FaultParameter.TFaultOutOfRange Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<FaultParameterTFaultOutOfRangeCodec, T::FaultParameter.TFaultOutOfRange>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::FaultParameter.TFaultOutOfRange value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.Encode<FaultParameterTFaultOutOfRangeTMinNormalValueCodec, T::FaultParameter.TFaultOutOfRange.TMinNormalValue>(ref writer, 0, value.MinNormalValue);
+        AsduElement.Encode<FaultParameterTFaultOutOfRangeTMaxNormalValueCodec, T::FaultParameter.TFaultOutOfRange.TMaxNormalValue>(ref writer, 1, value.MaxNormalValue);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultOutOfRange value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::FaultParameter.TFaultOutOfRange value)
+        => AsduConstructed.Encode<FaultParameterTFaultOutOfRangeCodec, T::FaultParameter.TFaultOutOfRange>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::FaultParameter.TFaultOutOfRange value)
     {
-        Asdu.EncodeElement<FaultParameterTFaultOutOfRangeTMinNormalValueCodec, global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultOutOfRange.TMinNormalValue>(ref writer, 0, value.MinNormalValue);
-        Asdu.EncodeElement<FaultParameterTFaultOutOfRangeTMaxNormalValueCodec, global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultOutOfRange.TMaxNormalValue>(ref writer, 1, value.MaxNormalValue);
+        var length = 0;
+        length += AsduElement.GetEncodedLength<FaultParameterTFaultOutOfRangeTMinNormalValueCodec, T::FaultParameter.TFaultOutOfRange.TMinNormalValue>(0, value.MinNormalValue);
+        length += AsduElement.GetEncodedLength<FaultParameterTFaultOutOfRangeTMaxNormalValueCodec, T::FaultParameter.TFaultOutOfRange.TMaxNormalValue>(1, value.MaxNormalValue);
+        return length;
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultOutOfRange value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
+    public static int GetEncodedLength(in T::FaultParameter.TFaultOutOfRange value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<FaultParameterTFaultOutOfRangeCodec, T::FaultParameter.TFaultOutOfRange>(tagNumber, value);
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultOutOfRange value)
+    public static bool Matches(ref AsduReader reader)
     {
-        return Asdu.GetElementLength<FaultParameterTFaultOutOfRangeTMinNormalValueCodec, global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultOutOfRange.TMinNormalValue>(0, value.MinNormalValue) + Asdu.GetElementLength<FaultParameterTFaultOutOfRangeTMaxNormalValueCodec, global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultOutOfRange.TMaxNormalValue>(1, value.MaxNormalValue);
+        return reader.PeekContextTag(0);
     }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultOutOfRange value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

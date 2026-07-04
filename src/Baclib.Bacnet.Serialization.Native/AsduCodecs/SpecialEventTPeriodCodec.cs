@@ -7,82 +7,68 @@ public sealed class SpecialEventTPeriodCodec :
     IAsduElementCodec<global::Baclib.Bacnet.Types.Application.SpecialEvent.TPeriod>,
     IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.SpecialEvent.TPeriod>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static bool Matches(ref AsduReader reader)
     {
-
-        var contextTagNumber = reader.PeekContextTagNumber();
-        switch (contextTagNumber)
+        if (!reader.PeekContextTag(out var contextTagNumber))
         {
-            case 0:
-            case 1:
-                return true;
-            default:
-                return false;
+            return false;
         }
+        return contextTagNumber switch
+        {
+            0 or
+            1 => true,
+            _ => false
+        };
     }
 
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag(tagNumber);
-
-    public static global::Baclib.Bacnet.Types.Application.SpecialEvent.TPeriod Decode(ref NativeReader reader)
+    public static global::Baclib.Bacnet.Types.Application.SpecialEvent.TPeriod Decode(ref AsduReader reader)
     {
-        var tagNumber = reader.PeekContextTagNumber();
+        var tagNumber = reader.ReadContextTagNumber();
         switch (tagNumber)
         {
             case 0:
-                var _calendarEntry = Asdu.DecodeConstructed<CalendarEntryCodec, global::Baclib.Bacnet.Types.Application.CalendarEntry>(ref reader, 0);
-                return global::Baclib.Bacnet.Types.Application.SpecialEvent.TPeriod.FromCalendarEntry(_calendarEntry);
+                var @calendarEntry = CalendarEntryCodec.Decode(ref reader, 0);
+                return global::Baclib.Bacnet.Types.Application.SpecialEvent.TPeriod.FromCalendarEntry(@calendarEntry);
             case 1:
-                var _calendarReference = Asdu.DecodePrimitive<ObjectIdentifierCodec, global::Baclib.Bacnet.Types.Application.ObjectIdentifier>(ref reader, 1);
-                return global::Baclib.Bacnet.Types.Application.SpecialEvent.TPeriod.FromCalendarReference(_calendarReference);
+                var @calendarReference = ObjectIdentifierCodec.Decode(ref reader, 1);
+                return global::Baclib.Bacnet.Types.Application.SpecialEvent.TPeriod.FromCalendarReference(@calendarReference);
         }
         throw new FormatException(nameof(reader));
     }
 
-    public static global::Baclib.Bacnet.Types.Application.SpecialEvent.TPeriod Decode(ref NativeReader reader, byte tagNumber)
-    {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
-    }
+    public static global::Baclib.Bacnet.Types.Application.SpecialEvent.TPeriod Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<SpecialEventTPeriodCodec, global::Baclib.Bacnet.Types.Application.SpecialEvent.TPeriod>(ref reader, tagNumber);
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.SpecialEvent.TPeriod value)
+    public static void Encode(ref AsduWriter writer, in global::Baclib.Bacnet.Types.Application.SpecialEvent.TPeriod value)
     {
         switch (value.Choice)
         {
             case global::Baclib.Bacnet.Types.Application.SpecialEvent.TPeriod.Option.CalendarEntry:
-                Asdu.EncodeConstructed<CalendarEntryCodec, global::Baclib.Bacnet.Types.Application.CalendarEntry>(ref writer, 0, value.CalendarEntry);
+                CalendarEntryCodec.Encode(ref writer, 0, value.CalendarEntry);
                 return;
             case global::Baclib.Bacnet.Types.Application.SpecialEvent.TPeriod.Option.CalendarReference:
-                Asdu.EncodePrimitive<ObjectIdentifierCodec, global::Baclib.Bacnet.Types.Application.ObjectIdentifier>(ref writer, 1, value.CalendarReference);
+                ObjectIdentifierCodec.Encode(ref writer, 1, value.CalendarReference);
                 return;
-        }
-        throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported.");
-    }
-
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.SpecialEvent.TPeriod value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.SpecialEvent.TPeriod value)
-    {
-        switch (value.Choice)
-        {
-            case global::Baclib.Bacnet.Types.Application.SpecialEvent.TPeriod.Option.CalendarEntry:
-                return Asdu.GetConstructedLength<CalendarEntryCodec, global::Baclib.Bacnet.Types.Application.CalendarEntry>(0, value.CalendarEntry);
-            case global::Baclib.Bacnet.Types.Application.SpecialEvent.TPeriod.Option.CalendarReference:
-                return Asdu.GetPrimitiveLength<ObjectIdentifierCodec, global::Baclib.Bacnet.Types.Application.ObjectIdentifier>(1, value.CalendarReference);
             default:
                 throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported.");
         }
     }
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.SpecialEvent.TPeriod value, byte tagNumber)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.SpecialEvent.TPeriod value)
+        => AsduConstructed.Encode<SpecialEventTPeriodCodec, global::Baclib.Bacnet.Types.Application.SpecialEvent.TPeriod>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in global::Baclib.Bacnet.Types.Application.SpecialEvent.TPeriod value)
     {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
+        return value.Choice switch
+        {
+            global::Baclib.Bacnet.Types.Application.SpecialEvent.TPeriod.Option.CalendarEntry
+                => CalendarEntryCodec.GetEncodedLength(value.CalendarEntry, 0),
+            global::Baclib.Bacnet.Types.Application.SpecialEvent.TPeriod.Option.CalendarReference
+                => ObjectIdentifierCodec.GetEncodedLength(value.CalendarReference, 1),
+            _ => throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported."),
+        };
     }
+
+    public static int GetEncodedLength(in global::Baclib.Bacnet.Types.Application.SpecialEvent.TPeriod value, byte tagNumber)
+        => AsduElement.GetEncodedLength<SpecialEventTPeriodCodec, global::Baclib.Bacnet.Types.Application.SpecialEvent.TPeriod>(tagNumber, value);
 }

@@ -1,62 +1,45 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class LandingDoorStatusCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.LandingDoorStatus>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.LandingDoorStatus>
+    IAsduElementCodec<T::LandingDoorStatus>,
+    IAsduConstructedCodec<T::LandingDoorStatus>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::LandingDoorStatus Decode(ref AsduReader reader)
     {
-        return reader.PeekOpeningTag(0);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.LandingDoorStatus Decode(ref NativeReader reader)
-    {
-        var _landingDoors = Asdu.DecodeSequenceOf<LandingDoorStatusTLandingDoorsTLandingDoorsItemCodec, global::Baclib.Bacnet.Types.Application.LandingDoorStatus.TLandingDoors.TLandingDoorsItem>(ref reader, 0);
-
-        return new global::Baclib.Bacnet.Types.Application.LandingDoorStatus
+        return new T::LandingDoorStatus
         {
-            LandingDoors = _landingDoors
+            LandingDoors = AsduElement.DecodeSequenceOf<LandingDoorStatusTLandingDoorsItemCodec, T::LandingDoorStatus.TLandingDoorsItem>(ref reader, 0)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.LandingDoorStatus Decode(ref NativeReader reader, byte tagNumber)
+    public static T::LandingDoorStatus Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<LandingDoorStatusCodec, T::LandingDoorStatus>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::LandingDoorStatus value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.EncodeSequenceOf<LandingDoorStatusTLandingDoorsItemCodec, T::LandingDoorStatus.TLandingDoorsItem>(ref writer, 0, value.LandingDoors);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.LandingDoorStatus value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::LandingDoorStatus value)
+        => AsduConstructed.Encode<LandingDoorStatusCodec, T::LandingDoorStatus>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::LandingDoorStatus value)
     {
-        writer.WriteOpeningTag(0);
-        foreach (var item in value.LandingDoors)
-        {
-            Asdu.EncodeElement<LandingDoorStatusTLandingDoorsTLandingDoorsItemCodec, global::Baclib.Bacnet.Types.Application.LandingDoorStatus.TLandingDoors.TLandingDoorsItem>(ref writer, 0, item);
-        }
-        writer.WriteClosingTag(0);
+        var length = 0;
+        length += AsduElement.GetSequenceOfEncodedLength<LandingDoorStatusTLandingDoorsItemCodec, T::LandingDoorStatus.TLandingDoorsItem>(0, value.LandingDoors);
+        return length;
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.LandingDoorStatus value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
+    public static int GetEncodedLength(in T::LandingDoorStatus value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<LandingDoorStatusCodec, T::LandingDoorStatus>(tagNumber, value);
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.LandingDoorStatus value)
+    public static bool Matches(ref AsduReader reader)
     {
-        return (AsduLength.FromTagNumber((byte)0) + (value.LandingDoors.Items.Sum(static item => Asdu.GetElementLength<LandingDoorStatusTLandingDoorsTLandingDoorsItemCodec, global::Baclib.Bacnet.Types.Application.LandingDoorStatus.TLandingDoors.TLandingDoorsItem>(0, item))) + AsduLength.FromTagNumber((byte)0));
+        return reader.PeekContextTag(0);
     }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.LandingDoorStatus value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

@@ -1,69 +1,54 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class RouterEntryCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.RouterEntry>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.RouterEntry>
+    IAsduElementCodec<T::RouterEntry>,
+    IAsduConstructedCodec<T::RouterEntry>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::RouterEntry Decode(ref AsduReader reader)
     {
-        return reader.PeekTag((byte)0);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.RouterEntry Decode(ref NativeReader reader)
-    {
-        var _networkNumber = Asdu.DecodePrimitive<Unsigned16Codec, ushort>(ref reader, 0);
-        var _macAddress = Asdu.DecodePrimitive<OctetStringCodec, global::Baclib.Bacnet.Types.Application.OctetString>(ref reader, 1);
-        var _status = Asdu.DecodePrimitive<RouterEntryTStatusCodec, global::Baclib.Bacnet.Types.Application.RouterEntry.TStatus>(ref reader, 2);
-        var _performanceIndex = Asdu.DecodeOptional<Unsigned8Codec, byte>(ref reader, 3);
-
-        return new global::Baclib.Bacnet.Types.Application.RouterEntry
+        return new T::RouterEntry
         {
-            NetworkNumber = _networkNumber,
-            MacAddress = _macAddress,
-            Status = _status,
-            PerformanceIndex = _performanceIndex
+            NetworkNumber = AsduElement.Decode<Unsigned16Codec, ushort>(ref reader, 0),
+            MacAddress = AsduElement.Decode<OctetStringCodec, T::OctetString>(ref reader, 1),
+            Status = AsduElement.Decode<RouterEntryTStatusCodec, T::RouterEntry.TStatus>(ref reader, 2),
+            PerformanceIndex = AsduElement.DecodeOptional<Unsigned8Codec, byte>(ref reader, 3)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.RouterEntry Decode(ref NativeReader reader, byte tagNumber)
+    public static T::RouterEntry Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<RouterEntryCodec, T::RouterEntry>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::RouterEntry value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.Encode<Unsigned16Codec, ushort>(ref writer, 0, value.NetworkNumber);
+        AsduElement.Encode<OctetStringCodec, T::OctetString>(ref writer, 1, value.MacAddress);
+        AsduElement.Encode<RouterEntryTStatusCodec, T::RouterEntry.TStatus>(ref writer, 2, value.Status);
+        AsduElement.EncodeOptional<Unsigned8Codec, byte>(ref writer, 3, value.PerformanceIndex);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.RouterEntry value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::RouterEntry value)
+        => AsduConstructed.Encode<RouterEntryCodec, T::RouterEntry>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::RouterEntry value)
     {
-        Asdu.EncodePrimitive<Unsigned16Codec, ushort>(ref writer, 0, value.NetworkNumber);
-        Asdu.EncodePrimitive<OctetStringCodec, global::Baclib.Bacnet.Types.Application.OctetString>(ref writer, 1, value.MacAddress);
-        Asdu.EncodePrimitive<RouterEntryTStatusCodec, global::Baclib.Bacnet.Types.Application.RouterEntry.TStatus>(ref writer, 2, value.Status);
-        if (value.PerformanceIndex.HasValue)
-        {
-            Asdu.EncodePrimitive<Unsigned8Codec, byte>(ref writer, 3, value.PerformanceIndex.Value);
-        }
+        var length = 0;
+        length += AsduElement.GetEncodedLength<Unsigned16Codec, ushort>(0, value.NetworkNumber);
+        length += AsduElement.GetEncodedLength<OctetStringCodec, T::OctetString>(1, value.MacAddress);
+        length += AsduElement.GetEncodedLength<RouterEntryTStatusCodec, T::RouterEntry.TStatus>(2, value.Status);
+        length += AsduElement.GetOptionalEncodedLength<Unsigned8Codec, byte>(3, value.PerformanceIndex);
+        return length;
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.RouterEntry value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
+    public static int GetEncodedLength(in T::RouterEntry value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<RouterEntryCodec, T::RouterEntry>(tagNumber, value);
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.RouterEntry value)
+    public static bool Matches(ref AsduReader reader)
     {
-        return Asdu.GetPrimitiveLength<Unsigned16Codec, ushort>(0, value.NetworkNumber) + Asdu.GetPrimitiveLength<OctetStringCodec, global::Baclib.Bacnet.Types.Application.OctetString>(1, value.MacAddress) + Asdu.GetPrimitiveLength<RouterEntryTStatusCodec, global::Baclib.Bacnet.Types.Application.RouterEntry.TStatus>(2, value.Status) + (value.PerformanceIndex.HasValue ? Asdu.GetPrimitiveLength<Unsigned8Codec, byte>(3, value.PerformanceIndex.Value) : 0);
+        return reader.PeekContextTag(0);
     }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.RouterEntry value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

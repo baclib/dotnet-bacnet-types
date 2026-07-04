@@ -1,66 +1,51 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class LogRecordCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.LogRecord>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.LogRecord>
+    IAsduElementCodec<T::LogRecord>,
+    IAsduConstructedCodec<T::LogRecord>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::LogRecord Decode(ref AsduReader reader)
     {
-        return reader.PeekOpeningTag((byte)0);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.LogRecord Decode(ref NativeReader reader)
-    {
-        var _timestamp = Asdu.DecodeConstructed<DateTimeCodec, global::Baclib.Bacnet.Types.Application.DateTime>(ref reader, 0);
-        var _logDatum = Asdu.DecodeConstructed<LogRecordTLogDatumCodec, global::Baclib.Bacnet.Types.Application.LogRecord.TLogDatum>(ref reader, 1);
-        var _statusFlags = Asdu.DecodeOptional<StatusFlagsCodec, global::Baclib.Bacnet.Types.Application.StatusFlags>(ref reader, 2);
-
-        return new global::Baclib.Bacnet.Types.Application.LogRecord
+        return new T::LogRecord
         {
-            Timestamp = _timestamp,
-            LogDatum = _logDatum,
-            StatusFlags = _statusFlags
+            Timestamp = AsduElement.Decode<DateTimeCodec, T::DateTime>(ref reader, 0),
+            LogDatum = AsduElement.Decode<LogRecordTLogDatumCodec, T::LogRecord.TLogDatum>(ref reader, 1),
+            StatusFlags = AsduElement.DecodeOptional<StatusFlagsCodec, T::StatusFlags>(ref reader, 2)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.LogRecord Decode(ref NativeReader reader, byte tagNumber)
+    public static T::LogRecord Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<LogRecordCodec, T::LogRecord>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::LogRecord value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.Encode<DateTimeCodec, T::DateTime>(ref writer, 0, value.Timestamp);
+        AsduElement.Encode<LogRecordTLogDatumCodec, T::LogRecord.TLogDatum>(ref writer, 1, value.LogDatum);
+        AsduElement.EncodeOptional<StatusFlagsCodec, T::StatusFlags>(ref writer, 2, value.StatusFlags);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.LogRecord value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::LogRecord value)
+        => AsduConstructed.Encode<LogRecordCodec, T::LogRecord>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::LogRecord value)
     {
-        Asdu.EncodeElement<DateTimeCodec, global::Baclib.Bacnet.Types.Application.DateTime>(ref writer, 0, value.Timestamp);
-        Asdu.EncodeElement<LogRecordTLogDatumCodec, global::Baclib.Bacnet.Types.Application.LogRecord.TLogDatum>(ref writer, 1, value.LogDatum);
-        if (value.StatusFlags.HasValue)
-        {
-            Asdu.EncodePrimitive<StatusFlagsCodec, global::Baclib.Bacnet.Types.Application.StatusFlags>(ref writer, 2, value.StatusFlags.Value);
-        }
+        var length = 0;
+        length += AsduElement.GetEncodedLength<DateTimeCodec, T::DateTime>(0, value.Timestamp);
+        length += AsduElement.GetEncodedLength<LogRecordTLogDatumCodec, T::LogRecord.TLogDatum>(1, value.LogDatum);
+        length += AsduElement.GetOptionalEncodedLength<StatusFlagsCodec, T::StatusFlags>(2, value.StatusFlags);
+        return length;
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.LogRecord value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
+    public static int GetEncodedLength(in T::LogRecord value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<LogRecordCodec, T::LogRecord>(tagNumber, value);
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.LogRecord value)
+    public static bool Matches(ref AsduReader reader)
     {
-        return Asdu.GetElementLength<DateTimeCodec, global::Baclib.Bacnet.Types.Application.DateTime>(0, value.Timestamp) + Asdu.GetElementLength<LogRecordTLogDatumCodec, global::Baclib.Bacnet.Types.Application.LogRecord.TLogDatum>(1, value.LogDatum) + (value.StatusFlags.HasValue ? Asdu.GetPrimitiveLength<StatusFlagsCodec, global::Baclib.Bacnet.Types.Application.StatusFlags>(2, value.StatusFlags.Value) : 0);
+        return reader.PeekContextTag(0);
     }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.LogRecord value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

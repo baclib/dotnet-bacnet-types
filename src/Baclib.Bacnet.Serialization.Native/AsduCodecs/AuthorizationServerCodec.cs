@@ -1,69 +1,51 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class AuthorizationServerCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.AuthorizationServer>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.AuthorizationServer>
+    IAsduElementCodec<T::AuthorizationServer>,
+    IAsduConstructedCodec<T::AuthorizationServer>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::AuthorizationServer Decode(ref AsduReader reader)
     {
-        return reader.PeekTag((byte)0);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.AuthorizationServer Decode(ref NativeReader reader)
-    {
-        var _authServer = Asdu.DecodePrimitive<Unsigned32Codec, uint>(ref reader, 0);
-        var _signingKey1 = Asdu.DecodeOptional<OctetStringCodec, global::Baclib.Bacnet.Types.Application.OctetString>(ref reader, 1);
-        var _signingKey2 = Asdu.DecodeOptional<OctetStringCodec, global::Baclib.Bacnet.Types.Application.OctetString>(ref reader, 2);
-
-        return new global::Baclib.Bacnet.Types.Application.AuthorizationServer
+        return new T::AuthorizationServer
         {
-            AuthServer = _authServer,
-            SigningKey1 = _signingKey1,
-            SigningKey2 = _signingKey2
+            AuthServer = AsduElement.Decode<Unsigned32Codec, uint>(ref reader, 0),
+            SigningKey1 = AsduElement.DecodeOptional<OctetStringCodec, T::OctetString>(ref reader, 1),
+            SigningKey2 = AsduElement.DecodeOptional<OctetStringCodec, T::OctetString>(ref reader, 2)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.AuthorizationServer Decode(ref NativeReader reader, byte tagNumber)
+    public static T::AuthorizationServer Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<AuthorizationServerCodec, T::AuthorizationServer>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::AuthorizationServer value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.Encode<Unsigned32Codec, uint>(ref writer, 0, value.AuthServer);
+        AsduElement.EncodeOptional<OctetStringCodec, T::OctetString>(ref writer, 1, value.SigningKey1);
+        AsduElement.EncodeOptional<OctetStringCodec, T::OctetString>(ref writer, 2, value.SigningKey2);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.AuthorizationServer value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::AuthorizationServer value)
+        => AsduConstructed.Encode<AuthorizationServerCodec, T::AuthorizationServer>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::AuthorizationServer value)
     {
-        Asdu.EncodePrimitive<Unsigned32Codec, uint>(ref writer, 0, value.AuthServer);
-        if (value.SigningKey1.HasValue)
-        {
-            Asdu.EncodePrimitive<OctetStringCodec, global::Baclib.Bacnet.Types.Application.OctetString>(ref writer, 1, value.SigningKey1.Value);
-        }
-        if (value.SigningKey2.HasValue)
-        {
-            Asdu.EncodePrimitive<OctetStringCodec, global::Baclib.Bacnet.Types.Application.OctetString>(ref writer, 2, value.SigningKey2.Value);
-        }
+        var length = 0;
+        length += AsduElement.GetEncodedLength<Unsigned32Codec, uint>(0, value.AuthServer);
+        length += AsduElement.GetOptionalEncodedLength<OctetStringCodec, T::OctetString>(1, value.SigningKey1);
+        length += AsduElement.GetOptionalEncodedLength<OctetStringCodec, T::OctetString>(2, value.SigningKey2);
+        return length;
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.AuthorizationServer value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
+    public static int GetEncodedLength(in T::AuthorizationServer value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<AuthorizationServerCodec, T::AuthorizationServer>(tagNumber, value);
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.AuthorizationServer value)
+    public static bool Matches(ref AsduReader reader)
     {
-        return Asdu.GetPrimitiveLength<Unsigned32Codec, uint>(0, value.AuthServer) + (value.SigningKey1.HasValue ? Asdu.GetPrimitiveLength<OctetStringCodec, global::Baclib.Bacnet.Types.Application.OctetString>(1, value.SigningKey1.Value) : 0) + (value.SigningKey2.HasValue ? Asdu.GetPrimitiveLength<OctetStringCodec, global::Baclib.Bacnet.Types.Application.OctetString>(2, value.SigningKey2.Value) : 0);
+        return reader.PeekContextTag(0);
     }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.AuthorizationServer value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

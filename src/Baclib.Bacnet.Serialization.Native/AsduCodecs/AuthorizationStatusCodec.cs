@@ -1,119 +1,66 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class AuthorizationStatusCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.AuthorizationStatus>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.AuthorizationStatus>
+    IAsduElementCodec<T::AuthorizationStatus>,
+    IAsduConstructedCodec<T::AuthorizationStatus>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::AuthorizationStatus Decode(ref AsduReader reader)
     {
-        return reader.PeekTag((byte)0);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.AuthorizationStatus Decode(ref NativeReader reader)
-    {
-        var _posture = Asdu.DecodePrimitive<AuthorizationPostureCodec, global::Baclib.Bacnet.Types.Application.AuthorizationPosture>(ref reader, 0);
-        var _error = Asdu.DecodeOptionalElement<ErrorCodec, global::Baclib.Bacnet.Types.Application.Error>(ref reader, 1);
-        var _errorSource = Asdu.DecodeOptionalElement<ObjectPropertyReferenceCodec, global::Baclib.Bacnet.Types.Application.ObjectPropertyReference>(ref reader, 2);
-        var _errorDetails = Asdu.DecodeOptional<CharacterStringCodec, global::Baclib.Bacnet.Types.Application.CharacterString>(ref reader, 3);
-        var _authenticationSuccess = reader.PeekOpeningTag(4) ? Asdu.DecodeSequenceOf<AuthenticationEventCodec, global::Baclib.Bacnet.Types.Application.AuthenticationEvent>(ref reader, 4) : Optional<SequenceOf<global::Baclib.Bacnet.Types.Application.AuthenticationEvent>>.None;
-        var _authenticationFailure = reader.PeekOpeningTag(5) ? Asdu.DecodeSequenceOf<AuthenticationEventCodec, global::Baclib.Bacnet.Types.Application.AuthenticationEvent>(ref reader, 5) : Optional<SequenceOf<global::Baclib.Bacnet.Types.Application.AuthenticationEvent>>.None;
-        var _authorizationSuccess = reader.PeekOpeningTag(6) ? Asdu.DecodeSequenceOf<AuthorizationEventCodec, global::Baclib.Bacnet.Types.Application.AuthorizationEvent>(ref reader, 6) : Optional<SequenceOf<global::Baclib.Bacnet.Types.Application.AuthorizationEvent>>.None;
-        var _authorizationFailure = reader.PeekOpeningTag(7) ? Asdu.DecodeSequenceOf<AuthorizationEventCodec, global::Baclib.Bacnet.Types.Application.AuthorizationEvent>(ref reader, 7) : Optional<SequenceOf<global::Baclib.Bacnet.Types.Application.AuthorizationEvent>>.None;
-
-        return new global::Baclib.Bacnet.Types.Application.AuthorizationStatus
+        return new T::AuthorizationStatus
         {
-            Posture = _posture,
-            Error = _error,
-            ErrorSource = _errorSource,
-            ErrorDetails = _errorDetails,
-            AuthenticationSuccess = _authenticationSuccess,
-            AuthenticationFailure = _authenticationFailure,
-            AuthorizationSuccess = _authorizationSuccess,
-            AuthorizationFailure = _authorizationFailure
+            Posture = AsduElement.Decode<AuthorizationPostureCodec, T::AuthorizationPosture>(ref reader, 0),
+            Error = AsduElement.DecodeOptional<ErrorCodec, T::Error>(ref reader, 1),
+            ErrorSource = AsduElement.DecodeOptional<ObjectPropertyReferenceCodec, T::ObjectPropertyReference>(ref reader, 2),
+            ErrorDetails = AsduElement.DecodeOptional<CharacterStringCodec, T::CharacterString>(ref reader, 3),
+            AuthenticationSuccess = AsduElement.DecodeOptionalSequenceOf<AuthenticationEventCodec, T::AuthenticationEvent>(ref reader, 4),
+            AuthenticationFailure = AsduElement.DecodeOptionalSequenceOf<AuthenticationEventCodec, T::AuthenticationEvent>(ref reader, 5),
+            AuthorizationSuccess = AsduElement.DecodeOptionalSequenceOf<AuthorizationEventCodec, T::AuthorizationEvent>(ref reader, 6),
+            AuthorizationFailure = AsduElement.DecodeOptionalSequenceOf<AuthorizationEventCodec, T::AuthorizationEvent>(ref reader, 7)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.AuthorizationStatus Decode(ref NativeReader reader, byte tagNumber)
+    public static T::AuthorizationStatus Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<AuthorizationStatusCodec, T::AuthorizationStatus>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::AuthorizationStatus value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.Encode<AuthorizationPostureCodec, T::AuthorizationPosture>(ref writer, 0, value.Posture);
+        AsduElement.EncodeOptional<ErrorCodec, T::Error>(ref writer, 1, value.Error);
+        AsduElement.EncodeOptional<ObjectPropertyReferenceCodec, T::ObjectPropertyReference>(ref writer, 2, value.ErrorSource);
+        AsduElement.EncodeOptional<CharacterStringCodec, T::CharacterString>(ref writer, 3, value.ErrorDetails);
+        AsduElement.EncodeOptionalSequenceOf<AuthenticationEventCodec, T::AuthenticationEvent>(ref writer, 4, value.AuthenticationSuccess);
+        AsduElement.EncodeOptionalSequenceOf<AuthenticationEventCodec, T::AuthenticationEvent>(ref writer, 5, value.AuthenticationFailure);
+        AsduElement.EncodeOptionalSequenceOf<AuthorizationEventCodec, T::AuthorizationEvent>(ref writer, 6, value.AuthorizationSuccess);
+        AsduElement.EncodeOptionalSequenceOf<AuthorizationEventCodec, T::AuthorizationEvent>(ref writer, 7, value.AuthorizationFailure);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.AuthorizationStatus value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::AuthorizationStatus value)
+        => AsduConstructed.Encode<AuthorizationStatusCodec, T::AuthorizationStatus>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::AuthorizationStatus value)
     {
-        Asdu.EncodePrimitive<AuthorizationPostureCodec, global::Baclib.Bacnet.Types.Application.AuthorizationPosture>(ref writer, 0, value.Posture);
-        if (value.Error.HasValue)
-        {
-            Asdu.EncodeElement<ErrorCodec, global::Baclib.Bacnet.Types.Application.Error>(ref writer, 1, value.Error.Value);
-        }
-        if (value.ErrorSource.HasValue)
-        {
-            Asdu.EncodeElement<ObjectPropertyReferenceCodec, global::Baclib.Bacnet.Types.Application.ObjectPropertyReference>(ref writer, 2, value.ErrorSource.Value);
-        }
-        if (value.ErrorDetails.HasValue)
-        {
-            Asdu.EncodePrimitive<CharacterStringCodec, global::Baclib.Bacnet.Types.Application.CharacterString>(ref writer, 3, value.ErrorDetails.Value);
-        }
-        if (value.AuthenticationSuccess.HasValue)
-        {
-            writer.WriteOpeningTag(4);
-            foreach (var item in value.AuthenticationSuccess.Value)
-            {
-                Asdu.EncodeElement<AuthenticationEventCodec, global::Baclib.Bacnet.Types.Application.AuthenticationEvent>(ref writer, 4, item);
-            }
-            writer.WriteClosingTag(4);
-        }
-        if (value.AuthenticationFailure.HasValue)
-        {
-            writer.WriteOpeningTag(5);
-            foreach (var item in value.AuthenticationFailure.Value)
-            {
-                Asdu.EncodeElement<AuthenticationEventCodec, global::Baclib.Bacnet.Types.Application.AuthenticationEvent>(ref writer, 5, item);
-            }
-            writer.WriteClosingTag(5);
-        }
-        if (value.AuthorizationSuccess.HasValue)
-        {
-            writer.WriteOpeningTag(6);
-            foreach (var item in value.AuthorizationSuccess.Value)
-            {
-                Asdu.EncodeElement<AuthorizationEventCodec, global::Baclib.Bacnet.Types.Application.AuthorizationEvent>(ref writer, 6, item);
-            }
-            writer.WriteClosingTag(6);
-        }
-        if (value.AuthorizationFailure.HasValue)
-        {
-            writer.WriteOpeningTag(7);
-            foreach (var item in value.AuthorizationFailure.Value)
-            {
-                Asdu.EncodeElement<AuthorizationEventCodec, global::Baclib.Bacnet.Types.Application.AuthorizationEvent>(ref writer, 7, item);
-            }
-            writer.WriteClosingTag(7);
-        }
+        var length = 0;
+        length += AsduElement.GetEncodedLength<AuthorizationPostureCodec, T::AuthorizationPosture>(0, value.Posture);
+        length += AsduElement.GetOptionalEncodedLength<ErrorCodec, T::Error>(1, value.Error);
+        length += AsduElement.GetOptionalEncodedLength<ObjectPropertyReferenceCodec, T::ObjectPropertyReference>(2, value.ErrorSource);
+        length += AsduElement.GetOptionalEncodedLength<CharacterStringCodec, T::CharacterString>(3, value.ErrorDetails);
+        length += AsduElement.GetOptionalSequenceOfEncodedLength<AuthenticationEventCodec, T::AuthenticationEvent>(4, value.AuthenticationSuccess);
+        length += AsduElement.GetOptionalSequenceOfEncodedLength<AuthenticationEventCodec, T::AuthenticationEvent>(5, value.AuthenticationFailure);
+        length += AsduElement.GetOptionalSequenceOfEncodedLength<AuthorizationEventCodec, T::AuthorizationEvent>(6, value.AuthorizationSuccess);
+        length += AsduElement.GetOptionalSequenceOfEncodedLength<AuthorizationEventCodec, T::AuthorizationEvent>(7, value.AuthorizationFailure);
+        return length;
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.AuthorizationStatus value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
+    public static int GetEncodedLength(in T::AuthorizationStatus value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<AuthorizationStatusCodec, T::AuthorizationStatus>(tagNumber, value);
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.AuthorizationStatus value)
+    public static bool Matches(ref AsduReader reader)
     {
-        return Asdu.GetPrimitiveLength<AuthorizationPostureCodec, global::Baclib.Bacnet.Types.Application.AuthorizationPosture>(0, value.Posture) + (value.Error.HasValue ? Asdu.GetElementLength<ErrorCodec, global::Baclib.Bacnet.Types.Application.Error>(1, value.Error.Value) : 0) + (value.ErrorSource.HasValue ? Asdu.GetElementLength<ObjectPropertyReferenceCodec, global::Baclib.Bacnet.Types.Application.ObjectPropertyReference>(2, value.ErrorSource.Value) : 0) + (value.ErrorDetails.HasValue ? Asdu.GetPrimitiveLength<CharacterStringCodec, global::Baclib.Bacnet.Types.Application.CharacterString>(3, value.ErrorDetails.Value) : 0) + (value.AuthenticationSuccess.HasValue ? (AsduLength.FromTagNumber((byte)4) + (value.AuthenticationSuccess.Value.Items.Sum(static item => Asdu.GetElementLength<AuthenticationEventCodec, global::Baclib.Bacnet.Types.Application.AuthenticationEvent>(4, item))) + AsduLength.FromTagNumber((byte)4)) : 0) + (value.AuthenticationFailure.HasValue ? (AsduLength.FromTagNumber((byte)5) + (value.AuthenticationFailure.Value.Items.Sum(static item => Asdu.GetElementLength<AuthenticationEventCodec, global::Baclib.Bacnet.Types.Application.AuthenticationEvent>(5, item))) + AsduLength.FromTagNumber((byte)5)) : 0) + (value.AuthorizationSuccess.HasValue ? (AsduLength.FromTagNumber((byte)6) + (value.AuthorizationSuccess.Value.Items.Sum(static item => Asdu.GetElementLength<AuthorizationEventCodec, global::Baclib.Bacnet.Types.Application.AuthorizationEvent>(6, item))) + AsduLength.FromTagNumber((byte)6)) : 0) + (value.AuthorizationFailure.HasValue ? (AsduLength.FromTagNumber((byte)7) + (value.AuthorizationFailure.Value.Items.Sum(static item => Asdu.GetElementLength<AuthorizationEventCodec, global::Baclib.Bacnet.Types.Application.AuthorizationEvent>(7, item))) + AsduLength.FromTagNumber((byte)7)) : 0);
+        return reader.PeekContextTag(0);
     }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.AuthorizationStatus value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

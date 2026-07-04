@@ -7,82 +7,68 @@ public sealed class ConfirmedTextMessageRequestTMessageClassCodec :
     IAsduElementCodec<global::Baclib.Bacnet.Types.Application.ConfirmedTextMessageRequest.TMessageClass>,
     IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.ConfirmedTextMessageRequest.TMessageClass>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static bool Matches(ref AsduReader reader)
     {
-
-        var contextTagNumber = reader.PeekContextTagNumber();
-        switch (contextTagNumber)
+        if (!reader.PeekContextTag(out var contextTagNumber))
         {
-            case 0:
-            case 1:
-                return true;
-            default:
-                return false;
+            return false;
         }
+        return contextTagNumber switch
+        {
+            0 or
+            1 => true,
+            _ => false
+        };
     }
 
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag(tagNumber);
-
-    public static global::Baclib.Bacnet.Types.Application.ConfirmedTextMessageRequest.TMessageClass Decode(ref NativeReader reader)
+    public static global::Baclib.Bacnet.Types.Application.ConfirmedTextMessageRequest.TMessageClass Decode(ref AsduReader reader)
     {
-        var tagNumber = reader.PeekContextTagNumber();
+        var tagNumber = reader.ReadContextTagNumber();
         switch (tagNumber)
         {
             case 0:
-                var _numeric = Asdu.DecodePrimitive<UnsignedCodec, uint>(ref reader, 0);
-                return global::Baclib.Bacnet.Types.Application.ConfirmedTextMessageRequest.TMessageClass.FromNumeric(_numeric);
+                var @numeric = UnsignedCodec.Decode(ref reader, 0);
+                return global::Baclib.Bacnet.Types.Application.ConfirmedTextMessageRequest.TMessageClass.FromNumeric(@numeric);
             case 1:
-                var _character = Asdu.DecodePrimitive<CharacterStringCodec, global::Baclib.Bacnet.Types.Application.CharacterString>(ref reader, 1);
-                return global::Baclib.Bacnet.Types.Application.ConfirmedTextMessageRequest.TMessageClass.FromCharacter(_character);
+                var @character = CharacterStringCodec.Decode(ref reader, 1);
+                return global::Baclib.Bacnet.Types.Application.ConfirmedTextMessageRequest.TMessageClass.FromCharacter(@character);
         }
         throw new FormatException(nameof(reader));
     }
 
-    public static global::Baclib.Bacnet.Types.Application.ConfirmedTextMessageRequest.TMessageClass Decode(ref NativeReader reader, byte tagNumber)
-    {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
-    }
+    public static global::Baclib.Bacnet.Types.Application.ConfirmedTextMessageRequest.TMessageClass Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<ConfirmedTextMessageRequestTMessageClassCodec, global::Baclib.Bacnet.Types.Application.ConfirmedTextMessageRequest.TMessageClass>(ref reader, tagNumber);
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.ConfirmedTextMessageRequest.TMessageClass value)
+    public static void Encode(ref AsduWriter writer, in global::Baclib.Bacnet.Types.Application.ConfirmedTextMessageRequest.TMessageClass value)
     {
         switch (value.Choice)
         {
             case global::Baclib.Bacnet.Types.Application.ConfirmedTextMessageRequest.TMessageClass.Option.Numeric:
-                Asdu.EncodePrimitive<UnsignedCodec, uint>(ref writer, 0, value.Numeric);
+                UnsignedCodec.Encode(ref writer, 0, value.Numeric);
                 return;
             case global::Baclib.Bacnet.Types.Application.ConfirmedTextMessageRequest.TMessageClass.Option.Character:
-                Asdu.EncodePrimitive<CharacterStringCodec, global::Baclib.Bacnet.Types.Application.CharacterString>(ref writer, 1, value.Character);
+                CharacterStringCodec.Encode(ref writer, 1, value.Character);
                 return;
-        }
-        throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported.");
-    }
-
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.ConfirmedTextMessageRequest.TMessageClass value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.ConfirmedTextMessageRequest.TMessageClass value)
-    {
-        switch (value.Choice)
-        {
-            case global::Baclib.Bacnet.Types.Application.ConfirmedTextMessageRequest.TMessageClass.Option.Numeric:
-                return Asdu.GetPrimitiveLength<UnsignedCodec, uint>(0, value.Numeric);
-            case global::Baclib.Bacnet.Types.Application.ConfirmedTextMessageRequest.TMessageClass.Option.Character:
-                return Asdu.GetPrimitiveLength<CharacterStringCodec, global::Baclib.Bacnet.Types.Application.CharacterString>(1, value.Character);
             default:
                 throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported.");
         }
     }
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.ConfirmedTextMessageRequest.TMessageClass value, byte tagNumber)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.ConfirmedTextMessageRequest.TMessageClass value)
+        => AsduConstructed.Encode<ConfirmedTextMessageRequestTMessageClassCodec, global::Baclib.Bacnet.Types.Application.ConfirmedTextMessageRequest.TMessageClass>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in global::Baclib.Bacnet.Types.Application.ConfirmedTextMessageRequest.TMessageClass value)
     {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
+        return value.Choice switch
+        {
+            global::Baclib.Bacnet.Types.Application.ConfirmedTextMessageRequest.TMessageClass.Option.Numeric
+                => UnsignedCodec.GetEncodedLength(value.Numeric, 0),
+            global::Baclib.Bacnet.Types.Application.ConfirmedTextMessageRequest.TMessageClass.Option.Character
+                => CharacterStringCodec.GetEncodedLength(value.Character, 1),
+            _ => throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported."),
+        };
     }
+
+    public static int GetEncodedLength(in global::Baclib.Bacnet.Types.Application.ConfirmedTextMessageRequest.TMessageClass value, byte tagNumber)
+        => AsduElement.GetEncodedLength<ConfirmedTextMessageRequestTMessageClassCodec, global::Baclib.Bacnet.Types.Application.ConfirmedTextMessageRequest.TMessageClass>(tagNumber, value);
 }

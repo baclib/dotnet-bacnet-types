@@ -1,68 +1,51 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class AuthRequestRequestTTokenRequestCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.AuthRequestRequest.TTokenRequest>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.AuthRequestRequest.TTokenRequest>
+    IAsduElementCodec<T::AuthRequestRequest.TTokenRequest>,
+    IAsduConstructedCodec<T::AuthRequestRequest.TTokenRequest>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::AuthRequestRequest.TTokenRequest Decode(ref AsduReader reader)
     {
-        return reader.PeekTag((byte)0);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.AuthRequestRequest.TTokenRequest Decode(ref NativeReader reader)
-    {
-        var _client = Asdu.DecodePrimitive<Unsigned32Codec, uint>(ref reader, 0);
-        var _audience = Asdu.DecodeSequenceOf<Integer32Codec, int>(ref reader, 1);
-        var _scope = Asdu.DecodeConstructed<AuthorizationScopeCodec, global::Baclib.Bacnet.Types.Application.AuthorizationScope>(ref reader, 2);
-
-        return new global::Baclib.Bacnet.Types.Application.AuthRequestRequest.TTokenRequest
+        return new T::AuthRequestRequest.TTokenRequest
         {
-            Client = _client,
-            Audience = _audience,
-            Scope = _scope
+            Client = AsduElement.Decode<Unsigned32Codec, uint>(ref reader, 0),
+            Audience = AsduElement.DecodeSequenceOf<Integer32Codec, int>(ref reader, 1),
+            Scope = AsduElement.Decode<AuthorizationScopeCodec, T::AuthorizationScope>(ref reader, 2)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.AuthRequestRequest.TTokenRequest Decode(ref NativeReader reader, byte tagNumber)
+    public static T::AuthRequestRequest.TTokenRequest Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<AuthRequestRequestTTokenRequestCodec, T::AuthRequestRequest.TTokenRequest>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::AuthRequestRequest.TTokenRequest value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.Encode<Unsigned32Codec, uint>(ref writer, 0, value.Client);
+        AsduElement.EncodeSequenceOf<Integer32Codec, int>(ref writer, 1, value.Audience);
+        AsduElement.Encode<AuthorizationScopeCodec, T::AuthorizationScope>(ref writer, 2, value.Scope);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.AuthRequestRequest.TTokenRequest value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::AuthRequestRequest.TTokenRequest value)
+        => AsduConstructed.Encode<AuthRequestRequestTTokenRequestCodec, T::AuthRequestRequest.TTokenRequest>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::AuthRequestRequest.TTokenRequest value)
     {
-        Asdu.EncodePrimitive<Unsigned32Codec, uint>(ref writer, 0, value.Client);
-        writer.WriteOpeningTag(1);
-        foreach (var item in value.Audience)
-        {
-            Asdu.EncodeElement<Integer32Codec, int>(ref writer, 1, item);
-        }
-        writer.WriteClosingTag(1);
-        Asdu.EncodeElement<AuthorizationScopeCodec, global::Baclib.Bacnet.Types.Application.AuthorizationScope>(ref writer, 2, value.Scope);
+        var length = 0;
+        length += AsduElement.GetEncodedLength<Unsigned32Codec, uint>(0, value.Client);
+        length += AsduElement.GetSequenceOfEncodedLength<Integer32Codec, int>(1, value.Audience);
+        length += AsduElement.GetEncodedLength<AuthorizationScopeCodec, T::AuthorizationScope>(2, value.Scope);
+        return length;
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.AuthRequestRequest.TTokenRequest value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
+    public static int GetEncodedLength(in T::AuthRequestRequest.TTokenRequest value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<AuthRequestRequestTTokenRequestCodec, T::AuthRequestRequest.TTokenRequest>(tagNumber, value);
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.AuthRequestRequest.TTokenRequest value)
+    public static bool Matches(ref AsduReader reader)
     {
-        return Asdu.GetPrimitiveLength<Unsigned32Codec, uint>(0, value.Client) + (AsduLength.FromTagNumber((byte)1) + (value.Audience.Items.Sum(static item => Asdu.GetElementLength<Integer32Codec, int>(1, item))) + AsduLength.FromTagNumber((byte)1)) + Asdu.GetElementLength<AuthorizationScopeCodec, global::Baclib.Bacnet.Types.Application.AuthorizationScope>(2, value.Scope);
+        return reader.PeekContextTag(0);
     }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.AuthRequestRequest.TTokenRequest value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

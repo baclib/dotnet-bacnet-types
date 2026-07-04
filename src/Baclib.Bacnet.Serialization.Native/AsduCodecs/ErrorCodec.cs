@@ -1,60 +1,48 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class ErrorCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.Error>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.Error>
+    IAsduElementCodec<T::Error>,
+    IAsduConstructedCodec<T::Error>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::Error Decode(ref AsduReader reader)
     {
-        return reader.PeekTag(ErrorTErrorClassCodec.TagNumber);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.Error Decode(ref NativeReader reader)
-    {
-        var _errorClass = Asdu.DecodePrimitive<ErrorTErrorClassCodec, global::Baclib.Bacnet.Types.Application.Error.TErrorClass>(ref reader);
-        var _errorCode = Asdu.DecodePrimitive<ErrorTErrorCodeCodec, global::Baclib.Bacnet.Types.Application.Error.TErrorCode>(ref reader);
-
-        return new global::Baclib.Bacnet.Types.Application.Error
+        return new T::Error
         {
-            ErrorClass = _errorClass,
-            ErrorCode = _errorCode
+            ErrorClass = AsduElement.Decode<ErrorTErrorClassCodec, T::Error.TErrorClass>(ref reader),
+            ErrorCode = AsduElement.Decode<ErrorTErrorCodeCodec, T::Error.TErrorCode>(ref reader)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.Error Decode(ref NativeReader reader, byte tagNumber)
+    public static T::Error Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<ErrorCodec, T::Error>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::Error value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.Encode<ErrorTErrorClassCodec, T::Error.TErrorClass>(ref writer, value.ErrorClass);
+        AsduElement.Encode<ErrorTErrorCodeCodec, T::Error.TErrorCode>(ref writer, value.ErrorCode);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.Error value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::Error value)
+        => AsduConstructed.Encode<ErrorCodec, T::Error>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::Error value)
     {
-        Asdu.EncodePrimitive<ErrorTErrorClassCodec, global::Baclib.Bacnet.Types.Application.Error.TErrorClass>(ref writer, value.ErrorClass);
-        Asdu.EncodePrimitive<ErrorTErrorCodeCodec, global::Baclib.Bacnet.Types.Application.Error.TErrorCode>(ref writer, value.ErrorCode);
+        var length = 0;
+        length += AsduElement.GetEncodedLength<ErrorTErrorClassCodec, T::Error.TErrorClass>(value.ErrorClass);
+        length += AsduElement.GetEncodedLength<ErrorTErrorCodeCodec, T::Error.TErrorCode>(value.ErrorCode);
+        return length;
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.Error value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
+    public static int GetEncodedLength(in T::Error value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<ErrorCodec, T::Error>(tagNumber, value);
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.Error value)
+    public static bool Matches(ref AsduReader reader)
     {
-        return Asdu.GetEncodedLength<ErrorTErrorClassCodec, global::Baclib.Bacnet.Types.Application.Error.TErrorClass>(value.ErrorClass) + Asdu.GetEncodedLength<ErrorTErrorCodeCodec, global::Baclib.Bacnet.Types.Application.Error.TErrorCode>(value.ErrorCode);
+        return ErrorTErrorClassCodec.Matches(ref reader);
     }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.Error value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

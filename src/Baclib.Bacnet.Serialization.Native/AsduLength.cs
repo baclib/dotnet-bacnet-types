@@ -301,6 +301,15 @@ public abstract class AsduLength
 
 
 
+    public static int GetEncodedLength<TCodec, T>(in T value)
+        where TCodec : IAsduPrimitiveCodec<T>
+    {
+        return ((byte)TCodec.TagNumber < 15 ? 1 : 2) + TCodec.GetEncodedValueLength(value);
+    }
+
+
+
+
     public static int Sum(ApplicationTagNumber tagNumber, int dataLength) => Sum((byte)tagNumber, dataLength);
 
     public static int Sum(byte tagNumber, int dataLength)

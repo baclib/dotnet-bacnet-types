@@ -1,60 +1,48 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class AtomicReadFileRequestCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.AtomicReadFileRequest>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.AtomicReadFileRequest>
+    IAsduElementCodec<T::AtomicReadFileRequest>,
+    IAsduConstructedCodec<T::AtomicReadFileRequest>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::AtomicReadFileRequest Decode(ref AsduReader reader)
     {
-        return reader.PeekTag(ObjectIdentifierCodec.TagNumber);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.AtomicReadFileRequest Decode(ref NativeReader reader)
-    {
-        var _fileIdentifier = Asdu.DecodePrimitive<ObjectIdentifierCodec, global::Baclib.Bacnet.Types.Application.ObjectIdentifier>(ref reader);
-        var _accessMethod = Asdu.DecodeElement<AtomicReadFileRequestTAccessMethodCodec, global::Baclib.Bacnet.Types.Application.AtomicReadFileRequest.TAccessMethod>(ref reader);
-
-        return new global::Baclib.Bacnet.Types.Application.AtomicReadFileRequest
+        return new T::AtomicReadFileRequest
         {
-            FileIdentifier = _fileIdentifier,
-            AccessMethod = _accessMethod
+            FileIdentifier = AsduElement.Decode<ObjectIdentifierCodec, T::ObjectIdentifier>(ref reader),
+            AccessMethod = AsduElement.Decode<AtomicReadFileRequestTAccessMethodCodec, T::AtomicReadFileRequest.TAccessMethod>(ref reader)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.AtomicReadFileRequest Decode(ref NativeReader reader, byte tagNumber)
+    public static T::AtomicReadFileRequest Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<AtomicReadFileRequestCodec, T::AtomicReadFileRequest>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::AtomicReadFileRequest value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.Encode<ObjectIdentifierCodec, T::ObjectIdentifier>(ref writer, value.FileIdentifier);
+        AsduElement.Encode<AtomicReadFileRequestTAccessMethodCodec, T::AtomicReadFileRequest.TAccessMethod>(ref writer, value.AccessMethod);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.AtomicReadFileRequest value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::AtomicReadFileRequest value)
+        => AsduConstructed.Encode<AtomicReadFileRequestCodec, T::AtomicReadFileRequest>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::AtomicReadFileRequest value)
     {
-        Asdu.EncodePrimitive<ObjectIdentifierCodec, global::Baclib.Bacnet.Types.Application.ObjectIdentifier>(ref writer, value.FileIdentifier);
-        Asdu.EncodeElement<AtomicReadFileRequestTAccessMethodCodec, global::Baclib.Bacnet.Types.Application.AtomicReadFileRequest.TAccessMethod>(ref writer, value.AccessMethod);
+        var length = 0;
+        length += AsduElement.GetEncodedLength<ObjectIdentifierCodec, T::ObjectIdentifier>(value.FileIdentifier);
+        length += AsduElement.GetEncodedLength<AtomicReadFileRequestTAccessMethodCodec, T::AtomicReadFileRequest.TAccessMethod>(value.AccessMethod);
+        return length;
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.AtomicReadFileRequest value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
+    public static int GetEncodedLength(in T::AtomicReadFileRequest value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<AtomicReadFileRequestCodec, T::AtomicReadFileRequest>(tagNumber, value);
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.AtomicReadFileRequest value)
+    public static bool Matches(ref AsduReader reader)
     {
-        return Asdu.GetEncodedLength<ObjectIdentifierCodec, global::Baclib.Bacnet.Types.Application.ObjectIdentifier>(value.FileIdentifier) + Asdu.GetElementLength<AtomicReadFileRequestTAccessMethodCodec, global::Baclib.Bacnet.Types.Application.AtomicReadFileRequest.TAccessMethod>(value.AccessMethod);
+        return ObjectIdentifierCodec.Matches(ref reader);
     }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.AtomicReadFileRequest value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

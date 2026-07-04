@@ -1,63 +1,52 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class NotificationParametersTChangeOfStatusFlagsCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.NotificationParameters.TChangeOfStatusFlags>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.NotificationParameters.TChangeOfStatusFlags>
+    IAsduElementCodec<T::NotificationParameters.TChangeOfStatusFlags>,
+    IAsduConstructedCodec<T::NotificationParameters.TChangeOfStatusFlags>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::NotificationParameters.TChangeOfStatusFlags Decode(ref AsduReader reader)
     {
-        return reader.PeekTag((byte)1);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.NotificationParameters.TChangeOfStatusFlags Decode(ref NativeReader reader)
-    {
-        var _presentValue = Asdu.DecodeOptional<AnyCodec, global::Baclib.Bacnet.Types.Application.Any>(ref reader, 0);
-        var _referencedFlags = Asdu.DecodePrimitive<StatusFlagsCodec, global::Baclib.Bacnet.Types.Application.StatusFlags>(ref reader, 1);
-
-        return new global::Baclib.Bacnet.Types.Application.NotificationParameters.TChangeOfStatusFlags
+        return new T::NotificationParameters.TChangeOfStatusFlags
         {
-            PresentValue = _presentValue,
-            ReferencedFlags = _referencedFlags
+            PresentValue = AsduElement.DecodeOptional<AnyCodec, T::Any>(ref reader, 0),
+            ReferencedFlags = AsduElement.Decode<StatusFlagsCodec, T::StatusFlags>(ref reader, 1)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.NotificationParameters.TChangeOfStatusFlags Decode(ref NativeReader reader, byte tagNumber)
+    public static T::NotificationParameters.TChangeOfStatusFlags Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<NotificationParametersTChangeOfStatusFlagsCodec, T::NotificationParameters.TChangeOfStatusFlags>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::NotificationParameters.TChangeOfStatusFlags value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.EncodeOptional<AnyCodec, T::Any>(ref writer, 0, value.PresentValue);
+        AsduElement.Encode<StatusFlagsCodec, T::StatusFlags>(ref writer, 1, value.ReferencedFlags);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.NotificationParameters.TChangeOfStatusFlags value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::NotificationParameters.TChangeOfStatusFlags value)
+        => AsduConstructed.Encode<NotificationParametersTChangeOfStatusFlagsCodec, T::NotificationParameters.TChangeOfStatusFlags>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::NotificationParameters.TChangeOfStatusFlags value)
     {
-        if (value.PresentValue.HasValue)
+        var length = 0;
+        length += AsduElement.GetOptionalEncodedLength<AnyCodec, T::Any>(0, value.PresentValue);
+        length += AsduElement.GetEncodedLength<StatusFlagsCodec, T::StatusFlags>(1, value.ReferencedFlags);
+        return length;
+    }
+
+    public static int GetEncodedLength(in T::NotificationParameters.TChangeOfStatusFlags value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<NotificationParametersTChangeOfStatusFlagsCodec, T::NotificationParameters.TChangeOfStatusFlags>(tagNumber, value);
+
+    public static bool Matches(ref AsduReader reader)
+    {
+        if (reader.PeekContextTag(0))
         {
-            Asdu.EncodePrimitive<AnyCodec, global::Baclib.Bacnet.Types.Application.Any>(ref writer, 0, value.PresentValue.Value);
+            return true;
         }
-        Asdu.EncodePrimitive<StatusFlagsCodec, global::Baclib.Bacnet.Types.Application.StatusFlags>(ref writer, 1, value.ReferencedFlags);
+        return reader.PeekContextTag(1);
     }
-
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.NotificationParameters.TChangeOfStatusFlags value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.NotificationParameters.TChangeOfStatusFlags value)
-    {
-        return (value.PresentValue.HasValue ? Asdu.GetPrimitiveLength<AnyCodec, global::Baclib.Bacnet.Types.Application.Any>(0, value.PresentValue.Value) : 0) + Asdu.GetPrimitiveLength<StatusFlagsCodec, global::Baclib.Bacnet.Types.Application.StatusFlags>(1, value.ReferencedFlags);
-    }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.NotificationParameters.TChangeOfStatusFlags value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

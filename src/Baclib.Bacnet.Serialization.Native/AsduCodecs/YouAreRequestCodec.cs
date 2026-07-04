@@ -1,75 +1,57 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class YouAreRequestCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.YouAreRequest>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.YouAreRequest>
+    IAsduElementCodec<T::YouAreRequest>,
+    IAsduConstructedCodec<T::YouAreRequest>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::YouAreRequest Decode(ref AsduReader reader)
     {
-        return reader.PeekTag(Unsigned16Codec.TagNumber);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.YouAreRequest Decode(ref NativeReader reader)
-    {
-        var _vendorId = Asdu.DecodePrimitive<Unsigned16Codec, ushort>(ref reader);
-        var _modelName = Asdu.DecodePrimitive<CharacterStringCodec, global::Baclib.Bacnet.Types.Application.CharacterString>(ref reader);
-        var _serialNumber = Asdu.DecodePrimitive<CharacterStringCodec, global::Baclib.Bacnet.Types.Application.CharacterString>(ref reader);
-        var _deviceIdentifier = Asdu.DecodeOptional<ObjectIdentifierCodec, global::Baclib.Bacnet.Types.Application.ObjectIdentifier>(ref reader);
-        var _deviceMacAddress = Asdu.DecodeOptional<OctetStringCodec, global::Baclib.Bacnet.Types.Application.OctetString>(ref reader);
-
-        return new global::Baclib.Bacnet.Types.Application.YouAreRequest
+        return new T::YouAreRequest
         {
-            VendorId = _vendorId,
-            ModelName = _modelName,
-            SerialNumber = _serialNumber,
-            DeviceIdentifier = _deviceIdentifier,
-            DeviceMacAddress = _deviceMacAddress
+            VendorId = AsduElement.Decode<Unsigned16Codec, ushort>(ref reader),
+            ModelName = AsduElement.Decode<CharacterStringCodec, T::CharacterString>(ref reader),
+            SerialNumber = AsduElement.Decode<CharacterStringCodec, T::CharacterString>(ref reader),
+            DeviceIdentifier = AsduElement.DecodeOptional<ObjectIdentifierCodec, T::ObjectIdentifier>(ref reader),
+            DeviceMacAddress = AsduElement.DecodeOptional<OctetStringCodec, T::OctetString>(ref reader)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.YouAreRequest Decode(ref NativeReader reader, byte tagNumber)
+    public static T::YouAreRequest Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<YouAreRequestCodec, T::YouAreRequest>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::YouAreRequest value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.Encode<Unsigned16Codec, ushort>(ref writer, value.VendorId);
+        AsduElement.Encode<CharacterStringCodec, T::CharacterString>(ref writer, value.ModelName);
+        AsduElement.Encode<CharacterStringCodec, T::CharacterString>(ref writer, value.SerialNumber);
+        AsduElement.EncodeOptional<ObjectIdentifierCodec, T::ObjectIdentifier>(ref writer, value.DeviceIdentifier);
+        AsduElement.EncodeOptional<OctetStringCodec, T::OctetString>(ref writer, value.DeviceMacAddress);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.YouAreRequest value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::YouAreRequest value)
+        => AsduConstructed.Encode<YouAreRequestCodec, T::YouAreRequest>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::YouAreRequest value)
     {
-        Asdu.EncodePrimitive<Unsigned16Codec, ushort>(ref writer, value.VendorId);
-        Asdu.EncodePrimitive<CharacterStringCodec, global::Baclib.Bacnet.Types.Application.CharacterString>(ref writer, value.ModelName);
-        Asdu.EncodePrimitive<CharacterStringCodec, global::Baclib.Bacnet.Types.Application.CharacterString>(ref writer, value.SerialNumber);
-        if (value.DeviceIdentifier.HasValue)
-        {
-            Asdu.EncodePrimitive<ObjectIdentifierCodec, global::Baclib.Bacnet.Types.Application.ObjectIdentifier>(ref writer, value.DeviceIdentifier.Value);
-        }
-        if (value.DeviceMacAddress.HasValue)
-        {
-            Asdu.EncodePrimitive<OctetStringCodec, global::Baclib.Bacnet.Types.Application.OctetString>(ref writer, value.DeviceMacAddress.Value);
-        }
+        var length = 0;
+        length += AsduElement.GetEncodedLength<Unsigned16Codec, ushort>(value.VendorId);
+        length += AsduElement.GetEncodedLength<CharacterStringCodec, T::CharacterString>(value.ModelName);
+        length += AsduElement.GetEncodedLength<CharacterStringCodec, T::CharacterString>(value.SerialNumber);
+        length += AsduElement.GetOptionalEncodedLength<ObjectIdentifierCodec, T::ObjectIdentifier>(value.DeviceIdentifier);
+        length += AsduElement.GetOptionalEncodedLength<OctetStringCodec, T::OctetString>(value.DeviceMacAddress);
+        return length;
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.YouAreRequest value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
+    public static int GetEncodedLength(in T::YouAreRequest value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<YouAreRequestCodec, T::YouAreRequest>(tagNumber, value);
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.YouAreRequest value)
+    public static bool Matches(ref AsduReader reader)
     {
-        return Asdu.GetEncodedLength<Unsigned16Codec, ushort>(value.VendorId) + Asdu.GetEncodedLength<CharacterStringCodec, global::Baclib.Bacnet.Types.Application.CharacterString>(value.ModelName) + Asdu.GetEncodedLength<CharacterStringCodec, global::Baclib.Bacnet.Types.Application.CharacterString>(value.SerialNumber) + (value.DeviceIdentifier.HasValue ? Asdu.GetEncodedLength<ObjectIdentifierCodec, global::Baclib.Bacnet.Types.Application.ObjectIdentifier>(value.DeviceIdentifier.Value) : 0) + (value.DeviceMacAddress.HasValue ? Asdu.GetEncodedLength<OctetStringCodec, global::Baclib.Bacnet.Types.Application.OctetString>(value.DeviceMacAddress.Value) : 0);
+        return Unsigned16Codec.Matches(ref reader);
     }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.YouAreRequest value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

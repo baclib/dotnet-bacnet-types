@@ -1,65 +1,48 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class GetEventInformationAckCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.GetEventInformationAck>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.GetEventInformationAck>
+    IAsduElementCodec<T::GetEventInformationAck>,
+    IAsduConstructedCodec<T::GetEventInformationAck>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::GetEventInformationAck Decode(ref AsduReader reader)
     {
-        return reader.PeekOpeningTag(0);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.GetEventInformationAck Decode(ref NativeReader reader)
-    {
-        var _listOfEventSummaries = Asdu.DecodeSequenceOf<GetEventInformationAckTListOfEventSummariesItemCodec, global::Baclib.Bacnet.Types.Application.GetEventInformationAck.TListOfEventSummariesItem>(ref reader, 0);
-        var _moreEvents = Asdu.DecodePrimitive<BooleanCodec, bool>(ref reader, 1);
-
-        return new global::Baclib.Bacnet.Types.Application.GetEventInformationAck
+        return new T::GetEventInformationAck
         {
-            ListOfEventSummaries = _listOfEventSummaries,
-            MoreEvents = _moreEvents
+            ListOfEventSummaries = AsduElement.DecodeSequenceOf<GetEventInformationAckTListOfEventSummariesItemCodec, T::GetEventInformationAck.TListOfEventSummariesItem>(ref reader, 0),
+            MoreEvents = AsduElement.Decode<BooleanCodec, bool>(ref reader, 1)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.GetEventInformationAck Decode(ref NativeReader reader, byte tagNumber)
+    public static T::GetEventInformationAck Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<GetEventInformationAckCodec, T::GetEventInformationAck>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::GetEventInformationAck value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.EncodeSequenceOf<GetEventInformationAckTListOfEventSummariesItemCodec, T::GetEventInformationAck.TListOfEventSummariesItem>(ref writer, 0, value.ListOfEventSummaries);
+        AsduElement.Encode<BooleanCodec, bool>(ref writer, 1, value.MoreEvents);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.GetEventInformationAck value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::GetEventInformationAck value)
+        => AsduConstructed.Encode<GetEventInformationAckCodec, T::GetEventInformationAck>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::GetEventInformationAck value)
     {
-        writer.WriteOpeningTag(0);
-        foreach (var item in value.ListOfEventSummaries)
-        {
-            Asdu.EncodeElement<GetEventInformationAckTListOfEventSummariesItemCodec, global::Baclib.Bacnet.Types.Application.GetEventInformationAck.TListOfEventSummariesItem>(ref writer, 0, item);
-        }
-        writer.WriteClosingTag(0);
-        Asdu.EncodePrimitive<BooleanCodec, bool>(ref writer, 1, value.MoreEvents);
+        var length = 0;
+        length += AsduElement.GetSequenceOfEncodedLength<GetEventInformationAckTListOfEventSummariesItemCodec, T::GetEventInformationAck.TListOfEventSummariesItem>(0, value.ListOfEventSummaries);
+        length += AsduElement.GetEncodedLength<BooleanCodec, bool>(1, value.MoreEvents);
+        return length;
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.GetEventInformationAck value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
+    public static int GetEncodedLength(in T::GetEventInformationAck value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<GetEventInformationAckCodec, T::GetEventInformationAck>(tagNumber, value);
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.GetEventInformationAck value)
+    public static bool Matches(ref AsduReader reader)
     {
-        return (AsduLength.FromTagNumber((byte)0) + (value.ListOfEventSummaries.Items.Sum(static item => Asdu.GetElementLength<GetEventInformationAckTListOfEventSummariesItemCodec, global::Baclib.Bacnet.Types.Application.GetEventInformationAck.TListOfEventSummariesItem>(0, item))) + AsduLength.FromTagNumber((byte)0)) + Asdu.GetPrimitiveLength<BooleanCodec, bool>(1, value.MoreEvents);
+        return reader.PeekContextTag(0);
     }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.GetEventInformationAck value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

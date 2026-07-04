@@ -1,68 +1,51 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class AuditLogQueryAckCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.AuditLogQueryAck>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.AuditLogQueryAck>
+    IAsduElementCodec<T::AuditLogQueryAck>,
+    IAsduConstructedCodec<T::AuditLogQueryAck>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::AuditLogQueryAck Decode(ref AsduReader reader)
     {
-        return reader.PeekTag((byte)0);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.AuditLogQueryAck Decode(ref NativeReader reader)
-    {
-        var _auditLog = Asdu.DecodePrimitive<ObjectIdentifierCodec, global::Baclib.Bacnet.Types.Application.ObjectIdentifier>(ref reader, 0);
-        var _records = Asdu.DecodeSequenceOf<AuditLogRecordResultCodec, global::Baclib.Bacnet.Types.Application.AuditLogRecordResult>(ref reader, 1);
-        var _noMoreItems = Asdu.DecodePrimitive<BooleanCodec, bool>(ref reader, 2);
-
-        return new global::Baclib.Bacnet.Types.Application.AuditLogQueryAck
+        return new T::AuditLogQueryAck
         {
-            AuditLog = _auditLog,
-            Records = _records,
-            NoMoreItems = _noMoreItems
+            AuditLog = AsduElement.Decode<ObjectIdentifierCodec, T::ObjectIdentifier>(ref reader, 0),
+            Records = AsduElement.DecodeSequenceOf<AuditLogRecordResultCodec, T::AuditLogRecordResult>(ref reader, 1),
+            NoMoreItems = AsduElement.Decode<BooleanCodec, bool>(ref reader, 2)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.AuditLogQueryAck Decode(ref NativeReader reader, byte tagNumber)
+    public static T::AuditLogQueryAck Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<AuditLogQueryAckCodec, T::AuditLogQueryAck>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::AuditLogQueryAck value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.Encode<ObjectIdentifierCodec, T::ObjectIdentifier>(ref writer, 0, value.AuditLog);
+        AsduElement.EncodeSequenceOf<AuditLogRecordResultCodec, T::AuditLogRecordResult>(ref writer, 1, value.Records);
+        AsduElement.Encode<BooleanCodec, bool>(ref writer, 2, value.NoMoreItems);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.AuditLogQueryAck value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::AuditLogQueryAck value)
+        => AsduConstructed.Encode<AuditLogQueryAckCodec, T::AuditLogQueryAck>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::AuditLogQueryAck value)
     {
-        Asdu.EncodePrimitive<ObjectIdentifierCodec, global::Baclib.Bacnet.Types.Application.ObjectIdentifier>(ref writer, 0, value.AuditLog);
-        writer.WriteOpeningTag(1);
-        foreach (var item in value.Records)
-        {
-            Asdu.EncodeElement<AuditLogRecordResultCodec, global::Baclib.Bacnet.Types.Application.AuditLogRecordResult>(ref writer, 1, item);
-        }
-        writer.WriteClosingTag(1);
-        Asdu.EncodePrimitive<BooleanCodec, bool>(ref writer, 2, value.NoMoreItems);
+        var length = 0;
+        length += AsduElement.GetEncodedLength<ObjectIdentifierCodec, T::ObjectIdentifier>(0, value.AuditLog);
+        length += AsduElement.GetSequenceOfEncodedLength<AuditLogRecordResultCodec, T::AuditLogRecordResult>(1, value.Records);
+        length += AsduElement.GetEncodedLength<BooleanCodec, bool>(2, value.NoMoreItems);
+        return length;
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.AuditLogQueryAck value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
+    public static int GetEncodedLength(in T::AuditLogQueryAck value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<AuditLogQueryAckCodec, T::AuditLogQueryAck>(tagNumber, value);
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.AuditLogQueryAck value)
+    public static bool Matches(ref AsduReader reader)
     {
-        return Asdu.GetPrimitiveLength<ObjectIdentifierCodec, global::Baclib.Bacnet.Types.Application.ObjectIdentifier>(0, value.AuditLog) + (AsduLength.FromTagNumber((byte)1) + (value.Records.Items.Sum(static item => Asdu.GetElementLength<AuditLogRecordResultCodec, global::Baclib.Bacnet.Types.Application.AuditLogRecordResult>(1, item))) + AsduLength.FromTagNumber((byte)1)) + Asdu.GetPrimitiveLength<BooleanCodec, bool>(2, value.NoMoreItems);
+        return reader.PeekContextTag(0);
     }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.AuditLogQueryAck value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

@@ -7,82 +7,68 @@ public sealed class NotificationParametersTChangeOfValueTNewValueCodec :
     IAsduElementCodec<global::Baclib.Bacnet.Types.Application.NotificationParameters.TChangeOfValue.TNewValue>,
     IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.NotificationParameters.TChangeOfValue.TNewValue>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static bool Matches(ref AsduReader reader)
     {
-
-        var contextTagNumber = reader.PeekContextTagNumber();
-        switch (contextTagNumber)
+        if (!reader.PeekContextTag(out var contextTagNumber))
         {
-            case 0:
-            case 1:
-                return true;
-            default:
-                return false;
+            return false;
         }
+        return contextTagNumber switch
+        {
+            0 or
+            1 => true,
+            _ => false
+        };
     }
 
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag(tagNumber);
-
-    public static global::Baclib.Bacnet.Types.Application.NotificationParameters.TChangeOfValue.TNewValue Decode(ref NativeReader reader)
+    public static global::Baclib.Bacnet.Types.Application.NotificationParameters.TChangeOfValue.TNewValue Decode(ref AsduReader reader)
     {
-        var tagNumber = reader.PeekContextTagNumber();
+        var tagNumber = reader.ReadContextTagNumber();
         switch (tagNumber)
         {
             case 0:
-                var _changedBits = Asdu.DecodePrimitive<BitStringCodec, global::Baclib.Bacnet.Types.Application.BitString>(ref reader, 0);
-                return global::Baclib.Bacnet.Types.Application.NotificationParameters.TChangeOfValue.TNewValue.FromChangedBits(_changedBits);
+                var @changedBits = BitStringCodec.Decode(ref reader, 0);
+                return global::Baclib.Bacnet.Types.Application.NotificationParameters.TChangeOfValue.TNewValue.FromChangedBits(@changedBits);
             case 1:
-                var _changedValue = Asdu.DecodePrimitive<RealCodec, float>(ref reader, 1);
-                return global::Baclib.Bacnet.Types.Application.NotificationParameters.TChangeOfValue.TNewValue.FromChangedValue(_changedValue);
+                var @changedValue = RealCodec.Decode(ref reader, 1);
+                return global::Baclib.Bacnet.Types.Application.NotificationParameters.TChangeOfValue.TNewValue.FromChangedValue(@changedValue);
         }
         throw new FormatException(nameof(reader));
     }
 
-    public static global::Baclib.Bacnet.Types.Application.NotificationParameters.TChangeOfValue.TNewValue Decode(ref NativeReader reader, byte tagNumber)
-    {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
-    }
+    public static global::Baclib.Bacnet.Types.Application.NotificationParameters.TChangeOfValue.TNewValue Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<NotificationParametersTChangeOfValueTNewValueCodec, global::Baclib.Bacnet.Types.Application.NotificationParameters.TChangeOfValue.TNewValue>(ref reader, tagNumber);
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.NotificationParameters.TChangeOfValue.TNewValue value)
+    public static void Encode(ref AsduWriter writer, in global::Baclib.Bacnet.Types.Application.NotificationParameters.TChangeOfValue.TNewValue value)
     {
         switch (value.Choice)
         {
             case global::Baclib.Bacnet.Types.Application.NotificationParameters.TChangeOfValue.TNewValue.Option.ChangedBits:
-                Asdu.EncodePrimitive<BitStringCodec, global::Baclib.Bacnet.Types.Application.BitString>(ref writer, 0, value.ChangedBits);
+                BitStringCodec.Encode(ref writer, 0, value.ChangedBits);
                 return;
             case global::Baclib.Bacnet.Types.Application.NotificationParameters.TChangeOfValue.TNewValue.Option.ChangedValue:
-                Asdu.EncodePrimitive<RealCodec, float>(ref writer, 1, value.ChangedValue);
+                RealCodec.Encode(ref writer, 1, value.ChangedValue);
                 return;
-        }
-        throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported.");
-    }
-
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.NotificationParameters.TChangeOfValue.TNewValue value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.NotificationParameters.TChangeOfValue.TNewValue value)
-    {
-        switch (value.Choice)
-        {
-            case global::Baclib.Bacnet.Types.Application.NotificationParameters.TChangeOfValue.TNewValue.Option.ChangedBits:
-                return Asdu.GetPrimitiveLength<BitStringCodec, global::Baclib.Bacnet.Types.Application.BitString>(0, value.ChangedBits);
-            case global::Baclib.Bacnet.Types.Application.NotificationParameters.TChangeOfValue.TNewValue.Option.ChangedValue:
-                return Asdu.GetPrimitiveLength<RealCodec, float>(1, value.ChangedValue);
             default:
                 throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported.");
         }
     }
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.NotificationParameters.TChangeOfValue.TNewValue value, byte tagNumber)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.NotificationParameters.TChangeOfValue.TNewValue value)
+        => AsduConstructed.Encode<NotificationParametersTChangeOfValueTNewValueCodec, global::Baclib.Bacnet.Types.Application.NotificationParameters.TChangeOfValue.TNewValue>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in global::Baclib.Bacnet.Types.Application.NotificationParameters.TChangeOfValue.TNewValue value)
     {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
+        return value.Choice switch
+        {
+            global::Baclib.Bacnet.Types.Application.NotificationParameters.TChangeOfValue.TNewValue.Option.ChangedBits
+                => BitStringCodec.GetEncodedLength(value.ChangedBits, 0),
+            global::Baclib.Bacnet.Types.Application.NotificationParameters.TChangeOfValue.TNewValue.Option.ChangedValue
+                => RealCodec.GetEncodedLength(value.ChangedValue, 1),
+            _ => throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported."),
+        };
     }
+
+    public static int GetEncodedLength(in global::Baclib.Bacnet.Types.Application.NotificationParameters.TChangeOfValue.TNewValue value, byte tagNumber)
+        => AsduElement.GetEncodedLength<NotificationParametersTChangeOfValueTNewValueCodec, global::Baclib.Bacnet.Types.Application.NotificationParameters.TChangeOfValue.TNewValue>(tagNumber, value);
 }

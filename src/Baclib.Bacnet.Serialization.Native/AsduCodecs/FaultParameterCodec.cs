@@ -7,136 +7,122 @@ public sealed class FaultParameterCodec :
     IAsduElementCodec<global::Baclib.Bacnet.Types.Application.FaultParameter>,
     IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.FaultParameter>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static bool Matches(ref AsduReader reader)
     {
-
-        var contextTagNumber = reader.PeekContextTagNumber();
-        switch (contextTagNumber)
+        if (!reader.PeekContextTag(out var contextTagNumber))
         {
-            case 0:
-            case 1:
-            case 2:
-            case 3:
-            case 4:
-            case 5:
-            case 6:
-            case 7:
-                return true;
-            default:
-                return false;
+            return false;
         }
+        return contextTagNumber switch
+        {
+            0 or
+            1 or
+            2 or
+            3 or
+            4 or
+            5 or
+            6 or
+            7 => true,
+            _ => false
+        };
     }
 
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag(tagNumber);
-
-    public static global::Baclib.Bacnet.Types.Application.FaultParameter Decode(ref NativeReader reader)
+    public static global::Baclib.Bacnet.Types.Application.FaultParameter Decode(ref AsduReader reader)
     {
-        var tagNumber = reader.PeekContextTagNumber();
+        var tagNumber = reader.ReadContextTagNumber();
         switch (tagNumber)
         {
             case 0:
-                var _none = Asdu.DecodePrimitive<NullCodec, global::Baclib.Bacnet.Types.Application.Null>(ref reader, 0);
-                return global::Baclib.Bacnet.Types.Application.FaultParameter.FromNone(_none);
+                var @none = NullCodec.Decode(ref reader, 0);
+                return global::Baclib.Bacnet.Types.Application.FaultParameter.FromNone(@none);
             case 1:
-                var _faultCharacterstring = Asdu.DecodeConstructed<FaultParameterTFaultCharacterstringCodec, global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultCharacterstring>(ref reader, 1);
-                return global::Baclib.Bacnet.Types.Application.FaultParameter.FromFaultCharacterstring(_faultCharacterstring);
+                var @faultCharacterstring = FaultParameterTFaultCharacterstringCodec.Decode(ref reader, 1);
+                return global::Baclib.Bacnet.Types.Application.FaultParameter.FromFaultCharacterstring(@faultCharacterstring);
             case 2:
-                var _faultExtended = Asdu.DecodeConstructed<FaultParameterTFaultExtendedCodec, global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultExtended>(ref reader, 2);
-                return global::Baclib.Bacnet.Types.Application.FaultParameter.FromFaultExtended(_faultExtended);
+                var @faultExtended = FaultParameterTFaultExtendedCodec.Decode(ref reader, 2);
+                return global::Baclib.Bacnet.Types.Application.FaultParameter.FromFaultExtended(@faultExtended);
             case 3:
-                var _faultLifeSafety = Asdu.DecodeConstructed<FaultParameterTFaultLifeSafetyCodec, global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultLifeSafety>(ref reader, 3);
-                return global::Baclib.Bacnet.Types.Application.FaultParameter.FromFaultLifeSafety(_faultLifeSafety);
+                var @faultLifeSafety = FaultParameterTFaultLifeSafetyCodec.Decode(ref reader, 3);
+                return global::Baclib.Bacnet.Types.Application.FaultParameter.FromFaultLifeSafety(@faultLifeSafety);
             case 4:
-                var _faultState = Asdu.DecodeConstructed<FaultParameterTFaultStateCodec, global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultState>(ref reader, 4);
-                return global::Baclib.Bacnet.Types.Application.FaultParameter.FromFaultState(_faultState);
+                var @faultState = FaultParameterTFaultStateCodec.Decode(ref reader, 4);
+                return global::Baclib.Bacnet.Types.Application.FaultParameter.FromFaultState(@faultState);
             case 5:
-                var _faultStatusFlags = Asdu.DecodeConstructed<FaultParameterTFaultStatusFlagsCodec, global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultStatusFlags>(ref reader, 5);
-                return global::Baclib.Bacnet.Types.Application.FaultParameter.FromFaultStatusFlags(_faultStatusFlags);
+                var @faultStatusFlags = FaultParameterTFaultStatusFlagsCodec.Decode(ref reader, 5);
+                return global::Baclib.Bacnet.Types.Application.FaultParameter.FromFaultStatusFlags(@faultStatusFlags);
             case 6:
-                var _faultOutOfRange = Asdu.DecodeConstructed<FaultParameterTFaultOutOfRangeCodec, global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultOutOfRange>(ref reader, 6);
-                return global::Baclib.Bacnet.Types.Application.FaultParameter.FromFaultOutOfRange(_faultOutOfRange);
+                var @faultOutOfRange = FaultParameterTFaultOutOfRangeCodec.Decode(ref reader, 6);
+                return global::Baclib.Bacnet.Types.Application.FaultParameter.FromFaultOutOfRange(@faultOutOfRange);
             case 7:
-                var _faultListed = Asdu.DecodeConstructed<FaultParameterTFaultListedCodec, global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultListed>(ref reader, 7);
-                return global::Baclib.Bacnet.Types.Application.FaultParameter.FromFaultListed(_faultListed);
+                var @faultListed = FaultParameterTFaultListedCodec.Decode(ref reader, 7);
+                return global::Baclib.Bacnet.Types.Application.FaultParameter.FromFaultListed(@faultListed);
         }
         throw new FormatException(nameof(reader));
     }
 
-    public static global::Baclib.Bacnet.Types.Application.FaultParameter Decode(ref NativeReader reader, byte tagNumber)
-    {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
-    }
+    public static global::Baclib.Bacnet.Types.Application.FaultParameter Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<FaultParameterCodec, global::Baclib.Bacnet.Types.Application.FaultParameter>(ref reader, tagNumber);
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.FaultParameter value)
+    public static void Encode(ref AsduWriter writer, in global::Baclib.Bacnet.Types.Application.FaultParameter value)
     {
         switch (value.Choice)
         {
             case global::Baclib.Bacnet.Types.Application.FaultParameter.Option.None:
-                Asdu.EncodePrimitive<NullCodec, global::Baclib.Bacnet.Types.Application.Null>(ref writer, 0, value.None);
+                NullCodec.Encode(ref writer, 0, value.None);
                 return;
             case global::Baclib.Bacnet.Types.Application.FaultParameter.Option.FaultCharacterstring:
-                Asdu.EncodeConstructed<FaultParameterTFaultCharacterstringCodec, global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultCharacterstring>(ref writer, 1, value.FaultCharacterstring);
+                FaultParameterTFaultCharacterstringCodec.Encode(ref writer, 1, value.FaultCharacterstring);
                 return;
             case global::Baclib.Bacnet.Types.Application.FaultParameter.Option.FaultExtended:
-                Asdu.EncodeConstructed<FaultParameterTFaultExtendedCodec, global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultExtended>(ref writer, 2, value.FaultExtended);
+                FaultParameterTFaultExtendedCodec.Encode(ref writer, 2, value.FaultExtended);
                 return;
             case global::Baclib.Bacnet.Types.Application.FaultParameter.Option.FaultLifeSafety:
-                Asdu.EncodeConstructed<FaultParameterTFaultLifeSafetyCodec, global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultLifeSafety>(ref writer, 3, value.FaultLifeSafety);
+                FaultParameterTFaultLifeSafetyCodec.Encode(ref writer, 3, value.FaultLifeSafety);
                 return;
             case global::Baclib.Bacnet.Types.Application.FaultParameter.Option.FaultState:
-                Asdu.EncodeConstructed<FaultParameterTFaultStateCodec, global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultState>(ref writer, 4, value.FaultState);
+                FaultParameterTFaultStateCodec.Encode(ref writer, 4, value.FaultState);
                 return;
             case global::Baclib.Bacnet.Types.Application.FaultParameter.Option.FaultStatusFlags:
-                Asdu.EncodeConstructed<FaultParameterTFaultStatusFlagsCodec, global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultStatusFlags>(ref writer, 5, value.FaultStatusFlags);
+                FaultParameterTFaultStatusFlagsCodec.Encode(ref writer, 5, value.FaultStatusFlags);
                 return;
             case global::Baclib.Bacnet.Types.Application.FaultParameter.Option.FaultOutOfRange:
-                Asdu.EncodeConstructed<FaultParameterTFaultOutOfRangeCodec, global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultOutOfRange>(ref writer, 6, value.FaultOutOfRange);
+                FaultParameterTFaultOutOfRangeCodec.Encode(ref writer, 6, value.FaultOutOfRange);
                 return;
             case global::Baclib.Bacnet.Types.Application.FaultParameter.Option.FaultListed:
-                Asdu.EncodeConstructed<FaultParameterTFaultListedCodec, global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultListed>(ref writer, 7, value.FaultListed);
+                FaultParameterTFaultListedCodec.Encode(ref writer, 7, value.FaultListed);
                 return;
-        }
-        throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported.");
-    }
-
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.FaultParameter value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.FaultParameter value)
-    {
-        switch (value.Choice)
-        {
-            case global::Baclib.Bacnet.Types.Application.FaultParameter.Option.None:
-                return Asdu.GetPrimitiveLength<NullCodec, global::Baclib.Bacnet.Types.Application.Null>(0, value.None);
-            case global::Baclib.Bacnet.Types.Application.FaultParameter.Option.FaultCharacterstring:
-                return Asdu.GetConstructedLength<FaultParameterTFaultCharacterstringCodec, global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultCharacterstring>(1, value.FaultCharacterstring);
-            case global::Baclib.Bacnet.Types.Application.FaultParameter.Option.FaultExtended:
-                return Asdu.GetConstructedLength<FaultParameterTFaultExtendedCodec, global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultExtended>(2, value.FaultExtended);
-            case global::Baclib.Bacnet.Types.Application.FaultParameter.Option.FaultLifeSafety:
-                return Asdu.GetConstructedLength<FaultParameterTFaultLifeSafetyCodec, global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultLifeSafety>(3, value.FaultLifeSafety);
-            case global::Baclib.Bacnet.Types.Application.FaultParameter.Option.FaultState:
-                return Asdu.GetConstructedLength<FaultParameterTFaultStateCodec, global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultState>(4, value.FaultState);
-            case global::Baclib.Bacnet.Types.Application.FaultParameter.Option.FaultStatusFlags:
-                return Asdu.GetConstructedLength<FaultParameterTFaultStatusFlagsCodec, global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultStatusFlags>(5, value.FaultStatusFlags);
-            case global::Baclib.Bacnet.Types.Application.FaultParameter.Option.FaultOutOfRange:
-                return Asdu.GetConstructedLength<FaultParameterTFaultOutOfRangeCodec, global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultOutOfRange>(6, value.FaultOutOfRange);
-            case global::Baclib.Bacnet.Types.Application.FaultParameter.Option.FaultListed:
-                return Asdu.GetConstructedLength<FaultParameterTFaultListedCodec, global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultListed>(7, value.FaultListed);
             default:
                 throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported.");
         }
     }
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.FaultParameter value, byte tagNumber)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.FaultParameter value)
+        => AsduConstructed.Encode<FaultParameterCodec, global::Baclib.Bacnet.Types.Application.FaultParameter>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in global::Baclib.Bacnet.Types.Application.FaultParameter value)
     {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
+        return value.Choice switch
+        {
+            global::Baclib.Bacnet.Types.Application.FaultParameter.Option.None
+                => NullCodec.GetEncodedLength(value.None, 0),
+            global::Baclib.Bacnet.Types.Application.FaultParameter.Option.FaultCharacterstring
+                => FaultParameterTFaultCharacterstringCodec.GetEncodedLength(value.FaultCharacterstring, 1),
+            global::Baclib.Bacnet.Types.Application.FaultParameter.Option.FaultExtended
+                => FaultParameterTFaultExtendedCodec.GetEncodedLength(value.FaultExtended, 2),
+            global::Baclib.Bacnet.Types.Application.FaultParameter.Option.FaultLifeSafety
+                => FaultParameterTFaultLifeSafetyCodec.GetEncodedLength(value.FaultLifeSafety, 3),
+            global::Baclib.Bacnet.Types.Application.FaultParameter.Option.FaultState
+                => FaultParameterTFaultStateCodec.GetEncodedLength(value.FaultState, 4),
+            global::Baclib.Bacnet.Types.Application.FaultParameter.Option.FaultStatusFlags
+                => FaultParameterTFaultStatusFlagsCodec.GetEncodedLength(value.FaultStatusFlags, 5),
+            global::Baclib.Bacnet.Types.Application.FaultParameter.Option.FaultOutOfRange
+                => FaultParameterTFaultOutOfRangeCodec.GetEncodedLength(value.FaultOutOfRange, 6),
+            global::Baclib.Bacnet.Types.Application.FaultParameter.Option.FaultListed
+                => FaultParameterTFaultListedCodec.GetEncodedLength(value.FaultListed, 7),
+            _ => throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported."),
+        };
     }
+
+    public static int GetEncodedLength(in global::Baclib.Bacnet.Types.Application.FaultParameter value, byte tagNumber)
+        => AsduElement.GetEncodedLength<FaultParameterCodec, global::Baclib.Bacnet.Types.Application.FaultParameter>(tagNumber, value);
 }

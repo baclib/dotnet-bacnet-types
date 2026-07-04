@@ -7,91 +7,77 @@ public sealed class CalendarEntryCodec :
     IAsduElementCodec<global::Baclib.Bacnet.Types.Application.CalendarEntry>,
     IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.CalendarEntry>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static bool Matches(ref AsduReader reader)
     {
-
-        var contextTagNumber = reader.PeekContextTagNumber();
-        switch (contextTagNumber)
+        if (!reader.PeekContextTag(out var contextTagNumber))
         {
-            case 0:
-            case 1:
-            case 2:
-                return true;
-            default:
-                return false;
+            return false;
         }
+        return contextTagNumber switch
+        {
+            0 or
+            1 or
+            2 => true,
+            _ => false
+        };
     }
 
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag(tagNumber);
-
-    public static global::Baclib.Bacnet.Types.Application.CalendarEntry Decode(ref NativeReader reader)
+    public static global::Baclib.Bacnet.Types.Application.CalendarEntry Decode(ref AsduReader reader)
     {
-        var tagNumber = reader.PeekContextTagNumber();
+        var tagNumber = reader.ReadContextTagNumber();
         switch (tagNumber)
         {
             case 0:
-                var _date = Asdu.DecodePrimitive<DatePatternCodec, global::Baclib.Bacnet.Types.Application.DatePattern>(ref reader, 0);
-                return global::Baclib.Bacnet.Types.Application.CalendarEntry.FromDate(_date);
+                var @date = DatePatternCodec.Decode(ref reader, 0);
+                return global::Baclib.Bacnet.Types.Application.CalendarEntry.FromDate(@date);
             case 1:
-                var _dateRange = Asdu.DecodeConstructed<DateRangeCodec, global::Baclib.Bacnet.Types.Application.DateRange>(ref reader, 1);
-                return global::Baclib.Bacnet.Types.Application.CalendarEntry.FromDateRange(_dateRange);
+                var @dateRange = DateRangeCodec.Decode(ref reader, 1);
+                return global::Baclib.Bacnet.Types.Application.CalendarEntry.FromDateRange(@dateRange);
             case 2:
-                var _weeknday = Asdu.DecodePrimitive<WeekNDayCodec, global::Baclib.Bacnet.Types.Application.WeekNDay>(ref reader, 2);
-                return global::Baclib.Bacnet.Types.Application.CalendarEntry.FromWeeknday(_weeknday);
+                var @weeknday = WeekNDayCodec.Decode(ref reader, 2);
+                return global::Baclib.Bacnet.Types.Application.CalendarEntry.FromWeeknday(@weeknday);
         }
         throw new FormatException(nameof(reader));
     }
 
-    public static global::Baclib.Bacnet.Types.Application.CalendarEntry Decode(ref NativeReader reader, byte tagNumber)
-    {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
-    }
+    public static global::Baclib.Bacnet.Types.Application.CalendarEntry Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<CalendarEntryCodec, global::Baclib.Bacnet.Types.Application.CalendarEntry>(ref reader, tagNumber);
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.CalendarEntry value)
+    public static void Encode(ref AsduWriter writer, in global::Baclib.Bacnet.Types.Application.CalendarEntry value)
     {
         switch (value.Choice)
         {
             case global::Baclib.Bacnet.Types.Application.CalendarEntry.Option.Date:
-                Asdu.EncodePrimitive<DatePatternCodec, global::Baclib.Bacnet.Types.Application.DatePattern>(ref writer, 0, value.Date);
+                DatePatternCodec.Encode(ref writer, 0, value.Date);
                 return;
             case global::Baclib.Bacnet.Types.Application.CalendarEntry.Option.DateRange:
-                Asdu.EncodeConstructed<DateRangeCodec, global::Baclib.Bacnet.Types.Application.DateRange>(ref writer, 1, value.DateRange);
+                DateRangeCodec.Encode(ref writer, 1, value.DateRange);
                 return;
             case global::Baclib.Bacnet.Types.Application.CalendarEntry.Option.Weeknday:
-                Asdu.EncodePrimitive<WeekNDayCodec, global::Baclib.Bacnet.Types.Application.WeekNDay>(ref writer, 2, value.Weeknday);
+                WeekNDayCodec.Encode(ref writer, 2, value.Weeknday);
                 return;
-        }
-        throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported.");
-    }
-
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.CalendarEntry value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.CalendarEntry value)
-    {
-        switch (value.Choice)
-        {
-            case global::Baclib.Bacnet.Types.Application.CalendarEntry.Option.Date:
-                return Asdu.GetPrimitiveLength<DatePatternCodec, global::Baclib.Bacnet.Types.Application.DatePattern>(0, value.Date);
-            case global::Baclib.Bacnet.Types.Application.CalendarEntry.Option.DateRange:
-                return Asdu.GetConstructedLength<DateRangeCodec, global::Baclib.Bacnet.Types.Application.DateRange>(1, value.DateRange);
-            case global::Baclib.Bacnet.Types.Application.CalendarEntry.Option.Weeknday:
-                return Asdu.GetPrimitiveLength<WeekNDayCodec, global::Baclib.Bacnet.Types.Application.WeekNDay>(2, value.Weeknday);
             default:
                 throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported.");
         }
     }
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.CalendarEntry value, byte tagNumber)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.CalendarEntry value)
+        => AsduConstructed.Encode<CalendarEntryCodec, global::Baclib.Bacnet.Types.Application.CalendarEntry>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in global::Baclib.Bacnet.Types.Application.CalendarEntry value)
     {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
+        return value.Choice switch
+        {
+            global::Baclib.Bacnet.Types.Application.CalendarEntry.Option.Date
+                => DatePatternCodec.GetEncodedLength(value.Date, 0),
+            global::Baclib.Bacnet.Types.Application.CalendarEntry.Option.DateRange
+                => DateRangeCodec.GetEncodedLength(value.DateRange, 1),
+            global::Baclib.Bacnet.Types.Application.CalendarEntry.Option.Weeknday
+                => WeekNDayCodec.GetEncodedLength(value.Weeknday, 2),
+            _ => throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported."),
+        };
     }
+
+    public static int GetEncodedLength(in global::Baclib.Bacnet.Types.Application.CalendarEntry value, byte tagNumber)
+        => AsduElement.GetEncodedLength<CalendarEntryCodec, global::Baclib.Bacnet.Types.Application.CalendarEntry>(tagNumber, value);
 }

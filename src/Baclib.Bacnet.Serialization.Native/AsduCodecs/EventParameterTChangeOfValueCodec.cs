@@ -1,60 +1,48 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class EventParameterTChangeOfValueCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfValue>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfValue>
+    IAsduElementCodec<T::EventParameter.TChangeOfValue>,
+    IAsduConstructedCodec<T::EventParameter.TChangeOfValue>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::EventParameter.TChangeOfValue Decode(ref AsduReader reader)
     {
-        return reader.PeekTag((byte)0);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfValue Decode(ref NativeReader reader)
-    {
-        var _timeDelay = Asdu.DecodePrimitive<UnsignedCodec, uint>(ref reader, 0);
-        var _covCriteria = Asdu.DecodeConstructed<EventParameterTChangeOfValueTCovCriteriaCodec, global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfValue.TCovCriteria>(ref reader, 1);
-
-        return new global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfValue
+        return new T::EventParameter.TChangeOfValue
         {
-            TimeDelay = _timeDelay,
-            CovCriteria = _covCriteria
+            TimeDelay = AsduElement.Decode<UnsignedCodec, uint>(ref reader, 0),
+            CovCriteria = AsduElement.Decode<EventParameterTChangeOfValueTCovCriteriaCodec, T::EventParameter.TChangeOfValue.TCovCriteria>(ref reader, 1)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfValue Decode(ref NativeReader reader, byte tagNumber)
+    public static T::EventParameter.TChangeOfValue Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<EventParameterTChangeOfValueCodec, T::EventParameter.TChangeOfValue>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::EventParameter.TChangeOfValue value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.Encode<UnsignedCodec, uint>(ref writer, 0, value.TimeDelay);
+        AsduElement.Encode<EventParameterTChangeOfValueTCovCriteriaCodec, T::EventParameter.TChangeOfValue.TCovCriteria>(ref writer, 1, value.CovCriteria);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfValue value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::EventParameter.TChangeOfValue value)
+        => AsduConstructed.Encode<EventParameterTChangeOfValueCodec, T::EventParameter.TChangeOfValue>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::EventParameter.TChangeOfValue value)
     {
-        Asdu.EncodePrimitive<UnsignedCodec, uint>(ref writer, 0, value.TimeDelay);
-        Asdu.EncodeElement<EventParameterTChangeOfValueTCovCriteriaCodec, global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfValue.TCovCriteria>(ref writer, 1, value.CovCriteria);
+        var length = 0;
+        length += AsduElement.GetEncodedLength<UnsignedCodec, uint>(0, value.TimeDelay);
+        length += AsduElement.GetEncodedLength<EventParameterTChangeOfValueTCovCriteriaCodec, T::EventParameter.TChangeOfValue.TCovCriteria>(1, value.CovCriteria);
+        return length;
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfValue value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
+    public static int GetEncodedLength(in T::EventParameter.TChangeOfValue value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<EventParameterTChangeOfValueCodec, T::EventParameter.TChangeOfValue>(tagNumber, value);
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfValue value)
+    public static bool Matches(ref AsduReader reader)
     {
-        return Asdu.GetPrimitiveLength<UnsignedCodec, uint>(0, value.TimeDelay) + Asdu.GetElementLength<EventParameterTChangeOfValueTCovCriteriaCodec, global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfValue.TCovCriteria>(1, value.CovCriteria);
+        return reader.PeekContextTag(0);
     }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfValue value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

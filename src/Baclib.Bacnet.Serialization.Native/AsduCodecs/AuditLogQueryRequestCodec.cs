@@ -1,69 +1,54 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class AuditLogQueryRequestCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.AuditLogQueryRequest>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.AuditLogQueryRequest>
+    IAsduElementCodec<T::AuditLogQueryRequest>,
+    IAsduConstructedCodec<T::AuditLogQueryRequest>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::AuditLogQueryRequest Decode(ref AsduReader reader)
     {
-        return reader.PeekTag((byte)0);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.AuditLogQueryRequest Decode(ref NativeReader reader)
-    {
-        var _auditLog = Asdu.DecodePrimitive<ObjectIdentifierCodec, global::Baclib.Bacnet.Types.Application.ObjectIdentifier>(ref reader, 0);
-        var _queryParameters = Asdu.DecodeConstructed<AuditLogQueryParametersCodec, global::Baclib.Bacnet.Types.Application.AuditLogQueryParameters>(ref reader, 1);
-        var _startAtSequenceNumber = Asdu.DecodeOptional<Unsigned64Codec, ulong>(ref reader, 2);
-        var _requestedCount = Asdu.DecodePrimitive<Unsigned16Codec, ushort>(ref reader, 3);
-
-        return new global::Baclib.Bacnet.Types.Application.AuditLogQueryRequest
+        return new T::AuditLogQueryRequest
         {
-            AuditLog = _auditLog,
-            QueryParameters = _queryParameters,
-            StartAtSequenceNumber = _startAtSequenceNumber,
-            RequestedCount = _requestedCount
+            AuditLog = AsduElement.Decode<ObjectIdentifierCodec, T::ObjectIdentifier>(ref reader, 0),
+            QueryParameters = AsduElement.Decode<AuditLogQueryParametersCodec, T::AuditLogQueryParameters>(ref reader, 1),
+            StartAtSequenceNumber = AsduElement.DecodeOptional<Unsigned64Codec, ulong>(ref reader, 2),
+            RequestedCount = AsduElement.Decode<Unsigned16Codec, ushort>(ref reader, 3)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.AuditLogQueryRequest Decode(ref NativeReader reader, byte tagNumber)
+    public static T::AuditLogQueryRequest Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<AuditLogQueryRequestCodec, T::AuditLogQueryRequest>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::AuditLogQueryRequest value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.Encode<ObjectIdentifierCodec, T::ObjectIdentifier>(ref writer, 0, value.AuditLog);
+        AsduElement.Encode<AuditLogQueryParametersCodec, T::AuditLogQueryParameters>(ref writer, 1, value.QueryParameters);
+        AsduElement.EncodeOptional<Unsigned64Codec, ulong>(ref writer, 2, value.StartAtSequenceNumber);
+        AsduElement.Encode<Unsigned16Codec, ushort>(ref writer, 3, value.RequestedCount);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.AuditLogQueryRequest value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::AuditLogQueryRequest value)
+        => AsduConstructed.Encode<AuditLogQueryRequestCodec, T::AuditLogQueryRequest>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::AuditLogQueryRequest value)
     {
-        Asdu.EncodePrimitive<ObjectIdentifierCodec, global::Baclib.Bacnet.Types.Application.ObjectIdentifier>(ref writer, 0, value.AuditLog);
-        Asdu.EncodeElement<AuditLogQueryParametersCodec, global::Baclib.Bacnet.Types.Application.AuditLogQueryParameters>(ref writer, 1, value.QueryParameters);
-        if (value.StartAtSequenceNumber.HasValue)
-        {
-            Asdu.EncodePrimitive<Unsigned64Codec, ulong>(ref writer, 2, value.StartAtSequenceNumber.Value);
-        }
-        Asdu.EncodePrimitive<Unsigned16Codec, ushort>(ref writer, 3, value.RequestedCount);
+        var length = 0;
+        length += AsduElement.GetEncodedLength<ObjectIdentifierCodec, T::ObjectIdentifier>(0, value.AuditLog);
+        length += AsduElement.GetEncodedLength<AuditLogQueryParametersCodec, T::AuditLogQueryParameters>(1, value.QueryParameters);
+        length += AsduElement.GetOptionalEncodedLength<Unsigned64Codec, ulong>(2, value.StartAtSequenceNumber);
+        length += AsduElement.GetEncodedLength<Unsigned16Codec, ushort>(3, value.RequestedCount);
+        return length;
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.AuditLogQueryRequest value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
+    public static int GetEncodedLength(in T::AuditLogQueryRequest value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<AuditLogQueryRequestCodec, T::AuditLogQueryRequest>(tagNumber, value);
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.AuditLogQueryRequest value)
+    public static bool Matches(ref AsduReader reader)
     {
-        return Asdu.GetPrimitiveLength<ObjectIdentifierCodec, global::Baclib.Bacnet.Types.Application.ObjectIdentifier>(0, value.AuditLog) + Asdu.GetElementLength<AuditLogQueryParametersCodec, global::Baclib.Bacnet.Types.Application.AuditLogQueryParameters>(1, value.QueryParameters) + (value.StartAtSequenceNumber.HasValue ? Asdu.GetPrimitiveLength<Unsigned64Codec, ulong>(2, value.StartAtSequenceNumber.Value) : 0) + Asdu.GetPrimitiveLength<Unsigned16Codec, ushort>(3, value.RequestedCount);
+        return reader.PeekContextTag(0);
     }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.AuditLogQueryRequest value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

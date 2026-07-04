@@ -1,60 +1,48 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class NotificationParametersTChangeOfDiscreteValueCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.NotificationParameters.TChangeOfDiscreteValue>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.NotificationParameters.TChangeOfDiscreteValue>
+    IAsduElementCodec<T::NotificationParameters.TChangeOfDiscreteValue>,
+    IAsduConstructedCodec<T::NotificationParameters.TChangeOfDiscreteValue>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::NotificationParameters.TChangeOfDiscreteValue Decode(ref AsduReader reader)
     {
-        return reader.PeekOpeningTag((byte)0);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.NotificationParameters.TChangeOfDiscreteValue Decode(ref NativeReader reader)
-    {
-        var _newValue = Asdu.DecodeConstructed<NotificationParametersTChangeOfDiscreteValueTNewValueCodec, global::Baclib.Bacnet.Types.Application.NotificationParameters.TChangeOfDiscreteValue.TNewValue>(ref reader, 0);
-        var _statusFlags = Asdu.DecodePrimitive<StatusFlagsCodec, global::Baclib.Bacnet.Types.Application.StatusFlags>(ref reader, 1);
-
-        return new global::Baclib.Bacnet.Types.Application.NotificationParameters.TChangeOfDiscreteValue
+        return new T::NotificationParameters.TChangeOfDiscreteValue
         {
-            NewValue = _newValue,
-            StatusFlags = _statusFlags
+            NewValue = AsduElement.Decode<NotificationParametersTChangeOfDiscreteValueTNewValueCodec, T::NotificationParameters.TChangeOfDiscreteValue.TNewValue>(ref reader, 0),
+            StatusFlags = AsduElement.Decode<StatusFlagsCodec, T::StatusFlags>(ref reader, 1)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.NotificationParameters.TChangeOfDiscreteValue Decode(ref NativeReader reader, byte tagNumber)
+    public static T::NotificationParameters.TChangeOfDiscreteValue Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<NotificationParametersTChangeOfDiscreteValueCodec, T::NotificationParameters.TChangeOfDiscreteValue>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::NotificationParameters.TChangeOfDiscreteValue value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.Encode<NotificationParametersTChangeOfDiscreteValueTNewValueCodec, T::NotificationParameters.TChangeOfDiscreteValue.TNewValue>(ref writer, 0, value.NewValue);
+        AsduElement.Encode<StatusFlagsCodec, T::StatusFlags>(ref writer, 1, value.StatusFlags);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.NotificationParameters.TChangeOfDiscreteValue value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::NotificationParameters.TChangeOfDiscreteValue value)
+        => AsduConstructed.Encode<NotificationParametersTChangeOfDiscreteValueCodec, T::NotificationParameters.TChangeOfDiscreteValue>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::NotificationParameters.TChangeOfDiscreteValue value)
     {
-        Asdu.EncodeElement<NotificationParametersTChangeOfDiscreteValueTNewValueCodec, global::Baclib.Bacnet.Types.Application.NotificationParameters.TChangeOfDiscreteValue.TNewValue>(ref writer, 0, value.NewValue);
-        Asdu.EncodePrimitive<StatusFlagsCodec, global::Baclib.Bacnet.Types.Application.StatusFlags>(ref writer, 1, value.StatusFlags);
+        var length = 0;
+        length += AsduElement.GetEncodedLength<NotificationParametersTChangeOfDiscreteValueTNewValueCodec, T::NotificationParameters.TChangeOfDiscreteValue.TNewValue>(0, value.NewValue);
+        length += AsduElement.GetEncodedLength<StatusFlagsCodec, T::StatusFlags>(1, value.StatusFlags);
+        return length;
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.NotificationParameters.TChangeOfDiscreteValue value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
+    public static int GetEncodedLength(in T::NotificationParameters.TChangeOfDiscreteValue value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<NotificationParametersTChangeOfDiscreteValueCodec, T::NotificationParameters.TChangeOfDiscreteValue>(tagNumber, value);
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.NotificationParameters.TChangeOfDiscreteValue value)
+    public static bool Matches(ref AsduReader reader)
     {
-        return Asdu.GetElementLength<NotificationParametersTChangeOfDiscreteValueTNewValueCodec, global::Baclib.Bacnet.Types.Application.NotificationParameters.TChangeOfDiscreteValue.TNewValue>(0, value.NewValue) + Asdu.GetPrimitiveLength<StatusFlagsCodec, global::Baclib.Bacnet.Types.Application.StatusFlags>(1, value.StatusFlags);
+        return reader.PeekContextTag(0);
     }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.NotificationParameters.TChangeOfDiscreteValue value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

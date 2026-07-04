@@ -1,63 +1,51 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class IHaveRequestCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.IHaveRequest>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.IHaveRequest>
+    IAsduElementCodec<T::IHaveRequest>,
+    IAsduConstructedCodec<T::IHaveRequest>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::IHaveRequest Decode(ref AsduReader reader)
     {
-        return reader.PeekTag(ObjectIdentifierCodec.TagNumber);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.IHaveRequest Decode(ref NativeReader reader)
-    {
-        var _deviceIdentifier = Asdu.DecodePrimitive<ObjectIdentifierCodec, global::Baclib.Bacnet.Types.Application.ObjectIdentifier>(ref reader);
-        var _objectIdentifier = Asdu.DecodePrimitive<ObjectIdentifierCodec, global::Baclib.Bacnet.Types.Application.ObjectIdentifier>(ref reader);
-        var _objectName = Asdu.DecodePrimitive<CharacterStringCodec, global::Baclib.Bacnet.Types.Application.CharacterString>(ref reader);
-
-        return new global::Baclib.Bacnet.Types.Application.IHaveRequest
+        return new T::IHaveRequest
         {
-            DeviceIdentifier = _deviceIdentifier,
-            ObjectIdentifier = _objectIdentifier,
-            ObjectName = _objectName
+            DeviceIdentifier = AsduElement.Decode<ObjectIdentifierCodec, T::ObjectIdentifier>(ref reader),
+            ObjectIdentifier = AsduElement.Decode<ObjectIdentifierCodec, T::ObjectIdentifier>(ref reader),
+            ObjectName = AsduElement.Decode<CharacterStringCodec, T::CharacterString>(ref reader)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.IHaveRequest Decode(ref NativeReader reader, byte tagNumber)
+    public static T::IHaveRequest Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<IHaveRequestCodec, T::IHaveRequest>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::IHaveRequest value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.Encode<ObjectIdentifierCodec, T::ObjectIdentifier>(ref writer, value.DeviceIdentifier);
+        AsduElement.Encode<ObjectIdentifierCodec, T::ObjectIdentifier>(ref writer, value.ObjectIdentifier);
+        AsduElement.Encode<CharacterStringCodec, T::CharacterString>(ref writer, value.ObjectName);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.IHaveRequest value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::IHaveRequest value)
+        => AsduConstructed.Encode<IHaveRequestCodec, T::IHaveRequest>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::IHaveRequest value)
     {
-        Asdu.EncodePrimitive<ObjectIdentifierCodec, global::Baclib.Bacnet.Types.Application.ObjectIdentifier>(ref writer, value.DeviceIdentifier);
-        Asdu.EncodePrimitive<ObjectIdentifierCodec, global::Baclib.Bacnet.Types.Application.ObjectIdentifier>(ref writer, value.ObjectIdentifier);
-        Asdu.EncodePrimitive<CharacterStringCodec, global::Baclib.Bacnet.Types.Application.CharacterString>(ref writer, value.ObjectName);
+        var length = 0;
+        length += AsduElement.GetEncodedLength<ObjectIdentifierCodec, T::ObjectIdentifier>(value.DeviceIdentifier);
+        length += AsduElement.GetEncodedLength<ObjectIdentifierCodec, T::ObjectIdentifier>(value.ObjectIdentifier);
+        length += AsduElement.GetEncodedLength<CharacterStringCodec, T::CharacterString>(value.ObjectName);
+        return length;
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.IHaveRequest value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
+    public static int GetEncodedLength(in T::IHaveRequest value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<IHaveRequestCodec, T::IHaveRequest>(tagNumber, value);
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.IHaveRequest value)
+    public static bool Matches(ref AsduReader reader)
     {
-        return Asdu.GetEncodedLength<ObjectIdentifierCodec, global::Baclib.Bacnet.Types.Application.ObjectIdentifier>(value.DeviceIdentifier) + Asdu.GetEncodedLength<ObjectIdentifierCodec, global::Baclib.Bacnet.Types.Application.ObjectIdentifier>(value.ObjectIdentifier) + Asdu.GetEncodedLength<CharacterStringCodec, global::Baclib.Bacnet.Types.Application.CharacterString>(value.ObjectName);
+        return ObjectIdentifierCodec.Matches(ref reader);
     }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.IHaveRequest value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

@@ -1,60 +1,48 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class AddressBindingCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.AddressBinding>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.AddressBinding>
+    IAsduElementCodec<T::AddressBinding>,
+    IAsduConstructedCodec<T::AddressBinding>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::AddressBinding Decode(ref AsduReader reader)
     {
-        return reader.PeekTag(ObjectIdentifierCodec.TagNumber);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.AddressBinding Decode(ref NativeReader reader)
-    {
-        var _deviceIdentifier = Asdu.DecodePrimitive<ObjectIdentifierCodec, global::Baclib.Bacnet.Types.Application.ObjectIdentifier>(ref reader);
-        var _deviceAddress = Asdu.DecodeElement<AddressCodec, global::Baclib.Bacnet.Types.Application.Address>(ref reader);
-
-        return new global::Baclib.Bacnet.Types.Application.AddressBinding
+        return new T::AddressBinding
         {
-            DeviceIdentifier = _deviceIdentifier,
-            DeviceAddress = _deviceAddress
+            DeviceIdentifier = AsduElement.Decode<ObjectIdentifierCodec, T::ObjectIdentifier>(ref reader),
+            DeviceAddress = AsduElement.Decode<AddressCodec, T::Address>(ref reader)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.AddressBinding Decode(ref NativeReader reader, byte tagNumber)
+    public static T::AddressBinding Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<AddressBindingCodec, T::AddressBinding>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::AddressBinding value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.Encode<ObjectIdentifierCodec, T::ObjectIdentifier>(ref writer, value.DeviceIdentifier);
+        AsduElement.Encode<AddressCodec, T::Address>(ref writer, value.DeviceAddress);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.AddressBinding value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::AddressBinding value)
+        => AsduConstructed.Encode<AddressBindingCodec, T::AddressBinding>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::AddressBinding value)
     {
-        Asdu.EncodePrimitive<ObjectIdentifierCodec, global::Baclib.Bacnet.Types.Application.ObjectIdentifier>(ref writer, value.DeviceIdentifier);
-        Asdu.EncodeElement<AddressCodec, global::Baclib.Bacnet.Types.Application.Address>(ref writer, value.DeviceAddress);
+        var length = 0;
+        length += AsduElement.GetEncodedLength<ObjectIdentifierCodec, T::ObjectIdentifier>(value.DeviceIdentifier);
+        length += AsduElement.GetEncodedLength<AddressCodec, T::Address>(value.DeviceAddress);
+        return length;
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.AddressBinding value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
+    public static int GetEncodedLength(in T::AddressBinding value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<AddressBindingCodec, T::AddressBinding>(tagNumber, value);
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.AddressBinding value)
+    public static bool Matches(ref AsduReader reader)
     {
-        return Asdu.GetEncodedLength<ObjectIdentifierCodec, global::Baclib.Bacnet.Types.Application.ObjectIdentifier>(value.DeviceIdentifier) + Asdu.GetElementLength<AddressCodec, global::Baclib.Bacnet.Types.Application.Address>(value.DeviceAddress);
+        return ObjectIdentifierCodec.Matches(ref reader);
     }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.AddressBinding value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

@@ -1,60 +1,45 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class VtCloseRequestCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.VtCloseRequest>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.VtCloseRequest>
+    IAsduElementCodec<T::VtCloseRequest>,
+    IAsduConstructedCodec<T::VtCloseRequest>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::VtCloseRequest Decode(ref AsduReader reader)
     {
-        return reader.PeekTag(Unsigned8Codec.TagNumber);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.VtCloseRequest Decode(ref NativeReader reader)
-    {
-        var _listOfRemoteVtSessionIdentifiers = Asdu.DecodeSequenceOf<Unsigned8Codec, byte>(ref reader);
-
-        return new global::Baclib.Bacnet.Types.Application.VtCloseRequest
+        return new T::VtCloseRequest
         {
-            ListOfRemoteVtSessionIdentifiers = _listOfRemoteVtSessionIdentifiers
+            ListOfRemoteVtSessionIdentifiers = AsduElement.DecodeSequenceOf<Unsigned8Codec, byte>(ref reader)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.VtCloseRequest Decode(ref NativeReader reader, byte tagNumber)
+    public static T::VtCloseRequest Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<VtCloseRequestCodec, T::VtCloseRequest>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::VtCloseRequest value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.EncodeSequenceOf<Unsigned8Codec, byte>(ref writer, value.ListOfRemoteVtSessionIdentifiers);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.VtCloseRequest value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::VtCloseRequest value)
+        => AsduConstructed.Encode<VtCloseRequestCodec, T::VtCloseRequest>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::VtCloseRequest value)
     {
-        foreach (var item in value.ListOfRemoteVtSessionIdentifiers)
-        {
-            Asdu.EncodeElement<Unsigned8Codec, byte>(ref writer, item);
-        }
+        var length = 0;
+        length += AsduElement.GetSequenceOfEncodedLength<Unsigned8Codec, byte>(value.ListOfRemoteVtSessionIdentifiers);
+        return length;
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.VtCloseRequest value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
+    public static int GetEncodedLength(in T::VtCloseRequest value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<VtCloseRequestCodec, T::VtCloseRequest>(tagNumber, value);
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.VtCloseRequest value)
+    public static bool Matches(ref AsduReader reader)
     {
-        return (value.ListOfRemoteVtSessionIdentifiers.Items.Sum(static item => Asdu.GetElementLength<Unsigned8Codec, byte>(item)));
+        return Unsigned8Codec.Matches(ref reader);
     }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.VtCloseRequest value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

@@ -1,68 +1,51 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class AuthenticationPolicyCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.AuthenticationPolicy>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.AuthenticationPolicy>
+    IAsduElementCodec<T::AuthenticationPolicy>,
+    IAsduConstructedCodec<T::AuthenticationPolicy>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::AuthenticationPolicy Decode(ref AsduReader reader)
     {
-        return reader.PeekOpeningTag(0);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.AuthenticationPolicy Decode(ref NativeReader reader)
-    {
-        var _policy = Asdu.DecodeSequenceOf<AuthenticationPolicyTPolicyTPolicyItemCodec, global::Baclib.Bacnet.Types.Application.AuthenticationPolicy.TPolicy.TPolicyItem>(ref reader, 0);
-        var _orderEnforced = Asdu.DecodePrimitive<BooleanCodec, bool>(ref reader, 1);
-        var _timeout = Asdu.DecodePrimitive<UnsignedCodec, uint>(ref reader, 2);
-
-        return new global::Baclib.Bacnet.Types.Application.AuthenticationPolicy
+        return new T::AuthenticationPolicy
         {
-            Policy = _policy,
-            OrderEnforced = _orderEnforced,
-            Timeout = _timeout
+            Policy = AsduElement.DecodeSequenceOf<AuthenticationPolicyTPolicyItemCodec, T::AuthenticationPolicy.TPolicyItem>(ref reader, 0),
+            OrderEnforced = AsduElement.Decode<BooleanCodec, bool>(ref reader, 1),
+            Timeout = AsduElement.Decode<UnsignedCodec, uint>(ref reader, 2)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.AuthenticationPolicy Decode(ref NativeReader reader, byte tagNumber)
+    public static T::AuthenticationPolicy Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<AuthenticationPolicyCodec, T::AuthenticationPolicy>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::AuthenticationPolicy value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.EncodeSequenceOf<AuthenticationPolicyTPolicyItemCodec, T::AuthenticationPolicy.TPolicyItem>(ref writer, 0, value.Policy);
+        AsduElement.Encode<BooleanCodec, bool>(ref writer, 1, value.OrderEnforced);
+        AsduElement.Encode<UnsignedCodec, uint>(ref writer, 2, value.Timeout);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.AuthenticationPolicy value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::AuthenticationPolicy value)
+        => AsduConstructed.Encode<AuthenticationPolicyCodec, T::AuthenticationPolicy>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::AuthenticationPolicy value)
     {
-        writer.WriteOpeningTag(0);
-        foreach (var item in value.Policy)
-        {
-            Asdu.EncodeElement<AuthenticationPolicyTPolicyTPolicyItemCodec, global::Baclib.Bacnet.Types.Application.AuthenticationPolicy.TPolicy.TPolicyItem>(ref writer, 0, item);
-        }
-        writer.WriteClosingTag(0);
-        Asdu.EncodePrimitive<BooleanCodec, bool>(ref writer, 1, value.OrderEnforced);
-        Asdu.EncodePrimitive<UnsignedCodec, uint>(ref writer, 2, value.Timeout);
+        var length = 0;
+        length += AsduElement.GetSequenceOfEncodedLength<AuthenticationPolicyTPolicyItemCodec, T::AuthenticationPolicy.TPolicyItem>(0, value.Policy);
+        length += AsduElement.GetEncodedLength<BooleanCodec, bool>(1, value.OrderEnforced);
+        length += AsduElement.GetEncodedLength<UnsignedCodec, uint>(2, value.Timeout);
+        return length;
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.AuthenticationPolicy value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
+    public static int GetEncodedLength(in T::AuthenticationPolicy value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<AuthenticationPolicyCodec, T::AuthenticationPolicy>(tagNumber, value);
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.AuthenticationPolicy value)
+    public static bool Matches(ref AsduReader reader)
     {
-        return (AsduLength.FromTagNumber((byte)0) + (value.Policy.Items.Sum(static item => Asdu.GetElementLength<AuthenticationPolicyTPolicyTPolicyItemCodec, global::Baclib.Bacnet.Types.Application.AuthenticationPolicy.TPolicy.TPolicyItem>(0, item))) + AsduLength.FromTagNumber((byte)0)) + Asdu.GetPrimitiveLength<BooleanCodec, bool>(1, value.OrderEnforced) + Asdu.GetPrimitiveLength<UnsignedCodec, uint>(2, value.Timeout);
+        return reader.PeekContextTag(0);
     }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.AuthenticationPolicy value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

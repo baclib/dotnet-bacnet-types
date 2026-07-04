@@ -7,235 +7,221 @@ public sealed class EventParameterCodec :
     IAsduElementCodec<global::Baclib.Bacnet.Types.Application.EventParameter>,
     IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.EventParameter>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static bool Matches(ref AsduReader reader)
     {
-
-        var contextTagNumber = reader.PeekContextTagNumber();
-        switch (contextTagNumber)
+        if (!reader.PeekContextTag(out var contextTagNumber))
         {
-            case 0:
-            case 1:
-            case 2:
-            case 3:
-            case 4:
-            case 5:
-            case 8:
-            case 9:
-            case 10:
-            case 11:
-            case 13:
-            case 14:
-            case 15:
-            case 16:
-            case 17:
-            case 18:
-            case 20:
-            case 21:
-            case 22:
-                return true;
-            default:
-                return false;
+            return false;
         }
+        return contextTagNumber switch
+        {
+            0 or
+            1 or
+            2 or
+            3 or
+            4 or
+            5 or
+            8 or
+            9 or
+            10 or
+            11 or
+            13 or
+            14 or
+            15 or
+            16 or
+            17 or
+            18 or
+            20 or
+            21 or
+            22 => true,
+            _ => false
+        };
     }
 
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag(tagNumber);
-
-    public static global::Baclib.Bacnet.Types.Application.EventParameter Decode(ref NativeReader reader)
+    public static global::Baclib.Bacnet.Types.Application.EventParameter Decode(ref AsduReader reader)
     {
-        var tagNumber = reader.PeekContextTagNumber();
+        var tagNumber = reader.ReadContextTagNumber();
         switch (tagNumber)
         {
             case 0:
-                var _changeOfBitstring = Asdu.DecodeConstructed<EventParameterTChangeOfBitstringCodec, global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfBitstring>(ref reader, 0);
-                return global::Baclib.Bacnet.Types.Application.EventParameter.FromChangeOfBitstring(_changeOfBitstring);
+                var @changeOfBitstring = EventParameterTChangeOfBitstringCodec.Decode(ref reader, 0);
+                return global::Baclib.Bacnet.Types.Application.EventParameter.FromChangeOfBitstring(@changeOfBitstring);
             case 1:
-                var _changeOfState = Asdu.DecodeConstructed<EventParameterTChangeOfStateCodec, global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfState>(ref reader, 1);
-                return global::Baclib.Bacnet.Types.Application.EventParameter.FromChangeOfState(_changeOfState);
+                var @changeOfState = EventParameterTChangeOfStateCodec.Decode(ref reader, 1);
+                return global::Baclib.Bacnet.Types.Application.EventParameter.FromChangeOfState(@changeOfState);
             case 2:
-                var _changeOfValue = Asdu.DecodeConstructed<EventParameterTChangeOfValueCodec, global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfValue>(ref reader, 2);
-                return global::Baclib.Bacnet.Types.Application.EventParameter.FromChangeOfValue(_changeOfValue);
+                var @changeOfValue = EventParameterTChangeOfValueCodec.Decode(ref reader, 2);
+                return global::Baclib.Bacnet.Types.Application.EventParameter.FromChangeOfValue(@changeOfValue);
             case 3:
-                var _commandFailure = Asdu.DecodeConstructed<EventParameterTCommandFailureCodec, global::Baclib.Bacnet.Types.Application.EventParameter.TCommandFailure>(ref reader, 3);
-                return global::Baclib.Bacnet.Types.Application.EventParameter.FromCommandFailure(_commandFailure);
+                var @commandFailure = EventParameterTCommandFailureCodec.Decode(ref reader, 3);
+                return global::Baclib.Bacnet.Types.Application.EventParameter.FromCommandFailure(@commandFailure);
             case 4:
-                var _floatingLimit = Asdu.DecodeConstructed<EventParameterTFloatingLimitCodec, global::Baclib.Bacnet.Types.Application.EventParameter.TFloatingLimit>(ref reader, 4);
-                return global::Baclib.Bacnet.Types.Application.EventParameter.FromFloatingLimit(_floatingLimit);
+                var @floatingLimit = EventParameterTFloatingLimitCodec.Decode(ref reader, 4);
+                return global::Baclib.Bacnet.Types.Application.EventParameter.FromFloatingLimit(@floatingLimit);
             case 5:
-                var _outOfRange = Asdu.DecodeConstructed<EventParameterTOutOfRangeCodec, global::Baclib.Bacnet.Types.Application.EventParameter.TOutOfRange>(ref reader, 5);
-                return global::Baclib.Bacnet.Types.Application.EventParameter.FromOutOfRange(_outOfRange);
+                var @outOfRange = EventParameterTOutOfRangeCodec.Decode(ref reader, 5);
+                return global::Baclib.Bacnet.Types.Application.EventParameter.FromOutOfRange(@outOfRange);
             case 8:
-                var _changeOfLifeSafety = Asdu.DecodeConstructed<EventParameterTChangeOfLifeSafetyCodec, global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfLifeSafety>(ref reader, 8);
-                return global::Baclib.Bacnet.Types.Application.EventParameter.FromChangeOfLifeSafety(_changeOfLifeSafety);
+                var @changeOfLifeSafety = EventParameterTChangeOfLifeSafetyCodec.Decode(ref reader, 8);
+                return global::Baclib.Bacnet.Types.Application.EventParameter.FromChangeOfLifeSafety(@changeOfLifeSafety);
             case 9:
-                var _extended = Asdu.DecodeConstructed<EventParameterTExtendedCodec, global::Baclib.Bacnet.Types.Application.EventParameter.TExtended>(ref reader, 9);
-                return global::Baclib.Bacnet.Types.Application.EventParameter.FromExtended(_extended);
+                var @extended = EventParameterTExtendedCodec.Decode(ref reader, 9);
+                return global::Baclib.Bacnet.Types.Application.EventParameter.FromExtended(@extended);
             case 10:
-                var _bufferReady = Asdu.DecodeConstructed<EventParameterTBufferReadyCodec, global::Baclib.Bacnet.Types.Application.EventParameter.TBufferReady>(ref reader, 10);
-                return global::Baclib.Bacnet.Types.Application.EventParameter.FromBufferReady(_bufferReady);
+                var @bufferReady = EventParameterTBufferReadyCodec.Decode(ref reader, 10);
+                return global::Baclib.Bacnet.Types.Application.EventParameter.FromBufferReady(@bufferReady);
             case 11:
-                var _unsignedRange = Asdu.DecodeConstructed<EventParameterTUnsignedRangeCodec, global::Baclib.Bacnet.Types.Application.EventParameter.TUnsignedRange>(ref reader, 11);
-                return global::Baclib.Bacnet.Types.Application.EventParameter.FromUnsignedRange(_unsignedRange);
+                var @unsignedRange = EventParameterTUnsignedRangeCodec.Decode(ref reader, 11);
+                return global::Baclib.Bacnet.Types.Application.EventParameter.FromUnsignedRange(@unsignedRange);
             case 13:
-                var _accessEvent = Asdu.DecodeConstructed<EventParameterTAccessEventCodec, global::Baclib.Bacnet.Types.Application.EventParameter.TAccessEvent>(ref reader, 13);
-                return global::Baclib.Bacnet.Types.Application.EventParameter.FromAccessEvent(_accessEvent);
+                var @accessEvent = EventParameterTAccessEventCodec.Decode(ref reader, 13);
+                return global::Baclib.Bacnet.Types.Application.EventParameter.FromAccessEvent(@accessEvent);
             case 14:
-                var _doubleOutOfRange = Asdu.DecodeConstructed<EventParameterTDoubleOutOfRangeCodec, global::Baclib.Bacnet.Types.Application.EventParameter.TDoubleOutOfRange>(ref reader, 14);
-                return global::Baclib.Bacnet.Types.Application.EventParameter.FromDoubleOutOfRange(_doubleOutOfRange);
+                var @doubleOutOfRange = EventParameterTDoubleOutOfRangeCodec.Decode(ref reader, 14);
+                return global::Baclib.Bacnet.Types.Application.EventParameter.FromDoubleOutOfRange(@doubleOutOfRange);
             case 15:
-                var _signedOutOfRange = Asdu.DecodeConstructed<EventParameterTSignedOutOfRangeCodec, global::Baclib.Bacnet.Types.Application.EventParameter.TSignedOutOfRange>(ref reader, 15);
-                return global::Baclib.Bacnet.Types.Application.EventParameter.FromSignedOutOfRange(_signedOutOfRange);
+                var @signedOutOfRange = EventParameterTSignedOutOfRangeCodec.Decode(ref reader, 15);
+                return global::Baclib.Bacnet.Types.Application.EventParameter.FromSignedOutOfRange(@signedOutOfRange);
             case 16:
-                var _unsignedOutOfRange = Asdu.DecodeConstructed<EventParameterTUnsignedOutOfRangeCodec, global::Baclib.Bacnet.Types.Application.EventParameter.TUnsignedOutOfRange>(ref reader, 16);
-                return global::Baclib.Bacnet.Types.Application.EventParameter.FromUnsignedOutOfRange(_unsignedOutOfRange);
+                var @unsignedOutOfRange = EventParameterTUnsignedOutOfRangeCodec.Decode(ref reader, 16);
+                return global::Baclib.Bacnet.Types.Application.EventParameter.FromUnsignedOutOfRange(@unsignedOutOfRange);
             case 17:
-                var _changeOfCharacterstring = Asdu.DecodeConstructed<EventParameterTChangeOfCharacterstringCodec, global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfCharacterstring>(ref reader, 17);
-                return global::Baclib.Bacnet.Types.Application.EventParameter.FromChangeOfCharacterstring(_changeOfCharacterstring);
+                var @changeOfCharacterstring = EventParameterTChangeOfCharacterstringCodec.Decode(ref reader, 17);
+                return global::Baclib.Bacnet.Types.Application.EventParameter.FromChangeOfCharacterstring(@changeOfCharacterstring);
             case 18:
-                var _changeOfStatusFlags = Asdu.DecodeConstructed<EventParameterTChangeOfStatusFlagsCodec, global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfStatusFlags>(ref reader, 18);
-                return global::Baclib.Bacnet.Types.Application.EventParameter.FromChangeOfStatusFlags(_changeOfStatusFlags);
+                var @changeOfStatusFlags = EventParameterTChangeOfStatusFlagsCodec.Decode(ref reader, 18);
+                return global::Baclib.Bacnet.Types.Application.EventParameter.FromChangeOfStatusFlags(@changeOfStatusFlags);
             case 20:
-                var _none = Asdu.DecodePrimitive<NullCodec, global::Baclib.Bacnet.Types.Application.Null>(ref reader, 20);
-                return global::Baclib.Bacnet.Types.Application.EventParameter.FromNone(_none);
+                var @none = NullCodec.Decode(ref reader, 20);
+                return global::Baclib.Bacnet.Types.Application.EventParameter.FromNone(@none);
             case 21:
-                var _changeOfDiscreteValue = Asdu.DecodeConstructed<EventParameterTChangeOfDiscreteValueCodec, global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue>(ref reader, 21);
-                return global::Baclib.Bacnet.Types.Application.EventParameter.FromChangeOfDiscreteValue(_changeOfDiscreteValue);
+                var @changeOfDiscreteValue = EventParameterTChangeOfDiscreteValueCodec.Decode(ref reader, 21);
+                return global::Baclib.Bacnet.Types.Application.EventParameter.FromChangeOfDiscreteValue(@changeOfDiscreteValue);
             case 22:
-                var _changeOfTimer = Asdu.DecodeConstructed<EventParameterTChangeOfTimerCodec, global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfTimer>(ref reader, 22);
-                return global::Baclib.Bacnet.Types.Application.EventParameter.FromChangeOfTimer(_changeOfTimer);
+                var @changeOfTimer = EventParameterTChangeOfTimerCodec.Decode(ref reader, 22);
+                return global::Baclib.Bacnet.Types.Application.EventParameter.FromChangeOfTimer(@changeOfTimer);
         }
         throw new FormatException(nameof(reader));
     }
 
-    public static global::Baclib.Bacnet.Types.Application.EventParameter Decode(ref NativeReader reader, byte tagNumber)
-    {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
-    }
+    public static global::Baclib.Bacnet.Types.Application.EventParameter Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<EventParameterCodec, global::Baclib.Bacnet.Types.Application.EventParameter>(ref reader, tagNumber);
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.EventParameter value)
+    public static void Encode(ref AsduWriter writer, in global::Baclib.Bacnet.Types.Application.EventParameter value)
     {
         switch (value.Choice)
         {
             case global::Baclib.Bacnet.Types.Application.EventParameter.Option.ChangeOfBitstring:
-                Asdu.EncodeConstructed<EventParameterTChangeOfBitstringCodec, global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfBitstring>(ref writer, 0, value.ChangeOfBitstring);
+                EventParameterTChangeOfBitstringCodec.Encode(ref writer, 0, value.ChangeOfBitstring);
                 return;
             case global::Baclib.Bacnet.Types.Application.EventParameter.Option.ChangeOfState:
-                Asdu.EncodeConstructed<EventParameterTChangeOfStateCodec, global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfState>(ref writer, 1, value.ChangeOfState);
+                EventParameterTChangeOfStateCodec.Encode(ref writer, 1, value.ChangeOfState);
                 return;
             case global::Baclib.Bacnet.Types.Application.EventParameter.Option.ChangeOfValue:
-                Asdu.EncodeConstructed<EventParameterTChangeOfValueCodec, global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfValue>(ref writer, 2, value.ChangeOfValue);
+                EventParameterTChangeOfValueCodec.Encode(ref writer, 2, value.ChangeOfValue);
                 return;
             case global::Baclib.Bacnet.Types.Application.EventParameter.Option.CommandFailure:
-                Asdu.EncodeConstructed<EventParameterTCommandFailureCodec, global::Baclib.Bacnet.Types.Application.EventParameter.TCommandFailure>(ref writer, 3, value.CommandFailure);
+                EventParameterTCommandFailureCodec.Encode(ref writer, 3, value.CommandFailure);
                 return;
             case global::Baclib.Bacnet.Types.Application.EventParameter.Option.FloatingLimit:
-                Asdu.EncodeConstructed<EventParameterTFloatingLimitCodec, global::Baclib.Bacnet.Types.Application.EventParameter.TFloatingLimit>(ref writer, 4, value.FloatingLimit);
+                EventParameterTFloatingLimitCodec.Encode(ref writer, 4, value.FloatingLimit);
                 return;
             case global::Baclib.Bacnet.Types.Application.EventParameter.Option.OutOfRange:
-                Asdu.EncodeConstructed<EventParameterTOutOfRangeCodec, global::Baclib.Bacnet.Types.Application.EventParameter.TOutOfRange>(ref writer, 5, value.OutOfRange);
+                EventParameterTOutOfRangeCodec.Encode(ref writer, 5, value.OutOfRange);
                 return;
             case global::Baclib.Bacnet.Types.Application.EventParameter.Option.ChangeOfLifeSafety:
-                Asdu.EncodeConstructed<EventParameterTChangeOfLifeSafetyCodec, global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfLifeSafety>(ref writer, 8, value.ChangeOfLifeSafety);
+                EventParameterTChangeOfLifeSafetyCodec.Encode(ref writer, 8, value.ChangeOfLifeSafety);
                 return;
             case global::Baclib.Bacnet.Types.Application.EventParameter.Option.Extended:
-                Asdu.EncodeConstructed<EventParameterTExtendedCodec, global::Baclib.Bacnet.Types.Application.EventParameter.TExtended>(ref writer, 9, value.Extended);
+                EventParameterTExtendedCodec.Encode(ref writer, 9, value.Extended);
                 return;
             case global::Baclib.Bacnet.Types.Application.EventParameter.Option.BufferReady:
-                Asdu.EncodeConstructed<EventParameterTBufferReadyCodec, global::Baclib.Bacnet.Types.Application.EventParameter.TBufferReady>(ref writer, 10, value.BufferReady);
+                EventParameterTBufferReadyCodec.Encode(ref writer, 10, value.BufferReady);
                 return;
             case global::Baclib.Bacnet.Types.Application.EventParameter.Option.UnsignedRange:
-                Asdu.EncodeConstructed<EventParameterTUnsignedRangeCodec, global::Baclib.Bacnet.Types.Application.EventParameter.TUnsignedRange>(ref writer, 11, value.UnsignedRange);
+                EventParameterTUnsignedRangeCodec.Encode(ref writer, 11, value.UnsignedRange);
                 return;
             case global::Baclib.Bacnet.Types.Application.EventParameter.Option.AccessEvent:
-                Asdu.EncodeConstructed<EventParameterTAccessEventCodec, global::Baclib.Bacnet.Types.Application.EventParameter.TAccessEvent>(ref writer, 13, value.AccessEvent);
+                EventParameterTAccessEventCodec.Encode(ref writer, 13, value.AccessEvent);
                 return;
             case global::Baclib.Bacnet.Types.Application.EventParameter.Option.DoubleOutOfRange:
-                Asdu.EncodeConstructed<EventParameterTDoubleOutOfRangeCodec, global::Baclib.Bacnet.Types.Application.EventParameter.TDoubleOutOfRange>(ref writer, 14, value.DoubleOutOfRange);
+                EventParameterTDoubleOutOfRangeCodec.Encode(ref writer, 14, value.DoubleOutOfRange);
                 return;
             case global::Baclib.Bacnet.Types.Application.EventParameter.Option.SignedOutOfRange:
-                Asdu.EncodeConstructed<EventParameterTSignedOutOfRangeCodec, global::Baclib.Bacnet.Types.Application.EventParameter.TSignedOutOfRange>(ref writer, 15, value.SignedOutOfRange);
+                EventParameterTSignedOutOfRangeCodec.Encode(ref writer, 15, value.SignedOutOfRange);
                 return;
             case global::Baclib.Bacnet.Types.Application.EventParameter.Option.UnsignedOutOfRange:
-                Asdu.EncodeConstructed<EventParameterTUnsignedOutOfRangeCodec, global::Baclib.Bacnet.Types.Application.EventParameter.TUnsignedOutOfRange>(ref writer, 16, value.UnsignedOutOfRange);
+                EventParameterTUnsignedOutOfRangeCodec.Encode(ref writer, 16, value.UnsignedOutOfRange);
                 return;
             case global::Baclib.Bacnet.Types.Application.EventParameter.Option.ChangeOfCharacterstring:
-                Asdu.EncodeConstructed<EventParameterTChangeOfCharacterstringCodec, global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfCharacterstring>(ref writer, 17, value.ChangeOfCharacterstring);
+                EventParameterTChangeOfCharacterstringCodec.Encode(ref writer, 17, value.ChangeOfCharacterstring);
                 return;
             case global::Baclib.Bacnet.Types.Application.EventParameter.Option.ChangeOfStatusFlags:
-                Asdu.EncodeConstructed<EventParameterTChangeOfStatusFlagsCodec, global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfStatusFlags>(ref writer, 18, value.ChangeOfStatusFlags);
+                EventParameterTChangeOfStatusFlagsCodec.Encode(ref writer, 18, value.ChangeOfStatusFlags);
                 return;
             case global::Baclib.Bacnet.Types.Application.EventParameter.Option.None:
-                Asdu.EncodePrimitive<NullCodec, global::Baclib.Bacnet.Types.Application.Null>(ref writer, 20, value.None);
+                NullCodec.Encode(ref writer, 20, value.None);
                 return;
             case global::Baclib.Bacnet.Types.Application.EventParameter.Option.ChangeOfDiscreteValue:
-                Asdu.EncodeConstructed<EventParameterTChangeOfDiscreteValueCodec, global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue>(ref writer, 21, value.ChangeOfDiscreteValue);
+                EventParameterTChangeOfDiscreteValueCodec.Encode(ref writer, 21, value.ChangeOfDiscreteValue);
                 return;
             case global::Baclib.Bacnet.Types.Application.EventParameter.Option.ChangeOfTimer:
-                Asdu.EncodeConstructed<EventParameterTChangeOfTimerCodec, global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfTimer>(ref writer, 22, value.ChangeOfTimer);
+                EventParameterTChangeOfTimerCodec.Encode(ref writer, 22, value.ChangeOfTimer);
                 return;
-        }
-        throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported.");
-    }
-
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.EventParameter value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.EventParameter value)
-    {
-        switch (value.Choice)
-        {
-            case global::Baclib.Bacnet.Types.Application.EventParameter.Option.ChangeOfBitstring:
-                return Asdu.GetConstructedLength<EventParameterTChangeOfBitstringCodec, global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfBitstring>(0, value.ChangeOfBitstring);
-            case global::Baclib.Bacnet.Types.Application.EventParameter.Option.ChangeOfState:
-                return Asdu.GetConstructedLength<EventParameterTChangeOfStateCodec, global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfState>(1, value.ChangeOfState);
-            case global::Baclib.Bacnet.Types.Application.EventParameter.Option.ChangeOfValue:
-                return Asdu.GetConstructedLength<EventParameterTChangeOfValueCodec, global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfValue>(2, value.ChangeOfValue);
-            case global::Baclib.Bacnet.Types.Application.EventParameter.Option.CommandFailure:
-                return Asdu.GetConstructedLength<EventParameterTCommandFailureCodec, global::Baclib.Bacnet.Types.Application.EventParameter.TCommandFailure>(3, value.CommandFailure);
-            case global::Baclib.Bacnet.Types.Application.EventParameter.Option.FloatingLimit:
-                return Asdu.GetConstructedLength<EventParameterTFloatingLimitCodec, global::Baclib.Bacnet.Types.Application.EventParameter.TFloatingLimit>(4, value.FloatingLimit);
-            case global::Baclib.Bacnet.Types.Application.EventParameter.Option.OutOfRange:
-                return Asdu.GetConstructedLength<EventParameterTOutOfRangeCodec, global::Baclib.Bacnet.Types.Application.EventParameter.TOutOfRange>(5, value.OutOfRange);
-            case global::Baclib.Bacnet.Types.Application.EventParameter.Option.ChangeOfLifeSafety:
-                return Asdu.GetConstructedLength<EventParameterTChangeOfLifeSafetyCodec, global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfLifeSafety>(8, value.ChangeOfLifeSafety);
-            case global::Baclib.Bacnet.Types.Application.EventParameter.Option.Extended:
-                return Asdu.GetConstructedLength<EventParameterTExtendedCodec, global::Baclib.Bacnet.Types.Application.EventParameter.TExtended>(9, value.Extended);
-            case global::Baclib.Bacnet.Types.Application.EventParameter.Option.BufferReady:
-                return Asdu.GetConstructedLength<EventParameterTBufferReadyCodec, global::Baclib.Bacnet.Types.Application.EventParameter.TBufferReady>(10, value.BufferReady);
-            case global::Baclib.Bacnet.Types.Application.EventParameter.Option.UnsignedRange:
-                return Asdu.GetConstructedLength<EventParameterTUnsignedRangeCodec, global::Baclib.Bacnet.Types.Application.EventParameter.TUnsignedRange>(11, value.UnsignedRange);
-            case global::Baclib.Bacnet.Types.Application.EventParameter.Option.AccessEvent:
-                return Asdu.GetConstructedLength<EventParameterTAccessEventCodec, global::Baclib.Bacnet.Types.Application.EventParameter.TAccessEvent>(13, value.AccessEvent);
-            case global::Baclib.Bacnet.Types.Application.EventParameter.Option.DoubleOutOfRange:
-                return Asdu.GetConstructedLength<EventParameterTDoubleOutOfRangeCodec, global::Baclib.Bacnet.Types.Application.EventParameter.TDoubleOutOfRange>(14, value.DoubleOutOfRange);
-            case global::Baclib.Bacnet.Types.Application.EventParameter.Option.SignedOutOfRange:
-                return Asdu.GetConstructedLength<EventParameterTSignedOutOfRangeCodec, global::Baclib.Bacnet.Types.Application.EventParameter.TSignedOutOfRange>(15, value.SignedOutOfRange);
-            case global::Baclib.Bacnet.Types.Application.EventParameter.Option.UnsignedOutOfRange:
-                return Asdu.GetConstructedLength<EventParameterTUnsignedOutOfRangeCodec, global::Baclib.Bacnet.Types.Application.EventParameter.TUnsignedOutOfRange>(16, value.UnsignedOutOfRange);
-            case global::Baclib.Bacnet.Types.Application.EventParameter.Option.ChangeOfCharacterstring:
-                return Asdu.GetConstructedLength<EventParameterTChangeOfCharacterstringCodec, global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfCharacterstring>(17, value.ChangeOfCharacterstring);
-            case global::Baclib.Bacnet.Types.Application.EventParameter.Option.ChangeOfStatusFlags:
-                return Asdu.GetConstructedLength<EventParameterTChangeOfStatusFlagsCodec, global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfStatusFlags>(18, value.ChangeOfStatusFlags);
-            case global::Baclib.Bacnet.Types.Application.EventParameter.Option.None:
-                return Asdu.GetPrimitiveLength<NullCodec, global::Baclib.Bacnet.Types.Application.Null>(20, value.None);
-            case global::Baclib.Bacnet.Types.Application.EventParameter.Option.ChangeOfDiscreteValue:
-                return Asdu.GetConstructedLength<EventParameterTChangeOfDiscreteValueCodec, global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue>(21, value.ChangeOfDiscreteValue);
-            case global::Baclib.Bacnet.Types.Application.EventParameter.Option.ChangeOfTimer:
-                return Asdu.GetConstructedLength<EventParameterTChangeOfTimerCodec, global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfTimer>(22, value.ChangeOfTimer);
             default:
                 throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported.");
         }
     }
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.EventParameter value, byte tagNumber)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.EventParameter value)
+        => AsduConstructed.Encode<EventParameterCodec, global::Baclib.Bacnet.Types.Application.EventParameter>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in global::Baclib.Bacnet.Types.Application.EventParameter value)
     {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
+        return value.Choice switch
+        {
+            global::Baclib.Bacnet.Types.Application.EventParameter.Option.ChangeOfBitstring
+                => EventParameterTChangeOfBitstringCodec.GetEncodedLength(value.ChangeOfBitstring, 0),
+            global::Baclib.Bacnet.Types.Application.EventParameter.Option.ChangeOfState
+                => EventParameterTChangeOfStateCodec.GetEncodedLength(value.ChangeOfState, 1),
+            global::Baclib.Bacnet.Types.Application.EventParameter.Option.ChangeOfValue
+                => EventParameterTChangeOfValueCodec.GetEncodedLength(value.ChangeOfValue, 2),
+            global::Baclib.Bacnet.Types.Application.EventParameter.Option.CommandFailure
+                => EventParameterTCommandFailureCodec.GetEncodedLength(value.CommandFailure, 3),
+            global::Baclib.Bacnet.Types.Application.EventParameter.Option.FloatingLimit
+                => EventParameterTFloatingLimitCodec.GetEncodedLength(value.FloatingLimit, 4),
+            global::Baclib.Bacnet.Types.Application.EventParameter.Option.OutOfRange
+                => EventParameterTOutOfRangeCodec.GetEncodedLength(value.OutOfRange, 5),
+            global::Baclib.Bacnet.Types.Application.EventParameter.Option.ChangeOfLifeSafety
+                => EventParameterTChangeOfLifeSafetyCodec.GetEncodedLength(value.ChangeOfLifeSafety, 8),
+            global::Baclib.Bacnet.Types.Application.EventParameter.Option.Extended
+                => EventParameterTExtendedCodec.GetEncodedLength(value.Extended, 9),
+            global::Baclib.Bacnet.Types.Application.EventParameter.Option.BufferReady
+                => EventParameterTBufferReadyCodec.GetEncodedLength(value.BufferReady, 10),
+            global::Baclib.Bacnet.Types.Application.EventParameter.Option.UnsignedRange
+                => EventParameterTUnsignedRangeCodec.GetEncodedLength(value.UnsignedRange, 11),
+            global::Baclib.Bacnet.Types.Application.EventParameter.Option.AccessEvent
+                => EventParameterTAccessEventCodec.GetEncodedLength(value.AccessEvent, 13),
+            global::Baclib.Bacnet.Types.Application.EventParameter.Option.DoubleOutOfRange
+                => EventParameterTDoubleOutOfRangeCodec.GetEncodedLength(value.DoubleOutOfRange, 14),
+            global::Baclib.Bacnet.Types.Application.EventParameter.Option.SignedOutOfRange
+                => EventParameterTSignedOutOfRangeCodec.GetEncodedLength(value.SignedOutOfRange, 15),
+            global::Baclib.Bacnet.Types.Application.EventParameter.Option.UnsignedOutOfRange
+                => EventParameterTUnsignedOutOfRangeCodec.GetEncodedLength(value.UnsignedOutOfRange, 16),
+            global::Baclib.Bacnet.Types.Application.EventParameter.Option.ChangeOfCharacterstring
+                => EventParameterTChangeOfCharacterstringCodec.GetEncodedLength(value.ChangeOfCharacterstring, 17),
+            global::Baclib.Bacnet.Types.Application.EventParameter.Option.ChangeOfStatusFlags
+                => EventParameterTChangeOfStatusFlagsCodec.GetEncodedLength(value.ChangeOfStatusFlags, 18),
+            global::Baclib.Bacnet.Types.Application.EventParameter.Option.None
+                => NullCodec.GetEncodedLength(value.None, 20),
+            global::Baclib.Bacnet.Types.Application.EventParameter.Option.ChangeOfDiscreteValue
+                => EventParameterTChangeOfDiscreteValueCodec.GetEncodedLength(value.ChangeOfDiscreteValue, 21),
+            global::Baclib.Bacnet.Types.Application.EventParameter.Option.ChangeOfTimer
+                => EventParameterTChangeOfTimerCodec.GetEncodedLength(value.ChangeOfTimer, 22),
+            _ => throw new ArgumentOutOfRangeException(nameof(value), value.Choice, "The choice is not supported."),
+        };
     }
+
+    public static int GetEncodedLength(in global::Baclib.Bacnet.Types.Application.EventParameter value, byte tagNumber)
+        => AsduElement.GetEncodedLength<EventParameterCodec, global::Baclib.Bacnet.Types.Application.EventParameter>(tagNumber, value);
 }

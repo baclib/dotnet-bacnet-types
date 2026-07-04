@@ -1,68 +1,51 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class NotificationParametersTChangeOfReliabilityCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.NotificationParameters.TChangeOfReliability>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.NotificationParameters.TChangeOfReliability>
+    IAsduElementCodec<T::NotificationParameters.TChangeOfReliability>,
+    IAsduConstructedCodec<T::NotificationParameters.TChangeOfReliability>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::NotificationParameters.TChangeOfReliability Decode(ref AsduReader reader)
     {
-        return reader.PeekTag((byte)0);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.NotificationParameters.TChangeOfReliability Decode(ref NativeReader reader)
-    {
-        var _reliability = Asdu.DecodePrimitive<ReliabilityCodec, global::Baclib.Bacnet.Types.Application.Reliability>(ref reader, 0);
-        var _statusFlags = Asdu.DecodePrimitive<StatusFlagsCodec, global::Baclib.Bacnet.Types.Application.StatusFlags>(ref reader, 1);
-        var _propertyValues = Asdu.DecodeSequenceOf<PropertyValueCodec, global::Baclib.Bacnet.Types.Application.PropertyValue>(ref reader, 2);
-
-        return new global::Baclib.Bacnet.Types.Application.NotificationParameters.TChangeOfReliability
+        return new T::NotificationParameters.TChangeOfReliability
         {
-            Reliability = _reliability,
-            StatusFlags = _statusFlags,
-            PropertyValues = _propertyValues
+            Reliability = AsduElement.Decode<ReliabilityCodec, T::Reliability>(ref reader, 0),
+            StatusFlags = AsduElement.Decode<StatusFlagsCodec, T::StatusFlags>(ref reader, 1),
+            PropertyValues = AsduElement.DecodeSequenceOf<PropertyValueCodec, T::PropertyValue>(ref reader, 2)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.NotificationParameters.TChangeOfReliability Decode(ref NativeReader reader, byte tagNumber)
+    public static T::NotificationParameters.TChangeOfReliability Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<NotificationParametersTChangeOfReliabilityCodec, T::NotificationParameters.TChangeOfReliability>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::NotificationParameters.TChangeOfReliability value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.Encode<ReliabilityCodec, T::Reliability>(ref writer, 0, value.Reliability);
+        AsduElement.Encode<StatusFlagsCodec, T::StatusFlags>(ref writer, 1, value.StatusFlags);
+        AsduElement.EncodeSequenceOf<PropertyValueCodec, T::PropertyValue>(ref writer, 2, value.PropertyValues);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.NotificationParameters.TChangeOfReliability value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::NotificationParameters.TChangeOfReliability value)
+        => AsduConstructed.Encode<NotificationParametersTChangeOfReliabilityCodec, T::NotificationParameters.TChangeOfReliability>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::NotificationParameters.TChangeOfReliability value)
     {
-        Asdu.EncodePrimitive<ReliabilityCodec, global::Baclib.Bacnet.Types.Application.Reliability>(ref writer, 0, value.Reliability);
-        Asdu.EncodePrimitive<StatusFlagsCodec, global::Baclib.Bacnet.Types.Application.StatusFlags>(ref writer, 1, value.StatusFlags);
-        writer.WriteOpeningTag(2);
-        foreach (var item in value.PropertyValues)
-        {
-            Asdu.EncodeElement<PropertyValueCodec, global::Baclib.Bacnet.Types.Application.PropertyValue>(ref writer, 2, item);
-        }
-        writer.WriteClosingTag(2);
+        var length = 0;
+        length += AsduElement.GetEncodedLength<ReliabilityCodec, T::Reliability>(0, value.Reliability);
+        length += AsduElement.GetEncodedLength<StatusFlagsCodec, T::StatusFlags>(1, value.StatusFlags);
+        length += AsduElement.GetSequenceOfEncodedLength<PropertyValueCodec, T::PropertyValue>(2, value.PropertyValues);
+        return length;
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.NotificationParameters.TChangeOfReliability value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
+    public static int GetEncodedLength(in T::NotificationParameters.TChangeOfReliability value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<NotificationParametersTChangeOfReliabilityCodec, T::NotificationParameters.TChangeOfReliability>(tagNumber, value);
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.NotificationParameters.TChangeOfReliability value)
+    public static bool Matches(ref AsduReader reader)
     {
-        return Asdu.GetPrimitiveLength<ReliabilityCodec, global::Baclib.Bacnet.Types.Application.Reliability>(0, value.Reliability) + Asdu.GetPrimitiveLength<StatusFlagsCodec, global::Baclib.Bacnet.Types.Application.StatusFlags>(1, value.StatusFlags) + (AsduLength.FromTagNumber((byte)2) + (value.PropertyValues.Items.Sum(static item => Asdu.GetElementLength<PropertyValueCodec, global::Baclib.Bacnet.Types.Application.PropertyValue>(2, item))) + AsduLength.FromTagNumber((byte)2));
+        return reader.PeekContextTag(0);
     }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.NotificationParameters.TChangeOfReliability value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }

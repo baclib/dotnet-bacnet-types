@@ -1,60 +1,48 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using T = Baclib.Bacnet.Types.Application;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 public sealed class ReadRangeRequestTRangeTByTimeCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.ReadRangeRequest.TRange.TByTime>,
-    IAsduConstructedCodec<global::Baclib.Bacnet.Types.Application.ReadRangeRequest.TRange.TByTime>
+    IAsduElementCodec<T::ReadRangeRequest.TRange.TByTime>,
+    IAsduConstructedCodec<T::ReadRangeRequest.TRange.TByTime>
 {
-    public static bool Matches(ref NativeReader reader)
+    public static T::ReadRangeRequest.TRange.TByTime Decode(ref AsduReader reader)
     {
-        return DateTimeCodec.Matches(ref reader);
-    }
-
-    public static global::Baclib.Bacnet.Types.Application.ReadRangeRequest.TRange.TByTime Decode(ref NativeReader reader)
-    {
-        var _referenceTime = Asdu.DecodeElement<DateTimeCodec, global::Baclib.Bacnet.Types.Application.DateTime>(ref reader);
-        var _count = Asdu.DecodePrimitive<Integer16Codec, short>(ref reader);
-
-        return new global::Baclib.Bacnet.Types.Application.ReadRangeRequest.TRange.TByTime
+        return new T::ReadRangeRequest.TRange.TByTime
         {
-            ReferenceTime = _referenceTime,
-            Count = _count
+            ReferenceTime = AsduElement.Decode<DateTimeCodec, T::DateTime>(ref reader),
+            Count = AsduElement.Decode<Integer16Codec, short>(ref reader)
         };
     }
 
-    public static global::Baclib.Bacnet.Types.Application.ReadRangeRequest.TRange.TByTime Decode(ref NativeReader reader, byte tagNumber)
+    public static T::ReadRangeRequest.TRange.TByTime Decode(ref AsduReader reader, byte tagNumber)
+        => AsduConstructed.Decode<ReadRangeRequestTRangeTByTimeCodec, T::ReadRangeRequest.TRange.TByTime>(ref reader, tagNumber);
+
+    public static void Encode(ref AsduWriter writer, in T::ReadRangeRequest.TRange.TByTime value)
     {
-        reader.ReadOpeningTag(tagNumber);
-        var value = Decode(ref reader);
-        reader.ReadClosingTag(tagNumber);
-        return value;
+        AsduElement.Encode<DateTimeCodec, T::DateTime>(ref writer, value.ReferenceTime);
+        AsduElement.Encode<Integer16Codec, short>(ref writer, value.Count);
     }
 
-    public static void Encode(ref NativeWriter writer, in global::Baclib.Bacnet.Types.Application.ReadRangeRequest.TRange.TByTime value)
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T::ReadRangeRequest.TRange.TByTime value)
+        => AsduConstructed.Encode<ReadRangeRequestTRangeTByTimeCodec, T::ReadRangeRequest.TRange.TByTime>(ref writer, tagNumber, value);
+
+    public static int GetEncodedLength(in T::ReadRangeRequest.TRange.TByTime value)
     {
-        Asdu.EncodeElement<DateTimeCodec, global::Baclib.Bacnet.Types.Application.DateTime>(ref writer, value.ReferenceTime);
-        Asdu.EncodePrimitive<Integer16Codec, short>(ref writer, value.Count);
+        var length = 0;
+        length += AsduElement.GetEncodedLength<DateTimeCodec, T::DateTime>(value.ReferenceTime);
+        length += AsduElement.GetEncodedLength<Integer16Codec, short>(value.Count);
+        return length;
     }
 
-    public static void Encode(ref NativeWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.ReadRangeRequest.TRange.TByTime value)
-    {
-        writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
-        writer.WriteClosingTag(tagNumber);
-    }
+    public static int GetEncodedLength(in T::ReadRangeRequest.TRange.TByTime value, byte tagNumber)
+        => AsduConstructed.GetEncodedLength<ReadRangeRequestTRangeTByTimeCodec, T::ReadRangeRequest.TRange.TByTime>(tagNumber, value);
 
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.ReadRangeRequest.TRange.TByTime value)
+    public static bool Matches(ref AsduReader reader)
     {
-        return Asdu.GetElementLength<DateTimeCodec, global::Baclib.Bacnet.Types.Application.DateTime>(value.ReferenceTime) + Asdu.GetEncodedLength<Integer16Codec, short>(value.Count);
+        return DateTimeCodec.Matches(ref reader);
     }
-
-    public static int GetLength(in global::Baclib.Bacnet.Types.Application.ReadRangeRequest.TRange.TByTime value, byte tagNumber)
-    {
-        return AsduLength.FromTagNumber((byte)tagNumber) + GetLength(value) + AsduLength.FromTagNumber((byte)tagNumber);
-    }
-
-    public static bool Matches(ref NativeReader reader, byte tagNumber)
-        => reader.PeekOpeningTag((byte)tagNumber);
 }
