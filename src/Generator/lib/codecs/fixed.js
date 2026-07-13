@@ -8,7 +8,7 @@ import { TemplateEngine } from '../core/template-engine.js';
 import { codecTemplatesDir, codecsOutputDir, generatorRoot, workingDir } from '../core/paths.js';
 import { isBooleanObject } from 'util/types';
 import Handlebars from 'handlebars';
-import { predefinedCodecs, getUnsignedVariant, getIntegerVariant } from './primitive.js';
+import { sourceTypesByIndex, getUnsignedVariant, getIntegerVariant } from './predefined.js';
 import { toPascalCase, toCamelCase } from '../core/text.js';
 
 Handlebars.registerHelper('nameis', function (value, options) {
@@ -26,8 +26,8 @@ class FixedCodecTransformer extends TemplateEngine {
             ? path.resolve(generatorRoot, process.env.CODEC_OUTPUT_DIR)
             : codecsOutputDir;
         this.templatesDir = codecTemplatesDir;
-        this.primitiveCodecs = [...predefinedCodecs];
-        this.predefinedNames = new Set(predefinedCodecs.map(codec => codec.name));
+        this.primitiveCodecs = [...sourceTypesByIndex];
+        this.predefinedNames = new Set(sourceTypesByIndex.map(codec => codec.name));
     }
 
     inferBounds(traits) {
@@ -82,12 +82,12 @@ class FixedCodecTransformer extends TemplateEngine {
         const fixedSize = base === 'real';
         const lengthConstant = base === 'real' ? 'Real' : null;
 
-        const baseTypeDef = predefinedCodecs.find(codec => codec.name === base);
+        const baseTypeDef = sourceTypesByIndex.find(codec => codec.name === base);
         if (baseTypeDef.underlyingType) {
 
             if (baseTypeDef.name === 'enumerated') {
                 const vary = getUnsignedVariant(bounds.minimum, bounds.maximum);
-                console.log(fullname.padEnd(60), vary.type, vary.size);
+                //console.log(fullname.padEnd(60), vary.type, vary.size);
             }
 
 
