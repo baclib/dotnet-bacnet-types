@@ -17,6 +17,7 @@ public abstract class AsduLength
 {
 
     public const int Null = 0;
+
     public const int Boolean = 1;
 
     public const int WeekNDay = 3;
@@ -92,6 +93,12 @@ public abstract class AsduLength
     /// <param name="value">The signed 32-bit integer value.</param>
     /// <returns>1 to 4 bytes, depending on the value.</returns>
     public static int FromUnsigned32(int value) => FromUnsigned32((uint)value);
+
+
+    public static int FromUnsigned(uint value) => FromUnsigned32(value);
+
+    public static int FromInteger(int value) => FromInteger32(value);
+
 
     /// <summary>
     /// The maximum number of bytes required to encode an unsigned 64-bit integer (8 bytes).
@@ -269,10 +276,14 @@ public abstract class AsduLength
     /// </summary>
     public const int Date = 4;
 
+    public const int DatePattern = 4;
+
     /// <summary>
     /// The number of bytes required to encode a BACnet Time value.
     /// </summary>
     public const int Time = 4;
+
+    public const int TimePattern = 4;
 
     /// <summary>
     /// The number of bytes required to encode a BACnet ObjectIdentifier value.
@@ -298,6 +309,12 @@ public abstract class AsduLength
         return (byte)tagNumber < 15 ? 1 : 2;
     }
 
+
+
+
+    public static int FromOctetString(OctetString value) => 0;
+    public static int FromCharacterString(CharacterString value) => 0;
+    public static int FromBitString(BitString value) => 0;
 
 
 

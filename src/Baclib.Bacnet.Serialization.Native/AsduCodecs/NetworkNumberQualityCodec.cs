@@ -1,90 +1,90 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
-using T = Baclib.Bacnet.Types.Application;
+//using T = Baclib.Bacnet.Types.Application;
+
+using Action = Baclib.Bacnet.Types.Application.Action;
 
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 /// <summary>
-/// Provides BACnet ASDU primitive decoding and encoding for <see cref="T.NetworkNumberQuality"/> values.
+/// Provides BACnet ASDU primitive decoding and encoding for <see cref="NetworkNumberQuality"/> values.
 /// </summary>
 public sealed class NetworkNumberQualityCodec :
-    IAsduElementCodec<T.NetworkNumberQuality>,
-    IAsduPrimitiveCodec<T.NetworkNumberQuality>
+    IAsduElementCodec<NetworkNumberQuality>,
+    IAsduPrimitiveCodec<NetworkNumberQuality>
 {
     /// <summary>
-    /// Decodes an <see cref="T.NetworkNumberQuality"/> value from the current reader position using the application tag.
+    /// Decodes a <see cref="NetworkNumberQuality"/> value from the current reader position using the application tag.
     /// </summary>
-    /// <param name="reader">The reader positioned at an enumerated primitive tag.</param>
-    /// <returns>The decoded enumerated value.</returns>
-    public static T.NetworkNumberQuality Decode(ref AsduReader reader)
-        => AsduPrimitive.Decode<NetworkNumberQualityCodec, T.NetworkNumberQuality>(ref reader);
+    /// <param name="reader">The reader positioned at a <see cref="NetworkNumberQuality"/> primitive tag.</param>
+    /// <returns>The decoded <see cref="NetworkNumberQuality"/> value.</returns>
+    /// <exception cref="FormatException">Thrown when the encoded value is not valid.</exception>
+    public static NetworkNumberQuality Decode(ref AsduReader reader)
+        => AsduPrimitive.Decode<NetworkNumberQualityCodec, NetworkNumberQuality>(ref reader);
 
     /// <summary>
-    /// Decodes an <see cref="T.NetworkNumberQuality"/> value from the current reader position using a specific context tag.
+    /// Decodes a <see cref="NetworkNumberQuality"/> value from the current reader position using a specific context tag.
     /// </summary>
-    /// <param name="reader">The reader positioned at an enumerated primitive tag.</param>
+    /// <param name="reader">The reader positioned at a <see cref="NetworkNumberQuality"/> primitive tag.</param>
     /// <param name="tagNumber">The expected context tag number.</param>
-    /// <returns>The decoded enumerated value.</returns>
-    public static T.NetworkNumberQuality Decode(ref AsduReader reader, byte tagNumber)
-        => AsduPrimitive.Decode<NetworkNumberQualityCodec, T.NetworkNumberQuality>(ref reader, tagNumber);
+    /// <returns>The decoded <see cref="NetworkNumberQuality"/> value.</returns>
+    public static NetworkNumberQuality Decode(ref AsduReader reader, byte tagNumber)
+        => AsduPrimitive.Decode<NetworkNumberQualityCodec, NetworkNumberQuality>(ref reader, tagNumber);
 
     /// <summary>
-    /// Decodes an <see cref="T.NetworkNumberQuality"/> value from raw encoded bytes.
+    /// Decodes a <see cref="NetworkNumberQuality"/> value from raw encoded bytes.
     /// </summary>
-    /// <param name="source">The source payload bytes for the enumerated value.</param>
-    /// <returns>The decoded enumerated value.</returns>
-    /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="source"/> length is not supported.</exception>
-    public static T.NetworkNumberQuality DecodeValue(ReadOnlySpan<byte> source)
+    /// <param name="source">The source payload bytes for the <see cref="NetworkNumberQuality"/> value.</param>
+    /// <returns>The decoded <see cref="NetworkNumberQuality"/> value.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="source"/> length is not 1.</exception>
+    /// <exception cref="FormatException">Thrown when the encoded value is not 0 or 1.</exception>
+    public static NetworkNumberQuality DecodeValue(ReadOnlySpan<byte> source)
     {
         return source.Length switch
         {
-            AsduLength.Enumerated8 => (T.NetworkNumberQuality)AsduBinaryPrimitives.ReadUnsigned8(source),
             _ => throw new ArgumentOutOfRangeException(nameof(source))
         };
     }
 
     /// <summary>
-    /// Encodes an <see cref="T.NetworkNumberQuality"/> value using the application tag.
+    /// Encodes a <see cref="NetworkNumberQuality"/> value using the application tag.
     /// </summary>
     /// <param name="writer">The writer receiving the encoded value.</param>
     /// <param name="value">The value to encode.</param>
-    public static void Encode(ref AsduWriter writer, in T.NetworkNumberQuality value)
-        => AsduPrimitive.Encode<NetworkNumberQualityCodec, T.NetworkNumberQuality>(ref writer, value);
+    public static void Encode(ref AsduWriter writer, in NetworkNumberQuality value)
+        => AsduPrimitive.Encode<NetworkNumberQualityCodec, NetworkNumberQuality>(ref writer, value);
 
     /// <summary>
-    /// Encodes an <see cref="T.NetworkNumberQuality"/> value using a specific context tag.
+    /// Encodes a <see cref="NetworkNumberQuality"/> value using a specific context tag.
     /// </summary>
     /// <param name="writer">The writer receiving the encoded value.</param>
     /// <param name="tagNumber">The context tag number.</param>
     /// <param name="value">The value to encode.</param>
-    public static void Encode(ref AsduWriter writer, byte tagNumber, in T.NetworkNumberQuality value)
-        => AsduPrimitive.Encode<NetworkNumberQualityCodec, T.NetworkNumberQuality>(ref writer, tagNumber, value);
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in NetworkNumberQuality value)
+        => AsduPrimitive.Encode<NetworkNumberQualityCodec, NetworkNumberQuality>(ref writer, tagNumber, value);
 
     /// <summary>
-    /// Encodes an <see cref="T.NetworkNumberQuality"/> value into an already allocated payload span.
+    /// Encodes a <see cref="NetworkNumberQuality"/> value into an already allocated payload span.
     /// </summary>
-    /// <param name="destination">The destination payload bytes.</param>
+    /// <param name="destination">The destination payload span.</param>
     /// <param name="value">The value to encode.</param>
     /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="destination"/> length is not supported.</exception>
-    public static void EncodeValue(Span<byte> destination, in T.NetworkNumberQuality value)
+    public static void EncodeValue(Span<byte> destination, in NetworkNumberQuality value)
     {
         switch (destination.Length)
         {
-            case AsduLength.Enumerated8:
-                AsduBinaryPrimitives.WriteUnsigned8(destination, (byte)value);
-                break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(destination));
         }
     }
 
     /// <summary>
-    /// Gets the encoded payload length for an <see cref="T.NetworkNumberQuality"/> value.
+    /// Gets the encoded payload length for a <see cref="NetworkNumberQuality"/> value.
     /// </summary>
     /// <param name="value">The value whose payload length is requested.</param>
     /// <returns>The encoded payload length in bytes.</returns>
-    public static int GetEncodedValueLength(in T.NetworkNumberQuality value)
+    public static int GetEncodedValueLength(in NetworkNumberQuality value)
         => AsduLength.FromUnsigned8((byte)value);
 
     /// <summary>
@@ -92,8 +92,8 @@ public sealed class NetworkNumberQualityCodec :
     /// </summary>
     /// <param name="value">The value whose total encoded length is requested.</param>
     /// <returns>The total encoded length in bytes.</returns>
-    public static int GetEncodedLength(in T.NetworkNumberQuality value)
-        => AsduLength.Sum(TagNumber, GetEncodedValueLength(value));
+    public static int GetEncodedLength(in NetworkNumberQuality value)
+        => AsduLength.FromTagNumber(TagNumber) + GetEncodedValueLength(value);
 
     /// <summary>
     /// Gets the total encoded length including a specific context tag.
@@ -101,8 +101,8 @@ public sealed class NetworkNumberQualityCodec :
     /// <param name="value">The value whose total encoded length is requested.</param>
     /// <param name="tagNumber">The context tag number.</param>
     /// <returns>The total encoded length in bytes.</returns>
-    public static int GetEncodedLength(in T.NetworkNumberQuality value, byte tagNumber)
-        => AsduLength.Sum(tagNumber, GetEncodedValueLength(value));
+    public static int GetEncodedLength(in NetworkNumberQuality value, byte tagNumber)
+        => AsduLength.FromTagNumber(tagNumber) + GetEncodedValueLength(value);
 
     /// <summary>
     /// Determines whether the next value in the reader matches this codec's application tag.
@@ -110,7 +110,7 @@ public sealed class NetworkNumberQualityCodec :
     /// <param name="reader">The reader to inspect.</param>
     /// <returns><see langword="true"/> when the next tag matches; otherwise, <see langword="false"/>.</returns>
     public static bool Matches(ref AsduReader reader)
-        => reader.PeekApplicationTag(TagNumber);
+       => reader.PeekApplicationTag(TagNumber);
 
     /// <summary>
     /// Gets the BACnet application tag number handled by this codec.

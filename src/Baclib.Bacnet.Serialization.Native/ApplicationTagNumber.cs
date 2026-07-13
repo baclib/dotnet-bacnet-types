@@ -27,6 +27,7 @@ public enum ApplicationTagNumber : byte
     /// <summary>
     /// Signed integer value (tag number 3).
     /// </summary>
+    Integer = 3,
     Signed = 3,
 
     /// <summary>

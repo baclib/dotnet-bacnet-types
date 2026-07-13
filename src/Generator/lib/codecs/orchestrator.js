@@ -18,11 +18,11 @@ import { createBitStringCodecGenerator } from './bit-string.js';
 // restriction generators that reference them.
 const codecGeneratorFactories = Object.freeze([
     createFixedCodecGenerator,
-    createEnumCodecGenerator,
+    //createEnumCodecGenerator,
     createChoiceCodecGenerator,
     createSequenceCodecGenerator,
-    createRestrictedCodecGenerator,
-    createBitStringCodecGenerator
+    //createRestrictedCodecGenerator,
+    //createBitStringCodecGenerator
 ]);
 
 // Environment filters that scope individual codec generators to a single type. They must be

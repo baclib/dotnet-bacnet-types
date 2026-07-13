@@ -1,90 +1,90 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
-using T = Baclib.Bacnet.Types.Application;
+//using T = Baclib.Bacnet.Types.Application;
+
+using Action = Baclib.Bacnet.Types.Application.Action;
 
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 /// <summary>
-/// Provides BACnet ASDU primitive decoding and encoding for <see cref="T.ConfirmedServiceChoice"/> values.
+/// Provides BACnet ASDU primitive decoding and encoding for <see cref="ConfirmedServiceChoice"/> values.
 /// </summary>
 public sealed class ConfirmedServiceChoiceCodec :
-    IAsduElementCodec<T.ConfirmedServiceChoice>,
-    IAsduPrimitiveCodec<T.ConfirmedServiceChoice>
+    IAsduElementCodec<ConfirmedServiceChoice>,
+    IAsduPrimitiveCodec<ConfirmedServiceChoice>
 {
     /// <summary>
-    /// Decodes an <see cref="T.ConfirmedServiceChoice"/> value from the current reader position using the application tag.
+    /// Decodes a <see cref="ConfirmedServiceChoice"/> value from the current reader position using the application tag.
     /// </summary>
-    /// <param name="reader">The reader positioned at an enumerated primitive tag.</param>
-    /// <returns>The decoded enumerated value.</returns>
-    public static T.ConfirmedServiceChoice Decode(ref AsduReader reader)
-        => AsduPrimitive.Decode<ConfirmedServiceChoiceCodec, T.ConfirmedServiceChoice>(ref reader);
+    /// <param name="reader">The reader positioned at a <see cref="ConfirmedServiceChoice"/> primitive tag.</param>
+    /// <returns>The decoded <see cref="ConfirmedServiceChoice"/> value.</returns>
+    /// <exception cref="FormatException">Thrown when the encoded value is not valid.</exception>
+    public static ConfirmedServiceChoice Decode(ref AsduReader reader)
+        => AsduPrimitive.Decode<ConfirmedServiceChoiceCodec, ConfirmedServiceChoice>(ref reader);
 
     /// <summary>
-    /// Decodes an <see cref="T.ConfirmedServiceChoice"/> value from the current reader position using a specific context tag.
+    /// Decodes a <see cref="ConfirmedServiceChoice"/> value from the current reader position using a specific context tag.
     /// </summary>
-    /// <param name="reader">The reader positioned at an enumerated primitive tag.</param>
+    /// <param name="reader">The reader positioned at a <see cref="ConfirmedServiceChoice"/> primitive tag.</param>
     /// <param name="tagNumber">The expected context tag number.</param>
-    /// <returns>The decoded enumerated value.</returns>
-    public static T.ConfirmedServiceChoice Decode(ref AsduReader reader, byte tagNumber)
-        => AsduPrimitive.Decode<ConfirmedServiceChoiceCodec, T.ConfirmedServiceChoice>(ref reader, tagNumber);
+    /// <returns>The decoded <see cref="ConfirmedServiceChoice"/> value.</returns>
+    public static ConfirmedServiceChoice Decode(ref AsduReader reader, byte tagNumber)
+        => AsduPrimitive.Decode<ConfirmedServiceChoiceCodec, ConfirmedServiceChoice>(ref reader, tagNumber);
 
     /// <summary>
-    /// Decodes an <see cref="T.ConfirmedServiceChoice"/> value from raw encoded bytes.
+    /// Decodes a <see cref="ConfirmedServiceChoice"/> value from raw encoded bytes.
     /// </summary>
-    /// <param name="source">The source payload bytes for the enumerated value.</param>
-    /// <returns>The decoded enumerated value.</returns>
-    /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="source"/> length is not supported.</exception>
-    public static T.ConfirmedServiceChoice DecodeValue(ReadOnlySpan<byte> source)
+    /// <param name="source">The source payload bytes for the <see cref="ConfirmedServiceChoice"/> value.</param>
+    /// <returns>The decoded <see cref="ConfirmedServiceChoice"/> value.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="source"/> length is not 1.</exception>
+    /// <exception cref="FormatException">Thrown when the encoded value is not 0 or 1.</exception>
+    public static ConfirmedServiceChoice DecodeValue(ReadOnlySpan<byte> source)
     {
         return source.Length switch
         {
-            AsduLength.Enumerated8 => (T.ConfirmedServiceChoice)AsduBinaryPrimitives.ReadUnsigned8(source),
             _ => throw new ArgumentOutOfRangeException(nameof(source))
         };
     }
 
     /// <summary>
-    /// Encodes an <see cref="T.ConfirmedServiceChoice"/> value using the application tag.
+    /// Encodes a <see cref="ConfirmedServiceChoice"/> value using the application tag.
     /// </summary>
     /// <param name="writer">The writer receiving the encoded value.</param>
     /// <param name="value">The value to encode.</param>
-    public static void Encode(ref AsduWriter writer, in T.ConfirmedServiceChoice value)
-        => AsduPrimitive.Encode<ConfirmedServiceChoiceCodec, T.ConfirmedServiceChoice>(ref writer, value);
+    public static void Encode(ref AsduWriter writer, in ConfirmedServiceChoice value)
+        => AsduPrimitive.Encode<ConfirmedServiceChoiceCodec, ConfirmedServiceChoice>(ref writer, value);
 
     /// <summary>
-    /// Encodes an <see cref="T.ConfirmedServiceChoice"/> value using a specific context tag.
+    /// Encodes a <see cref="ConfirmedServiceChoice"/> value using a specific context tag.
     /// </summary>
     /// <param name="writer">The writer receiving the encoded value.</param>
     /// <param name="tagNumber">The context tag number.</param>
     /// <param name="value">The value to encode.</param>
-    public static void Encode(ref AsduWriter writer, byte tagNumber, in T.ConfirmedServiceChoice value)
-        => AsduPrimitive.Encode<ConfirmedServiceChoiceCodec, T.ConfirmedServiceChoice>(ref writer, tagNumber, value);
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in ConfirmedServiceChoice value)
+        => AsduPrimitive.Encode<ConfirmedServiceChoiceCodec, ConfirmedServiceChoice>(ref writer, tagNumber, value);
 
     /// <summary>
-    /// Encodes an <see cref="T.ConfirmedServiceChoice"/> value into an already allocated payload span.
+    /// Encodes a <see cref="ConfirmedServiceChoice"/> value into an already allocated payload span.
     /// </summary>
-    /// <param name="destination">The destination payload bytes.</param>
+    /// <param name="destination">The destination payload span.</param>
     /// <param name="value">The value to encode.</param>
     /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="destination"/> length is not supported.</exception>
-    public static void EncodeValue(Span<byte> destination, in T.ConfirmedServiceChoice value)
+    public static void EncodeValue(Span<byte> destination, in ConfirmedServiceChoice value)
     {
         switch (destination.Length)
         {
-            case AsduLength.Enumerated8:
-                AsduBinaryPrimitives.WriteUnsigned8(destination, (byte)value);
-                break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(destination));
         }
     }
 
     /// <summary>
-    /// Gets the encoded payload length for an <see cref="T.ConfirmedServiceChoice"/> value.
+    /// Gets the encoded payload length for a <see cref="ConfirmedServiceChoice"/> value.
     /// </summary>
     /// <param name="value">The value whose payload length is requested.</param>
     /// <returns>The encoded payload length in bytes.</returns>
-    public static int GetEncodedValueLength(in T.ConfirmedServiceChoice value)
+    public static int GetEncodedValueLength(in ConfirmedServiceChoice value)
         => AsduLength.FromUnsigned8((byte)value);
 
     /// <summary>
@@ -92,8 +92,8 @@ public sealed class ConfirmedServiceChoiceCodec :
     /// </summary>
     /// <param name="value">The value whose total encoded length is requested.</param>
     /// <returns>The total encoded length in bytes.</returns>
-    public static int GetEncodedLength(in T.ConfirmedServiceChoice value)
-        => AsduLength.Sum(TagNumber, GetEncodedValueLength(value));
+    public static int GetEncodedLength(in ConfirmedServiceChoice value)
+        => AsduLength.FromTagNumber(TagNumber) + GetEncodedValueLength(value);
 
     /// <summary>
     /// Gets the total encoded length including a specific context tag.
@@ -101,8 +101,8 @@ public sealed class ConfirmedServiceChoiceCodec :
     /// <param name="value">The value whose total encoded length is requested.</param>
     /// <param name="tagNumber">The context tag number.</param>
     /// <returns>The total encoded length in bytes.</returns>
-    public static int GetEncodedLength(in T.ConfirmedServiceChoice value, byte tagNumber)
-        => AsduLength.Sum(tagNumber, GetEncodedValueLength(value));
+    public static int GetEncodedLength(in ConfirmedServiceChoice value, byte tagNumber)
+        => AsduLength.FromTagNumber(tagNumber) + GetEncodedValueLength(value);
 
     /// <summary>
     /// Determines whether the next value in the reader matches this codec's application tag.
@@ -110,7 +110,7 @@ public sealed class ConfirmedServiceChoiceCodec :
     /// <param name="reader">The reader to inspect.</param>
     /// <returns><see langword="true"/> when the next tag matches; otherwise, <see langword="false"/>.</returns>
     public static bool Matches(ref AsduReader reader)
-        => reader.PeekApplicationTag(TagNumber);
+       => reader.PeekApplicationTag(TagNumber);
 
     /// <summary>
     /// Gets the BACnet application tag number handled by this codec.

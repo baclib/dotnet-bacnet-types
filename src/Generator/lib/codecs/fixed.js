@@ -5,211 +5,19 @@ import { writeFileSync } from 'fs';
 import fs from 'fs/promises';
 import path from 'path';
 import { TemplateEngine } from '../core/template-engine.js';
-import { codecTemplatesDir, codecsOutputDir, generatorRoot } from '../core/paths.js';
+import { codecTemplatesDir, codecsOutputDir, generatorRoot, workingDir } from '../core/paths.js';
+import { isBooleanObject } from 'util/types';
+import Handlebars from 'handlebars';
+import { predefinedCodecs, getUnsignedVariant, getIntegerVariant } from './primitive.js';
+import { toPascalCase, toCamelCase } from '../core/text.js';
 
+Handlebars.registerHelper('nameis', function (value, options) {
+    return this.name === value ? options.fn(this) : options.inverse(this);
+});
 
-const fixedCodecSpecs = Object.freeze([
-    {
-        className: 'BooleanCodec',
-        csharpType: 'bool',
-        tagName: 'Boolean',
-        template: 'codec-boolean-native'
-    },
-    {
-        className: 'NullCodec',
-        csharpType: 'Null',
-        tagName: 'Null',
-        template: 'codec-null-native'
-    },
-    {
-        className: 'DatePatternCodec',
-        csharpType: 'DatePattern',
-        tagName: 'DatePattern',
-        template: 'codec-date-pattern-native'
-    },
-    {
-        className: 'DateCodec',
-        csharpType: 'global::Baclib.Bacnet.Types.Application.Date',
-        tagName: 'DatePattern',
-        template: 'codec-date-pattern-native'
-    },
-    {
-        className: 'TimePatternCodec',
-        csharpType: 'TimePattern',
-        tagName: 'TimePattern',
-        template: 'codec-time-pattern-native'
-    },
-    {
-        className: 'TimeCodec',
-        csharpType: 'global::Baclib.Bacnet.Types.Application.Time',
-        tagName: 'TimePattern',
-        template: 'codec-time-pattern-native'
-    },
-    {
-        className: 'WeekNDayCodec',
-        csharpType: 'global::Baclib.Bacnet.Types.Application.WeekNDay',
-        tagName: 'OctetString',
-        template: 'codec-week-n-day-native'
-    },
-    {
-        className: 'ObjectIdentifierCodec',
-        csharpType: 'ObjectIdentifier',
-        tagName: 'ObjectIdentifier',
-        template: 'codec-object-identifier-native'
-    },
-    {
-        className: 'OctetStringCodec',
-        csharpType: 'OctetString',
-        tagName: 'OctetString',
-        template: 'codec-octet-string-native'
-    },
-    {
-        className: 'CharacterStringCodec',
-        csharpType: 'CharacterString',
-        tagName: 'CharacterString',
-        template: 'codec-character-string-native'
-    },
-    {
-        className: 'BitStringCodec',
-        csharpType: 'BitString',
-        tagName: 'BitString',
-        template: 'codec-bit-string-native'
-    },
-    {
-        className: 'Unsigned8Codec',
-        csharpType: 'byte',
-        tagName: 'Unsigned',
-        fromLengthMethod: 'FromUnsigned8',
-        levels: [
-            { lengthConst: 'Unsigned8', readMethod: 'ReadUnsigned8', writeMethod: 'WriteUnsigned8', castType: 'byte' }
-        ]
-    },
-    {
-        className: 'Unsigned16Codec',
-        csharpType: 'ushort',
-        tagName: 'Unsigned',
-        fromLengthMethod: 'FromUnsigned16',
-        levels: [
-            { lengthConst: 'Unsigned8', readMethod: 'ReadUnsigned8', writeMethod: 'WriteUnsigned8', castType: 'byte' },
-            { lengthConst: 'Unsigned16', readMethod: 'ReadUnsigned16', writeMethod: 'WriteUnsigned16', castType: 'ushort' }
-        ]
-    },
-    {
-        className: 'Unsigned32Codec',
-        csharpType: 'uint',
-        tagName: 'Unsigned',
-        fromLengthMethod: 'FromUnsigned32',
-        levels: [
-            { lengthConst: 'Unsigned8', readMethod: 'ReadUnsigned8', writeMethod: 'WriteUnsigned8', castType: 'byte' },
-            { lengthConst: 'Unsigned16', readMethod: 'ReadUnsigned16', writeMethod: 'WriteUnsigned16', castType: 'ushort' },
-            { lengthConst: 'Unsigned24', readMethod: 'ReadUnsigned24', writeMethod: 'WriteUnsigned24', castType: 'uint' },
-            { lengthConst: 'Unsigned32', readMethod: 'ReadUnsigned32', writeMethod: 'WriteUnsigned32', castType: 'uint' }
-        ]
-    },
-    {
-        className: 'Unsigned64Codec',
-        csharpType: 'ulong',
-        tagName: 'Unsigned',
-        fromLengthMethod: 'FromUnsigned64',
-        levels: [
-            { lengthConst: 'Unsigned8', readMethod: 'ReadUnsigned8', writeMethod: 'WriteUnsigned8', castType: 'byte' },
-            { lengthConst: 'Unsigned16', readMethod: 'ReadUnsigned16', writeMethod: 'WriteUnsigned16', castType: 'ushort' },
-            { lengthConst: 'Unsigned24', readMethod: 'ReadUnsigned24', writeMethod: 'WriteUnsigned24', castType: 'uint' },
-            { lengthConst: 'Unsigned32', readMethod: 'ReadUnsigned32', writeMethod: 'WriteUnsigned32', castType: 'uint' },
-            { lengthConst: 'Unsigned40', readMethod: 'ReadUnsigned40', writeMethod: 'WriteUnsigned40', castType: 'ulong' },
-            { lengthConst: 'Unsigned48', readMethod: 'ReadUnsigned48', writeMethod: 'WriteUnsigned48', castType: 'ulong' },
-            { lengthConst: 'Unsigned56', readMethod: 'ReadUnsigned56', writeMethod: 'WriteUnsigned56', castType: 'ulong' },
-            { lengthConst: 'Unsigned64', readMethod: 'ReadUnsigned64', writeMethod: 'WriteUnsigned64', castType: 'ulong' }
-        ]
-    },
-    {
-        className: 'Integer8Codec',
-        csharpType: 'sbyte',
-        tagName: 'Signed',
-        fromLengthMethod: 'FromInteger8',
-        levels: [
-            { lengthConst: 'Signed8', readMethod: 'ReadInteger8', writeMethod: 'WriteInteger8', castType: 'sbyte' }
-        ]
-    },
-    {
-        className: 'Integer16Codec',
-        csharpType: 'short',
-        tagName: 'Signed',
-        fromLengthMethod: 'FromInteger16',
-        levels: [
-            { lengthConst: 'Signed8', readMethod: 'ReadInteger8', writeMethod: 'WriteInteger8', castType: 'sbyte' },
-            { lengthConst: 'Signed16', readMethod: 'ReadInteger16', writeMethod: 'WriteInteger16', castType: 'short' }
-        ]
-    },
-    {
-        className: 'Integer32Codec',
-        csharpType: 'int',
-        tagName: 'Signed',
-        fromLengthMethod: 'FromInteger32',
-        levels: [
-            { lengthConst: 'Signed8', readMethod: 'ReadInteger8', writeMethod: 'WriteInteger8', castType: 'sbyte' },
-            { lengthConst: 'Signed16', readMethod: 'ReadInteger16', writeMethod: 'WriteInteger16', castType: 'short' },
-            { lengthConst: 'Signed24', readMethod: 'ReadInteger24', writeMethod: 'WriteInteger24', castType: 'int' },
-            { lengthConst: 'Signed32', readMethod: 'ReadInteger32', writeMethod: 'WriteInteger32', castType: 'int' }
-        ]
-    },
-    {
-        className: 'Integer64Codec',
-        csharpType: 'long',
-        tagName: 'Signed',
-        fromLengthMethod: 'FromInteger64',
-        levels: [
-            { lengthConst: 'Signed8', readMethod: 'ReadInteger8', writeMethod: 'WriteInteger8', castType: 'sbyte' },
-            { lengthConst: 'Signed16', readMethod: 'ReadInteger16', writeMethod: 'WriteInteger16', castType: 'short' },
-            { lengthConst: 'Signed24', readMethod: 'ReadInteger24', writeMethod: 'WriteInteger24', castType: 'int' },
-            { lengthConst: 'Signed32', readMethod: 'ReadInteger32', writeMethod: 'WriteInteger32', castType: 'int' },
-            { lengthConst: 'Signed40', readMethod: 'ReadInteger40', writeMethod: 'WriteInteger40', castType: 'long' },
-            { lengthConst: 'Signed48', readMethod: 'ReadInteger48', writeMethod: 'WriteInteger48', castType: 'long' },
-            { lengthConst: 'Signed56', readMethod: 'ReadInteger56', writeMethod: 'WriteInteger56', castType: 'long' },
-            { lengthConst: 'Signed64', readMethod: 'ReadInteger64', writeMethod: 'WriteInteger64', castType: 'long' }
-        ]
-    },
-    {
-        className: 'UnsignedCodec',
-        csharpType: 'uint',
-        tagName: 'Unsigned',
-        fromLengthMethod: 'FromUnsigned32',
-        levels: [
-            { lengthConst: 'Unsigned8', readMethod: 'ReadUnsigned8', writeMethod: 'WriteUnsigned8', castType: 'byte' },
-            { lengthConst: 'Unsigned16', readMethod: 'ReadUnsigned16', writeMethod: 'WriteUnsigned16', castType: 'ushort' },
-            { lengthConst: 'Unsigned24', readMethod: 'ReadUnsigned24', writeMethod: 'WriteUnsigned24', castType: 'uint' },
-            { lengthConst: 'Unsigned32', readMethod: 'ReadUnsigned32', writeMethod: 'WriteUnsigned32', castType: 'uint' }
-        ]
-    },
-    {
-        className: 'IntegerCodec',
-        csharpType: 'int',
-        tagName: 'Signed',
-        fromLengthMethod: 'FromInteger32',
-        levels: [
-            { lengthConst: 'Signed8', readMethod: 'ReadInteger8', writeMethod: 'WriteInteger8', castType: 'sbyte' },
-            { lengthConst: 'Signed16', readMethod: 'ReadInteger16', writeMethod: 'WriteInteger16', castType: 'short' },
-            { lengthConst: 'Signed24', readMethod: 'ReadInteger24', writeMethod: 'WriteInteger24', castType: 'int' },
-            { lengthConst: 'Signed32', readMethod: 'ReadInteger32', writeMethod: 'WriteInteger32', castType: 'int' }
-        ]
-    },
-    {
-        className: 'RealCodec',
-        csharpType: 'float',
-        tagName: 'Real',
-        fixedLengthConst: 'Real',
-        fixedReadMethod: 'ReadReal',
-        fixedWriteMethod: 'WriteReal'
-    },
-    {
-        className: 'DoubleCodec',
-        csharpType: 'double',
-        tagName: 'Double',
-        fixedLengthConst: 'Double',
-        fixedReadMethod: 'ReadDouble',
-        fixedWriteMethod: 'WriteDouble'
-    }
-]);
+BigInt.prototype.toJSON = function () {
+    return Number(this);
+};
 
 class FixedCodecTransformer extends TemplateEngine {
     constructor() {
@@ -218,31 +26,141 @@ class FixedCodecTransformer extends TemplateEngine {
             ? path.resolve(generatorRoot, process.env.CODEC_OUTPUT_DIR)
             : codecsOutputDir;
         this.templatesDir = codecTemplatesDir;
+        this.primitiveCodecs = [...predefinedCodecs];
+        this.predefinedNames = new Set(predefinedCodecs.map(codec => codec.name));
     }
 
-    startDefinition(context) {}
+    inferBounds(traits) {
+        const hasMinimum = Object.hasOwn(traits, 'minimum');
+        const hasMaximum = Object.hasOwn(traits, 'maximum');
+        if (traits.values) {
+            const constants = traits.values.map((value) => value.constant);
+            const minimum = hasMinimum ? traits.minimum : Math.min(...constants);
+            const maximum = hasMaximum ? traits.maximum : Math.max(...constants);
+            return { minimum, maximum };
+        }
+        else if (hasMinimum || hasMaximum) {
+            const minimum = hasMinimum ? traits.minimum : null;
+            const maximum = hasMaximum ? traits.maximum : null;
+            return { minimum, maximum };
+        }
+    }
 
-    endDefinition(context) {}
+    inferLength(traits) {
+        const length = traits.length;
+        if (Number.isFinite(length)) {
+            return { minimum: length, maximum: length };
+        }
+        const hasLength = Object.hasOwn(traits, 'length');
+        const hasMinimum = hasLength && Object.hasOwn(length, 'minimum');
+        const hasMaximum = hasLength && Object.hasOwn(length, 'maximum');
+        if (traits.bits) {
+            const positions = traits.bits.map((bit) => bit.position);
+            const maximum = hasMaximum ? length.maximum : Math.max(...positions) + 1;
+            const minimum = hasMinimum ? length.minimum : maximum;
+            return { minimum, maximum };
+        }
+        else if (hasMinimum || hasMaximum) {
+            const minimum = hasMinimum ? length.minimum : null;
+            const maximum = hasMaximum ? length.maximum : null;
+            return { minimum, maximum };
+        }
+    }
 
-    startTraits(context) {}
+    pushPrimitiveCodec(fullname, base, context) {
 
-    endTraits(context) {}
+        const bounds = this.inferBounds(context.traits);
+        const length = this.inferLength(context.traits);
+        const typeName = fullname.split('.').map((part, index) => (index ? 'T' : '') + toPascalCase(part)).join('.')
 
-    startItem(context) {}
+        const variant = (bounds && (base === 'unsigned' || base === 'enumerated')) ? getUnsignedVariant(bounds.minimum, bounds.maximum) : null;
+ 
 
-    endItem(context) {}
+        const isBitString = base === 'bit-string';
+        const isEnumerated = base === 'enumerated';
+
+        const fixedSize = base === 'real';
+        const lengthConstant = base === 'real' ? 'Real' : null;
+
+        const baseTypeDef = predefinedCodecs.find(codec => codec.name === base);
+        if (baseTypeDef.underlyingType) {
+
+            if (baseTypeDef.name === 'enumerated') {
+                const vary = getUnsignedVariant(bounds.minimum, bounds.maximum);
+                console.log(fullname.padEnd(60), vary.type, vary.size);
+            }
+
+
+            //console.log(fullname.padEnd(40), bName, vType, vSize, vary);
+        }
+
+
+        this.primitiveCodecs.push({
+            name: fullname,
+            typeName,
+            className: `${typeName}Codec`.replaceAll('.', ''),
+            csharpType: typeName,
+            ...(bounds ? { bounds } : {}),
+            ...(length ? { length } : {}),
+            ...(variant ? { variant } : {}),
+            ...(isBitString ? { isBitString } : {}),
+            ...(isEnumerated ? { isEnumerated } : {}),
+            ...(fixedSize ? { fixedSize } : {}),
+            ...(lengthConstant ? { lengthConstant } : {}),
+            tagName: toPascalCase(base),
+
+        });
+    }
+   
+
+    startDefinition(context) {
+        const name = context.definition.name;
+        if (name === 'string' || name === 'create-object-ack') {
+            return;
+        }
+
+        if (!context.isPrimitive && !this.predefinedNames.has(name)) {
+            const typeName = context.definition.type.base ?? context.definition.type;
+            if (this.predefinedNames.has(typeName)) {
+                this.pushPrimitiveCodec(name, typeName, context);
+            }
+        }
+    }
+
+    endDefinition(context) { }
+
+    startTraits(context) {
+        if (!context.definition) {
+            const traits = context.traits;
+            if (Object.keys(traits).length === 2 && 'base' in traits && 'series' in traits) {
+                return;
+            }
+            const typeName = context.traits.base;
+            if (this.predefinedNames.has(typeName)) {
+                this.pushPrimitiveCodec(context.fullname, typeName, context);
+            }
+        }
+    }
+
+    endTraits(context) { }
+
+    startItem(context) { }
+
+    endItem(context) { }
 
     async start() {
         await fs.mkdir(this.directory, { recursive: true });
     }
 
     async afterProcessing() {
-        for (const codec of fixedCodecSpecs) {
-            const fileName = `${codec.className}.cs`;
-            const templateName = codec.template ?? 'codec-fixed-native';
-            const templatePath = path.join(this.templatesDir, `${templateName}.hbs`);
+        const debugOutputPath = path.join(workingDir, 'fixed-codecs-debug.json');
+        await fs.writeFile(debugOutputPath, JSON.stringify(this.primitiveCodecs, null, 4) + '\n', 'utf-8');
+        for (const codec of this.primitiveCodecs) {
+            // console.log(codec);
+            const templatePath = path.join(this.templatesDir, 'primitive.hbs');
             const content = await this.render(templatePath, codec);
-            writeFileSync(path.join(this.directory, fileName), content);
+            const filePath = path.join(this.directory, `${codec.className}.cs`);
+            writeFileSync(filePath, content);
         }
     }
 }

@@ -25,7 +25,7 @@ namespace Baclib.Bacnet.Types;
 /// </para>
 /// <para>
 /// <b>Usage:</b> Use <see cref="Default"/> for standard encoding, or create a custom instance
-/// and assign it to <see cref="CharacterString.Encoder"/> during application startup.
+/// and assign it to <see xyzcref="CharacterString.Encoder"/> during application startup.
 /// </para>
 /// </remarks>
 /// <example>

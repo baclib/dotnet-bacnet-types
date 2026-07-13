@@ -1,44 +1,120 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+//using T = Baclib.Bacnet.Types.Application;
+
+using Action = Baclib.Bacnet.Types.Application.Action;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
-// Restriction wrapper codec. Delegates wire handling to CharacterStringCodec and projects the
-// underlying value to and from global::Baclib.Bacnet.Types.Application.ReinitializeDeviceRequest.TPassword.
+/// <summary>
+/// Provides BACnet ASDU primitive decoding and encoding for <see cref="ReinitializeDeviceRequest.TPassword"/> values.
+/// </summary>
 public sealed class ReinitializeDeviceRequestTPasswordCodec :
-    IAsduElementCodec<global::Baclib.Bacnet.Types.Application.ReinitializeDeviceRequest.TPassword>,
-    IAsduPrimitiveCodec<global::Baclib.Bacnet.Types.Application.ReinitializeDeviceRequest.TPassword>
+    IAsduElementCodec<ReinitializeDeviceRequest.TPassword>,
+    IAsduPrimitiveCodec<ReinitializeDeviceRequest.TPassword>
 {
-    public static global::Baclib.Bacnet.Types.Application.ReinitializeDeviceRequest.TPassword Decode(ref AsduReader reader)
-        => AsduPrimitive.Decode<ReinitializeDeviceRequestTPasswordCodec, global::Baclib.Bacnet.Types.Application.ReinitializeDeviceRequest.TPassword>(ref reader);
+    /// <summary>
+    /// Decodes a <see cref="ReinitializeDeviceRequest.TPassword"/> value from the current reader position using the application tag.
+    /// </summary>
+    /// <param name="reader">The reader positioned at a <see cref="ReinitializeDeviceRequest.TPassword"/> primitive tag.</param>
+    /// <returns>The decoded <see cref="ReinitializeDeviceRequest.TPassword"/> value.</returns>
+    /// <exception cref="FormatException">Thrown when the encoded value is not valid.</exception>
+    public static ReinitializeDeviceRequest.TPassword Decode(ref AsduReader reader)
+        => AsduPrimitive.Decode<ReinitializeDeviceRequestTPasswordCodec, ReinitializeDeviceRequest.TPassword>(ref reader);
 
-    public static global::Baclib.Bacnet.Types.Application.ReinitializeDeviceRequest.TPassword Decode(ref AsduReader reader, byte tagNumber)
-        => AsduPrimitive.Decode<ReinitializeDeviceRequestTPasswordCodec, global::Baclib.Bacnet.Types.Application.ReinitializeDeviceRequest.TPassword>(ref reader, tagNumber);
+    /// <summary>
+    /// Decodes a <see cref="ReinitializeDeviceRequest.TPassword"/> value from the current reader position using a specific context tag.
+    /// </summary>
+    /// <param name="reader">The reader positioned at a <see cref="ReinitializeDeviceRequest.TPassword"/> primitive tag.</param>
+    /// <param name="tagNumber">The expected context tag number.</param>
+    /// <returns>The decoded <see cref="ReinitializeDeviceRequest.TPassword"/> value.</returns>
+    public static ReinitializeDeviceRequest.TPassword Decode(ref AsduReader reader, byte tagNumber)
+        => AsduPrimitive.Decode<ReinitializeDeviceRequestTPasswordCodec, ReinitializeDeviceRequest.TPassword>(ref reader, tagNumber);
 
-    public static global::Baclib.Bacnet.Types.Application.ReinitializeDeviceRequest.TPassword DecodeValue(ReadOnlySpan<byte> source)
-        => (global::Baclib.Bacnet.Types.Application.ReinitializeDeviceRequest.TPassword)CharacterStringCodec.DecodeValue(source);
+    /// <summary>
+    /// Decodes a <see cref="ReinitializeDeviceRequest.TPassword"/> value from raw encoded bytes.
+    /// </summary>
+    /// <param name="source">The source payload bytes for the <see cref="ReinitializeDeviceRequest.TPassword"/> value.</param>
+    /// <returns>The decoded <see cref="ReinitializeDeviceRequest.TPassword"/> value.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="source"/> length is not 1.</exception>
+    /// <exception cref="FormatException">Thrown when the encoded value is not 0 or 1.</exception>
+    public static ReinitializeDeviceRequest.TPassword DecodeValue(ReadOnlySpan<byte> source)
+    {
+        return source.Length switch
+        {
+            _ => throw new ArgumentOutOfRangeException(nameof(source))
+        };
+    }
 
-    public static void Encode(ref AsduWriter writer, in global::Baclib.Bacnet.Types.Application.ReinitializeDeviceRequest.TPassword value)
-        => AsduPrimitive.Encode<ReinitializeDeviceRequestTPasswordCodec, global::Baclib.Bacnet.Types.Application.ReinitializeDeviceRequest.TPassword>(ref writer, value);
+    /// <summary>
+    /// Encodes a <see cref="ReinitializeDeviceRequest.TPassword"/> value using the application tag.
+    /// </summary>
+    /// <param name="writer">The writer receiving the encoded value.</param>
+    /// <param name="value">The value to encode.</param>
+    public static void Encode(ref AsduWriter writer, in ReinitializeDeviceRequest.TPassword value)
+        => AsduPrimitive.Encode<ReinitializeDeviceRequestTPasswordCodec, ReinitializeDeviceRequest.TPassword>(ref writer, value);
 
-    public static void Encode(ref AsduWriter writer, byte tagNumber, in global::Baclib.Bacnet.Types.Application.ReinitializeDeviceRequest.TPassword value)
-        => AsduPrimitive.Encode<ReinitializeDeviceRequestTPasswordCodec, global::Baclib.Bacnet.Types.Application.ReinitializeDeviceRequest.TPassword>(ref writer, tagNumber, value);
+    /// <summary>
+    /// Encodes a <see cref="ReinitializeDeviceRequest.TPassword"/> value using a specific context tag.
+    /// </summary>
+    /// <param name="writer">The writer receiving the encoded value.</param>
+    /// <param name="tagNumber">The context tag number.</param>
+    /// <param name="value">The value to encode.</param>
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in ReinitializeDeviceRequest.TPassword value)
+        => AsduPrimitive.Encode<ReinitializeDeviceRequestTPasswordCodec, ReinitializeDeviceRequest.TPassword>(ref writer, tagNumber, value);
 
-    public static void EncodeValue(Span<byte> destination, in global::Baclib.Bacnet.Types.Application.ReinitializeDeviceRequest.TPassword value)
-        => CharacterStringCodec.EncodeValue(destination, value.Value);
+    /// <summary>
+    /// Encodes a <see cref="ReinitializeDeviceRequest.TPassword"/> value into an already allocated payload span.
+    /// </summary>
+    /// <param name="destination">The destination payload span.</param>
+    /// <param name="value">The value to encode.</param>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="destination"/> length is not supported.</exception>
+    public static void EncodeValue(Span<byte> destination, in ReinitializeDeviceRequest.TPassword value)
+    {
+        switch (destination.Length)
+        {
+            default:
+                throw new ArgumentOutOfRangeException(nameof(destination));
+        }
+    }
 
-    public static int GetEncodedValueLength(in global::Baclib.Bacnet.Types.Application.ReinitializeDeviceRequest.TPassword value)
-        => CharacterStringCodec.GetEncodedValueLength(value.Value);
+    /// <summary>
+    /// Gets the encoded payload length for a <see cref="ReinitializeDeviceRequest.TPassword"/> value.
+    /// </summary>
+    /// <param name="value">The value whose payload length is requested.</param>
+    /// <returns>The encoded payload length in bytes.</returns>
+    public static int GetEncodedValueLength(in ReinitializeDeviceRequest.TPassword value)
+        => AsduLength.FromCharacterString(value);
 
-    public static int GetEncodedLength(in global::Baclib.Bacnet.Types.Application.ReinitializeDeviceRequest.TPassword value)
-        => AsduLength.Sum(TagNumber, GetEncodedValueLength(value));
+    /// <summary>
+    /// Gets the total encoded length including the application tag.
+    /// </summary>
+    /// <param name="value">The value whose total encoded length is requested.</param>
+    /// <returns>The total encoded length in bytes.</returns>
+    public static int GetEncodedLength(in ReinitializeDeviceRequest.TPassword value)
+        => AsduLength.FromTagNumber(TagNumber) + GetEncodedValueLength(value);
 
-    public static int GetEncodedLength(in global::Baclib.Bacnet.Types.Application.ReinitializeDeviceRequest.TPassword value, byte tagNumber)
-        => AsduLength.Sum(tagNumber, GetEncodedValueLength(value));
+    /// <summary>
+    /// Gets the total encoded length including a specific context tag.
+    /// </summary>
+    /// <param name="value">The value whose total encoded length is requested.</param>
+    /// <param name="tagNumber">The context tag number.</param>
+    /// <returns>The total encoded length in bytes.</returns>
+    public static int GetEncodedLength(in ReinitializeDeviceRequest.TPassword value, byte tagNumber)
+        => AsduLength.FromTagNumber(tagNumber) + GetEncodedValueLength(value);
 
+    /// <summary>
+    /// Determines whether the next value in the reader matches this codec's application tag.
+    /// </summary>
+    /// <param name="reader">The reader to inspect.</param>
+    /// <returns><see langword="true"/> when the next tag matches; otherwise, <see langword="false"/>.</returns>
     public static bool Matches(ref AsduReader reader)
-        => reader.PeekApplicationTag(TagNumber);
+       => reader.PeekApplicationTag(TagNumber);
 
+    /// <summary>
+    /// Gets the BACnet application tag number handled by this codec.
+    /// </summary>
     public static ApplicationTagNumber TagNumber
-        => CharacterStringCodec.TagNumber;
+        => ApplicationTagNumber.CharacterString;
 }

@@ -1,71 +1,137 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+//using T = Baclib.Bacnet.Types.Application;
+
+using Action = Baclib.Bacnet.Types.Application.Action;
+
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 /// <summary>
-/// Provides BACnet ASDU primitive decoding and encoding for <see cref="{{aliasTypeRef}}"/> values.
+/// Provides BACnet ASDU primitive decoding and encoding for <see cref="{{typeName}}"/> values.
 /// </summary>
-public sealed class {{codecName}} :
-    IAsduElementCodec<{{typeName}}>,
-    IAsduPrimitiveCodec<{{typeName}}>
+public sealed class {{className}} :
+    IAsduElementCodec<{{csharpType}}>,
+    IAsduPrimitiveCodec<{{csharpType}}>
 {
     /// <summary>
-    /// Decodes a <see cref="{{typeName}}"/> value from the current reader position using the application tag.
+    /// Decodes a <see cref="{{csharpType}}"/> value from the current reader position using the application tag.
     /// </summary>
-    /// <param name="reader">The reader positioned at a <see cref="{{typeName}}"/> primitive tag.</param>
-    /// <returns>The decoded <see cref="{{typeName}}"/> value.</returns>
+    /// <param name="reader">The reader positioned at a <see cref="{{csharpType}}"/> primitive tag.</param>
+    /// <returns>The decoded <see cref="{{csharpType}}"/> value.</returns>
     /// <exception cref="FormatException">Thrown when the encoded value is not valid.</exception>
-    public static {{typeName}} Decode(ref AsduReader reader)
-        => AsduPrimitive.Decode<{{codecName}}, {{typeName}}>(ref reader);
+    public static {{csharpType}} Decode(ref AsduReader reader)
+{{#unless isBoolean}}
+        => AsduPrimitive.Decode<{{className}}, {{csharpType}}>(ref reader);
+{{else}}
+    {
+        var value = reader.ReadByte();
+        return value switch
+        {
+            0x10 => false,
+            0x11 => true,
+            _ => throw new InvalidDataException(nameof(reader))
+        };
+    }
+{{/unless}}
 
     /// <summary>
-    /// Decodes a <see cref="{{typeName}}"/> value from the current reader position using a specific context tag.
+    /// Decodes a <see cref="{{csharpType}}"/> value from the current reader position using a specific context tag.
     /// </summary>
-    /// <param name="reader">The reader positioned at a <see cref="{{typeName}}"/> primitive tag.</param>
+    /// <param name="reader">The reader positioned at a <see cref="{{csharpType}}"/> primitive tag.</param>
     /// <param name="tagNumber">The expected context tag number.</param>
-    /// <returns>The decoded <see cref="{{typeName}}"/> value.</returns>
-    public static {{typeName}} Decode(ref AsduReader reader, byte tagNumber)
-        => AsduPrimitive.Decode<{{codecName}}, {{typeName}}>(ref reader, tagNumber);
+    /// <returns>The decoded <see cref="{{csharpType}}"/> value.</returns>
+    public static {{csharpType}} Decode(ref AsduReader reader, byte tagNumber)
+        => AsduPrimitive.Decode<{{className}}, {{csharpType}}>(ref reader, tagNumber);
 
     /// <summary>
-    /// Decodes a <see cref="{{typeName}}"/> value from raw encoded bytes.
+    /// Decodes a <see cref="{{csharpType}}"/> value from raw encoded bytes.
     /// </summary>
-    /// <param name="source">The source payload bytes for the <see cref="{{typeName}}"/> value.</param>
-    /// <returns>The decoded <see cref="{{typeName}}"/> value.</returns>
+    /// <param name="source">The source payload bytes for the <see cref="{{csharpType}}"/> value.</param>
+    /// <returns>The decoded <see cref="{{csharpType}}"/> value.</returns>
     /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="source"/> length is not 1.</exception>
     /// <exception cref="FormatException">Thrown when the encoded value is not 0 or 1.</exception>
-    public static {{typeName}} DecodeValue(ReadOnlySpan<byte> source)
+    public static {{csharpType}} DecodeValue(ReadOnlySpan<byte> source)
     {
-        {{_todo_decode_}}
+{{#if hasFixedDataLength}}
+        if (source.Length != AsduLength.{{tagName}})
+        {
+            throw new ArgumentOutOfRangeException(nameof(source));
+        }
+    {{#if isNull}}
+        return {{csharpType}}.Value;
+    {{else unless fields}}
+        return AsduBinaryPrimitives.Read{{tagName}}(source);
+    {{else}}
+        {{#each fields}}
+        var {{this}} = source[{{@index}}];
+        {{/each}}
+        return new {{csharpType}}({{#each fields}}{{this}}{{#unless @last}}, {{/unless}}{{/each}});
+    {{/if}}
+{{else if hasStringDataLength}}
+        return new {{csharpType}}(source.ToArray());
+{{else}}
+        return source.Length switch
+        {
+    {{#each variants}}
+            AsduLength.{{../tagName}}{{this}} => AsduBinaryPrimitives.Read{{../tagName}}{{this}}(source),
+    {{/each}}
+            _ => throw new ArgumentOutOfRangeException(nameof(source))
+        };
+{{/if}}
     }
 
     /// <summary>
-    /// Encodes a <see cref="{{typeName}}"/> value using the application tag.
+    /// Encodes a <see cref="{{csharpType}}"/> value using the application tag.
     /// </summary>
     /// <param name="writer">The writer receiving the encoded value.</param>
     /// <param name="value">The value to encode.</param>
-    public static void Encode(ref AsduWriter writer, in {{typeName}} value)
-        => AsduPrimitive.Encode<{{codecName}}, {{typeName}}>(ref writer, value);
+    public static void Encode(ref AsduWriter writer, in {{csharpType}} value)
+        => AsduPrimitive.Encode<{{className}}, {{csharpType}}>(ref writer, value);
 
     /// <summary>
-    /// Encodes a <see cref="{{typeName}}"/> value using a specific context tag.
+    /// Encodes a <see cref="{{csharpType}}"/> value using a specific context tag.
     /// </summary>
     /// <param name="writer">The writer receiving the encoded value.</param>
     /// <param name="tagNumber">The context tag number.</param>
     /// <param name="value">The value to encode.</param>
-    public static void Encode(ref AsduWriter writer, byte tagNumber, in {{typeName}} value)
-        => AsduPrimitive.Encode<{{codecName}}, {{typeName}}>(ref writer, tagNumber, value);
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in {{csharpType}} value)
+        => AsduPrimitive.Encode<{{className}}, {{csharpType}}>(ref writer, tagNumber, value);
 
     /// <summary>
-    /// Encodes a <see cref="{{typeName}}"/> value into an already allocated payload span.
+    /// Encodes a <see cref="{{csharpType}}"/> value into an already allocated payload span.
     /// </summary>
     /// <param name="destination">The destination payload span.</param>
     /// <param name="value">The value to encode.</param>
     /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="destination"/> length is not supported.</exception>
-    public static void EncodeValue(Span<byte> destination, in {{typeName}} value)
+    public static void EncodeValue(Span<byte> destination, in {{csharpType}} value)
     {
-        {{_todo_encode_}}
+{{#if hasFixedDataLength}}
+        if (destination.Length != AsduLength.{{tagName}})
+        {
+            throw new ArgumentOutOfRangeException(nameof(destination));
+        }
+    {{#unless fields}}
+        AsduBinaryPrimitives.Write{{tagName}}(destination, value);
+    {{else}}
+        {{#each fields}}
+        destination[{{@index}}] = value.{{this}};
+        {{/each}}
+    {{/unless}}
+{{else if hasStringDataLength}}
+        value.CopyTo(destination);
+{{else}}
+        switch (destination.Length)
+        {
+    {{#each variants}}
+            case AsduLength.{{../tagName}}{{this}}:
+                AsduBinaryPrimitives.Write{{../tagName}}{{this}}(destination, value);
+                break;
+    {{/each}}
+            default:
+                throw new ArgumentOutOfRangeException(nameof(destination));
+        }
+{{/if}}
     }
 
     /// <summary>
@@ -73,15 +139,21 @@ public sealed class {{codecName}} :
     /// </summary>
     /// <param name="value">The value whose payload length is requested.</param>
     /// <returns>The encoded payload length in bytes.</returns>
-    public static int GetEncodedValueLength(in {{typeName}} value)
-        => AsduLength.Boolean;
+    public static int GetEncodedValueLength(in {{csharpType}} value)
+{{#if isBitString}}
+        => throw new NotSupportedException("BitString length is not supported.");
+{{else if isEnumerated}}
+        => AsduLength.FromUnsigned{{variant.size}}(({{variant.type}})value);
+{{else}}
+        => AsduLength.{{#if lengthConstant}}{{lengthConstant}}{{else}}From{{tagName}}{{variant.size}}(value){{/if}};
+{{/if}}
 
     /// <summary>
     /// Gets the total encoded length including the application tag.
     /// </summary>
     /// <param name="value">The value whose total encoded length is requested.</param>
     /// <returns>The total encoded length in bytes.</returns>
-    public static int GetEncodedLength(in {{typeName}} value)
+    public static int GetEncodedLength(in {{csharpType}} value)
         => AsduLength.FromTagNumber(TagNumber) + GetEncodedValueLength(value);
 
     /// <summary>
@@ -90,7 +162,7 @@ public sealed class {{codecName}} :
     /// <param name="value">The value whose total encoded length is requested.</param>
     /// <param name="tagNumber">The context tag number.</param>
     /// <returns>The total encoded length in bytes.</returns>
-    public static int GetEncodedLength(in {{typeName}} value, byte tagNumber)
+    public static int GetEncodedLength(in {{csharpType}} value, byte tagNumber)
         => AsduLength.FromTagNumber(tagNumber) + GetEncodedValueLength(value);
 
     /// <summary>
@@ -99,11 +171,11 @@ public sealed class {{codecName}} :
     /// <param name="reader">The reader to inspect.</param>
     /// <returns><see langword="true"/> when the next tag matches; otherwise, <see langword="false"/>.</returns>
     public static bool Matches(ref AsduReader reader)
-        => reader.PeekApplicationTag(TagNumber);
+       => reader.PeekApplicationTag(TagNumber);
 
     /// <summary>
     /// Gets the BACnet application tag number handled by this codec.
     /// </summary>
     public static ApplicationTagNumber TagNumber
-        => ApplicationTagNumber.{{_todo_}};
+        => ApplicationTagNumber.{{tagName}};
 }

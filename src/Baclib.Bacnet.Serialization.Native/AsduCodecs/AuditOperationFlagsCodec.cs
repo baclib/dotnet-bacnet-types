@@ -1,93 +1,99 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
-using T = Baclib.Bacnet.Types.Application;
+//using T = Baclib.Bacnet.Types.Application;
+
+using Action = Baclib.Bacnet.Types.Application.Action;
 
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 /// <summary>
-/// Provides BACnet ASDU primitive decoding and encoding for <see cref="T.AuditOperationFlags"/> values.
+/// Provides BACnet ASDU primitive decoding and encoding for <see cref="AuditOperationFlags"/> values.
 /// </summary>
 public sealed class AuditOperationFlagsCodec :
-    IAsduElementCodec<T.AuditOperationFlags>,
-    IAsduPrimitiveCodec<T.AuditOperationFlags>
+    IAsduElementCodec<AuditOperationFlags>,
+    IAsduPrimitiveCodec<AuditOperationFlags>
 {
     /// <summary>
-    /// Decodes a <see cref="T.AuditOperationFlags"/> value from the current reader position using the application tag.
+    /// Decodes a <see cref="AuditOperationFlags"/> value from the current reader position using the application tag.
     /// </summary>
-    /// <param name="reader">The reader positioned at a bit string primitive tag.</param>
-    /// <returns>The decoded value.</returns>
-    public static T.AuditOperationFlags Decode(ref AsduReader reader)
-        => AsduPrimitive.Decode<AuditOperationFlagsCodec, T.AuditOperationFlags>(ref reader);
+    /// <param name="reader">The reader positioned at a <see cref="AuditOperationFlags"/> primitive tag.</param>
+    /// <returns>The decoded <see cref="AuditOperationFlags"/> value.</returns>
+    /// <exception cref="FormatException">Thrown when the encoded value is not valid.</exception>
+    public static AuditOperationFlags Decode(ref AsduReader reader)
+        => AsduPrimitive.Decode<AuditOperationFlagsCodec, AuditOperationFlags>(ref reader);
 
     /// <summary>
-    /// Decodes a <see cref="T.AuditOperationFlags"/> value from the current reader position using a specific context tag.
+    /// Decodes a <see cref="AuditOperationFlags"/> value from the current reader position using a specific context tag.
     /// </summary>
-    /// <param name="reader">The reader positioned at a bit string primitive tag.</param>
+    /// <param name="reader">The reader positioned at a <see cref="AuditOperationFlags"/> primitive tag.</param>
     /// <param name="tagNumber">The expected context tag number.</param>
-    /// <returns>The decoded value.</returns>
-    public static T.AuditOperationFlags Decode(ref AsduReader reader, byte tagNumber)
-        => AsduPrimitive.Decode<AuditOperationFlagsCodec, T.AuditOperationFlags>(ref reader, tagNumber);
+    /// <returns>The decoded <see cref="AuditOperationFlags"/> value.</returns>
+    public static AuditOperationFlags Decode(ref AsduReader reader, byte tagNumber)
+        => AsduPrimitive.Decode<AuditOperationFlagsCodec, AuditOperationFlags>(ref reader, tagNumber);
 
     /// <summary>
-    /// Decodes a <see cref="T.AuditOperationFlags"/> value from raw encoded bytes.
+    /// Decodes a <see cref="AuditOperationFlags"/> value from raw encoded bytes.
     /// </summary>
-    /// <param name="source">The source payload bytes for the value.</param>
-    /// <returns>The decoded value.</returns>
-    public static T.AuditOperationFlags DecodeValue(ReadOnlySpan<byte> source)
+    /// <param name="source">The source payload bytes for the <see cref="AuditOperationFlags"/> value.</param>
+    /// <returns>The decoded <see cref="AuditOperationFlags"/> value.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="source"/> length is not 1.</exception>
+    /// <exception cref="FormatException">Thrown when the encoded value is not 0 or 1.</exception>
+    public static AuditOperationFlags DecodeValue(ReadOnlySpan<byte> source)
     {
-        var bitString = new BitString(source);
-        var flags = ReadFlags(bitString.Flags);
-        return new T.AuditOperationFlags(flags, (byte)bitString.Length);
+        return source.Length switch
+        {
+            _ => throw new ArgumentOutOfRangeException(nameof(source))
+        };
     }
 
     /// <summary>
-    /// Encodes a <see cref="T.AuditOperationFlags"/> value using the application tag.
+    /// Encodes a <see cref="AuditOperationFlags"/> value using the application tag.
     /// </summary>
     /// <param name="writer">The writer receiving the encoded value.</param>
     /// <param name="value">The value to encode.</param>
-    public static void Encode(ref AsduWriter writer, in T.AuditOperationFlags value)
-        => AsduPrimitive.Encode<AuditOperationFlagsCodec, T.AuditOperationFlags>(ref writer, value);
+    public static void Encode(ref AsduWriter writer, in AuditOperationFlags value)
+        => AsduPrimitive.Encode<AuditOperationFlagsCodec, AuditOperationFlags>(ref writer, value);
 
     /// <summary>
-    /// Encodes a <see cref="T.AuditOperationFlags"/> value using a specific context tag.
+    /// Encodes a <see cref="AuditOperationFlags"/> value using a specific context tag.
     /// </summary>
     /// <param name="writer">The writer receiving the encoded value.</param>
     /// <param name="tagNumber">The context tag number.</param>
     /// <param name="value">The value to encode.</param>
-    public static void Encode(ref AsduWriter writer, byte tagNumber, in T.AuditOperationFlags value)
-        => AsduPrimitive.Encode<AuditOperationFlagsCodec, T.AuditOperationFlags>(ref writer, tagNumber, value);
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in AuditOperationFlags value)
+        => AsduPrimitive.Encode<AuditOperationFlagsCodec, AuditOperationFlags>(ref writer, tagNumber, value);
 
     /// <summary>
-    /// Encodes a <see cref="T.AuditOperationFlags"/> value into an already allocated payload span.
+    /// Encodes a <see cref="AuditOperationFlags"/> value into an already allocated payload span.
     /// </summary>
-    /// <param name="destination">The destination payload bytes.</param>
+    /// <param name="destination">The destination payload span.</param>
     /// <param name="value">The value to encode.</param>
-    public static void EncodeValue(Span<byte> destination, in T.AuditOperationFlags value)
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="destination"/> length is not supported.</exception>
+    public static void EncodeValue(Span<byte> destination, in AuditOperationFlags value)
     {
-        int bitCount = value.Length;
-        ArgumentOutOfRangeException.ThrowIfNegative(bitCount, nameof(value));
-        ArgumentOutOfRangeException.ThrowIfGreaterThan(bitCount, ushort.MaxValue, nameof(value));
-        var flagsBytes = WriteFlags(value.Flags, bitCount);
-        var bitString = new BitString(flagsBytes, checked((ushort)bitCount));
-        bitString.CopyTo(destination);
+        switch (destination.Length)
+        {
+            default:
+                throw new ArgumentOutOfRangeException(nameof(destination));
+        }
     }
 
     /// <summary>
-    /// Gets the encoded payload length for a <see cref="T.AuditOperationFlags"/> value.
+    /// Gets the encoded payload length for a <see cref="AuditOperationFlags"/> value.
     /// </summary>
     /// <param name="value">The value whose payload length is requested.</param>
     /// <returns>The encoded payload length in bytes.</returns>
-    public static int GetEncodedValueLength(in T.AuditOperationFlags value)
-        => 1 + ((value.Length + 7) / 8);
+    public static int GetEncodedValueLength(in AuditOperationFlags value)
+        => throw new NotSupportedException("BitString length is not supported.");
 
     /// <summary>
     /// Gets the total encoded length including the application tag.
     /// </summary>
     /// <param name="value">The value whose total encoded length is requested.</param>
     /// <returns>The total encoded length in bytes.</returns>
-    public static int GetEncodedLength(in T.AuditOperationFlags value)
-        => AsduPrimitive.GetEncodedLength<AuditOperationFlagsCodec, T.AuditOperationFlags>(value);
+    public static int GetEncodedLength(in AuditOperationFlags value)
+        => AsduLength.FromTagNumber(TagNumber) + GetEncodedValueLength(value);
 
     /// <summary>
     /// Gets the total encoded length including a specific context tag.
@@ -95,8 +101,8 @@ public sealed class AuditOperationFlagsCodec :
     /// <param name="value">The value whose total encoded length is requested.</param>
     /// <param name="tagNumber">The context tag number.</param>
     /// <returns>The total encoded length in bytes.</returns>
-    public static int GetEncodedLength(in T.AuditOperationFlags value, byte tagNumber)
-        => AsduPrimitive.GetEncodedLength<AuditOperationFlagsCodec, T.AuditOperationFlags>(tagNumber, value);
+    public static int GetEncodedLength(in AuditOperationFlags value, byte tagNumber)
+        => AsduLength.FromTagNumber(tagNumber) + GetEncodedValueLength(value);
 
     /// <summary>
     /// Determines whether the next value in the reader matches this codec's application tag.
@@ -104,39 +110,11 @@ public sealed class AuditOperationFlagsCodec :
     /// <param name="reader">The reader to inspect.</param>
     /// <returns><see langword="true"/> when the next tag matches; otherwise, <see langword="false"/>.</returns>
     public static bool Matches(ref AsduReader reader)
-        => reader.PeekApplicationTag(TagNumber);
+       => reader.PeekApplicationTag(TagNumber);
 
     /// <summary>
     /// Gets the BACnet application tag number handled by this codec.
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.BitString;
-
-    private static ulong ReadFlags(ReadOnlySpan<byte> source)
-    {
-        int bytesToRead = Math.Min(source.Length, 8);
-        ulong flags = 0;
-
-        for (int i = 0; i < bytesToRead; i++)
-        {
-            flags |= (ulong)source[i] << (i * 8);
-        }
-
-        return (ulong)flags;
-    }
-
-    private static byte[] WriteFlags(ulong value, int bitCount)
-    {
-        int byteCount = (bitCount + 7) / 8;
-        var flags = new byte[byteCount];
-        ulong source = value;
-
-        for (int i = 0; i < byteCount; i++)
-        {
-            flags[i] = (byte)(source >> (i * 8));
-        }
-
-        return flags;
-    }
-
 }

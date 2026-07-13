@@ -11,8 +11,11 @@ public readonly partial record struct Time
 {
     private const int MaxTicksPerDay = 8_640_000; // 24 * 60 * 60 * 100
 
-    private readonly int _centiseconds;
+    private readonly int _centiseconds = 0;
 
+    /// <summary>
+    /// Gets the total number of centiseconds since midnight (0-8639999) or -1 if unspecified.
+    /// </summary>
     public int TotalCentiseconds { get; }
 
     /// <summary>

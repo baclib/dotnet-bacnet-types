@@ -21,12 +21,6 @@
 
   <ItemGroup>
     <Using Include="Baclib.Bacnet.Types.Application" />
-    <Using Include="Baclib.Bacnet.Types.Application.DatePattern">
-      <Alias>Date</Alias>
-    </Using>
-    <Using Include="Baclib.Bacnet.Types.Application.TimePattern">
-      <Alias>Time</Alias>
-    </Using>
   </ItemGroup>
 
 </Project>

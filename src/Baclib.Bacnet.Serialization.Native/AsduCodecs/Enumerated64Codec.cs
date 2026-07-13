@@ -1,118 +1,90 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
-using T = Baclib.Bacnet.Types.Application;
+//using T = Baclib.Bacnet.Types.Application;
+
+using Action = Baclib.Bacnet.Types.Application.Action;
 
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 /// <summary>
-/// Provides BACnet ASDU primitive decoding and encoding for <see cref="T.Enumerated64"/> values.
+/// Provides BACnet ASDU primitive decoding and encoding for <see cref="Enumerated64"/> values.
 /// </summary>
 public sealed class Enumerated64Codec :
-    IAsduElementCodec<T.Enumerated64>,
-    IAsduPrimitiveCodec<T.Enumerated64>
+    IAsduElementCodec<Enumerated64>,
+    IAsduPrimitiveCodec<Enumerated64>
 {
     /// <summary>
-    /// Decodes an <see cref="T.Enumerated64"/> value from the current reader position using the application tag.
+    /// Decodes a <see cref="Enumerated64"/> value from the current reader position using the application tag.
     /// </summary>
-    /// <param name="reader">The reader positioned at an enumerated primitive tag.</param>
-    /// <returns>The decoded enumerated value.</returns>
-    public static T.Enumerated64 Decode(ref AsduReader reader)
-        => AsduPrimitive.Decode<Enumerated64Codec, T.Enumerated64>(ref reader);
+    /// <param name="reader">The reader positioned at a <see cref="Enumerated64"/> primitive tag.</param>
+    /// <returns>The decoded <see cref="Enumerated64"/> value.</returns>
+    /// <exception cref="FormatException">Thrown when the encoded value is not valid.</exception>
+    public static Enumerated64 Decode(ref AsduReader reader)
+        => AsduPrimitive.Decode<Enumerated64Codec, Enumerated64>(ref reader);
 
     /// <summary>
-    /// Decodes an <see cref="T.Enumerated64"/> value from the current reader position using a specific context tag.
+    /// Decodes a <see cref="Enumerated64"/> value from the current reader position using a specific context tag.
     /// </summary>
-    /// <param name="reader">The reader positioned at an enumerated primitive tag.</param>
+    /// <param name="reader">The reader positioned at a <see cref="Enumerated64"/> primitive tag.</param>
     /// <param name="tagNumber">The expected context tag number.</param>
-    /// <returns>The decoded enumerated value.</returns>
-    public static T.Enumerated64 Decode(ref AsduReader reader, byte tagNumber)
-        => AsduPrimitive.Decode<Enumerated64Codec, T.Enumerated64>(ref reader, tagNumber);
+    /// <returns>The decoded <see cref="Enumerated64"/> value.</returns>
+    public static Enumerated64 Decode(ref AsduReader reader, byte tagNumber)
+        => AsduPrimitive.Decode<Enumerated64Codec, Enumerated64>(ref reader, tagNumber);
 
     /// <summary>
-    /// Decodes an <see cref="T.Enumerated64"/> value from raw encoded bytes.
+    /// Decodes a <see cref="Enumerated64"/> value from raw encoded bytes.
     /// </summary>
-    /// <param name="source">The source payload bytes for the enumerated value.</param>
-    /// <returns>The decoded enumerated value.</returns>
-    /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="source"/> length is not supported.</exception>
-    public static T.Enumerated64 DecodeValue(ReadOnlySpan<byte> source)
+    /// <param name="source">The source payload bytes for the <see cref="Enumerated64"/> value.</param>
+    /// <returns>The decoded <see cref="Enumerated64"/> value.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="source"/> length is not 1.</exception>
+    /// <exception cref="FormatException">Thrown when the encoded value is not 0 or 1.</exception>
+    public static Enumerated64 DecodeValue(ReadOnlySpan<byte> source)
     {
         return source.Length switch
         {
-            AsduLength.Enumerated8 => (T.Enumerated64)AsduBinaryPrimitives.ReadUnsigned8(source),
-            AsduLength.Enumerated16 => (T.Enumerated64)AsduBinaryPrimitives.ReadUnsigned16(source),
-            AsduLength.Enumerated24 => (T.Enumerated64)AsduBinaryPrimitives.ReadUnsigned24(source),
-            AsduLength.Enumerated32 => (T.Enumerated64)AsduBinaryPrimitives.ReadUnsigned32(source),
-            AsduLength.Enumerated40 => (T.Enumerated64)AsduBinaryPrimitives.ReadUnsigned40(source),
-            AsduLength.Enumerated48 => (T.Enumerated64)AsduBinaryPrimitives.ReadUnsigned48(source),
-            AsduLength.Enumerated56 => (T.Enumerated64)AsduBinaryPrimitives.ReadUnsigned56(source),
-            AsduLength.Enumerated64 => (T.Enumerated64)AsduBinaryPrimitives.ReadUnsigned64(source),
             _ => throw new ArgumentOutOfRangeException(nameof(source))
         };
     }
 
     /// <summary>
-    /// Encodes an <see cref="T.Enumerated64"/> value using the application tag.
+    /// Encodes a <see cref="Enumerated64"/> value using the application tag.
     /// </summary>
     /// <param name="writer">The writer receiving the encoded value.</param>
     /// <param name="value">The value to encode.</param>
-    public static void Encode(ref AsduWriter writer, in T.Enumerated64 value)
-        => AsduPrimitive.Encode<Enumerated64Codec, T.Enumerated64>(ref writer, value);
+    public static void Encode(ref AsduWriter writer, in Enumerated64 value)
+        => AsduPrimitive.Encode<Enumerated64Codec, Enumerated64>(ref writer, value);
 
     /// <summary>
-    /// Encodes an <see cref="T.Enumerated64"/> value using a specific context tag.
+    /// Encodes a <see cref="Enumerated64"/> value using a specific context tag.
     /// </summary>
     /// <param name="writer">The writer receiving the encoded value.</param>
     /// <param name="tagNumber">The context tag number.</param>
     /// <param name="value">The value to encode.</param>
-    public static void Encode(ref AsduWriter writer, byte tagNumber, in T.Enumerated64 value)
-        => AsduPrimitive.Encode<Enumerated64Codec, T.Enumerated64>(ref writer, tagNumber, value);
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in Enumerated64 value)
+        => AsduPrimitive.Encode<Enumerated64Codec, Enumerated64>(ref writer, tagNumber, value);
 
     /// <summary>
-    /// Encodes an <see cref="T.Enumerated64"/> value into an already allocated payload span.
+    /// Encodes a <see cref="Enumerated64"/> value into an already allocated payload span.
     /// </summary>
-    /// <param name="destination">The destination payload bytes.</param>
+    /// <param name="destination">The destination payload span.</param>
     /// <param name="value">The value to encode.</param>
     /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="destination"/> length is not supported.</exception>
-    public static void EncodeValue(Span<byte> destination, in T.Enumerated64 value)
+    public static void EncodeValue(Span<byte> destination, in Enumerated64 value)
     {
         switch (destination.Length)
         {
-            case AsduLength.Enumerated8:
-                AsduBinaryPrimitives.WriteUnsigned8(destination, (byte)value);
-                break;
-            case AsduLength.Enumerated16:
-                AsduBinaryPrimitives.WriteUnsigned16(destination, (ushort)value);
-                break;
-            case AsduLength.Enumerated24:
-                AsduBinaryPrimitives.WriteUnsigned24(destination, (uint)value);
-                break;
-            case AsduLength.Enumerated32:
-                AsduBinaryPrimitives.WriteUnsigned32(destination, (uint)value);
-                break;
-            case AsduLength.Enumerated40:
-                AsduBinaryPrimitives.WriteUnsigned40(destination, (ulong)value);
-                break;
-            case AsduLength.Enumerated48:
-                AsduBinaryPrimitives.WriteUnsigned48(destination, (ulong)value);
-                break;
-            case AsduLength.Enumerated56:
-                AsduBinaryPrimitives.WriteUnsigned56(destination, (ulong)value);
-                break;
-            case AsduLength.Enumerated64:
-                AsduBinaryPrimitives.WriteUnsigned64(destination, (ulong)value);
-                break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(destination));
         }
     }
 
     /// <summary>
-    /// Gets the encoded payload length for an <see cref="T.Enumerated64"/> value.
+    /// Gets the encoded payload length for a <see cref="Enumerated64"/> value.
     /// </summary>
     /// <param name="value">The value whose payload length is requested.</param>
     /// <returns>The encoded payload length in bytes.</returns>
-    public static int GetEncodedValueLength(in T.Enumerated64 value)
+    public static int GetEncodedValueLength(in Enumerated64 value)
         => AsduLength.FromUnsigned64((ulong)value);
 
     /// <summary>
@@ -120,8 +92,8 @@ public sealed class Enumerated64Codec :
     /// </summary>
     /// <param name="value">The value whose total encoded length is requested.</param>
     /// <returns>The total encoded length in bytes.</returns>
-    public static int GetEncodedLength(in T.Enumerated64 value)
-        => AsduLength.Sum(TagNumber, GetEncodedValueLength(value));
+    public static int GetEncodedLength(in Enumerated64 value)
+        => AsduLength.FromTagNumber(TagNumber) + GetEncodedValueLength(value);
 
     /// <summary>
     /// Gets the total encoded length including a specific context tag.
@@ -129,8 +101,8 @@ public sealed class Enumerated64Codec :
     /// <param name="value">The value whose total encoded length is requested.</param>
     /// <param name="tagNumber">The context tag number.</param>
     /// <returns>The total encoded length in bytes.</returns>
-    public static int GetEncodedLength(in T.Enumerated64 value, byte tagNumber)
-        => AsduLength.Sum(tagNumber, GetEncodedValueLength(value));
+    public static int GetEncodedLength(in Enumerated64 value, byte tagNumber)
+        => AsduLength.FromTagNumber(tagNumber) + GetEncodedValueLength(value);
 
     /// <summary>
     /// Determines whether the next value in the reader matches this codec's application tag.
@@ -138,7 +110,7 @@ public sealed class Enumerated64Codec :
     /// <param name="reader">The reader to inspect.</param>
     /// <returns><see langword="true"/> when the next tag matches; otherwise, <see langword="false"/>.</returns>
     public static bool Matches(ref AsduReader reader)
-        => reader.PeekApplicationTag(TagNumber);
+       => reader.PeekApplicationTag(TagNumber);
 
     /// <summary>
     /// Gets the BACnet application tag number handled by this codec.

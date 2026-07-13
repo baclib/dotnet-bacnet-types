@@ -8,38 +8,38 @@ using Action = Baclib.Bacnet.Types.Application.Action;
 namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
 
 /// <summary>
-/// Provides BACnet ASDU primitive decoding and encoding for <see cref="ObjectTypesSupported"/> values.
+/// Provides BACnet ASDU primitive decoding and encoding for <see cref="AccessThreatLevel"/> values.
 /// </summary>
-public sealed class ObjectTypesSupportedCodec :
-    IAsduElementCodec<ObjectTypesSupported>,
-    IAsduPrimitiveCodec<ObjectTypesSupported>
+public sealed class AccessThreatLevelCodec :
+    IAsduElementCodec<AccessThreatLevel>,
+    IAsduPrimitiveCodec<AccessThreatLevel>
 {
     /// <summary>
-    /// Decodes a <see cref="ObjectTypesSupported"/> value from the current reader position using the application tag.
+    /// Decodes a <see cref="AccessThreatLevel"/> value from the current reader position using the application tag.
     /// </summary>
-    /// <param name="reader">The reader positioned at a <see cref="ObjectTypesSupported"/> primitive tag.</param>
-    /// <returns>The decoded <see cref="ObjectTypesSupported"/> value.</returns>
+    /// <param name="reader">The reader positioned at a <see cref="AccessThreatLevel"/> primitive tag.</param>
+    /// <returns>The decoded <see cref="AccessThreatLevel"/> value.</returns>
     /// <exception cref="FormatException">Thrown when the encoded value is not valid.</exception>
-    public static ObjectTypesSupported Decode(ref AsduReader reader)
-        => AsduPrimitive.Decode<ObjectTypesSupportedCodec, ObjectTypesSupported>(ref reader);
+    public static AccessThreatLevel Decode(ref AsduReader reader)
+        => AsduPrimitive.Decode<AccessThreatLevelCodec, AccessThreatLevel>(ref reader);
 
     /// <summary>
-    /// Decodes a <see cref="ObjectTypesSupported"/> value from the current reader position using a specific context tag.
+    /// Decodes a <see cref="AccessThreatLevel"/> value from the current reader position using a specific context tag.
     /// </summary>
-    /// <param name="reader">The reader positioned at a <see cref="ObjectTypesSupported"/> primitive tag.</param>
+    /// <param name="reader">The reader positioned at a <see cref="AccessThreatLevel"/> primitive tag.</param>
     /// <param name="tagNumber">The expected context tag number.</param>
-    /// <returns>The decoded <see cref="ObjectTypesSupported"/> value.</returns>
-    public static ObjectTypesSupported Decode(ref AsduReader reader, byte tagNumber)
-        => AsduPrimitive.Decode<ObjectTypesSupportedCodec, ObjectTypesSupported>(ref reader, tagNumber);
+    /// <returns>The decoded <see cref="AccessThreatLevel"/> value.</returns>
+    public static AccessThreatLevel Decode(ref AsduReader reader, byte tagNumber)
+        => AsduPrimitive.Decode<AccessThreatLevelCodec, AccessThreatLevel>(ref reader, tagNumber);
 
     /// <summary>
-    /// Decodes a <see cref="ObjectTypesSupported"/> value from raw encoded bytes.
+    /// Decodes a <see cref="AccessThreatLevel"/> value from raw encoded bytes.
     /// </summary>
-    /// <param name="source">The source payload bytes for the <see cref="ObjectTypesSupported"/> value.</param>
-    /// <returns>The decoded <see cref="ObjectTypesSupported"/> value.</returns>
+    /// <param name="source">The source payload bytes for the <see cref="AccessThreatLevel"/> value.</param>
+    /// <returns>The decoded <see cref="AccessThreatLevel"/> value.</returns>
     /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="source"/> length is not 1.</exception>
     /// <exception cref="FormatException">Thrown when the encoded value is not 0 or 1.</exception>
-    public static ObjectTypesSupported DecodeValue(ReadOnlySpan<byte> source)
+    public static AccessThreatLevel DecodeValue(ReadOnlySpan<byte> source)
     {
         return source.Length switch
         {
@@ -48,29 +48,29 @@ public sealed class ObjectTypesSupportedCodec :
     }
 
     /// <summary>
-    /// Encodes a <see cref="ObjectTypesSupported"/> value using the application tag.
+    /// Encodes a <see cref="AccessThreatLevel"/> value using the application tag.
     /// </summary>
     /// <param name="writer">The writer receiving the encoded value.</param>
     /// <param name="value">The value to encode.</param>
-    public static void Encode(ref AsduWriter writer, in ObjectTypesSupported value)
-        => AsduPrimitive.Encode<ObjectTypesSupportedCodec, ObjectTypesSupported>(ref writer, value);
+    public static void Encode(ref AsduWriter writer, in AccessThreatLevel value)
+        => AsduPrimitive.Encode<AccessThreatLevelCodec, AccessThreatLevel>(ref writer, value);
 
     /// <summary>
-    /// Encodes a <see cref="ObjectTypesSupported"/> value using a specific context tag.
+    /// Encodes a <see cref="AccessThreatLevel"/> value using a specific context tag.
     /// </summary>
     /// <param name="writer">The writer receiving the encoded value.</param>
     /// <param name="tagNumber">The context tag number.</param>
     /// <param name="value">The value to encode.</param>
-    public static void Encode(ref AsduWriter writer, byte tagNumber, in ObjectTypesSupported value)
-        => AsduPrimitive.Encode<ObjectTypesSupportedCodec, ObjectTypesSupported>(ref writer, tagNumber, value);
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in AccessThreatLevel value)
+        => AsduPrimitive.Encode<AccessThreatLevelCodec, AccessThreatLevel>(ref writer, tagNumber, value);
 
     /// <summary>
-    /// Encodes a <see cref="ObjectTypesSupported"/> value into an already allocated payload span.
+    /// Encodes a <see cref="AccessThreatLevel"/> value into an already allocated payload span.
     /// </summary>
     /// <param name="destination">The destination payload span.</param>
     /// <param name="value">The value to encode.</param>
     /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="destination"/> length is not supported.</exception>
-    public static void EncodeValue(Span<byte> destination, in ObjectTypesSupported value)
+    public static void EncodeValue(Span<byte> destination, in AccessThreatLevel value)
     {
         switch (destination.Length)
         {
@@ -80,19 +80,19 @@ public sealed class ObjectTypesSupportedCodec :
     }
 
     /// <summary>
-    /// Gets the encoded payload length for a <see cref="ObjectTypesSupported"/> value.
+    /// Gets the encoded payload length for a <see cref="AccessThreatLevel"/> value.
     /// </summary>
     /// <param name="value">The value whose payload length is requested.</param>
     /// <returns>The encoded payload length in bytes.</returns>
-    public static int GetEncodedValueLength(in ObjectTypesSupported value)
-        => throw new NotSupportedException("BitString length is not supported.");
+    public static int GetEncodedValueLength(in AccessThreatLevel value)
+        => AsduLength.FromUnsigned8(value);
 
     /// <summary>
     /// Gets the total encoded length including the application tag.
     /// </summary>
     /// <param name="value">The value whose total encoded length is requested.</param>
     /// <returns>The total encoded length in bytes.</returns>
-    public static int GetEncodedLength(in ObjectTypesSupported value)
+    public static int GetEncodedLength(in AccessThreatLevel value)
         => AsduLength.FromTagNumber(TagNumber) + GetEncodedValueLength(value);
 
     /// <summary>
@@ -101,7 +101,7 @@ public sealed class ObjectTypesSupportedCodec :
     /// <param name="value">The value whose total encoded length is requested.</param>
     /// <param name="tagNumber">The context tag number.</param>
     /// <returns>The total encoded length in bytes.</returns>
-    public static int GetEncodedLength(in ObjectTypesSupported value, byte tagNumber)
+    public static int GetEncodedLength(in AccessThreatLevel value, byte tagNumber)
         => AsduLength.FromTagNumber(tagNumber) + GetEncodedValueLength(value);
 
     /// <summary>
@@ -116,5 +116,5 @@ public sealed class ObjectTypesSupportedCodec :
     /// Gets the BACnet application tag number handled by this codec.
     /// </summary>
     public static ApplicationTagNumber TagNumber
-        => ApplicationTagNumber.BitString;
+        => ApplicationTagNumber.Unsigned;
 }
