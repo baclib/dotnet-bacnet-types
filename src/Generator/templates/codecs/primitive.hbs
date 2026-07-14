@@ -53,20 +53,37 @@ public sealed class {{className}} :
     /// <exception cref="FormatException">Thrown when the encoded value is not 0 or 1.</exception>
     public static {{csharpType}} DecodeValue(ReadOnlySpan<byte> source)
     {
-{{#if hasFixedDataLength}}
-        if (source.Length != AsduLength.{{tagName}})
+{{#if lengthConstant}}
+        if (source.Length != AsduLength.{{lengthConstant}})
         {
             throw new ArgumentOutOfRangeException(nameof(source));
         }
+
     {{#if isNull}}
         return {{csharpType}}.Value;
-    {{else unless fields}}
-        return AsduBinaryPrimitives.Read{{tagName}}(source);
-    {{else}}
-        {{#each fields}}
+    {{else if isBoolean}}
+        return source[0] switch
+        {
+            0 => false,
+            1 => true,
+            _ => throw new InvalidDataException(nameof(source))
+        };
+    {{else if isReal}}
+        throw new NotImplementedException("Decoding of Real values is not implemented yet.");
+    {{else if isEnumerated}}
+        var value = AsduBinaryPrimitives.ReadUnsigned{{variant.size}}(source);
+        return ({{csharpType}})value;
+    {{else if isObjectIdentifier}}
+        var value = AsduBinaryPrimitives.ReadUnsigned32(source);
+        return new {{csharpType}}(value);
+    {{else if members}}
+        {{#each members.private}}
         var {{this}} = source[{{@index}}];
         {{/each}}
-        return new {{csharpType}}({{#each fields}}{{this}}{{#unless @last}}, {{/unless}}{{/each}});
+
+        return new {{csharpType}}({{#each members.private}}{{this}}{{#unless @last}}, {{/unless}}{{/each}});
+    {{else}}
+        return AsduBinaryPrimitives.Read{{tagName}}(source);
     {{/if}}
 {{else if hasStringDataLength}}
         return new {{csharpType}}(source.ToArray());
@@ -106,18 +123,29 @@ public sealed class {{className}} :
     /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="destination"/> length is not supported.</exception>
     public static void EncodeValue(Span<byte> destination, in {{csharpType}} value)
     {
-{{#if hasFixedDataLength}}
-        if (destination.Length != AsduLength.{{tagName}})
+{{#if lengthConstant}}
+        if (destination.Length != AsduLength.{{lengthConstant}})
         {
             throw new ArgumentOutOfRangeException(nameof(destination));
         }
-    {{#unless fields}}
-        AsduBinaryPrimitives.Write{{tagName}}(destination, value);
-    {{else}}
-        {{#each fields}}
+
+    {{#if isNull}}
+        // No payload to encode for null value.
+    {{else if isBoolean}}
+        destination[0] = value ? (byte)1 : (byte)0;
+    {{else if isReal}}
+        throw new NotImplementedException("Encoding of Real values is not implemented yet.");
+    {{else if isEnumerated}}
+        AsduBinaryPrimitives.WriteUnsigned{{variant.size}}(destination, ({{variant.type}})value);
+    {{else if isObjectIdentifier}}
+        AsduBinaryPrimitives.WriteUnsigned32(destination, value.Value);
+    {{else if members}}
+        {{#each members.public}}
         destination[{{@index}}] = value.{{this}};
         {{/each}}
-    {{/unless}}
+    {{else}}
+        AsduBinaryPrimitives.Write{{tagName}}(destination, value);
+    {{/if}}
 {{else if hasStringDataLength}}
         value.CopyTo(destination);
 {{else}}
@@ -141,9 +169,13 @@ public sealed class {{className}} :
     /// <returns>The encoded payload length in bytes.</returns>
     public static int GetEncodedValueLength(in {{csharpType}} value)
 {{#if isBitString}}
-        => throw new NotSupportedException("BitString length is not supported.");
+        => 1 + (value.Length + 7) / 8;
 {{else if isEnumerated}}
+    {{#if variant}}
         => AsduLength.FromUnsigned{{variant.size}}(({{variant.type}})value);
+    {{else}}
+        => AsduLength.FromUnsigned32((uint)value);
+    {{/if}}
 {{else}}
         => AsduLength.{{#if lengthConstant}}{{lengthConstant}}{{else}}From{{tagName}}{{variant.size}}(value){{/if}};
 {{/if}}

@@ -8,7 +8,7 @@ import { TemplateEngine } from '../core/template-engine.js';
 import { codecTemplatesDir, codecsOutputDir, generatorRoot, workingDir } from '../core/paths.js';
 import { isBooleanObject } from 'util/types';
 import Handlebars from 'handlebars';
-import { sourceTypesByIndex, getUnsignedVariant, getIntegerVariant } from './predefined.js';
+import { sourceTypesByName, sourceTypesByIndex, getUnsignedVariant, getIntegerVariant } from './predefined.js';
 import { toPascalCase, toCamelCase } from '../core/text.js';
 
 Handlebars.registerHelper('nameis', function (value, options) {
@@ -69,6 +69,11 @@ class FixedCodecTransformer extends TemplateEngine {
 
     pushPrimitiveCodec(fullname, base, context) {
 
+
+
+        const st = sourceTypesByName[base];
+        console.log(st);
+
         const bounds = this.inferBounds(context.traits);
         const length = this.inferLength(context.traits);
         const typeName = fullname.split('.').map((part, index) => (index ? 'T' : '') + toPascalCase(part)).join('.')
@@ -78,22 +83,10 @@ class FixedCodecTransformer extends TemplateEngine {
 
         const isBitString = base === 'bit-string';
         const isEnumerated = base === 'enumerated';
+        const isReal = base === 'real';
 
         const fixedSize = base === 'real';
         const lengthConstant = base === 'real' ? 'Real' : null;
-
-        const baseTypeDef = sourceTypesByIndex.find(codec => codec.name === base);
-        if (baseTypeDef.underlyingType) {
-
-            if (baseTypeDef.name === 'enumerated') {
-                const vary = getUnsignedVariant(bounds.minimum, bounds.maximum);
-                //console.log(fullname.padEnd(60), vary.type, vary.size);
-            }
-
-
-            //console.log(fullname.padEnd(40), bName, vType, vSize, vary);
-        }
-
 
         this.primitiveCodecs.push({
             name: fullname,
@@ -105,8 +98,10 @@ class FixedCodecTransformer extends TemplateEngine {
             ...(variant ? { variant } : {}),
             ...(isBitString ? { isBitString } : {}),
             ...(isEnumerated ? { isEnumerated } : {}),
+            ...(isReal ? { isReal } : {}),
             ...(fixedSize ? { fixedSize } : {}),
             ...(lengthConstant ? { lengthConstant } : {}),
+            //...(st.underlyingType ? { underlyingType: st.underlyingType } : {}),
             tagName: toPascalCase(base),
 
         });
@@ -169,3 +164,6 @@ class FixedCodecTransformer extends TemplateEngine {
 export function createFixedCodecGenerator() {
     return new FixedCodecTransformer();
 }
+
+
+//console.log(sourceTypesByIndex);

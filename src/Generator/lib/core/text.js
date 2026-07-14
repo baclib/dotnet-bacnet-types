@@ -14,10 +14,12 @@ export function toPascalCase(kebabCase) {
 }
 
 /**
- * Lowercases the first character of an identifier (e.g. "ObjectId" -> "objectId").
+ * Converts an identifier to camelCase using the same segment logic as toPascalCase
+ * (e.g. "object-identifier" -> "objectIdentifier", "ObjectIdentifier" -> "objectIdentifier").
  */
 export function toCamelCase(value) {
-    return value.charAt(0).toLowerCase() + value.slice(1);
+    const pascalCase = toPascalCase(value);
+    return pascalCase.charAt(0).toLowerCase() + pascalCase.slice(1);
 }
 
 /**

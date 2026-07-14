@@ -14,7 +14,7 @@ import { toPascalCase, toCamelCase } from '../core/text.js';
 const unsignedVariants = Object.freeze(['byte', 'ushort', 'uint', 'ulong'].map((type, index) => {
     const size = 8 << index;
     const max = (1n << BigInt(size)) - 1n;
-    return Object.freeze({ type, size, min: 0n, max });
+    return Object.freeze({ kind: 'Unsigned', type, size, min: 0n, max });
 }));
 
 /**
@@ -39,7 +39,7 @@ const integerVariants = Object.freeze(['sbyte', 'short', 'int', 'long'].map((typ
     const exponent = BigInt(size - 1);
     const min = -(1n << exponent);
     const max = (1n << exponent) - 1n;
-    return Object.freeze({ type, size, min, max });
+    return Object.freeze({ kind: 'Integer', type, size, min, max });
 }));
 
 export function getIntegerVariant(minimum, maximum) {
@@ -123,7 +123,7 @@ function buildSourceType(sourceTypes = sourceTypeDefinitions) {
             const variantType = {
                 name: `${sourceType.name}-${variant.size}`,
                 tagName: toPascalCase(sourceType.name),
-                variant: { size: variant.size, type: variant.type },
+                variant: { kind: variant.kind, size: variant.size, type: variant.type },
                 ...(sourceType.type ? { type: variant.type } : { base: variant.type })
             };
             pushType(variantType);
