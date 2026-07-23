@@ -228,7 +228,7 @@ export class CsharpTransformer extends TemplateEngine {
         const traits = context.ancestors.at(-1).traits;
         const base = traits.base;
         if (base === 'bit-string') {
-            // Bit-string item members are handled by generate-bit-string-types.js.
+            // Bit-string item members are handled by lib/bit-string-types.js.
             return;
         }
 
@@ -440,7 +440,6 @@ export async function generateTypes() {
     const transformer = new CsharpTransformer();
     await traverseDefinitions(transformer);
     await generateBitStringTypes({
-        outputDirectory: transformer.directory,
-        cleanupMode: 'none'
+        outputDirectory: transformer.directory
     });
 }

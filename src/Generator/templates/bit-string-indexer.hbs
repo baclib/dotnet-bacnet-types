@@ -1,3 +1,22 @@
-{{#each indexerLines}}
-{{this}}
-{{/each}}
+    /// <summary>
+    /// Gets whether the bit at the specified zero-based index is set.
+    /// </summary>
+    /// <param name="index">Zero-based bit index.</param>
+    /// <returns><see langword="true"/> when the bit is set; otherwise <see langword="false"/>.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="index"/> is outside the range <c>0..Count-1</c>.</exception>
+    public bool this[int index]
+    {
+        get
+        {
+            ArgumentOutOfRangeException.ThrowIfNegative(index, nameof(index));
+            ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual(index, Length, nameof(index));
+{{#if isArrayStorage}}
+
+            int byteIndex = index / 8;
+            int bitOffset = index % 8;
+            return (Flags[byteIndex] & (1 << bitOffset)) != 0;
+{{else}}
+            return (Flags & ({{scalar.indexShiftLiteral}} << index)) != 0;
+{{/if}}
+        }
+    }

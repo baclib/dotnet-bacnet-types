@@ -6,6 +6,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import { traverseDefinitions } from '@baclib/generic-bacnet-types/src/traverse.js';
 import { workingDir } from './core/paths.js';
+import { describeBitString, isBitStringSeries, toInteger } from './core/bit-string-model.js';
 
 class BitStringDefinitionReportTransformer {
     constructor() {
@@ -35,13 +36,30 @@ class BitStringDefinitionReportTransformer {
             ? [...context.userContext].sort((left, right) => this.compareNullableNumber(left.position, right.position))
             : [];
 
+        const definedBitPositions = bits
+            .map(bit => bit.position)
+            .filter(position => Number.isInteger(position));
+        const inferredFixedLength = definedBitPositions.length > 0
+            ? Math.max(...definedBitPositions) + 1
+            : null;
+
         const lengthInfo = this.getLengthInfo(context.traits, bits);
+        const descriptor = describeBitString({
+            lengthTrait: context.traits.length,
+            inferredFixedLength,
+            fullname: context.fullname
+        });
 
         this.definitions.push({
             fullname: context.fullname,
             bacnetName: context.thisAlias ?? context.thisName,
-            isSeries: this.isSeries(context),
+            isSeries: isBitStringSeries(context),
             lengthInfo,
+            storage: {
+                category: descriptor.category,
+                storageType: descriptor.storageType,
+                countType: descriptor.countType
+            },
             bitCount: bits.length,
             bits
         });
@@ -59,7 +77,7 @@ class BitStringDefinitionReportTransformer {
         parent.userContext.push({
             name: this.toPascalCase(item.name ?? ''),
             bacnetName: item.name ?? '',
-            position: this.toInteger(item.position),
+            position: toInteger(item.position),
             description: item.description ?? ''
         });
     }
@@ -69,22 +87,6 @@ class BitStringDefinitionReportTransformer {
         const html = this.renderHtml();
         writeFileSync(this.outputFilePath, html, 'utf-8');
         console.log(`Generated ${this.outputFilePath} with ${this.definitions.length} bit-string definitions.`);
-    }
-
-    isSeries(context) {
-        return context.traits && Object.hasOwn(context.traits, 'series') && context.traits.series !== false;
-    }
-
-    toInteger(value) {
-        if (typeof value === 'number' && Number.isInteger(value)) {
-            return value;
-        }
-
-        if (typeof value === 'string' && /^-?\d+$/.test(value.trim())) {
-            return Number.parseInt(value.trim(), 10);
-        }
-
-        return null;
     }
 
     compareNullableNumber(left, right) {
@@ -116,8 +118,8 @@ class BitStringDefinitionReportTransformer {
         }
 
         if (traitLength && typeof traitLength === 'object') {
-            const minimum = this.toInteger(traitLength.minimum);
-            const maximum = this.toInteger(traitLength.maximum);
+            const minimum = toInteger(traitLength.minimum);
+            const maximum = toInteger(traitLength.maximum);
             return {
                 kind: 'range',
                 minimum,
@@ -212,6 +214,14 @@ class BitStringDefinitionReportTransformer {
                         <dd>${this.escapeHtml(definition.lengthInfo.text)}</dd>
                     </div>
                     <div>
+                        <dt>Category</dt>
+                        <dd class="mono">${this.escapeHtml(definition.storage.category)}</dd>
+                    </div>
+                    <div>
+                        <dt>Storage</dt>
+                        <dd class="mono">${this.escapeHtml(definition.storage.storageType)}</dd>
+                    </div>
+                    <div>
                         <dt>Series Type</dt>
                         <dd>${definition.isSeries ? 'yes' : 'no'}</dd>
                     </div>
@@ -221,11 +231,13 @@ class BitStringDefinitionReportTransformer {
     }
 
     renderHtml() {
-        const now = new Date();
-        const generatedAt = `${now.toISOString()} (${now.toLocaleString()})`;
         const items = this.definitions.map(definition => this.renderDefinition(definition)).join('\n');
 
-        return `<!doctype html>
+        return `<!--
+SPDX-FileCopyrightText: Copyright 2024-2026, The BAClib Initiative and Contributors
+SPDX-License-Identifier: EPL-2.0
+-->
+<!doctype html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -439,7 +451,6 @@ class BitStringDefinitionReportTransformer {
         <header>
             <div>
                 <h1>BACnet Bit-String Definitions</h1>
-                <p class="subtitle">Generated on ${this.escapeHtml(generatedAt)}</p>
             </div>
             <div class="counter">${this.definitions.length} definitions</div>
         </header>

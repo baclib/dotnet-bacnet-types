@@ -11,6 +11,14 @@ import Handlebars from 'handlebars';
 import { sourceTypesByName, sourceTypesByIndex, getUnsignedVariant, getIntegerVariant } from './predefined.js';
 import { toPascalCase, toCamelCase } from '../core/text.js';
 
+function annotateIntegerFamilies(codec) {
+    return {
+        ...codec,
+        isUnsignedFamily: codec.tagName === 'Unsigned',
+        isIntegerFamily: codec.tagName === 'Integer'
+    };
+}
+
 Handlebars.registerHelper('nameis', function (value, options) {
     return this.name === value ? options.fn(this) : options.inverse(this);
 });
@@ -26,7 +34,7 @@ class FixedCodecTransformer extends TemplateEngine {
             ? path.resolve(generatorRoot, process.env.CODEC_OUTPUT_DIR)
             : codecsOutputDir;
         this.templatesDir = codecTemplatesDir;
-        this.primitiveCodecs = [...sourceTypesByIndex];
+        this.primitiveCodecs = sourceTypesByIndex.map(annotateIntegerFamilies);
         this.predefinedNames = new Set(sourceTypesByIndex.map(codec => codec.name));
     }
 
@@ -68,12 +76,6 @@ class FixedCodecTransformer extends TemplateEngine {
     }
 
     pushPrimitiveCodec(fullname, base, context) {
-
-
-
-        const st = sourceTypesByName[base];
-        console.log(st);
-
         const bounds = this.inferBounds(context.traits);
         const length = this.inferLength(context.traits);
         const typeName = fullname.split('.').map((part, index) => (index ? 'T' : '') + toPascalCase(part)).join('.')
@@ -84,11 +86,15 @@ class FixedCodecTransformer extends TemplateEngine {
         const isBitString = base === 'bit-string';
         const isEnumerated = base === 'enumerated';
         const isReal = base === 'real';
+        const isOctetString = base === 'octet-string';
+        const isCharacterString = base === 'character-string';
+
+        const isDerived = isBitString || isEnumerated || isReal || isOctetString || isCharacterString;
 
         const fixedSize = base === 'real';
         const lengthConstant = base === 'real' ? 'Real' : null;
 
-        this.primitiveCodecs.push({
+        this.primitiveCodecs.push(annotateIntegerFamilies({
             name: fullname,
             typeName,
             className: `${typeName}Codec`.replaceAll('.', ''),
@@ -99,12 +105,15 @@ class FixedCodecTransformer extends TemplateEngine {
             ...(isBitString ? { isBitString } : {}),
             ...(isEnumerated ? { isEnumerated } : {}),
             ...(isReal ? { isReal } : {}),
+            ...(isOctetString ? { isOctetString } : {}),
+            ...(isCharacterString ? { isCharacterString } : {}),
+            ...(isDerived ? { isDerived } : {}),
             ...(fixedSize ? { fixedSize } : {}),
             ...(lengthConstant ? { lengthConstant } : {}),
             //...(st.underlyingType ? { underlyingType: st.underlyingType } : {}),
             tagName: toPascalCase(base),
 
-        });
+        }));
     }
    
 

@@ -1,3 +1,72 @@
-{{#each constructorLines}}
-{{this}}
-{{/each}}
+{{#if isVariable}}
+{{#if isArrayStorage}}
+    /// <summary>
+    /// Initializes a new instance of <see cref="{{typeName}}"/> with a variable number of bits.
+    /// </summary>
+    /// <param name="flags">Bit payload bytes in LSB-first bit order.</param>
+    /// <param name="count">Number of valid bits in <paramref name="flags"/>. Valid range is <see cref="MinLength"/> to <see cref="MaxLength"/>.</param>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="flags"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="count"/> is out of range, or when <paramref name="flags"/> is shorter than required for <paramref name="count"/>.</exception>
+    public {{typeName}}(byte[] flags, {{countType}} count)
+    {
+        ArgumentOutOfRangeException.ThrowIfLessThan((int)count, MinLength, nameof(count));
+        if (MaxLength != int.MaxValue)
+        {
+            ArgumentOutOfRangeException.ThrowIfGreaterThan((int)count, MaxLength, nameof(count));
+        }
+
+        int requiredBytes = GetRequiredByteCount((int)count);
+        ArgumentNullException.ThrowIfNull(flags, nameof(flags));
+        ArgumentOutOfRangeException.ThrowIfLessThan(flags.Length, requiredBytes, nameof(flags));
+
+        _count = count;
+        Flags = new byte[requiredBytes];
+        Array.Copy(flags, Flags, requiredBytes);
+    }
+{{else}}
+    /// <summary>
+    /// Initializes a new instance of <see cref="{{typeName}}"/> with a variable number of bits.
+    /// </summary>
+    /// <param name="flags">Underlying {{storageType}} bit container in LSB-first bit order.</param>
+    /// <param name="count">Number of valid bits in <paramref name="flags"/>. Valid range is <see cref="MinLength"/> to <see cref="MaxLength"/>.</param>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="count"/> is out of range.</exception>
+    public {{typeName}}({{storageType}} flags, {{countType}} count)
+    {
+        ArgumentOutOfRangeException.ThrowIfLessThan((int)count, MinLength, nameof(count));
+        if (MaxLength != int.MaxValue)
+        {
+            ArgumentOutOfRangeException.ThrowIfGreaterThan((int)count, MaxLength, nameof(count));
+        }
+
+        _count = count;
+        Flags = MaskToCount(flags, (int)count);
+    }
+{{/if}}
+{{else}}
+{{#if isArrayStorage}}
+    /// <summary>
+    /// Initializes a new instance of <see cref="{{typeName}}"/> with a fixed bit length.
+    /// </summary>
+    /// <param name="flags">Bit payload bytes in LSB-first bit order.</param>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="flags"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="flags"/> is shorter than the required byte count for <see cref="FixedLength"/>.</exception>
+    public {{typeName}}(byte[] flags)
+    {
+        int requiredBytes = GetRequiredByteCount(FixedLength);
+        ArgumentNullException.ThrowIfNull(flags, nameof(flags));
+        ArgumentOutOfRangeException.ThrowIfLessThan(flags.Length, requiredBytes, nameof(flags));
+
+        Flags = new byte[requiredBytes];
+        Array.Copy(flags, Flags, requiredBytes);
+    }
+{{else}}
+    /// <summary>
+    /// Initializes a new instance of <see cref="{{typeName}}"/> with a fixed bit length.
+    /// </summary>
+    /// <param name="flags">Underlying {{storageType}} bit container in LSB-first bit order.</param>
+    public {{typeName}}({{storageType}} flags)
+    {
+        Flags = MaskToCount(flags, FixedLength);
+    }
+{{/if}}
+{{/if}}

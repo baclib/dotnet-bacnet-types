@@ -3,7 +3,6 @@
 
 import { generateTypes } from './type-generator.js';
 import { generateCodecs } from './codecs/orchestrator.js';
-import { generateBitStringTypes } from './bit-string-types.js';
 import { generateBitStringReport } from './bit-string-report.js';
 
 /**
@@ -22,11 +21,6 @@ export const generators = Object.freeze([
         name: 'codecs',
         description: 'Generate all ASDU codecs into the Native serialization project.',
         run: () => generateCodecs()
-    },
-    {
-        name: 'bit-string-types',
-        description: 'Generate stand-alone bit-string structs into the working folder.',
-        run: () => generateBitStringTypes()
     },
     {
         name: 'bit-string-report',

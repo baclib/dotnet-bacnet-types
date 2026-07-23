@@ -9,7 +9,6 @@
         "generate:types": "node generate.js types",
         "generate:codecs": "node generate.js codecs",
         "generate:all": "node generate.js all",
-        "generate:bit-string-types": "node generate.js bit-string-types",
         "generate:bit-string-report": "node generate.js bit-string-report"
     },
     "author": "The BAClib Initiative <baclib@mailbox.org> (https://github.com/baclib)",

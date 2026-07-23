@@ -8,21 +8,15 @@ import { toPascalCase } from '../core/text.js';
 import { codecsOutputDir, generatorRoot } from '../core/paths.js';
 import { ignoredCodecTypeNames } from '../core/constants.js';
 import { createFixedCodecGenerator } from './fixed.js';
-import { createEnumCodecGenerator } from './enum.js';
 import { createChoiceCodecGenerator } from './choice.js';
 import { createSequenceCodecGenerator } from './sequence.js';
-import { createRestrictedCodecGenerator } from './restricted.js';
-import { createBitStringCodecGenerator } from './bit-string.js';
 
 // Codec generators run in dependency order: primitives first, then the constructed and
 // restriction generators that reference them.
 const codecGeneratorFactories = Object.freeze([
     createFixedCodecGenerator,
-    //createEnumCodecGenerator,
     createChoiceCodecGenerator,
-    createSequenceCodecGenerator,
-    //createRestrictedCodecGenerator,
-    //createBitStringCodecGenerator
+    createSequenceCodecGenerator
 ]);
 
 // Environment filters that scope individual codec generators to a single type. They must be
@@ -112,10 +106,10 @@ public sealed class AnyCodec :
         => throw new NotImplementedException("AnyCodec is a placeholder. Provide a full Any length calculator.");
 
     public static int GetEncodedLength(in T.Any value)
-        => AsduLength.Sum(TagNumber, GetEncodedValueLength(value));
+        => throw new NotImplementedException("AnyCodec is a placeholder. Provide a full Any decoder.");
 
     public static int GetEncodedLength(in T.Any value, byte tagNumber)
-        => AsduLength.Sum(tagNumber, GetEncodedValueLength(value));
+        => throw new NotImplementedException("AnyCodec is a placeholder. Provide a full Any decoder.");
 
     public static bool Matches(ref AsduReader reader)
         => reader.PeekApplicationTag(TagNumber);

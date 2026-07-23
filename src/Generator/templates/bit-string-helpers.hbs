@@ -1,3 +1,34 @@
-{{#each helperLines}}
-{{this}}
-{{/each}}
+{{#if isArrayStorage}}
+    /// <summary>
+    /// Calculates the minimum number of bytes required to store the specified number of bits.
+    /// </summary>
+    /// <param name="bitCount">Bit count to convert to a byte count.</param>
+    /// <returns>Required byte count.</returns>
+    private static int GetRequiredByteCount(int bitCount)
+    {
+        if (bitCount <= 0)
+        {
+            return 0;
+        }
+
+        return (bitCount + 7) / 8;
+    }
+{{else}}
+    /// <summary>
+    /// Clears all bits above the provided bit count and returns the normalized value.
+    /// </summary>
+    /// <param name="flags">Input bit container.</param>
+    /// <param name="count">Number of valid low-order bits to preserve.</param>
+    /// <returns>Masked flag value containing only the valid bits.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="count"/> is outside the supported bit range for this storage type.</exception>
+    private static {{storageType}} MaskToCount({{storageType}} flags, int count)
+    {
+        ArgumentOutOfRangeException.ThrowIfNegative(count, nameof(count));
+        ArgumentOutOfRangeException.ThrowIfGreaterThan(count, {{scalar.maxBits}}, nameof(count));
+
+        if (count == 0) return 0;
+        if (count >= {{scalar.maxBits}}) return flags;
+        {{storageType}} mask = {{scalar.maskCast}}(({{scalar.oneLiteral}} << count) - {{scalar.oneLiteral}});
+        return {{scalar.maskCast}}(flags & mask);
+    }
+{{/if}}

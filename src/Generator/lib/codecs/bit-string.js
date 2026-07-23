@@ -6,13 +6,11 @@ import fs from 'fs/promises';
 import { EOL } from 'os';
 import path from 'path';
 import { CodecGeneratorBase } from './base.js';
-
-const specialVariableLengths = new Map([
-    ['bit-string-8', 8],
-    ['bit-string-16', 16],
-    ['bit-string-32', 32],
-    ['bit-string-64', 64]
-]);
+import {
+    describeBitString,
+    isPrimitiveBitString,
+    toInteger
+} from '../core/bit-string-model.js';
 
 class BitStringCodecTransformer extends CodecGeneratorBase {
     constructor() {
@@ -30,7 +28,7 @@ class BitStringCodecTransformer extends CodecGeneratorBase {
     startDefinition(context) {
         this.registerType(context);
 
-        if (!this.isPrimitiveBitString(context)) {
+        if (!isPrimitiveBitString(context)) {
             return;
         }
 
@@ -73,7 +71,7 @@ class BitStringCodecTransformer extends CodecGeneratorBase {
         }
 
         parent.userContext.push({
-            position: this.toInteger(context.item?.position)
+            position: toInteger(context.item?.position)
         });
     }
 
@@ -113,14 +111,6 @@ class BitStringCodecTransformer extends CodecGeneratorBase {
         });
     }
 
-    isPrimitiveBitString(context) {
-        if (context.traits !== undefined) {
-            return false;
-        }
-
-        return context.definition?.primitive === 8 || context.fullname === 'bit-string';
-    }
-
     registerCodecObject(context, bits) {
         const fullname = context.fullname;
         const hierarchy = this.getTypeHierarchy(fullname);
@@ -132,109 +122,23 @@ class BitStringCodecTransformer extends CodecGeneratorBase {
             ? Math.max(...bits.map(item => item.position)) + 1
             : null;
 
-        const isSpecialVariable = specialVariableLengths.has(fullname);
-        const lengthInfo = this.resolveLengthInfo(context.traits?.length, inferredFixedLength, isSpecialVariable, fullname);
-        const storageType = this.resolveStorageType(lengthInfo.maximum ?? lengthInfo.minimum);
+        const descriptor = describeBitString({
+            lengthTrait: context.traits?.length,
+            inferredFixedLength,
+            fullname
+        });
 
         this.codecObjects.set(fullname, {
             fullname,
             className,
             fileName,
             csharpType: `T.${typeName}`,
-            fixedLength: lengthInfo.isVariable ? null : lengthInfo.maximum,
-            isVariable: lengthInfo.isVariable,
-            storageType,
-            countType: this.getCountType(lengthInfo.maximum),
-            storageBytes: this.getStorageBytes(storageType)
+            fixedLength: descriptor.length.isVariable ? null : descriptor.length.maximum,
+            isVariable: descriptor.length.isVariable,
+            storageType: descriptor.storageType,
+            countType: descriptor.countType,
+            storageBytes: descriptor.storageBytes
         });
-    }
-
-    resolveLengthInfo(lengthTrait, inferredFixedLength, isSpecialVariable, fullname) {
-        if (isSpecialVariable) {
-            const max = specialVariableLengths.get(fullname);
-            return { minimum: 0, maximum: max, isVariable: true };
-        }
-
-        if (Number.isInteger(lengthTrait)) {
-            return { minimum: lengthTrait, maximum: lengthTrait, isVariable: false };
-        }
-
-        if (lengthTrait && typeof lengthTrait === 'object') {
-            const minimum = this.toInteger(lengthTrait.minimum) ?? 0;
-            const maximum = this.toInteger(lengthTrait.maximum);
-            if (minimum === maximum && maximum !== null) {
-                return { minimum, maximum, isVariable: false };
-            }
-            return { minimum, maximum, isVariable: true };
-        }
-
-        if (Number.isInteger(inferredFixedLength)) {
-            return { minimum: inferredFixedLength, maximum: inferredFixedLength, isVariable: false };
-        }
-
-        return { minimum: 0, maximum: null, isVariable: true };
-    }
-
-    resolveStorageType(maxLength) {
-        if (!Number.isInteger(maxLength)) {
-            return 'byte[]';
-        }
-
-        if (maxLength <= 8) {
-            return 'byte';
-        }
-        if (maxLength <= 16) {
-            return 'ushort';
-        }
-        if (maxLength <= 32) {
-            return 'uint';
-        }
-        if (maxLength <= 64) {
-            return 'ulong';
-        }
-
-        return 'byte[]';
-    }
-
-    getStorageBytes(storageType) {
-        switch (storageType) {
-            case 'byte':
-                return 1;
-            case 'ushort':
-                return 2;
-            case 'uint':
-                return 4;
-            case 'ulong':
-                return 8;
-            default:
-                return null;
-        }
-    }
-
-    getCountType(maximum) {
-        if (!Number.isInteger(maximum)) {
-            return 'ushort';
-        }
-
-        return maximum > 255 ? 'ushort' : 'byte';
-    }
-
-    toInteger(value) {
-        if (typeof value === 'number' && Number.isInteger(value)) {
-            return value;
-        }
-
-        if (typeof value === 'bigint') {
-            const asNumber = Number(value);
-            return Number.isInteger(asNumber) ? asNumber : null;
-        }
-
-        if (typeof value === 'string') {
-            const parsed = Number.parseInt(value, 10);
-            return Number.isInteger(parsed) ? parsed : null;
-        }
-
-        return null;
     }
 
     renderCodec(codecObject) {
