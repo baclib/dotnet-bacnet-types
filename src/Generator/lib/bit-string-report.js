@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: Copyright 2024-2026, The BAClib Initiative and Contributors
+// SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
 import { writeFileSync } from 'fs';
@@ -234,7 +234,7 @@ class BitStringDefinitionReportTransformer {
         const items = this.definitions.map(definition => this.renderDefinition(definition)).join('\n');
 
         return `<!--
-SPDX-FileCopyrightText: Copyright 2024-2026, The BAClib Initiative and Contributors
+SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 SPDX-License-Identifier: EPL-2.0
 -->
 <!doctype html>
