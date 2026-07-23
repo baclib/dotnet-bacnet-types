@@ -17,6 +17,14 @@ const unsignedVariants = Object.freeze(['byte', 'ushort', 'uint', 'ulong'].map((
     return Object.freeze({ kind: 'Unsigned', type, size, min: 0n, max });
 }));
 
+const unsignedVariantsByType = Object.freeze(
+    Object.fromEntries(unsignedVariants.map(variant => [variant.type, variant]))
+);
+
+const unsignedVariantsBySize = Object.freeze(
+    Object.fromEntries(unsignedVariants.map(variant => [variant.size, variant]))
+);
+
 /**
  * Find the smallest type variant that fits the given minimum and maximum values.
  * Uses binary search properties: variants are pre-sorted by size.
@@ -32,6 +40,72 @@ function getTypedVariant(variants, minimum, maximum) {
 
 export function getUnsignedVariant(minimum, maximum) {
     return getTypedVariant(unsignedVariants, minimum, maximum);
+}
+
+export function getUnsignedVariantByType(type) {
+    return unsignedVariantsByType[type] ?? null;
+}
+
+export function getUnsignedVariantBySize(size) {
+    return unsignedVariantsBySize[size] ?? null;
+}
+
+function normalizeIntegerValue(value) {
+    if (typeof value === 'bigint') {
+        return value;
+    }
+
+    if (typeof value === 'number' && Number.isInteger(value)) {
+        return BigInt(value);
+    }
+
+    if (typeof value === 'string' && /^\d+$/.test(value.trim())) {
+        return BigInt(value.trim());
+    }
+
+    return null;
+}
+
+export function describeEnumerated({ underlyingType = null, variant = null, values = [] } = {}) {
+    let resolvedVariant = null;
+
+    if (variant?.size) {
+        resolvedVariant = getUnsignedVariantBySize(variant.size);
+    }
+
+    if (!resolvedVariant && variant?.type) {
+        resolvedVariant = getUnsignedVariantByType(variant.type);
+    }
+
+    const normalizedValues = values
+        .map(normalizeIntegerValue)
+        .filter(value => value !== null);
+
+    if (!resolvedVariant && normalizedValues.length > 0) {
+        let maximum = normalizedValues[0];
+        for (const candidate of normalizedValues) {
+            if (candidate > maximum) {
+                maximum = candidate;
+            }
+        }
+
+        resolvedVariant = getUnsignedVariant(0n, maximum);
+    }
+
+    if (!resolvedVariant && underlyingType) {
+        resolvedVariant = getUnsignedVariantByType(underlyingType);
+    }
+
+    resolvedVariant ??= getUnsignedVariantByType('uint');
+
+    return {
+        underlyingType: resolvedVariant.type,
+        variant: {
+            kind: resolvedVariant.kind,
+            size: resolvedVariant.size,
+            type: resolvedVariant.type
+        }
+    };
 }
 
 const integerVariants = Object.freeze(['sbyte', 'short', 'int', 'long'].map((type, index) => {

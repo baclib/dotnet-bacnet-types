@@ -61,7 +61,7 @@ public sealed class {{className}} :
 
 {{/if}}
 {{#if isNull}}
-    return {{csharpType}}.Value;
+        return {{csharpType}}.Value;
 {{else if isBoolean}}
         return source[0] switch
         {
@@ -73,7 +73,6 @@ public sealed class {{className}} :
         return checked(({{csharpType}})AsduPrimitives.ReadUnsigned{{variant.size}}(source));
 {{else if isIntegerFamily}}
         return checked(({{csharpType}})AsduPrimitives.ReadInteger{{variant.size}}(source));
-
 {{else if isCharacterString}}
         var value = new CharacterString(source);
         return {{#if isDerived}}new {{csharpType}}(value){{else}}value{{/if}};
@@ -84,7 +83,6 @@ public sealed class {{className}} :
         {
             throw new ArgumentOutOfRangeException(nameof(source));
         }
-
 {{/unless}}
 {{#if isArrayStorage}}
 {{#if isVariable}}
@@ -101,7 +99,7 @@ public sealed class {{className}} :
 {{/if}}
 {{/if}}
 {{else if isEnumerated}}
-        var value = AsduBinaryPrimitives.ReadUnsigned{{variant.size}}(source);
+        var value = AsduPrimitives.ReadUnsigned{{variant.size}}(source);
         return ({{csharpType}})value;
 {{else if isObjectIdentifier}}
         var value = AsduBinaryPrimitives.ReadUnsigned32(source);
@@ -157,6 +155,8 @@ public sealed class {{className}} :
         {{else}}
         AsduPrimitives.WriteInteger(destination, checked((int)value));
         {{/if}}
+    {{else if isEnumerated}}
+        AsduPrimitives.WriteUnsigned{{variant.size}}(destination, checked(({{variant.type}})value));
     {{else if lengthConstant}}
         if (destination.Length != AsduLength.{{lengthConstant}})
         {
@@ -169,8 +169,6 @@ public sealed class {{className}} :
         destination[0] = value ? (byte)1 : (byte)0;
     {{else if isReal}}
         throw new NotImplementedException("Encoding of Real values is not implemented yet.");
-    {{else if isEnumerated}}
-        AsduBinaryPrimitives.WriteUnsigned{{variant.size}}(destination, ({{variant.type}})value);
     {{else if isObjectIdentifier}}
         AsduBinaryPrimitives.WriteUnsigned32(destination, value.Value);
     {{else if members}}

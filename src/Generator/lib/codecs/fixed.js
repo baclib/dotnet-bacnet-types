@@ -8,7 +8,7 @@ import { TemplateEngine } from '../core/template-engine.js';
 import { codecTemplatesDir, codecsOutputDir, generatorRoot, workingDir } from '../core/paths.js';
 import { isBooleanObject } from 'util/types';
 import Handlebars from 'handlebars';
-import { sourceTypesByName, sourceTypesByIndex, getUnsignedVariant, getIntegerVariant } from './predefined.js';
+import { sourceTypesByName, sourceTypesByIndex, getUnsignedVariant, getIntegerVariant, describeEnumerated } from './predefined.js';
 import { toPascalCase, toCamelCase } from '../core/text.js';
 import { describeBitString } from '../core/bit-string-model.js';
 
@@ -53,6 +53,10 @@ function bitStringDescriptorFields(fullname, traits) {
 /** Applies integer-family and (for bit-strings) storage-descriptor annotations to a seeded codec. */
 function annotatePrimitiveCodec(codec) {
     const annotated = annotateIntegerFamilies(codec);
+    if (annotated.isEnumerated) {
+        return { ...annotated, ...describeEnumerated({ underlyingType: annotated.underlyingType, variant: annotated.variant }) };
+    }
+
     if (!annotated.isBitString) {
         return annotated;
     }
@@ -119,9 +123,9 @@ class FixedCodecTransformer extends TemplateEngine {
     pushPrimitiveCodec(fullname, base, context) {
         const bounds = this.inferBounds(context.traits);
         const length = this.inferLength(context.traits);
-        const typeName = fullname.split('.').map((part, index) => (index ? 'T' : '') + toPascalCase(part)).join('.')
+        const typeName = fullname.split('.').map((part, index) => (index ? 'T' : '') + toPascalCase(part)).join('.');
 
-        const variant = (bounds && (base === 'unsigned' || base === 'enumerated')) ? getUnsignedVariant(bounds.minimum, bounds.maximum) : null;
+        const variant = (bounds && base === 'unsigned') ? getUnsignedVariant(bounds.minimum, bounds.maximum) : null;
  
 
         const isBitString = base === 'bit-string';
@@ -134,6 +138,15 @@ class FixedCodecTransformer extends TemplateEngine {
 
         const fixedSize = base === 'real';
         const lengthConstant = base === 'real' ? 'Real' : null;
+        const enumeratedDescriptor = isEnumerated
+            ? describeEnumerated({
+                values: [
+                    bounds?.minimum,
+                    bounds?.maximum,
+                    ...(context.userContext ?? [])
+                ]
+            })
+            : null;
 
         this.primitiveCodecs.push(annotateIntegerFamilies({
             name: fullname,
@@ -143,6 +156,7 @@ class FixedCodecTransformer extends TemplateEngine {
             ...(bounds ? { bounds } : {}),
             ...(length ? { length } : {}),
             ...(variant ? { variant } : {}),
+            ...(enumeratedDescriptor ?? {}),
             ...(isBitString ? { isBitString, ...bitStringDescriptorFields(fullname, context.traits) } : {}),
             ...(isEnumerated ? { isEnumerated } : {}),
             ...(isReal ? { isReal } : {}),
@@ -166,6 +180,10 @@ class FixedCodecTransformer extends TemplateEngine {
 
         if (!context.isPrimitive && !this.predefinedNames.has(name)) {
             const typeName = context.definition.type.base ?? context.definition.type;
+            if (typeName === 'enumerated') {
+                return;
+            }
+
             if (this.predefinedNames.has(typeName)) {
                 this.pushPrimitiveCodec(name, typeName, context);
             }
@@ -175,6 +193,10 @@ class FixedCodecTransformer extends TemplateEngine {
     endDefinition(context) { }
 
     startTraits(context) {
+        if (context.traits?.base === 'enumerated') {
+            context.userContext = [];
+        }
+
         if (!context.definition) {
             const traits = context.traits;
             if (Object.keys(traits).length === 2 && 'base' in traits && 'series' in traits) {
@@ -187,11 +209,25 @@ class FixedCodecTransformer extends TemplateEngine {
         }
     }
 
-    endTraits(context) { }
+    endTraits(context) {
+        if (context.definition && context.traits?.base === 'enumerated' && !this.predefinedNames.has(context.definition.name)) {
+            this.pushPrimitiveCodec(context.definition.name, 'enumerated', context);
+        }
+    }
 
     startItem(context) { }
 
-    endItem(context) { }
+    endItem(context) {
+        const parent = context.ancestors.at(-1);
+        if (parent?.traits?.base !== 'enumerated') {
+            return;
+        }
+
+        const constant = context.item?.constant;
+        if (constant !== undefined && constant !== null) {
+            parent.userContext.push(constant);
+        }
+    }
 
     async start() {
         await fs.mkdir(this.directory, { recursive: true });

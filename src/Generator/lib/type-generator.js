@@ -10,6 +10,7 @@ import { TemplateEngine } from './core/template-engine.js';
 import { toPascalCase } from './core/text.js';
 import { generatorRoot, templatesDir, typesOutputDir } from './core/paths.js';
 import { fixedAliases, partials, pduTypes, refinedTypes } from './core/constants.js';
+import { describeEnumerated } from './codecs/predefined.js';
 import { generateBitStringTypes } from './bit-string-types.js';
 
 /**
@@ -206,14 +207,13 @@ export class CsharpTransformer extends TemplateEngine {
         fileObject.items = context.userContext;
 
         if (fileObject.baseType === 'enumerated') {
-            const maximum = Number.isInteger(context.traits.maximum) ? context.traits.maximum : Math.max(...fileObject.items.map(item => item.constant));
-            if (maximum < 256) {
-                fileObject.enumBase = 'byte';
-            } else if (maximum < 65536) {
-                fileObject.enumBase = 'ushort';
-            } else {
-                fileObject.enumBase = 'uint';
-            }
+            const enumeratedDescriptor = describeEnumerated({
+                values: [
+                    context.traits.maximum,
+                    ...fileObject.items.map(item => item.constant)
+                ]
+            });
+            fileObject.enumBase = enumeratedDescriptor.underlyingType;
         }
 
         fileObject.flagBase = 'long';
