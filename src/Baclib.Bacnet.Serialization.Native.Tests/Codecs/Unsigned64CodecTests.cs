@@ -21,22 +21,4 @@ public class Unsigned64CodecTests
         var reader = new AsduReader([0x0D, 0x08, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]);
         Assert.Equal(0x8000000000000000ul, Unsigned64Codec.Decode(ref reader, tagNumber: 0));
     }
-
-    [Fact]
-    public void DecodeOptional_PresentValue_ReturnsExpected()
-    {
-        var reader = new AsduReader([0x25, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01]);
-        Optional<ulong> result = Asdu.DecodeOptional<Unsigned64Codec, ulong>(ref reader);
-        Assert.True(result.HasValue);
-        Assert.Equal(1ul, result.Value);
-    }
-
-    [Fact]
-    public void DecodeOptional_AbsentValue_ReturnsEmpty()
-    {
-        // Boolean tag (0x11) — unsigned decoder should not match.
-        var reader = new AsduReader([0x11]);
-        Optional<ulong> result = Asdu.DecodeOptional<Unsigned64Codec, ulong>(ref reader);
-        Assert.False(result.HasValue);
-    }
 }

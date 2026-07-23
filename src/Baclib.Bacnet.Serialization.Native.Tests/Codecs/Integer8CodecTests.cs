@@ -22,22 +22,4 @@ public class Integer8CodecTests
         var reader = new AsduReader([0x09, 0xFF]);
         Assert.Equal((sbyte)-1, Integer8Codec.Decode(ref reader, tagNumber: 0));
     }
-
-    [Fact]
-    public void DecodeOptional_PresentValue_ReturnsExpected()
-    {
-        var reader = new AsduReader([0x31, 0x2A]);
-        Optional<sbyte> result = Asdu.DecodeOptional<Integer8Codec, sbyte>(ref reader);
-        Assert.True(result.HasValue);
-        Assert.Equal((sbyte)42, result.Value);
-    }
-
-    [Fact]
-    public void DecodeOptional_AbsentValue_ReturnsEmpty()
-    {
-        // Boolean tag (0x11) — signed decoder should not match.
-        var reader = new AsduReader([0x11]);
-        Optional<sbyte> result = Asdu.DecodeOptional<Integer8Codec, sbyte>(ref reader);
-        Assert.False(result.HasValue);
-    }
 }

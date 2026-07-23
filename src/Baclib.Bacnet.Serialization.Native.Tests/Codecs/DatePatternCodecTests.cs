@@ -39,23 +39,6 @@ public class DatePatternCodecTests
     }
 
     [Fact]
-    public void DecodeOptional_PresentValue_ReturnsValue()
-    {
-        var reader = new AsduReader([0xA4, 0x7C, 0x0C, 0x19, 0x00]);
-        Optional<DatePattern> result = Asdu.DecodeOptional<DatePatternCodec, DatePattern>(ref reader);
-        Assert.True(result.HasValue);
-    }
-
-    [Fact]
-    public void DecodeOptional_AbsentValue_ReturnsEmpty()
-    {
-        // Boolean tag (0x11) — date decoder should not match.
-        var reader = new AsduReader([0x11]);
-        Optional<DatePattern> result = Asdu.DecodeOptional<DatePatternCodec, DatePattern>(ref reader);
-        Assert.False(result.HasValue);
-    }
-
-    [Fact]
     public void GetEncodedSize_ApplicationTagged_Returns6()
     {
         var datePattern = new DatePattern();

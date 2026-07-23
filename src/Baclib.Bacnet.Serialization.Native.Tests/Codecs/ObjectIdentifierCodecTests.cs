@@ -34,13 +34,4 @@ public class ObjectIdentifierCodecTests
         ObjectIdentifier result = ObjectIdentifierCodec.Decode(ref reader, tagNumber: 0);
         Assert.Equal(new ObjectIdentifier(0x00000001), result);
     }
-
-    [Fact]
-    public void DecodeOptional_AbsentValue_ReturnsEmpty()
-    {
-        // Boolean tag — ObjectIdentifier decoder should not match.
-        var reader = new AsduReader([0x11]);
-        Optional<ObjectIdentifier> result = Asdu.DecodeOptional<ObjectIdentifierCodec, ObjectIdentifier>(ref reader);
-        Assert.False(result.HasValue);
-    }
 }

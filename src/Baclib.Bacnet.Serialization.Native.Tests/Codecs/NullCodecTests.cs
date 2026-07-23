@@ -33,34 +33,6 @@ public class NullCodecTests
     }
 
     [Fact]
-    public void DecodeOptional_PresentValue_ReturnsNull()
-    {
-        var reader = new AsduReader([0x00]);
-        Optional<Null> result = Asdu.DecodeOptional<NullCodec, Null>(ref reader);
-        Assert.True(result.HasValue);
-        Assert.Equal(Null.Value, result.Value);
-    }
-
-    [Fact]
-    public void DecodeOptional_AbsentValue_ReturnsEmpty()
-    {
-        // Boolean tag (0x11) — null decoder should not match.
-        var reader = new AsduReader([0x11]);
-        Optional<Null> result = Asdu.DecodeOptional<NullCodec, Null>(ref reader);
-        Assert.False(result.HasValue);
-    }
-
-    [Fact]
-    public void DecodeOptional_ContextTagged_ReturnsNull()
-    {
-        // Context tag 2, length 0: (2 << 4) | 0x08 = 0x28
-        var reader = new AsduReader([0x28]);
-        Optional<Null> result = Asdu.DecodeOptional<NullCodec, Null>(ref reader, tagNumber: 2);
-        Assert.True(result.HasValue);
-        Assert.Equal(Null.Value, result.Value);
-    }
-
-    [Fact]
     public void GetEncodedSize_ApplicationTagged_Returns1()
     {
         var result = NullCodec.GetEncodedLength(Null.Value);

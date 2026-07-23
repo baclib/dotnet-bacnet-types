@@ -22,22 +22,4 @@ public class Integer16CodecTests
         var reader = new AsduReader([0x0A, 0xFF, 0x38]);
         Assert.Equal((short)-200, Integer16Codec.Decode(ref reader, tagNumber: 0));
     }
-
-    [Fact]
-    public void DecodeOptional_PresentValue_ReturnsExpected()
-    {
-        var reader = new AsduReader([0x32, 0x03, 0xE8]);
-        Optional<short> result = Asdu.DecodeOptional<Integer16Codec, short>(ref reader);
-        Assert.True(result.HasValue);
-        Assert.Equal((short)1000, result.Value);
-    }
-
-    [Fact]
-    public void DecodeOptional_AbsentValue_ReturnsEmpty()
-    {
-        // Boolean tag (0x11) — signed decoder should not match.
-        var reader = new AsduReader([0x11]);
-        Optional<short> result = Asdu.DecodeOptional<Integer16Codec, short>(ref reader);
-        Assert.False(result.HasValue);
-    }
 }

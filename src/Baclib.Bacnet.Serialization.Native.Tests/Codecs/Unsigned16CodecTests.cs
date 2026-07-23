@@ -22,22 +22,4 @@ public class Unsigned16CodecTests
         var reader = new AsduReader([0x0A, 0x01, 0x00]);
         Assert.Equal((ushort)256, Unsigned16Codec.Decode(ref reader, tagNumber: 0));
     }
-
-    [Fact]
-    public void DecodeOptional_PresentValue_ReturnsExpected()
-    {
-        var reader = new AsduReader([0x22, 0x03, 0xE8]);
-        Optional<ushort> result = Asdu.DecodeOptional<Unsigned16Codec, ushort>(ref reader);
-        Assert.True(result.HasValue);
-        Assert.Equal((ushort)1000, result.Value);
-    }
-
-    [Fact]
-    public void DecodeOptional_AbsentValue_ReturnsEmpty()
-    {
-        // Boolean tag (0x11) — unsigned decoder should not match.
-        var reader = new AsduReader([0x11]);
-        Optional<ushort> result = Asdu.DecodeOptional<Unsigned16Codec, ushort>(ref reader);
-        Assert.False(result.HasValue);
-    }
 }

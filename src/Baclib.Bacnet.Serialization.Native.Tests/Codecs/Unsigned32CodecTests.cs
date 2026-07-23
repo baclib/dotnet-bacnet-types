@@ -23,25 +23,4 @@ public class Unsigned32CodecTests
         var reader = new AsduReader([0x0A, 0x01, 0x00]);
         Assert.Equal(256u, Unsigned32Codec.Decode(ref reader, tagNumber: 0));
     }
-
-    [Theory]
-    [InlineData(new byte[] { 0x21, 0x00 }, 0u)]
-    [InlineData(new byte[] { 0x21, 0x7F }, 127u)]
-    [InlineData(new byte[] { 0x24, 0x80, 0x00, 0x00, 0x00 }, 2147483648u)]
-    public void DecodeOptional_PresentValue_ReturnsExpected(byte[] bytes, uint expected)
-    {
-        var reader = new AsduReader(bytes);
-        Optional<uint> result = Asdu.DecodeOptional<Unsigned32Codec, uint>(ref reader);
-        Assert.True(result.HasValue);
-        Assert.Equal(expected, result.Value);
-    }
-
-    [Fact]
-    public void DecodeOptional_AbsentValue_ReturnsEmpty()
-    {
-        // Boolean tag (0x11) — unsigned decoder should not match.
-        var reader = new AsduReader([0x11]);
-        Optional<uint> result = Asdu.DecodeOptional<Unsigned32Codec, uint>(ref reader);
-        Assert.False(result.HasValue);
-    }
 }

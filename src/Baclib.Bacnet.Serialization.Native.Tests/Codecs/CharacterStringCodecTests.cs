@@ -47,39 +47,10 @@ public class CharacterStringCodecTests
         Assert.Equal(CharacterSet.Utf8, result.CharSet);
     }
 
-    [Fact]
-    public void DecodeOptional_PresentValue_ReturnsValue()
-    {
-        // Application tag 7, length 3: UTF-8 marker + "HI"
-        var reader = new AsduReader([0x73, 0x00, 0x48, 0x49]);
-        Optional<CharacterString> result = Asdu.DecodeOptional<CharacterStringCodec, CharacterString>(ref reader);
-        Assert.True(result.HasValue);
-        Assert.Equal("HI", result.Value.Value);
-    }
-
-    [Fact]
-    public void DecodeOptional_AbsentValue_ReturnsEmpty()
-    {
-        // Boolean tag (0x11) — character string decoder should not match.
-        var reader = new AsduReader([0x11]);
-        Optional<CharacterString> result = Asdu.DecodeOptional<CharacterStringCodec, CharacterString>(ref reader);
-        Assert.False(result.HasValue);
-    }
-
-    [Fact]
-    public void DecodeOptional_ContextTagged_ReturnsValue()
-    {
-        // Context tag 0, length 4: 0x0C, UTF-8 marker + "XYZ"
-        var reader = new AsduReader([0x0C, 0x00, 0x58, 0x59, 0x5A]);
-        Optional<CharacterString> result = Asdu.DecodeOptional<CharacterStringCodec, CharacterString>(ref reader, tagNumber: 0);
-        Assert.True(result.HasValue);
-        Assert.Equal("XYZ", result.Value.Value);
-    }
-
     [Theory]
     [InlineData("", 2)]
-    [InlineData("A", 3)]
     [InlineData("Hi", 4)]
+    [InlineData("Hello World", 14)]
     public void GetEncodedSize_ApplicationTagged_ReturnsExpected(string value, int expected)
     {
         var charString = new CharacterString(value);

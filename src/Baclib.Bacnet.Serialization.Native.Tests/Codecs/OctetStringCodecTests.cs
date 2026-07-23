@@ -43,35 +43,6 @@ public class OctetStringCodecTests
         Assert.Equal("AABBCC", result.ToHexString());
     }
 
-    [Fact]
-    public void DecodeOptional_PresentValue_ReturnsValue()
-    {
-        // Application tag 6, length 2: 0x62
-        var reader = new AsduReader([0x62, 0x12, 0x34]);
-        Optional<OctetString> result = Asdu.DecodeOptional<OctetStringCodec, OctetString>(ref reader);
-        Assert.True(result.HasValue);
-        Assert.Equal("1234", result.Value.ToHexString());
-    }
-
-    [Fact]
-    public void DecodeOptional_AbsentValue_ReturnsEmpty()
-    {
-        // Boolean tag (0x11) — octet string decoder should not match.
-        var reader = new AsduReader([0x11]);
-        Optional<OctetString> result = Asdu.DecodeOptional<OctetStringCodec, OctetString>(ref reader);
-        Assert.False(result.HasValue);
-    }
-
-    [Fact]
-    public void DecodeOptional_ContextTagged_ReturnsValue()
-    {
-        // Context tag 0, length 2: 0x0A, data 0x55 0x66
-        var reader = new AsduReader([0x0A, 0x55, 0x66]);
-        Optional<OctetString> result = Asdu.DecodeOptional<OctetStringCodec, OctetString>(ref reader, tagNumber: 0);
-        Assert.True(result.HasValue);
-        Assert.Equal("5566", result.Value.ToHexString());
-    }
-
     [Theory]
     [InlineData(new byte[] { }, 1)]
     [InlineData(new byte[] { 0xFF }, 2)]

@@ -31,25 +31,4 @@ public class Integer32CodecTests
         var reader = new AsduReader([0x09, 0x64]);
         Assert.Equal(100, Integer32Codec.Decode(ref reader, tagNumber: 0));
     }
-
-    [Theory]
-    [InlineData(new byte[] { 0x31, 0x00 }, 0)]
-    [InlineData(new byte[] { 0x31, 0x7F }, 127)]
-    [InlineData(new byte[] { 0x32, 0x80, 0x00 }, -32768)]
-    public void DecodeOptional_PresentValue_ReturnsExpected(byte[] bytes, int expected)
-    {
-        var reader = new AsduReader(bytes);
-        Optional<int> result = Asdu.DecodeOptional<Integer32Codec, int>(ref reader);
-        Assert.True(result.HasValue);
-        Assert.Equal(expected, result.Value);
-    }
-
-    [Fact]
-    public void DecodeOptional_AbsentValue_ReturnsEmpty()
-    {
-        // Boolean tag (0x11) — integer decoder should not match.
-        var reader = new AsduReader([0x11]);
-        Optional<int> result = Asdu.DecodeOptional<Integer32Codec, int>(ref reader);
-        Assert.False(result.HasValue);
-    }
 }

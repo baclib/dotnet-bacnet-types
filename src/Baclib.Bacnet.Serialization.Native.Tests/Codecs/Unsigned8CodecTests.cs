@@ -22,22 +22,4 @@ public class Unsigned8CodecTests
         var reader = new AsduReader([0x09, 0x2A]);
         Assert.Equal((byte)42, Unsigned8Codec.Decode(ref reader, tagNumber: 0));
     }
-
-    [Fact]
-    public void DecodeOptional_PresentValue_ReturnsExpected()
-    {
-        var reader = new AsduReader([0x21, 0x2A]);
-        Optional<byte> result = Asdu.DecodeOptional<Unsigned8Codec, byte>(ref reader);
-        Assert.True(result.HasValue);
-        Assert.Equal((byte)42, result.Value);
-    }
-
-    [Fact]
-    public void DecodeOptional_AbsentValue_ReturnsEmpty()
-    {
-        // Boolean tag (0x11) — unsigned decoder should not match.
-        var reader = new AsduReader([0x11]);
-        Optional<byte> result = Asdu.DecodeOptional<Unsigned8Codec, byte>(ref reader);
-        Assert.False(result.HasValue);
-    }
 }

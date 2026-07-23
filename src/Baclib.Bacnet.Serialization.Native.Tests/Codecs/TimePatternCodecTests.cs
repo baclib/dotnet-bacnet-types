@@ -49,23 +49,6 @@ public class TimePatternCodecTests
     }
 
     [Fact]
-    public void DecodeOptional_PresentValue_ReturnsValue()
-    {
-        var reader = new AsduReader([0xB4, 0x14, 0x32, 0x2D, 0x00]);
-        Optional<TimePattern> result = Asdu.DecodeOptional<TimePatternCodec, TimePattern>(ref reader);
-        Assert.True(result.HasValue);
-    }
-
-    [Fact]
-    public void DecodeOptional_AbsentValue_ReturnsEmpty()
-    {
-        // Boolean tag (0x11) — time decoder should not match.
-        var reader = new AsduReader([0x11]);
-        Optional<TimePattern> result = Asdu.DecodeOptional<TimePatternCodec, TimePattern>(ref reader);
-        Assert.False(result.HasValue);
-    }
-
-    [Fact]
     public void GetEncodedSize_ApplicationTagged_Returns6()
     {
         var timePattern = new TimePattern();

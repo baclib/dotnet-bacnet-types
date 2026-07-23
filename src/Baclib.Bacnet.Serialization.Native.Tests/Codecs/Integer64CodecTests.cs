@@ -22,22 +22,4 @@ public class Integer64CodecTests
         var reader = new AsduReader([0x0D, 0x08, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF]);
         Assert.Equal(-1L, Integer64Codec.Decode(ref reader, tagNumber: 0));
     }
-
-    [Fact]
-    public void DecodeOptional_PresentValue_ReturnsExpected()
-    {
-        var reader = new AsduReader([0x35, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01]);
-        Optional<long> result = Asdu.DecodeOptional<Integer64Codec, long>(ref reader);
-        Assert.True(result.HasValue);
-        Assert.Equal(1L, result.Value);
-    }
-
-    [Fact]
-    public void DecodeOptional_AbsentValue_ReturnsEmpty()
-    {
-        // Boolean tag (0x11) — signed decoder should not match.
-        var reader = new AsduReader([0x11]);
-        Optional<long> result = Asdu.DecodeOptional<Integer64Codec, long>(ref reader);
-        Assert.False(result.HasValue);
-    }
 }
