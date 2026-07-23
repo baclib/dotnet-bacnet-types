@@ -129,4 +129,5 @@ public sealed class DatePatternCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.DatePattern;
+
 }

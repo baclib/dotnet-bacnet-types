@@ -116,4 +116,5 @@ public sealed class AuthenticationFactorTypeCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Enumerated;
+
 }

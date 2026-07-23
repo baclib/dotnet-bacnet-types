@@ -10,6 +10,7 @@ import { isBooleanObject } from 'util/types';
 import Handlebars from 'handlebars';
 import { sourceTypesByName, sourceTypesByIndex, getUnsignedVariant, getIntegerVariant } from './predefined.js';
 import { toPascalCase, toCamelCase } from '../core/text.js';
+import { describeBitString } from '../core/bit-string-model.js';
 
 function annotateIntegerFamilies(codec) {
     return {
@@ -17,6 +18,46 @@ function annotateIntegerFamilies(codec) {
         isUnsignedFamily: codec.tagName === 'Unsigned',
         isIntegerFamily: codec.tagName === 'Integer'
     };
+}
+
+/**
+ * Derives the storage/length fields the primitive template needs to emit a bit-string codec.
+ * All bit-string codecs (the base `bit-string`, the `bit-string-8/16/32/64` variants, and every
+ * refined named type) flow through the shared classifier so they stay in agreement with the types.
+ *
+ * @param {string} fullname The definition's full name (used to detect the special variable primitives).
+ * @param {object|undefined} traits The definition traits (`length`, `bits`), when available.
+ */
+function bitStringDescriptorFields(fullname, traits) {
+    const bits = traits?.bits;
+    const inferredFixedLength = Array.isArray(bits) && bits.length > 0
+        ? Math.max(...bits.map(bit => bit.position)) + 1
+        : null;
+
+    const descriptor = describeBitString({
+        lengthTrait: traits?.length,
+        inferredFixedLength,
+        fullname
+    });
+
+    return {
+        storageType: descriptor.storageType,
+        isArrayStorage: descriptor.isArrayStorage,
+        countType: descriptor.countType,
+        storageBytes: descriptor.storageBytes,
+        isVariable: descriptor.length.isVariable,
+        fixedLength: descriptor.length.isVariable ? null : descriptor.length.maximum
+    };
+}
+
+/** Applies integer-family and (for bit-strings) storage-descriptor annotations to a seeded codec. */
+function annotatePrimitiveCodec(codec) {
+    const annotated = annotateIntegerFamilies(codec);
+    if (!annotated.isBitString) {
+        return annotated;
+    }
+
+    return { ...annotated, ...bitStringDescriptorFields(annotated.name, undefined) };
 }
 
 Handlebars.registerHelper('nameis', function (value, options) {
@@ -34,7 +75,7 @@ class FixedCodecTransformer extends TemplateEngine {
             ? path.resolve(generatorRoot, process.env.CODEC_OUTPUT_DIR)
             : codecsOutputDir;
         this.templatesDir = codecTemplatesDir;
-        this.primitiveCodecs = sourceTypesByIndex.map(annotateIntegerFamilies);
+        this.primitiveCodecs = sourceTypesByIndex.map(annotatePrimitiveCodec);
         this.predefinedNames = new Set(sourceTypesByIndex.map(codec => codec.name));
     }
 
@@ -102,7 +143,7 @@ class FixedCodecTransformer extends TemplateEngine {
             ...(bounds ? { bounds } : {}),
             ...(length ? { length } : {}),
             ...(variant ? { variant } : {}),
-            ...(isBitString ? { isBitString } : {}),
+            ...(isBitString ? { isBitString, ...bitStringDescriptorFields(fullname, context.traits) } : {}),
             ...(isEnumerated ? { isEnumerated } : {}),
             ...(isReal ? { isReal } : {}),
             ...(isOctetString ? { isOctetString } : {}),

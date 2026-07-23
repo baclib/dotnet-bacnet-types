@@ -116,4 +116,5 @@ public sealed class BackupStateCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Enumerated;
+
 }

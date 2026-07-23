@@ -116,4 +116,5 @@ public sealed class ReinitializeDeviceRequestTPasswordCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.CharacterString;
+
 }

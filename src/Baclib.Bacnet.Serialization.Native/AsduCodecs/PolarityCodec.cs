@@ -116,4 +116,5 @@ public sealed class PolarityCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Enumerated;
+
 }

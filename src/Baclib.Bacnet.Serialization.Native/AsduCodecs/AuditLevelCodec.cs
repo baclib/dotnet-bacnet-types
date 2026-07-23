@@ -116,4 +116,5 @@ public sealed class AuditLevelCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Enumerated;
+
 }

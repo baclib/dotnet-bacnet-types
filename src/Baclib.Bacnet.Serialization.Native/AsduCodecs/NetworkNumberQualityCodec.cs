@@ -116,4 +116,5 @@ public sealed class NetworkNumberQualityCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Enumerated;
+
 }

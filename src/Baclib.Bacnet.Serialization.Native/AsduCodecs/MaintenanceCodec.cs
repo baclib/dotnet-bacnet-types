@@ -116,4 +116,5 @@ public sealed class MaintenanceCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Enumerated;
+
 }

@@ -116,4 +116,5 @@ public sealed class GetEnrollmentSummaryRequestTAcknowledgmentFilterCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Enumerated;
+
 }

@@ -121,4 +121,5 @@ public sealed class DoubleCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Double;
+
 }

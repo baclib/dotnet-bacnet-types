@@ -111,4 +111,5 @@ public sealed class ColorCommandTStepIncrementCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Unsigned;
+
 }

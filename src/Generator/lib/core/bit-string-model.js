@@ -184,7 +184,10 @@ export function classifyCategory(length, storageType) {
  */
 export function describeBitString({ lengthTrait, inferredFixedLength = null, fullname }) {
     const length = resolveLengthInfo(lengthTrait, inferredFixedLength, fullname);
-    const storageType = resolveStorageType(length.maximum ?? length.minimum);
+    // An unbounded bit-string (maximum === null) has no scalar upper bound, so it must use
+    // byte[] storage. Passing the null maximum straight through yields that; never fall back
+    // to the minimum, which would misclassify an unbounded string as a small scalar.
+    const storageType = resolveStorageType(length.maximum);
     const countType = getCountType(length.maximum);
     const storageBytes = getStorageBytes(storageType);
     const category = classifyCategory(length, storageType);

@@ -116,4 +116,5 @@ public sealed class AccumulatorRecordTAccumulatorStatusCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Enumerated;
+
 }

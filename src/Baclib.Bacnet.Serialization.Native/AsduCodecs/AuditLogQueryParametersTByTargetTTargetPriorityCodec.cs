@@ -111,4 +111,5 @@ public sealed class AuditLogQueryParametersTByTargetTTargetPriorityCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Unsigned;
+
 }

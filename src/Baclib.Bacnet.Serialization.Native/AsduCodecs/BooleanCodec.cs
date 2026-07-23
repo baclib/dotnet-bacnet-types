@@ -134,4 +134,5 @@ public sealed class BooleanCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Boolean;
+
 }

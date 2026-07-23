@@ -121,4 +121,5 @@ public sealed class LightingCommandTRampRateCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Real;
+
 }

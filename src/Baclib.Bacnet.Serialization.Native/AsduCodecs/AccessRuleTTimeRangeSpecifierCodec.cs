@@ -116,4 +116,5 @@ public sealed class AccessRuleTTimeRangeSpecifierCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Enumerated;
+
 }

@@ -116,4 +116,5 @@ public sealed class EscalatorFaultCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Enumerated;
+
 }

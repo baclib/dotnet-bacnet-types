@@ -116,4 +116,5 @@ public sealed class AccessUserTypeCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Enumerated;
+
 }

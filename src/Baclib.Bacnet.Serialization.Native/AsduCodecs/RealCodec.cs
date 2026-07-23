@@ -121,4 +121,5 @@ public sealed class RealCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Real;
+
 }

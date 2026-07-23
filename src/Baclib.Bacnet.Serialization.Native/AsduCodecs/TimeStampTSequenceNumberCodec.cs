@@ -111,4 +111,5 @@ public sealed class TimeStampTSequenceNumberCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Unsigned;
+
 }

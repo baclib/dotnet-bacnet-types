@@ -116,4 +116,5 @@ public sealed class SuccessFilterCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Enumerated;
+
 }

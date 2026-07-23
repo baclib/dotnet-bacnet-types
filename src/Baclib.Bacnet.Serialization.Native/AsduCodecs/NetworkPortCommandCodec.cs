@@ -116,4 +116,5 @@ public sealed class NetworkPortCommandCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Enumerated;
+
 }

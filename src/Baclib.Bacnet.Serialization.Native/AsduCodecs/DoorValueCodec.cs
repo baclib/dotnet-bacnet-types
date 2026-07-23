@@ -116,4 +116,5 @@ public sealed class DoorValueCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Enumerated;
+
 }

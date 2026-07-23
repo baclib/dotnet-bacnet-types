@@ -116,4 +116,5 @@ public sealed class RestartReasonCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Enumerated;
+
 }

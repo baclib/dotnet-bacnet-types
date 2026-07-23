@@ -121,4 +121,5 @@ public sealed class NullCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Null;
+
 }

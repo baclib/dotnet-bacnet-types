@@ -41,7 +41,14 @@ public sealed class PriorityFilterCodec :
     /// <exception cref="FormatException">Thrown when the encoded value is not 0 or 1.</exception>
     public static PriorityFilter DecodeValue(ReadOnlySpan<byte> source)
     {
-        throw new NotImplementedException("Decoding of BitString values is not implemented yet.");
+        var bitString = new BitString(source);
+        if (bitString.Length != PriorityFilter.FixedLength)
+        {
+            throw new ArgumentOutOfRangeException(nameof(source));
+        }
+
+        var flags = ReadFlags(bitString.Flags);
+        return new PriorityFilter(flags);
     }
 
     /// <summary>
@@ -69,11 +76,8 @@ public sealed class PriorityFilterCodec :
     /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="destination"/> length is not supported.</exception>
     public static void EncodeValue(Span<byte> destination, in PriorityFilter value)
     {
-        switch (destination.Length)
-        {
-            default:
-                throw new ArgumentOutOfRangeException(nameof(destination));
-        }
+        var flagsBytes = WriteFlags(value.Flags, value.Length);
+        new BitString(flagsBytes, (ushort)value.Length).CopyTo(destination);
     }
 
     /// <summary>
@@ -115,4 +119,33 @@ public sealed class PriorityFilterCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.BitString;
+
+
+    private static ushort ReadFlags(ReadOnlySpan<byte> source)
+    {
+        int bytesToRead = Math.Min(source.Length, 2);
+        ulong flags = 0;
+
+        for (int i = 0; i < bytesToRead; i++)
+        {
+            flags |= (ulong)source[i] << (i * 8);
+        }
+
+        return (ushort)flags;
+    }
+
+    private static byte[] WriteFlags(ushort value, int bitCount)
+    {
+        int byteCount = (bitCount + 7) / 8;
+        var flags = new byte[byteCount];
+        ulong source = value;
+
+        for (int i = 0; i < byteCount; i++)
+        {
+            flags[i] = (byte)(source >> (i * 8));
+        }
+
+        return flags;
+    }
+
 }

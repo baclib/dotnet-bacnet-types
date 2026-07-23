@@ -116,4 +116,5 @@ public sealed class BinaryLightingPvCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Enumerated;
+
 }

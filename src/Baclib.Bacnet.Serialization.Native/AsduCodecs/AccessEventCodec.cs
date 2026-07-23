@@ -116,4 +116,5 @@ public sealed class AccessEventCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Enumerated;
+
 }

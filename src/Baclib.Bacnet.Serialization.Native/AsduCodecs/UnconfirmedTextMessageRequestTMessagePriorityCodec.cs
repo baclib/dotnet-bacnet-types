@@ -116,4 +116,5 @@ public sealed class UnconfirmedTextMessageRequestTMessagePriorityCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Enumerated;
+
 }

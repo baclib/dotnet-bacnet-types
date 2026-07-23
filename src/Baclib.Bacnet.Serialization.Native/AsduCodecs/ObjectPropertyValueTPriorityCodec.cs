@@ -111,4 +111,5 @@ public sealed class ObjectPropertyValueTPriorityCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Unsigned;
+
 }

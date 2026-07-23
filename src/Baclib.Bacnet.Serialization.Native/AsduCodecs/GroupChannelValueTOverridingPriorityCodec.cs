@@ -111,4 +111,5 @@ public sealed class GroupChannelValueTOverridingPriorityCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Unsigned;
+
 }

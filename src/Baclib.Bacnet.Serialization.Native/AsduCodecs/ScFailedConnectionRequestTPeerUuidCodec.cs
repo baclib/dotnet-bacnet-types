@@ -116,4 +116,5 @@ public sealed class ScFailedConnectionRequestTPeerUuidCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.OctetString;
+
 }

@@ -112,4 +112,5 @@ public sealed class IntegerCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Integer;
+
 }

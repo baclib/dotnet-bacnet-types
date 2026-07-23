@@ -116,4 +116,5 @@ public sealed class Enumerated64Codec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Enumerated;
+
 }

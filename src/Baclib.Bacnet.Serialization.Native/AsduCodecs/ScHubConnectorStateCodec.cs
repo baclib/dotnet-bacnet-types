@@ -116,4 +116,5 @@ public sealed class ScHubConnectorStateCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Enumerated;
+
 }

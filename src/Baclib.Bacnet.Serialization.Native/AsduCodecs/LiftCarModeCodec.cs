@@ -116,4 +116,5 @@ public sealed class LiftCarModeCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Enumerated;
+
 }

@@ -116,4 +116,5 @@ public sealed class WriteStatusCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Enumerated;
+
 }

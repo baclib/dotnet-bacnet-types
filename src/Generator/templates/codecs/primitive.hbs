@@ -78,7 +78,28 @@ public sealed class {{className}} :
         var value = new CharacterString(source);
         return {{#if isDerived}}new {{csharpType}}(value){{else}}value{{/if}};
 {{else if isBitString}}
-        throw new NotImplementedException("Decoding of BitString values is not implemented yet.");
+        var bitString = new BitString(source);
+{{#unless isVariable}}
+        if (bitString.Length != {{csharpType}}.FixedLength)
+        {
+            throw new ArgumentOutOfRangeException(nameof(source));
+        }
+
+{{/unless}}
+{{#if isArrayStorage}}
+{{#if isVariable}}
+        return new {{csharpType}}(bitString.Flags, ({{countType}})bitString.Length);
+{{else}}
+        return new {{csharpType}}(bitString.Flags);
+{{/if}}
+{{else}}
+        var flags = ReadFlags(bitString.Flags);
+{{#if isVariable}}
+        return new {{csharpType}}(flags, ({{countType}})bitString.Length);
+{{else}}
+        return new {{csharpType}}(flags);
+{{/if}}
+{{/if}}
 {{else if isEnumerated}}
         var value = AsduBinaryPrimitives.ReadUnsigned{{variant.size}}(source);
         return ({{csharpType}})value;
@@ -159,6 +180,13 @@ public sealed class {{className}} :
     {{else}}
         AsduBinaryPrimitives.Write{{tagName}}(destination, value);
     {{/if}}
+{{else if isBitString}}
+    {{#if isArrayStorage}}
+        new BitString(value.Flags, (ushort)value.Length).CopyTo(destination);
+    {{else}}
+        var flagsBytes = WriteFlags(value.Flags, value.Length);
+        new BitString(flagsBytes, (ushort)value.Length).CopyTo(destination);
+    {{/if}}
 {{else if hasStringDataLength}}
         value.CopyTo(destination);
 {{else}}
@@ -224,4 +252,33 @@ public sealed class {{className}} :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.{{tagName}};
+{{#if isBitString}}{{#unless isArrayStorage}}
+
+    private static {{storageType}} ReadFlags(ReadOnlySpan<byte> source)
+    {
+        int bytesToRead = Math.Min(source.Length, {{storageBytes}});
+        ulong flags = 0;
+
+        for (int i = 0; i < bytesToRead; i++)
+        {
+            flags |= (ulong)source[i] << (i * 8);
+        }
+
+        return ({{storageType}})flags;
+    }
+
+    private static byte[] WriteFlags({{storageType}} value, int bitCount)
+    {
+        int byteCount = (bitCount + 7) / 8;
+        var flags = new byte[byteCount];
+        ulong source = value;
+
+        for (int i = 0; i < byteCount; i++)
+        {
+            flags[i] = (byte)(source >> (i * 8));
+        }
+
+        return flags;
+    }
+{{/unless}}{{/if}}
 }

@@ -116,4 +116,5 @@ public sealed class AccessPassbackModeCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Enumerated;
+
 }

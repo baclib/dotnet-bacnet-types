@@ -116,4 +116,5 @@ public sealed class DeviceCommunicationControlRequestTPasswordCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.CharacterString;
+
 }

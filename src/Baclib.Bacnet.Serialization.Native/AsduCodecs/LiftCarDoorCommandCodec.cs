@@ -116,4 +116,5 @@ public sealed class LiftCarDoorCommandCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Enumerated;
+
 }

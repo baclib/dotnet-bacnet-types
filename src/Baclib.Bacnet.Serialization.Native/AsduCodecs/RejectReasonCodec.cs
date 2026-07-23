@@ -116,4 +116,5 @@ public sealed class RejectReasonCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Enumerated;
+
 }

@@ -111,4 +111,5 @@ public sealed class AuditNotificationTTargetPriorityCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Unsigned;
+
 }

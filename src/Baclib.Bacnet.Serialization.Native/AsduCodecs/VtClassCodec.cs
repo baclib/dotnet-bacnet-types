@@ -116,4 +116,5 @@ public sealed class VtClassCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Enumerated;
+
 }

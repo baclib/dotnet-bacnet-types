@@ -111,4 +111,5 @@ public sealed class ColorCommandTFadeTimeCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Unsigned;
+
 }

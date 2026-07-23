@@ -121,4 +121,5 @@ public sealed class LightingCommandTTargetLevelCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Real;
+
 }

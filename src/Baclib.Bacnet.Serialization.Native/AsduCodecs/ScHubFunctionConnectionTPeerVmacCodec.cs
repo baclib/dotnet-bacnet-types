@@ -116,4 +116,5 @@ public sealed class ScHubFunctionConnectionTPeerVmacCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.OctetString;
+
 }

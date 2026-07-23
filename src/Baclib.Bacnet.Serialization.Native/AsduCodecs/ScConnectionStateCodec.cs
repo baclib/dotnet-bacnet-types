@@ -116,4 +116,5 @@ public sealed class ScConnectionStateCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Enumerated;
+
 }

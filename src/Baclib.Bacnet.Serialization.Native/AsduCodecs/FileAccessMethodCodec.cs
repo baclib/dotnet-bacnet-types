@@ -116,4 +116,5 @@ public sealed class FileAccessMethodCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Enumerated;
+
 }

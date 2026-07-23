@@ -116,4 +116,5 @@ public sealed class AccessRuleTLocationSpecifierCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Enumerated;
+
 }

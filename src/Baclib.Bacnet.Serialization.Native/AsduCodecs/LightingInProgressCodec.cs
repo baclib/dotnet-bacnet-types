@@ -116,4 +116,5 @@ public sealed class LightingInProgressCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Enumerated;
+
 }

@@ -116,4 +116,5 @@ public sealed class EscalatorModeCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Enumerated;
+
 }

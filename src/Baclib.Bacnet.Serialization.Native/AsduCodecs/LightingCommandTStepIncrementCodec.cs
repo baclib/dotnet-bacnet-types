@@ -121,4 +121,5 @@ public sealed class LightingCommandTStepIncrementCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Real;
+
 }

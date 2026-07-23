@@ -116,4 +116,5 @@ public sealed class EngineeringUnitsCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Enumerated;
+
 }

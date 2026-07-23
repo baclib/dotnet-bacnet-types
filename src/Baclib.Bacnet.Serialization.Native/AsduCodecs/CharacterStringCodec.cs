@@ -116,4 +116,5 @@ public sealed class CharacterStringCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.CharacterString;
+
 }

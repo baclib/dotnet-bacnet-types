@@ -111,4 +111,5 @@ public sealed class Unsigned32Codec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Unsigned;
+
 }

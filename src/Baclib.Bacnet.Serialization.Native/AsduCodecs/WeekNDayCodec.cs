@@ -127,4 +127,5 @@ public sealed class WeekNDayCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.OctetString;
+
 }

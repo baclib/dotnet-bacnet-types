@@ -116,4 +116,5 @@ public sealed class RelationshipCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Enumerated;
+
 }

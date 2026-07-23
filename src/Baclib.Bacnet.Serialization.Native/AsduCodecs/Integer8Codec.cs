@@ -112,4 +112,5 @@ public sealed class Integer8Codec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Integer;
+
 }

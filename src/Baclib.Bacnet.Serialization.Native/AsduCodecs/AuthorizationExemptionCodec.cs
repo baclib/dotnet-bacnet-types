@@ -116,4 +116,5 @@ public sealed class AuthorizationExemptionCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Enumerated;
+
 }

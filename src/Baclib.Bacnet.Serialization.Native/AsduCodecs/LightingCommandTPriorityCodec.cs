@@ -111,4 +111,5 @@ public sealed class LightingCommandTPriorityCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Unsigned;
+
 }

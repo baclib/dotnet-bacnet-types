@@ -116,4 +116,5 @@ public sealed class ConfirmedServiceChoiceCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Enumerated;
+
 }

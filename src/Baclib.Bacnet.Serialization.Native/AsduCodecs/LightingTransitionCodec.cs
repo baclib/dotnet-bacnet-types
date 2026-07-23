@@ -116,4 +116,5 @@ public sealed class LightingTransitionCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Enumerated;
+
 }

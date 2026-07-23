@@ -111,4 +111,5 @@ public sealed class WritePropertyRequestTPriorityCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Unsigned;
+
 }

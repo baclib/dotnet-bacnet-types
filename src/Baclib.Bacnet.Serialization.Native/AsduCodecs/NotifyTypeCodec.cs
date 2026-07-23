@@ -116,4 +116,5 @@ public sealed class NotifyTypeCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Enumerated;
+
 }

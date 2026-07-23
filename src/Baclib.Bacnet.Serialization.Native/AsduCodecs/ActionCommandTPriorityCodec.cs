@@ -111,4 +111,5 @@ public sealed class ActionCommandTPriorityCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Unsigned;
+
 }

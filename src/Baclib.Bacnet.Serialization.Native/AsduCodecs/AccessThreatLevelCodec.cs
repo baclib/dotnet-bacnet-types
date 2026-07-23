@@ -111,4 +111,5 @@ public sealed class AccessThreatLevelCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Unsigned;
+
 }

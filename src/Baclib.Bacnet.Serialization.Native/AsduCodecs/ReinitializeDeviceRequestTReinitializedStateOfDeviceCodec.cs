@@ -116,4 +116,5 @@ public sealed class ReinitializeDeviceRequestTReinitializedStateOfDeviceCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Enumerated;
+
 }

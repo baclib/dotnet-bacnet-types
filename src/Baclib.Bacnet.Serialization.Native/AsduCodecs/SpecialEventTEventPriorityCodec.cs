@@ -111,4 +111,5 @@ public sealed class SpecialEventTEventPriorityCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Unsigned;
+
 }

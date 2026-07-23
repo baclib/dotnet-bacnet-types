@@ -116,4 +116,5 @@ public sealed class LifeSafetyStateCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Enumerated;
+
 }

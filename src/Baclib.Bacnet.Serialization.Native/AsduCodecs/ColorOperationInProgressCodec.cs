@@ -116,4 +116,5 @@ public sealed class ColorOperationInProgressCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Enumerated;
+
 }

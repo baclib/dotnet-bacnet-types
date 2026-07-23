@@ -129,4 +129,5 @@ public sealed class TimeCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.TimePattern;
+
 }

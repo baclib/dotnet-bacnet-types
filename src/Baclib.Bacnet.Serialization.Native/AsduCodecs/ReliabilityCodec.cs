@@ -116,4 +116,5 @@ public sealed class ReliabilityCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Enumerated;
+
 }

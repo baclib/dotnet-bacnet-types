@@ -116,4 +116,5 @@ public sealed class SilencedStateCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Enumerated;
+
 }

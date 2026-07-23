@@ -116,4 +116,5 @@ public sealed class DeviceStatusCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Enumerated;
+
 }

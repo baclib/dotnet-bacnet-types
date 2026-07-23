@@ -116,4 +116,5 @@ public sealed class PropertyIdentifierCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Enumerated;
+
 }

@@ -116,4 +116,5 @@ public sealed class DoorSecuredStatusCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Enumerated;
+
 }

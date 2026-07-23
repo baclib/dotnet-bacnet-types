@@ -116,4 +116,5 @@ public sealed class ProgramErrorCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Enumerated;
+
 }

@@ -116,4 +116,5 @@ public sealed class AbortReasonCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Enumerated;
+
 }

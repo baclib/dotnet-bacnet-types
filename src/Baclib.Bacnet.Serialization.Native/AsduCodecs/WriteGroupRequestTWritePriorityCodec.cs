@@ -111,4 +111,5 @@ public sealed class WriteGroupRequestTWritePriorityCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Unsigned;
+
 }

@@ -116,4 +116,5 @@ public sealed class RouterEntryTStatusCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Enumerated;
+
 }

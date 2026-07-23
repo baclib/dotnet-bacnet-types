@@ -116,4 +116,5 @@ public sealed class ProtocolLevelCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Enumerated;
+
 }

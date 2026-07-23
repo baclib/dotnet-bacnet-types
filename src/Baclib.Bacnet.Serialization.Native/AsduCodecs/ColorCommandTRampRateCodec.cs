@@ -111,4 +111,5 @@ public sealed class ColorCommandTRampRateCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Unsigned;
+
 }

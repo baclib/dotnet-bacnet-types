@@ -116,4 +116,5 @@ public sealed class ProgramRequestCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Enumerated;
+
 }

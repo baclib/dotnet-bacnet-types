@@ -116,4 +116,5 @@ public sealed class ScFailedConnectionRequestTPeerVmacCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.OctetString;
+
 }

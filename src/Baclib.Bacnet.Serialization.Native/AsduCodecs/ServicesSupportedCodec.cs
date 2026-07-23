@@ -41,7 +41,8 @@ public sealed class ServicesSupportedCodec :
     /// <exception cref="FormatException">Thrown when the encoded value is not 0 or 1.</exception>
     public static ServicesSupported DecodeValue(ReadOnlySpan<byte> source)
     {
-        throw new NotImplementedException("Decoding of BitString values is not implemented yet.");
+        var bitString = new BitString(source);
+        return new ServicesSupported(bitString.Flags, (ushort)bitString.Length);
     }
 
     /// <summary>
@@ -69,11 +70,7 @@ public sealed class ServicesSupportedCodec :
     /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="destination"/> length is not supported.</exception>
     public static void EncodeValue(Span<byte> destination, in ServicesSupported value)
     {
-        switch (destination.Length)
-        {
-            default:
-                throw new ArgumentOutOfRangeException(nameof(destination));
-        }
+        new BitString(value.Flags, (ushort)value.Length).CopyTo(destination);
     }
 
     /// <summary>
@@ -115,4 +112,5 @@ public sealed class ServicesSupportedCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.BitString;
+
 }

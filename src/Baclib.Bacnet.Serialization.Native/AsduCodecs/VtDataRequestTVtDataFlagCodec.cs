@@ -111,4 +111,5 @@ public sealed class VtDataRequestTVtDataFlagCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Unsigned;
+
 }

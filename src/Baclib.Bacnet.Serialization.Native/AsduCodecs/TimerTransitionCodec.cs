@@ -116,4 +116,5 @@ public sealed class TimerTransitionCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Enumerated;
+
 }

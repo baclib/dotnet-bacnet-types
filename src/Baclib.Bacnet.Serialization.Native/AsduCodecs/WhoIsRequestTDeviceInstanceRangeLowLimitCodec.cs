@@ -111,4 +111,5 @@ public sealed class WhoIsRequestTDeviceInstanceRangeLowLimitCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Unsigned;
+
 }

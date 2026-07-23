@@ -122,4 +122,5 @@ public sealed class ObjectIdentifierCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.ObjectIdentifier;
+
 }

@@ -116,4 +116,5 @@ public sealed class AccessCredentialDisableReasonCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Enumerated;
+
 }

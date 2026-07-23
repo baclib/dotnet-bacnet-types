@@ -116,4 +116,5 @@ public sealed class IpModeCodec :
     /// </summary>
     public static ApplicationTagNumber TagNumber
         => ApplicationTagNumber.Enumerated;
+
 }
