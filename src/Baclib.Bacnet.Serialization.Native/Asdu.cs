@@ -268,4 +268,140 @@ public static class Asdu
         destination[1] = tagNumber;
         return 2;
     }
+
+    /// <summary>
+    /// Measures the total encoded length, in bytes, of exactly one complete ASDU element at the
+    /// start of <paramref name="source"/>. The element may be a primitive value (application- or
+    /// context-tagged) or a constructed value delimited by matching opening/closing tags.
+    /// </summary>
+    /// <param name="source">The bytes positioned at the start of the element.</param>
+    /// <returns>The number of bytes occupied by the element.</returns>
+    /// <exception cref="AsduException">Thrown when the element is malformed or truncated.</exception>
+    public static int MeasureElement(ReadOnlySpan<byte> source)
+    {
+        var offset = 0;
+        MeasureElement(source, ref offset);
+        return offset;
+    }
+
+    private static void MeasureElement(ReadOnlySpan<byte> source, ref int offset)
+    {
+        if (offset >= source.Length)
+        {
+            throw new AsduException("Unexpected end of ASDU while measuring element.");
+        }
+
+        var lvt = source[offset] & 0x07;
+
+        if (lvt == 6)
+        {
+            // Opening tag: constructed value delimited by a matching closing tag.
+            var tagNumber = ReadEnclosingTagNumber(source, ref offset);
+            while (true)
+            {
+                if (offset >= source.Length)
+                {
+                    throw new AsduException("Unterminated constructed value: closing tag not found.");
+                }
+
+                if ((source[offset] & 0x07) == 7)
+                {
+                    var closingNumber = ReadEnclosingTagNumber(source, ref offset);
+                    if (closingNumber != tagNumber)
+                    {
+                        throw new AsduException("Mismatched closing tag in constructed value.");
+                    }
+                    return;
+                }
+
+                MeasureElement(source, ref offset);
+            }
+        }
+
+        if (lvt == 7)
+        {
+            throw new AsduException("Unexpected closing tag at element start.");
+        }
+
+        // Primitive/data tag: header followed by the data bytes.
+        MeasureDataTag(source, ref offset);
+    }
+
+    private static int ReadEnclosingTagNumber(ReadOnlySpan<byte> source, ref int offset)
+    {
+        var control = source[offset];
+        var number = control >> 4;
+        if (number == 15)
+        {
+            if (offset + 1 >= source.Length)
+            {
+                throw new AsduException("Truncated extended tag number.");
+            }
+            number = source[offset + 1];
+            offset += 2;
+        }
+        else
+        {
+            offset += 1;
+        }
+        return number;
+    }
+
+    private static void MeasureDataTag(ReadOnlySpan<byte> source, ref int offset)
+    {
+        var control = source[offset];
+        var number = control >> 4;
+        offset += 1;
+        if (number == 15)
+        {
+            if (offset >= source.Length)
+            {
+                throw new AsduException("Truncated extended tag number.");
+            }
+            offset += 1;
+        }
+
+        var lvt = control & 0x07;
+        int dataLength;
+        if (lvt < 5)
+        {
+            dataLength = lvt;
+        }
+        else
+        {
+            if (offset >= source.Length)
+            {
+                throw new AsduException("Truncated extended length.");
+            }
+            var first = source[offset++];
+            if (first < 254)
+            {
+                dataLength = first;
+            }
+            else if (first == 254)
+            {
+                if (offset + 2 > source.Length)
+                {
+                    throw new AsduException("Truncated extended length.");
+                }
+                dataLength = AsduBinaryPrimitives.ReadUnsigned16(source.Slice(offset, 2));
+                offset += 2;
+            }
+            else
+            {
+                if (offset + 4 > source.Length)
+                {
+                    throw new AsduException("Truncated extended length.");
+                }
+                dataLength = AsduBinaryPrimitives.ReadInteger32(source.Slice(offset, 4));
+                offset += 4;
+            }
+        }
+
+        if (offset + dataLength > source.Length)
+        {
+            throw new AsduException("Truncated element data.");
+        }
+        offset += dataLength;
+    }
 }

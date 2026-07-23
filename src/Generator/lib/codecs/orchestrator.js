@@ -29,13 +29,21 @@ const codecFilterEnvNames = Object.freeze([
     'BITSTRING_CODEC_FILTER'
 ]);
 
+// Hand-written codecs that live in the generated output directory but are maintained by hand
+// and must never be deleted or regenerated. Any file ending in `.manual.cs` is preserved too.
+const preservedCodecFiles = Object.freeze(['AnyCodec.cs']);
+
+function isPreservedCodecFile(file) {
+    return preservedCodecFiles.includes(file) || file.endsWith('.manual.cs');
+}
+
 async function cleanOutputDirectory(directory) {
     await fs.mkdir(directory, { recursive: true });
     const files = await fs.readdir(directory);
 
     await Promise.all(
         files
-            .filter(file => file.endsWith('.cs'))
+            .filter(file => file.endsWith('.cs') && !isPreservedCodecFile(file))
             .map(file => fs.unlink(path.join(directory, file)))
     );
 }
@@ -70,58 +78,6 @@ async function removeIgnoredCodecs(directory) {
     );
 }
 
-async function writeAnyCodec(directory) {
-    const anyCodecPath = path.join(directory, 'AnyCodec.cs');
-    const anyCodecContent = `// SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
-// SPDX-License-Identifier: EPL-2.0
-
-using T = Baclib.Bacnet.Types.Application;
-
-namespace Baclib.Bacnet.Serialization.Native.AsduCodecs;
-
-// Placeholder implementation. Replace with full Any handling.
-public sealed class AnyCodec :
-    IAsduElementCodec<T.Any>,
-    IAsduPrimitiveCodec<T.Any>
-{
-    public static T.Any Decode(ref AsduReader reader)
-        => AsduPrimitive.Decode<AnyCodec, T.Any>(ref reader);
-
-    public static T.Any Decode(ref AsduReader reader, byte tagNumber)
-        => AsduPrimitive.Decode<AnyCodec, T.Any>(ref reader, tagNumber);
-
-    public static T.Any DecodeValue(ReadOnlySpan<byte> source)
-        => throw new NotImplementedException("AnyCodec is a placeholder. Provide a full Any decoder.");
-
-    public static void Encode(ref AsduWriter writer, in T.Any value)
-        => AsduPrimitive.Encode<AnyCodec, T.Any>(ref writer, value);
-
-    public static void Encode(ref AsduWriter writer, byte tagNumber, in T.Any value)
-        => AsduPrimitive.Encode<AnyCodec, T.Any>(ref writer, tagNumber, value);
-
-    public static void EncodeValue(Span<byte> destination, in T.Any value)
-        => throw new NotImplementedException("AnyCodec is a placeholder. Provide a full Any encoder.");
-
-    public static int GetEncodedValueLength(in T.Any value)
-        => throw new NotImplementedException("AnyCodec is a placeholder. Provide a full Any length calculator.");
-
-    public static int GetEncodedLength(in T.Any value)
-        => throw new NotImplementedException("AnyCodec is a placeholder. Provide a full Any decoder.");
-
-    public static int GetEncodedLength(in T.Any value, byte tagNumber)
-        => throw new NotImplementedException("AnyCodec is a placeholder. Provide a full Any decoder.");
-
-    public static bool Matches(ref AsduReader reader)
-        => reader.PeekApplicationTag(TagNumber);
-
-    public static ApplicationTagNumber TagNumber
-        => ApplicationTagNumber.Null;
-}
-`;
-
-    await fs.writeFile(anyCodecPath, anyCodecContent, 'utf-8');
-}
-
 /**
  * Generates every ASDU codec in-process and writes them to the output directory.
  *
@@ -146,7 +102,8 @@ export async function generateCodecs(options = {}) {
         await traverseDefinitions(createGenerator());
     }
 
-    await writeAnyCodec(outputDir);
+    // AnyCodec.cs is hand-written (full Any handling) and preserved by cleanOutputDirectory,
+    // so it is intentionally not (re)generated here.
     await removeIgnoredCodecs(outputDir);
 
     console.log(`All codecs generated in: ${outputDir}`);
