@@ -4,106 +4,120 @@
 namespace Baclib.Bacnet.Types.Application;
 
 /// <summary>
-/// Represents a BACnet <c>ABSTRACT-SYNTAX.&amp;Type</c> ("Any") value as defined in
-/// ANSI/ASHRAE 135-2024 Clause 21.
+/// Represents a BACnet <c>ABSTRACT-SYNTAX.&amp;Type</c> (Any) value.
 /// </summary>
 /// <remarks>
-/// An <see cref="Any"/> holds exactly one of two representations:
+/// This type can hold either:
 /// <list type="bullet">
 /// <item>
-/// raw ASDU bytes (the encoded form of a single element; may be empty), used when the
-/// concrete type is unknown, proprietary, or simply not (yet) materialized; or
+/// <description>Raw ASDU-encoded bytes wrapped in <see cref="AsduEncodedData"/>.</description>
 /// </item>
 /// <item>
-/// an arbitrary materialized .NET value stored as <see cref="object"/>, used when the
-/// concrete value is known at construction time (for example a <c>Real</c> present-value).
+/// <description>A materialized .NET value.</description>
 /// </item>
 /// </list>
-/// There is no separate "none" state: an <see cref="Any"/> that carries no materialized
-/// value is treated as raw data (possibly of zero length). The materialized value can be
-/// inspected via <see cref="Value"/> / <see cref="ValueType"/> regardless of whether it is
-/// encodable by the serialization layer.
+///
+/// A default-initialized instance is normalized to <see cref="AsduEncodedData.Empty"/> when
+/// accessed via <see cref="Value"/>.
 /// </remarks>
 public readonly partial record struct Any
 {
-    private readonly byte[]? _encoded;
     private readonly object? _value;
 
-    private Any(byte[]? encoded, object? value)
+    /// <summary>
+    /// Represents raw ASDU-encoded bytes used by <see cref="Any"/>.
+    /// </summary>
+    /// <param name="source">The source bytes to copy.</param>
+    /// <remarks>
+    /// The input is defensively copied, and only read-only views are exposed.
+    /// </remarks>
+    public readonly struct AsduEncodedData(ReadOnlySpan<byte> source)
     {
-        _encoded = encoded;
+        /// <summary>
+        /// Gets an empty encoded data value.
+        /// </summary>
+        public static readonly AsduEncodedData Empty = new([]);
+
+        private readonly byte[] _data = source.ToArray();
+
+        /// <summary>
+        /// Gets the number of encoded bytes.
+        /// </summary>
+        public int Length => _data.Length;
+
+        /// <summary>
+        /// Gets a read-only span over the encoded bytes.
+        /// </summary>
+        public ReadOnlySpan<byte> Span => _data;
+
+        /// <summary>
+        /// Gets a read-only memory view over the encoded bytes.
+        /// </summary>
+        public ReadOnlyMemory<byte> Memory => _data;
+
+        /// <summary>
+        /// Converts encoded data to a read-only span.
+        /// </summary>
+        /// <param name="value">The encoded data value.</param>
+        public static implicit operator ReadOnlySpan<byte>(AsduEncodedData value) => value.Span;
+
+        /// <summary>
+        /// Converts encoded data to read-only memory.
+        /// </summary>
+        /// <param name="value">The encoded data value.</param>
+        public static implicit operator ReadOnlyMemory<byte>(AsduEncodedData value) => value.Memory;
+    }
+
+    private Any(object value)
+    {
+        ArgumentNullException.ThrowIfNull(value);
         _value = value;
     }
 
     /// <summary>
-    /// Gets an empty <see cref="Any"/> holding zero raw bytes.
+    /// Gets an empty <see cref="Any"/> that carries empty ASDU-encoded bytes.
     /// </summary>
-    public static Any Empty => default;
+    public static Any Empty => new(AsduEncodedData.Empty);
 
     /// <summary>
-    /// Creates an <see cref="Any"/> from the raw encoded bytes of a single ASDU element.
+    /// Creates an <see cref="Any"/> from ASDU-encoded bytes.
     /// </summary>
-    /// <param name="encoded">The encoded bytes to copy. May be empty.</param>
+    /// <param name="encoded">The encoded bytes to copy.</param>
+    /// <returns>An <see cref="Any"/> containing encoded data.</returns>
     public static Any FromEncoded(ReadOnlySpan<byte> encoded)
-        => new([.. encoded], null);
+        => new(new AsduEncodedData(encoded));
 
     /// <summary>
-    /// Creates an <see cref="Any"/> from an arbitrary materialized .NET value.
+    /// Creates an <see cref="Any"/> from a materialized value.
     /// </summary>
-    /// <param name="value">The value to wrap. Must not be <see langword="null"/>.</param>
-    /// <exception cref="ArgumentNullException">Thrown if <paramref name="value"/> is null.</exception>
+    /// <param name="value">The value to store.</param>
+    /// <returns>An <see cref="Any"/> containing the provided value.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="value"/> is null.</exception>
     public static Any FromValue(object value)
+        => new(value ?? throw new ArgumentNullException(nameof(value)));
+
+    /// <summary>
+    /// Gets a value indicating whether this instance currently holds ASDU-encoded bytes.
+    /// </summary>
+    public bool IsEncoded => Value is AsduEncodedData;
+
+    /// <summary>
+    /// Gets the underlying stored value.
+    /// </summary>
+    /// <remarks>
+    /// If this instance is default-initialized, this property returns <see cref="AsduEncodedData.Empty"/>.
+    /// </remarks>
+    public object Value => _value ?? AsduEncodedData.Empty;
+
+    /// <summary>
+    /// Tries to get the stored value as the specified type.
+    /// </summary>
+    /// <typeparam name="TValue">The requested value type.</typeparam>
+    /// <param name="value">When this method returns, contains the typed value if successful; otherwise the default value of <typeparamref name="TValue"/>.</param>
+    /// <returns><see langword="true"/> if the stored value is of type <typeparamref name="TValue"/>; otherwise <see langword="false"/>.</returns>
+    public bool TryGetValue<TValue>(out TValue value)
     {
-        ArgumentNullException.ThrowIfNull(value);
-        return new(null, value);
-    }
-
-    /// <summary>
-    /// Gets a value indicating whether this instance holds a materialized .NET value.
-    /// </summary>
-    public bool HasValue => _value is not null;
-
-    /// <summary>
-    /// Gets a value indicating whether this instance holds raw encoded bytes.
-    /// </summary>
-    public bool IsEncoded => _value is null;
-
-    /// <summary>
-    /// Gets a value indicating whether this instance holds raw bytes of zero length.
-    /// </summary>
-    public bool IsEmpty => _value is null && (_encoded is null || _encoded.Length == 0);
-
-    /// <summary>
-    /// Gets the raw encoded bytes. Returns an empty span when a materialized value is held.
-    /// </summary>
-    public ReadOnlySpan<byte> RawData => _encoded ?? [];
-
-    /// <summary>
-    /// Gets the materialized value.
-    /// </summary>
-    /// <exception cref="InvalidOperationException">
-    /// Thrown when this instance holds raw encoded bytes instead of a materialized value.
-    /// Check <see cref="HasValue"/> or use <see cref="TryGetValue{T}"/> first.
-    /// </exception>
-    public object Value => _value
-        ?? throw new InvalidOperationException(
-            "Any holds raw encoded data, not a materialized value.");
-
-    /// <summary>
-    /// Gets the runtime type of the materialized value, or <see langword="null"/> when raw
-    /// bytes are held.
-    /// </summary>
-    public Type? ValueType => _value?.GetType();
-
-    /// <summary>
-    /// Tries to get the materialized value as <typeparamref name="T"/>.
-    /// </summary>
-    /// <typeparam name="T">The expected value type.</typeparam>
-    /// <param name="value">The materialized value when it is of type <typeparamref name="T"/>.</param>
-    /// <returns><see langword="true"/> if a materialized value of type <typeparamref name="T"/> is present.</returns>
-    public bool TryGetValue<T>(out T value)
-    {
-        if (_value is T typed)
+        if (Value is TValue typed)
         {
             value = typed;
             return true;
@@ -113,27 +127,17 @@ public readonly partial record struct Any
         return false;
     }
 
-    /// <inheritdoc/>
-    public bool Equals(Any other)
-    {
-        if (_value is not null || other._value is not null)
-        {
-            return Equals(_value, other._value);
-        }
+    /// <summary>
+    /// Gets the runtime type of the underlying stored value.
+    /// </summary>
+    public Type ValueType => Value.GetType();
 
-        return RawData.SequenceEqual(other.RawData);
-    }
-
-    /// <inheritdoc/>
-    public override int GetHashCode()
-    {
-        if (_value is not null)
-        {
-            return _value.GetHashCode();
-        }
-
-        var hash = new HashCode();
-        hash.AddBytes(RawData);
-        return hash.ToHashCode();
-    }
+    /// <summary>
+    /// Gets the encoded representation when this instance holds ASDU bytes.
+    /// </summary>
+    /// <exception cref="InvalidOperationException">Thrown when this instance does not carry ASDU-encoded data.</exception>
+    public AsduEncodedData EncodedData
+        => Value is AsduEncodedData encoded
+            ? encoded
+            : throw new InvalidOperationException("This instance does not carry ASDU encoded data.");
 }

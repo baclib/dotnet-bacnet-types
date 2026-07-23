@@ -45,7 +45,7 @@ public sealed class AnyCodec : IAsduElementCodec<T.Any>
     {
         if (value.IsEncoded)
         {
-            writer.WriteAny(value.RawData);
+            writer.WriteAny(value.EncodedData);
             return;
         }
 
@@ -75,7 +75,7 @@ public sealed class AnyCodec : IAsduElementCodec<T.Any>
     {
         if (value.IsEncoded)
         {
-            return value.RawData.Length;
+            return value.EncodedData.Length;
         }
 
         if (value.TryGetValue<T.AnyPrimitive>(out var primitive))
