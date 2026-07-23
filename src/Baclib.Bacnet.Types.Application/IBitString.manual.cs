@@ -1,4 +1,4 @@
-﻿namespace Baclib.Bacnet.Types;
+﻿namespace Baclib.Bacnet.Types.Application;
 
 /// <summary>
 /// Represents a BACnet Bit String primitive data type as defined in ANSI/ASHRAE 135-2024 Clause 20.2.10.
