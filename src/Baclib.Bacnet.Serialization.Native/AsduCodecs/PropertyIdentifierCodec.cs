@@ -41,7 +41,7 @@ public sealed class PropertyIdentifierCodec :
     /// <exception cref="FormatException">Thrown when the encoded value is not 0 or 1.</exception>
     public static PropertyIdentifier DecodeValue(ReadOnlySpan<byte> source)
     {
-        var value = AsduBinaryPrimitives.ReadUnsigned32(source);
+        var value = AsduPrimitives.ReadUnsigned32(source);
         return (PropertyIdentifier)value;
     }
 
@@ -70,11 +70,7 @@ public sealed class PropertyIdentifierCodec :
     /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="destination"/> length is not supported.</exception>
     public static void EncodeValue(Span<byte> destination, in PropertyIdentifier value)
     {
-        switch (destination.Length)
-        {
-            default:
-                throw new ArgumentOutOfRangeException(nameof(destination));
-        }
+        AsduPrimitives.WriteUnsigned32(destination, checked((uint)value));
     }
 
     /// <summary>

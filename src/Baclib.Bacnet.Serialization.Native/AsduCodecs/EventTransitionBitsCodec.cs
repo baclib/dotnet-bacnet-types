@@ -46,7 +46,6 @@ public sealed class EventTransitionBitsCodec :
         {
             throw new ArgumentOutOfRangeException(nameof(source));
         }
-
         var flags = ReadFlags(bitString.Flags);
         return new EventTransitionBits(flags);
     }

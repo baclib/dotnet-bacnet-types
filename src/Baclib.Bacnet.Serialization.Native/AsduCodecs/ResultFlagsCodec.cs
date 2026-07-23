@@ -46,7 +46,6 @@ public sealed class ResultFlagsCodec :
         {
             throw new ArgumentOutOfRangeException(nameof(source));
         }
-
         var flags = ReadFlags(bitString.Flags);
         return new ResultFlags(flags);
     }

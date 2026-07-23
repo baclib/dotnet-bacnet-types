@@ -41,7 +41,7 @@ public sealed class DoorSecuredStatusCodec :
     /// <exception cref="FormatException">Thrown when the encoded value is not 0 or 1.</exception>
     public static DoorSecuredStatus DecodeValue(ReadOnlySpan<byte> source)
     {
-        var value = AsduBinaryPrimitives.ReadUnsigned8(source);
+        var value = AsduPrimitives.ReadUnsigned8(source);
         return (DoorSecuredStatus)value;
     }
 
@@ -70,11 +70,7 @@ public sealed class DoorSecuredStatusCodec :
     /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="destination"/> length is not supported.</exception>
     public static void EncodeValue(Span<byte> destination, in DoorSecuredStatus value)
     {
-        switch (destination.Length)
-        {
-            default:
-                throw new ArgumentOutOfRangeException(nameof(destination));
-        }
+        AsduPrimitives.WriteUnsigned8(destination, checked((byte)value));
     }
 
     /// <summary>

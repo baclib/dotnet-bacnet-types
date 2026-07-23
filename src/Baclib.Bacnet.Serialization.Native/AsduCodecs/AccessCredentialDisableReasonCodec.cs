@@ -41,7 +41,7 @@ public sealed class AccessCredentialDisableReasonCodec :
     /// <exception cref="FormatException">Thrown when the encoded value is not 0 or 1.</exception>
     public static AccessCredentialDisableReason DecodeValue(ReadOnlySpan<byte> source)
     {
-        var value = AsduBinaryPrimitives.ReadUnsigned16(source);
+        var value = AsduPrimitives.ReadUnsigned16(source);
         return (AccessCredentialDisableReason)value;
     }
 
@@ -70,11 +70,7 @@ public sealed class AccessCredentialDisableReasonCodec :
     /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="destination"/> length is not supported.</exception>
     public static void EncodeValue(Span<byte> destination, in AccessCredentialDisableReason value)
     {
-        switch (destination.Length)
-        {
-            default:
-                throw new ArgumentOutOfRangeException(nameof(destination));
-        }
+        AsduPrimitives.WriteUnsigned16(destination, checked((ushort)value));
     }
 
     /// <summary>

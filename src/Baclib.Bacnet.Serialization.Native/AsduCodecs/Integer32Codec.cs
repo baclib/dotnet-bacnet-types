@@ -42,7 +42,6 @@ public sealed class Integer32Codec :
     public static int DecodeValue(ReadOnlySpan<byte> source)
     {
         return checked((int)AsduPrimitives.ReadInteger32(source));
-
     }
 
     /// <summary>

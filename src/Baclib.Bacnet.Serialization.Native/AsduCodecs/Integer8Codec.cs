@@ -42,7 +42,6 @@ public sealed class Integer8Codec :
     public static sbyte DecodeValue(ReadOnlySpan<byte> source)
     {
         return checked((sbyte)AsduPrimitives.ReadInteger8(source));
-
     }
 
     /// <summary>

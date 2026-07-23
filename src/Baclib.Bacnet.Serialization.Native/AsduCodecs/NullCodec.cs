@@ -46,7 +46,7 @@ public sealed class NullCodec :
             throw new ArgumentOutOfRangeException(nameof(source));
         }
 
-    return Null.Value;
+        return Null.Value;
     }
 
     /// <summary>

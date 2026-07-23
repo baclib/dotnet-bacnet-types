@@ -41,7 +41,7 @@ public sealed class EnumeratedCodec :
     /// <exception cref="FormatException">Thrown when the encoded value is not 0 or 1.</exception>
     public static Enumerated DecodeValue(ReadOnlySpan<byte> source)
     {
-        var value = AsduBinaryPrimitives.ReadUnsigned(source);
+        var value = AsduPrimitives.ReadUnsigned32(source);
         return (Enumerated)value;
     }
 
@@ -70,11 +70,7 @@ public sealed class EnumeratedCodec :
     /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="destination"/> length is not supported.</exception>
     public static void EncodeValue(Span<byte> destination, in Enumerated value)
     {
-        switch (destination.Length)
-        {
-            default:
-                throw new ArgumentOutOfRangeException(nameof(destination));
-        }
+        AsduPrimitives.WriteUnsigned32(destination, checked((uint)value));
     }
 
     /// <summary>

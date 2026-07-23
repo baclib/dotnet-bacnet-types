@@ -46,7 +46,6 @@ public sealed class AuthorizationScopeTStandardCodec :
         {
             throw new ArgumentOutOfRangeException(nameof(source));
         }
-
         var flags = ReadFlags(bitString.Flags);
         return new AuthorizationScope.TStandard(flags);
     }

@@ -46,7 +46,6 @@ public sealed class DaysOfWeekCodec :
         {
             throw new ArgumentOutOfRangeException(nameof(source));
         }
-
         var flags = ReadFlags(bitString.Flags);
         return new DaysOfWeek(flags);
     }

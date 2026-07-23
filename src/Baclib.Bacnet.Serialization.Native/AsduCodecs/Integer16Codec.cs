@@ -42,7 +42,6 @@ public sealed class Integer16Codec :
     public static short DecodeValue(ReadOnlySpan<byte> source)
     {
         return checked((short)AsduPrimitives.ReadInteger16(source));
-
     }
 
     /// <summary>

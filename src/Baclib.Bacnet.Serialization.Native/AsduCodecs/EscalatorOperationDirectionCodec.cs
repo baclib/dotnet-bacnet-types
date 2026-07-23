@@ -41,7 +41,7 @@ public sealed class EscalatorOperationDirectionCodec :
     /// <exception cref="FormatException">Thrown when the encoded value is not 0 or 1.</exception>
     public static EscalatorOperationDirection DecodeValue(ReadOnlySpan<byte> source)
     {
-        var value = AsduBinaryPrimitives.ReadUnsigned16(source);
+        var value = AsduPrimitives.ReadUnsigned16(source);
         return (EscalatorOperationDirection)value;
     }
 
@@ -70,11 +70,7 @@ public sealed class EscalatorOperationDirectionCodec :
     /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="destination"/> length is not supported.</exception>
     public static void EncodeValue(Span<byte> destination, in EscalatorOperationDirection value)
     {
-        switch (destination.Length)
-        {
-            default:
-                throw new ArgumentOutOfRangeException(nameof(destination));
-        }
+        AsduPrimitives.WriteUnsigned16(destination, checked((ushort)value));
     }
 
     /// <summary>

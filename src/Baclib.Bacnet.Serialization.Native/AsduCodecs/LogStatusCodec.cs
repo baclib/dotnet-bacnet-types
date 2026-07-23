@@ -46,7 +46,6 @@ public sealed class LogStatusCodec :
         {
             throw new ArgumentOutOfRangeException(nameof(source));
         }
-
         var flags = ReadFlags(bitString.Flags);
         return new LogStatus(flags);
     }
