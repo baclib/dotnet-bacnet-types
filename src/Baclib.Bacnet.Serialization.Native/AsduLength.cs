@@ -97,6 +97,8 @@ public abstract class AsduLength
 
     public static int FromUnsigned(uint value) => FromUnsigned32(value);
 
+    public static int FromUnsigned(Enumerated value) => FromUnsigned32((uint)value);
+
     public static int FromInteger(int value) => FromInteger32(value);
 
 
@@ -143,7 +145,14 @@ public abstract class AsduLength
     public const int Signed40 = 5;
     public const int Signed48 = 6;
     public const int Signed56 = 7;
+
+
     public const int Signed64 = 8;
+
+    public const int Integer24 = 3;
+    public const int Integer40 = 5;
+    public const int Integer48 = 6;
+    public const int Integer56 = 7;
 
 
 
@@ -260,17 +269,6 @@ public abstract class AsduLength
     public const int Enumerated64 = 8;
 
 
-
-
-    public static int FromEnumerated<T>(T value) where T : unmanaged, Enum => value switch
-    {
-        < 0x100 => 1,
-        < 0x10000 => 2,
-        < 0x1000000 => 3,
-        _ => Unsigned32
-    };
-
-
     /// <summary>
     /// The number of bytes required to encode a BACnet Date value.
     /// </summary>
@@ -312,10 +310,11 @@ public abstract class AsduLength
 
 
 
-    public static int FromOctetString(OctetString value) => 0;
-    public static int FromCharacterString(CharacterString value) => 0;
-    public static int FromBitString(BitString value) => 0;
+    public static int FromOctetString(OctetString value) => value.Length;
 
+
+    public static int FromCharacterString(CharacterString value) => (value.CharSet != Types.CharacterSet.Dbcs ? 1 : 3) + value.Length;
+    public static int FromBitString(BitString value) => value.Length;
 
 
     public static int GetEncodedLength<TCodec, T>(in T value)
@@ -327,29 +326,25 @@ public abstract class AsduLength
 
 
 
-    public static int Sum(ApplicationTagNumber tagNumber, int dataLength) => Sum((byte)tagNumber, dataLength);
+    public static int FromTag(ApplicationTagNumber tagNumber, int dataLength)
+        => FromTag((byte)tagNumber, dataLength);
 
-    public static int Sum(byte tagNumber, int dataLength)
+    public static int FromTag(byte tagNumber, int dataLength)
     {
-        int result = tagNumber < 15 ? 1 : 2;
-        if (dataLength >= 0)
+        int baseLength = tagNumber < 15 ? 1 : 2;
+
+        return dataLength switch
         {
-            if (dataLength <= 4)
-            {
-                return result + dataLength;
-            }
-            if (dataLength <= 253)
-            {
-                return result + 1 + dataLength;
-            }
-            if (dataLength <= 65535)
-            {
-                return result + 3 + dataLength;
-            }
-        }
-        return result + 5 + dataLength;
+            <= 4 => baseLength,
+            <= 253 => baseLength + 1,
+            <= 65535 => baseLength + 3,
+            _ => baseLength + 5
+        };
     }
 
+    public static int FromTagAndData(ApplicationTagNumber tagNumber, int dataLength)
+        => FromTagAndData((byte)tagNumber, dataLength);
 
+    public static int FromTagAndData(byte tagNumber, int dataLength)
+        => FromTag(tagNumber, dataLength) + dataLength;
 }
-

@@ -32,10 +32,10 @@ public sealed class AnyCodec :
         => throw new NotImplementedException("AnyCodec is a placeholder. Provide a full Any length calculator.");
 
     public static int GetEncodedLength(in T.Any value)
-        => AsduLength.Sum(TagNumber, GetEncodedValueLength(value));
+        => throw new NotImplementedException("AnyCodec is a placeholder. Provide a full Any decoder.");
 
     public static int GetEncodedLength(in T.Any value, byte tagNumber)
-        => AsduLength.Sum(tagNumber, GetEncodedValueLength(value));
+        => throw new NotImplementedException("AnyCodec is a placeholder. Provide a full Any decoder.");
 
     public static bool Matches(ref AsduReader reader)
         => reader.PeekApplicationTag(TagNumber);

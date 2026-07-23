@@ -41,10 +41,7 @@ public sealed class ColorCommandTRampRateCodec :
     /// <exception cref="FormatException">Thrown when the encoded value is not 0 or 1.</exception>
     public static ColorCommand.TRampRate DecodeValue(ReadOnlySpan<byte> source)
     {
-        return source.Length switch
-        {
-            _ => throw new ArgumentOutOfRangeException(nameof(source))
-        };
+        return checked((ColorCommand.TRampRate)AsduPrimitives.ReadUnsigned16(source));
     }
 
     /// <summary>
@@ -72,11 +69,7 @@ public sealed class ColorCommandTRampRateCodec :
     /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="destination"/> length is not supported.</exception>
     public static void EncodeValue(Span<byte> destination, in ColorCommand.TRampRate value)
     {
-        switch (destination.Length)
-        {
-            default:
-                throw new ArgumentOutOfRangeException(nameof(destination));
-        }
+            AsduPrimitives.WriteUnsigned16(destination, checked((ushort)value));
     }
 
     /// <summary>
@@ -93,7 +86,8 @@ public sealed class ColorCommandTRampRateCodec :
     /// <param name="value">The value whose total encoded length is requested.</param>
     /// <returns>The total encoded length in bytes.</returns>
     public static int GetEncodedLength(in ColorCommand.TRampRate value)
-        => AsduLength.FromTagNumber(TagNumber) + GetEncodedValueLength(value);
+        => AsduLength.FromTagAndData(TagNumber, GetEncodedValueLength(value));
+
 
     /// <summary>
     /// Gets the total encoded length including a specific context tag.
@@ -102,7 +96,7 @@ public sealed class ColorCommandTRampRateCodec :
     /// <param name="tagNumber">The context tag number.</param>
     /// <returns>The total encoded length in bytes.</returns>
     public static int GetEncodedLength(in ColorCommand.TRampRate value, byte tagNumber)
-        => AsduLength.FromTagNumber(tagNumber) + GetEncodedValueLength(value);
+        => AsduLength.FromTagAndData(tagNumber, GetEncodedValueLength(value));
 
     /// <summary>
     /// Determines whether the next value in the reader matches this codec's application tag.

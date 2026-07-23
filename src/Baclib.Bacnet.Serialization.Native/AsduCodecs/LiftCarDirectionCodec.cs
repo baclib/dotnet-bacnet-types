@@ -41,10 +41,8 @@ public sealed class LiftCarDirectionCodec :
     /// <exception cref="FormatException">Thrown when the encoded value is not 0 or 1.</exception>
     public static LiftCarDirection DecodeValue(ReadOnlySpan<byte> source)
     {
-        return source.Length switch
-        {
-            _ => throw new ArgumentOutOfRangeException(nameof(source))
-        };
+        var value = AsduBinaryPrimitives.ReadUnsigned16(source);
+        return (LiftCarDirection)value;
     }
 
     /// <summary>
@@ -93,7 +91,8 @@ public sealed class LiftCarDirectionCodec :
     /// <param name="value">The value whose total encoded length is requested.</param>
     /// <returns>The total encoded length in bytes.</returns>
     public static int GetEncodedLength(in LiftCarDirection value)
-        => AsduLength.FromTagNumber(TagNumber) + GetEncodedValueLength(value);
+        => AsduLength.FromTagAndData(TagNumber, GetEncodedValueLength(value));
+
 
     /// <summary>
     /// Gets the total encoded length including a specific context tag.
@@ -102,7 +101,7 @@ public sealed class LiftCarDirectionCodec :
     /// <param name="tagNumber">The context tag number.</param>
     /// <returns>The total encoded length in bytes.</returns>
     public static int GetEncodedLength(in LiftCarDirection value, byte tagNumber)
-        => AsduLength.FromTagNumber(tagNumber) + GetEncodedValueLength(value);
+        => AsduLength.FromTagAndData(tagNumber, GetEncodedValueLength(value));
 
     /// <summary>
     /// Determines whether the next value in the reader matches this codec's application tag.

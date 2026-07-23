@@ -41,10 +41,7 @@ public sealed class BitString8Codec :
     /// <exception cref="FormatException">Thrown when the encoded value is not 0 or 1.</exception>
     public static BitString8 DecodeValue(ReadOnlySpan<byte> source)
     {
-        return source.Length switch
-        {
-            _ => throw new ArgumentOutOfRangeException(nameof(source))
-        };
+        throw new NotImplementedException("Decoding of BitString values is not implemented yet.");
     }
 
     /// <summary>
@@ -85,7 +82,7 @@ public sealed class BitString8Codec :
     /// <param name="value">The value whose payload length is requested.</param>
     /// <returns>The encoded payload length in bytes.</returns>
     public static int GetEncodedValueLength(in BitString8 value)
-        => throw new NotSupportedException("BitString length is not supported.");
+        => 1 + (value.Length + 7) / 8;
 
     /// <summary>
     /// Gets the total encoded length including the application tag.
@@ -93,7 +90,8 @@ public sealed class BitString8Codec :
     /// <param name="value">The value whose total encoded length is requested.</param>
     /// <returns>The total encoded length in bytes.</returns>
     public static int GetEncodedLength(in BitString8 value)
-        => AsduLength.FromTagNumber(TagNumber) + GetEncodedValueLength(value);
+        => AsduLength.FromTagAndData(TagNumber, GetEncodedValueLength(value));
+
 
     /// <summary>
     /// Gets the total encoded length including a specific context tag.
@@ -102,7 +100,7 @@ public sealed class BitString8Codec :
     /// <param name="tagNumber">The context tag number.</param>
     /// <returns>The total encoded length in bytes.</returns>
     public static int GetEncodedLength(in BitString8 value, byte tagNumber)
-        => AsduLength.FromTagNumber(tagNumber) + GetEncodedValueLength(value);
+        => AsduLength.FromTagAndData(tagNumber, GetEncodedValueLength(value));
 
     /// <summary>
     /// Determines whether the next value in the reader matches this codec's application tag.

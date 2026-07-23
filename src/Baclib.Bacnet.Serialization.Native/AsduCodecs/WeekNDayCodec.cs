@@ -41,10 +41,16 @@ public sealed class WeekNDayCodec :
     /// <exception cref="FormatException">Thrown when the encoded value is not 0 or 1.</exception>
     public static WeekNDay DecodeValue(ReadOnlySpan<byte> source)
     {
-        return source.Length switch
+        if (source.Length != AsduLength.WeekNDay)
         {
-            _ => throw new ArgumentOutOfRangeException(nameof(source))
-        };
+            throw new ArgumentOutOfRangeException(nameof(source));
+        }
+
+        var month = source[0];
+        var week = source[1];
+        var dayOfWeek = source[2];
+
+        return new WeekNDay(month, week, dayOfWeek);
     }
 
     /// <summary>
@@ -72,11 +78,14 @@ public sealed class WeekNDayCodec :
     /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="destination"/> length is not supported.</exception>
     public static void EncodeValue(Span<byte> destination, in WeekNDay value)
     {
-        switch (destination.Length)
+        if (destination.Length != AsduLength.WeekNDay)
         {
-            default:
-                throw new ArgumentOutOfRangeException(nameof(destination));
+            throw new ArgumentOutOfRangeException(nameof(destination));
         }
+
+        destination[0] = value.Month;
+        destination[1] = value.Week;
+        destination[2] = value.DayOfWeek;
     }
 
     /// <summary>
@@ -93,7 +102,8 @@ public sealed class WeekNDayCodec :
     /// <param name="value">The value whose total encoded length is requested.</param>
     /// <returns>The total encoded length in bytes.</returns>
     public static int GetEncodedLength(in WeekNDay value)
-        => AsduLength.FromTagNumber(TagNumber) + GetEncodedValueLength(value);
+        => AsduLength.FromTagAndData(TagNumber, GetEncodedValueLength(value));
+
 
     /// <summary>
     /// Gets the total encoded length including a specific context tag.
@@ -102,7 +112,7 @@ public sealed class WeekNDayCodec :
     /// <param name="tagNumber">The context tag number.</param>
     /// <returns>The total encoded length in bytes.</returns>
     public static int GetEncodedLength(in WeekNDay value, byte tagNumber)
-        => AsduLength.FromTagNumber(tagNumber) + GetEncodedValueLength(value);
+        => AsduLength.FromTagAndData(tagNumber, GetEncodedValueLength(value));
 
     /// <summary>
     /// Determines whether the next value in the reader matches this codec's application tag.

@@ -22,14 +22,14 @@ public static class AsduPrimitive
     public static void Encode<TCodec, T>(ref AsduWriter writer, in T value)
         where TCodec : IAsduPrimitiveCodec<T>
     {
-        var destination = writer.WriteBlank(TCodec.TagNumber, TCodec.GetEncodedValueLength(value));
+        var destination = writer.WriteTagAndReserve(TCodec.TagNumber, TCodec.GetEncodedValueLength(value));
         TCodec.EncodeValue(destination, value);
     }
 
     public static void Encode<TCodec, T>(ref AsduWriter writer, byte tagNumber, in T value)
         where TCodec : IAsduPrimitiveCodec<T>
     {
-        var destination = writer.WriteBlank(tagNumber, TCodec.GetEncodedValueLength(value));
+        var destination = writer.WriteTagAndReserve(tagNumber, TCodec.GetEncodedValueLength(value));
         TCodec.EncodeValue(destination, value);
     }
 

@@ -41,10 +41,8 @@ public sealed class IntegerCodec :
     /// <exception cref="FormatException">Thrown when the encoded value is not 0 or 1.</exception>
     public static int DecodeValue(ReadOnlySpan<byte> source)
     {
-        return source.Length switch
-        {
-            _ => throw new ArgumentOutOfRangeException(nameof(source))
-        };
+        return checked((int)AsduPrimitives.ReadInteger(source));
+
     }
 
     /// <summary>
@@ -72,11 +70,7 @@ public sealed class IntegerCodec :
     /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="destination"/> length is not supported.</exception>
     public static void EncodeValue(Span<byte> destination, in int value)
     {
-        switch (destination.Length)
-        {
-            default:
-                throw new ArgumentOutOfRangeException(nameof(destination));
-        }
+        AsduPrimitives.WriteInteger(destination, checked((int)value));
     }
 
     /// <summary>
@@ -85,7 +79,7 @@ public sealed class IntegerCodec :
     /// <param name="value">The value whose payload length is requested.</param>
     /// <returns>The encoded payload length in bytes.</returns>
     public static int GetEncodedValueLength(in int value)
-        => AsduLength.FromInteger32(value);
+        => AsduLength.FromInteger(value);
 
     /// <summary>
     /// Gets the total encoded length including the application tag.
@@ -93,7 +87,8 @@ public sealed class IntegerCodec :
     /// <param name="value">The value whose total encoded length is requested.</param>
     /// <returns>The total encoded length in bytes.</returns>
     public static int GetEncodedLength(in int value)
-        => AsduLength.FromTagNumber(TagNumber) + GetEncodedValueLength(value);
+        => AsduLength.FromTagAndData(TagNumber, GetEncodedValueLength(value));
+
 
     /// <summary>
     /// Gets the total encoded length including a specific context tag.
@@ -102,7 +97,7 @@ public sealed class IntegerCodec :
     /// <param name="tagNumber">The context tag number.</param>
     /// <returns>The total encoded length in bytes.</returns>
     public static int GetEncodedLength(in int value, byte tagNumber)
-        => AsduLength.FromTagNumber(tagNumber) + GetEncodedValueLength(value);
+        => AsduLength.FromTagAndData(tagNumber, GetEncodedValueLength(value));
 
     /// <summary>
     /// Determines whether the next value in the reader matches this codec's application tag.

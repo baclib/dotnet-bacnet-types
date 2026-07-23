@@ -24,12 +24,12 @@ public ref struct AsduWriter
 
 
 
-    public Span<byte> WriteBlank(ApplicationTagNumber tagNumber, int dataLength)
+    public Span<byte> WriteTagAndReserve(ApplicationTagNumber tagNumber, int dataLength)
     {
         throw new NotImplementedException("This method is a placeholder and should be implemented according to the specific tag encoding requirements.");
     }
 
-    public Span<byte> WriteBlank(byte tagNumber, int dataLength)
+    public Span<byte> WriteTagAndReserve(byte tagNumber, int dataLength)
     {
         throw new NotImplementedException("This method is a placeholder and should be implemented according to the specific tag encoding requirements.");
     }

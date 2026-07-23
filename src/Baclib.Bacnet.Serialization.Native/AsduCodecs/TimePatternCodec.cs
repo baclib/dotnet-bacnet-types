@@ -41,10 +41,17 @@ public sealed class TimePatternCodec :
     /// <exception cref="FormatException">Thrown when the encoded value is not 0 or 1.</exception>
     public static TimePattern DecodeValue(ReadOnlySpan<byte> source)
     {
-        return source.Length switch
+        if (source.Length != AsduLength.TimePattern)
         {
-            _ => throw new ArgumentOutOfRangeException(nameof(source))
-        };
+            throw new ArgumentOutOfRangeException(nameof(source));
+        }
+
+        var hour = source[0];
+        var minute = source[1];
+        var second = source[2];
+        var hundredths = source[3];
+
+        return new TimePattern(hour, minute, second, hundredths);
     }
 
     /// <summary>
@@ -72,11 +79,15 @@ public sealed class TimePatternCodec :
     /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="destination"/> length is not supported.</exception>
     public static void EncodeValue(Span<byte> destination, in TimePattern value)
     {
-        switch (destination.Length)
+        if (destination.Length != AsduLength.TimePattern)
         {
-            default:
-                throw new ArgumentOutOfRangeException(nameof(destination));
+            throw new ArgumentOutOfRangeException(nameof(destination));
         }
+
+        destination[0] = value.Hour;
+        destination[1] = value.Minute;
+        destination[2] = value.Second;
+        destination[3] = value.Hundredths;
     }
 
     /// <summary>
@@ -93,7 +104,8 @@ public sealed class TimePatternCodec :
     /// <param name="value">The value whose total encoded length is requested.</param>
     /// <returns>The total encoded length in bytes.</returns>
     public static int GetEncodedLength(in TimePattern value)
-        => AsduLength.FromTagNumber(TagNumber) + GetEncodedValueLength(value);
+        => AsduLength.FromTagAndData(TagNumber, GetEncodedValueLength(value));
+
 
     /// <summary>
     /// Gets the total encoded length including a specific context tag.
@@ -102,7 +114,7 @@ public sealed class TimePatternCodec :
     /// <param name="tagNumber">The context tag number.</param>
     /// <returns>The total encoded length in bytes.</returns>
     public static int GetEncodedLength(in TimePattern value, byte tagNumber)
-        => AsduLength.FromTagNumber(tagNumber) + GetEncodedValueLength(value);
+        => AsduLength.FromTagAndData(tagNumber, GetEncodedValueLength(value));
 
     /// <summary>
     /// Determines whether the next value in the reader matches this codec's application tag.

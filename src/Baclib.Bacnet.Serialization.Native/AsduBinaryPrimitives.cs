@@ -6,51 +6,10 @@ using System.Buffers.Binary;
 namespace Baclib.Bacnet.Serialization.Native;
 
 /// <summary>
-/// Provides low-level big-endian read and write methodes for BACnet numeric primitive values.
+/// Provides low-level big-endian read and write methods for BACnet numeric primitive values.
 /// </summary>
 public static class AsduBinaryPrimitives
 {
-
-
-
-
-
-    public static Null ReadNull(ReadOnlySpan<byte> bytes)
-    {
-        return Null.Value;
-    }
-
-    public static bool WriteNull(Span<byte> bytes, Null value)
-    {
-        bytes[0] = 0;
-        return true;
-    }
-
-    public static bool ReadBoolean(ReadOnlySpan<byte> bytes)
-    {
-        return bytes[0] != 0;
-    }
-
-    public static void WriteBoolean(Span<byte> bytes, bool value)
-    {
-        bytes[0] = (byte)(value ? 1 : 0);
-    }
-
-    public static DatePattern ReadDatePattern(ReadOnlySpan<byte> bytes)
-    {
-        return new DatePattern(bytes[0], bytes[1], bytes[2], bytes[3]);
-    }
-
-    public static TimePattern ReadTimePattern(ReadOnlySpan<byte> bytes)
-    {
-        return new TimePattern(bytes[0], bytes[1], bytes[2], bytes[3]);
-    }
-
-
-
-
-
-
     /// <summary>
     /// Reads an 8-bit BACnet unsigned integer value.
     /// </summary>
@@ -61,15 +20,6 @@ public static class AsduBinaryPrimitives
         return bytes[0];
     }
 
-    public static ushort ReadUnsigned8AsUnsigned16(ReadOnlySpan<byte> bytes)
-        => ReadUnsigned8(bytes);
-
-    public static uint ReadUnsigned8AsUnsigned32(ReadOnlySpan<byte> bytes)
-        => ReadUnsigned8(bytes);
-
-    public static ulong ReadUnsigned8AsUnsigned64(ReadOnlySpan<byte> bytes)
-        => ReadUnsigned8(bytes);
-
     /// <summary>
     /// Reads a 16-bit BACnet unsigned integer value.
     /// </summary>
@@ -79,12 +29,6 @@ public static class AsduBinaryPrimitives
     {
         return BinaryPrimitives.ReadUInt16BigEndian(bytes);
     }
-
-    public static uint ReadUnsigned16AsUnsigned32(ReadOnlySpan<byte> bytes)
-        => ReadUnsigned16(bytes);
-
-    public static ulong ReadUnsigned16AsUnsigned64(ReadOnlySpan<byte> bytes)
-        => ReadUnsigned16(bytes);
 
     /// <summary>
     /// Reads a 24-bit BACnet unsigned integer value.
@@ -100,9 +44,6 @@ public static class AsduBinaryPrimitives
         return (byte0 << 16) | (byte1 << 8) | byte2;
     }
 
-    public static ulong ReadUnsigned24AsUnsigned64(ReadOnlySpan<byte> bytes)
-        => ReadUnsigned24(bytes);
-
     /// <summary>
     /// Reads a 32-bit BACnet unsigned integer value.
     /// </summary>
@@ -113,7 +54,7 @@ public static class AsduBinaryPrimitives
         return BinaryPrimitives.ReadUInt32BigEndian(bytes);
     }
 
-    public static ulong ReadUnsigned32AsUnsigned64(ReadOnlySpan<byte> bytes)
+    public static uint ReadUnsigned(ReadOnlySpan<byte> bytes)
         => ReadUnsigned32(bytes);
 
     /// <summary>
@@ -187,15 +128,6 @@ public static class AsduBinaryPrimitives
         return (sbyte)bytes[0];
     }
 
-    public static short ReadInteger8AsInteger16(ReadOnlySpan<byte> bytes)
-        => ReadInteger8(bytes);
-
-    public static int ReadInteger8AsInteger32(ReadOnlySpan<byte> bytes)
-        => ReadInteger8(bytes);
-
-    public static long ReadInteger8AsInteger64(ReadOnlySpan<byte> bytes)
-        => ReadInteger8(bytes);
-
     /// <summary>
     /// Reads a 16-bit BACnet signed integer value.
     /// </summary>
@@ -205,12 +137,6 @@ public static class AsduBinaryPrimitives
     {
         return BinaryPrimitives.ReadInt16BigEndian(bytes);
     }
-
-    public static int ReadInteger16AsInteger32(ReadOnlySpan<byte> bytes)
-        => ReadInteger16(bytes);
-
-    public static long ReadInteger16AsInteger64(ReadOnlySpan<byte> bytes)
-        => ReadInteger16(bytes);
 
     /// <summary>
     /// Reads a 24-bit BACnet signed integer value.
@@ -231,9 +157,6 @@ public static class AsduBinaryPrimitives
         return value;
     }
 
-    public static long ReadInteger24AsInteger64(ReadOnlySpan<byte> bytes)
-        => ReadInteger24(bytes);
-
     /// <summary>
     /// Reads a 32-bit BACnet signed integer value.
     /// </summary>
@@ -243,9 +166,6 @@ public static class AsduBinaryPrimitives
     {
         return BinaryPrimitives.ReadInt32BigEndian(bytes);
     }
-
-    public static long ReadInteger32AsInteger64(ReadOnlySpan<byte> bytes)
-        => ReadInteger32(bytes);
 
     /// <summary>
     /// Reads a 40-bit BACnet signed integer value.
@@ -353,15 +273,6 @@ public static class AsduBinaryPrimitives
         bytes[0] = value;
     }
 
-    public static void WriteUnsigned8(Span<byte> bytes, ushort value)
-         => WriteUnsigned8(bytes, (byte)value);
-
-    public static void WriteUnsigned8(Span<byte> bytes, uint value)
-         => WriteUnsigned8(bytes, (byte)value);
-
-    public static void WriteUnsigned8(Span<byte> bytes, ulong value)
-        => WriteUnsigned8(bytes, (byte)value);
-
     /// <summary>
     /// Writes a 16-bit BACnet unsigned integer value.
     /// </summary>
@@ -371,13 +282,6 @@ public static class AsduBinaryPrimitives
     {
         BinaryPrimitives.WriteUInt16BigEndian(bytes, value);
     }
-
-    public static void WriteUnsigned16(Span<byte> bytes, uint value)
-        => WriteUnsigned16(bytes, (ushort)value);
-
-    public static void WriteUnsigned16(Span<byte> bytes, ulong value)
-        => WriteUnsigned16(bytes, (ushort)value);
-
 
     /// <summary>
     /// Writes a 24-bit BACnet unsigned integer value.
@@ -391,9 +295,6 @@ public static class AsduBinaryPrimitives
         bytes[2] = (byte)value;
     }
 
-    public static void WriteUnsigned24(Span<byte> bytes, ulong value)
-        => WriteUnsigned24(bytes, (uint)value);
-
     /// <summary>
     /// Writes a 32-bit BACnet unsigned integer value.
     /// </summary>
@@ -403,9 +304,6 @@ public static class AsduBinaryPrimitives
     {
         BinaryPrimitives.WriteUInt32BigEndian(bytes, value);
     }
-
-    public static void WriteUnsigned32(Span<byte> bytes, ulong value)
-        => WriteUnsigned32(bytes, (uint)value);
 
     /// <summary>
     /// Writes a 40-bit BACnet unsigned integer value.
@@ -472,15 +370,6 @@ public static class AsduBinaryPrimitives
         bytes[0] = (byte)value;
     }
 
-    public static void WriteInteger8(Span<byte> bytes, short value)
-        => WriteInteger8(bytes, (sbyte)value);
-
-    public static void WriteInteger8(Span<byte> bytes, int value)
-        => WriteInteger8(bytes, (sbyte)value);
-
-    public static void WriteInteger8(Span<byte> bytes, long value)
-        => WriteInteger8(bytes, (sbyte)value);
-
     /// <summary>
     /// Writes a 16-bit BACnet signed integer value.
     /// </summary>
@@ -490,14 +379,6 @@ public static class AsduBinaryPrimitives
     {
         BinaryPrimitives.WriteInt16BigEndian(bytes, value);
     }
-
-    public static void WriteInteger16(Span<byte> bytes,  int value)
-        => WriteInteger16(bytes, (short)value);
-
-    public static void WriteInteger16(Span<byte> bytes, long value)
-    => WriteInteger16(bytes, (short)value);
-
-
 
     /// <summary>
     /// Writes a 24-bit BACnet signed integer value.
@@ -511,9 +392,6 @@ public static class AsduBinaryPrimitives
         bytes[2] = (byte)value;
     }
 
-    public static void WriteInteger24(Span<byte> bytes, long value)
-        => WriteInteger24(bytes, (int)value);
-
     /// <summary>
     /// Writes a 32-bit BACnet signed integer value.
     /// </summary>
@@ -523,9 +401,6 @@ public static class AsduBinaryPrimitives
     {
         BinaryPrimitives.WriteInt32BigEndian(bytes, value);
     }
-
-    public static void WriteInteger32(Span<byte> bytes, long value)
-        => WriteInteger32(bytes, (int)value);
 
     /// <summary>
     /// Writes a 40-bit BACnet signed integer value.
@@ -600,42 +475,5 @@ public static class AsduBinaryPrimitives
     public static void WriteDouble(Span<byte> bytes, double value)
     {
         BinaryPrimitives.WriteDoubleBigEndian(bytes, value);
-    }
-
-
-
-
-
-
-
-
-
-
-
-    public static void WriteDatePattern(Span<byte> bytes, DatePattern value)
-    {
-        bytes[0] = value.Year;
-        bytes[1] = value.Month;
-        bytes[2] = value.Day;
-        bytes[3] = value.DayOfWeek;
-    }
-
-    public static void WriteTimePattern(Span<byte> bytes, TimePattern value)
-    {
-        bytes[0] = value.Hour;
-        bytes[1] = value.Minute;
-        bytes[2] = value.Second;
-        bytes[3] = value.Hundredths;
-    }
-
-
-    public static ObjectIdentifier ReadObjectIdentifier(ReadOnlySpan<byte> bytes)
-    {
-        return new ObjectIdentifier(ReadUnsigned32(bytes));
-    }
-
-    public static void WriteObjectIdentifier(Span<byte> bytes, ObjectIdentifier value)
-    {
-        WriteUnsigned32(bytes, value.Value);
     }
 }

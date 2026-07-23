@@ -41,10 +41,8 @@ public sealed class Enumerated16Codec :
     /// <exception cref="FormatException">Thrown when the encoded value is not 0 or 1.</exception>
     public static Enumerated16 DecodeValue(ReadOnlySpan<byte> source)
     {
-        return source.Length switch
-        {
-            _ => throw new ArgumentOutOfRangeException(nameof(source))
-        };
+        var value = AsduBinaryPrimitives.ReadUnsigned16(source);
+        return (Enumerated16)value;
     }
 
     /// <summary>
@@ -93,7 +91,8 @@ public sealed class Enumerated16Codec :
     /// <param name="value">The value whose total encoded length is requested.</param>
     /// <returns>The total encoded length in bytes.</returns>
     public static int GetEncodedLength(in Enumerated16 value)
-        => AsduLength.FromTagNumber(TagNumber) + GetEncodedValueLength(value);
+        => AsduLength.FromTagAndData(TagNumber, GetEncodedValueLength(value));
+
 
     /// <summary>
     /// Gets the total encoded length including a specific context tag.
@@ -102,7 +101,7 @@ public sealed class Enumerated16Codec :
     /// <param name="tagNumber">The context tag number.</param>
     /// <returns>The total encoded length in bytes.</returns>
     public static int GetEncodedLength(in Enumerated16 value, byte tagNumber)
-        => AsduLength.FromTagNumber(tagNumber) + GetEncodedValueLength(value);
+        => AsduLength.FromTagAndData(tagNumber, GetEncodedValueLength(value));
 
     /// <summary>
     /// Determines whether the next value in the reader matches this codec's application tag.
