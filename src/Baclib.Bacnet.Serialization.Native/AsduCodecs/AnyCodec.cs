@@ -42,6 +42,15 @@ public sealed class AnyCodec : IAsduElementCodec<T.Any>
     /// <see cref="T.AnyPrimitive"/> to <see cref="AnyPrimitiveCodec"/>.
     /// </summary>
     public static void Encode(ref AsduWriter writer, in T.Any value)
+        => Encode(ref writer, value, registry: null);
+
+    /// <summary>
+    /// Encodes an <see cref="T.Any"/>, using static dispatch first and an optional runtime registry as fallback.
+    /// </summary>
+    /// <param name="writer">The writer receiving encoded bytes.</param>
+    /// <param name="value">The Any value to encode.</param>
+    /// <param name="registry">Optional runtime registry used when no static codec matches.</param>
+    public static void Encode(ref AsduWriter writer, in T.Any value, AnyCodecRegistry? registry)
     {
         if (value.IsEncoded)
         {
@@ -49,46 +58,79 @@ public sealed class AnyCodec : IAsduElementCodec<T.Any>
             return;
         }
 
-        if (value.TryGetValue<T.AnyPrimitive>(out var primitive))
+        if (AnyStaticDispatch.TryEncode(ref writer, value.Value))
         {
-            AnyPrimitiveCodec.Encode(ref writer, primitive);
             return;
         }
 
-        throw new NotSupportedException(
-            $"An Any holding a materialized value of type '{value.ValueType}' cannot be encoded. " +
-            "Wrap it as an AnyPrimitive or provide pre-encoded bytes via Any.FromEncoded.");
+        if (registry is not null && registry.TryGetByType(value.ValueType, out var codec))
+        {
+            codec.Encode(ref writer, value.Value);
+            return;
+        }
+
+        throw new NotSupportedException($"The type '{value.ValueType}' has no registered codec.");
     }
 
     /// <summary>
     /// Encodes an <see cref="T.Any"/> enclosed in the specified context tag.
     /// </summary>
     public static void Encode(ref AsduWriter writer, byte tagNumber, in T.Any value)
+        => Encode(ref writer, tagNumber, value, registry: null);
+
+    /// <summary>
+    /// Encodes an <see cref="T.Any"/> enclosed in the specified context tag.
+    /// </summary>
+    /// <param name="writer">The writer receiving encoded bytes.</param>
+    /// <param name="tagNumber">The context tag number.</param>
+    /// <param name="value">The Any value to encode.</param>
+    /// <param name="registry">Optional runtime registry used when no static codec matches.</param>
+    public static void Encode(ref AsduWriter writer, byte tagNumber, in T.Any value, AnyCodecRegistry? registry)
     {
         writer.WriteOpeningTag(tagNumber);
-        Encode(ref writer, value);
+        Encode(ref writer, value, registry);
         writer.WriteClosingTag(tagNumber);
     }
 
     /// <inheritdoc/>
     public static int GetEncodedLength(in T.Any value)
+        => GetEncodedLength(value, registry: null);
+
+    /// <summary>
+    /// Gets the encoded length of an <see cref="T.Any"/>, using static dispatch first and an optional runtime registry as fallback.
+    /// </summary>
+    /// <param name="value">The Any value to size.</param>
+    /// <param name="registry">Optional runtime registry used when no static codec matches.</param>
+    public static int GetEncodedLength(in T.Any value, AnyCodecRegistry? registry)
     {
         if (value.IsEncoded)
         {
             return value.EncodedData.Length;
         }
 
-        if (value.TryGetValue<T.AnyPrimitive>(out var primitive))
+        if (AnyStaticDispatch.TryGetEncodedLength(value.Value, out var encodedLength))
         {
-            return AnyPrimitiveCodec.GetEncodedLength(primitive);
+            return encodedLength;
         }
 
-        throw new NotSupportedException(
-            $"An Any holding a materialized value of type '{value.ValueType}' cannot be sized. " +
-            "Wrap it as an AnyPrimitive or provide pre-encoded bytes via Any.FromEncoded.");
+        if (registry is not null && registry.TryGetByType(value.ValueType, out var codec))
+        {
+            return codec.GetEncodedLength(value.Value);
+        }
+
+        throw new NotSupportedException($"The type '{value.ValueType}' has no registered codec.");
     }
 
     /// <inheritdoc/>
     public static int GetEncodedLength(in T.Any value, byte tagNumber)
-        => 2 * AsduLength.FromTagNumber(tagNumber) + GetEncodedLength(value);
+        => GetEncodedLength(value, tagNumber, registry: null);
+
+    /// <summary>
+    /// Gets the encoded length of a context-tagged <see cref="T.Any"/> value.
+    /// </summary>
+    /// <param name="value">The Any value to size.</param>
+    /// <param name="tagNumber">The context tag number.</param>
+    /// <param name="registry">Optional runtime registry used when no static codec matches.</param>
+    public static int GetEncodedLength(in T.Any value, byte tagNumber, AnyCodecRegistry? registry)
+        => 2 * AsduLength.FromTagNumber(tagNumber) + GetEncodedLength(value, registry);
 }

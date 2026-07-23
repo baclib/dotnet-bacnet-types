@@ -31,7 +31,11 @@ const codecFilterEnvNames = Object.freeze([
 
 // Hand-written codecs that live in the generated output directory but are maintained by hand
 // and must never be deleted or regenerated. Any file ending in `.manual.cs` is preserved too.
-const preservedCodecFiles = Object.freeze(['AnyCodec.cs']);
+const preservedCodecFiles = Object.freeze([
+    'AnyCodec.cs',
+    'AnyMaterializer.cs',
+    'AnyStaticDispatch.cs'
+]);
 
 function isPreservedCodecFile(file) {
     return preservedCodecFiles.includes(file) || file.endsWith('.manual.cs');
