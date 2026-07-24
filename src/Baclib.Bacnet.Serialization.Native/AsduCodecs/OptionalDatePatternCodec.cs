@@ -28,7 +28,7 @@ public sealed class OptionalDatePatternCodec :
             var @null = NullCodec.Decode(ref reader);
             return global::Baclib.Bacnet.Types.Application.OptionalDatePattern.FromNull(@null);
         }
-        if (NullCodec.Matches(ref reader))
+        if (DatePatternCodec.Matches(ref reader))
         {
             var @datepattern = DatePatternCodec.Decode(ref reader);
             return global::Baclib.Bacnet.Types.Application.OptionalDatePattern.FromDatepattern(@datepattern);

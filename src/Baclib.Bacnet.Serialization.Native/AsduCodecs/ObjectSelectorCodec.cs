@@ -29,12 +29,12 @@ public sealed class ObjectSelectorCodec :
             var @none = NullCodec.Decode(ref reader);
             return global::Baclib.Bacnet.Types.Application.ObjectSelector.FromNone(@none);
         }
-        if (NullCodec.Matches(ref reader))
+        if (ObjectIdentifierCodec.Matches(ref reader))
         {
             var @object = ObjectIdentifierCodec.Decode(ref reader);
             return global::Baclib.Bacnet.Types.Application.ObjectSelector.FromObject(@object);
         }
-        if (NullCodec.Matches(ref reader))
+        if (ObjectTypeCodec.Matches(ref reader))
         {
             var @objectType = ObjectTypeCodec.Decode(ref reader);
             return global::Baclib.Bacnet.Types.Application.ObjectSelector.FromObjectType(@objectType);

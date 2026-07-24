@@ -25,22 +25,22 @@ public sealed class FaultParameterTFaultOutOfRangeTMinNormalValueCodec :
 
     public static global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultOutOfRange.TMinNormalValue Decode(ref AsduReader reader)
     {
-        if (NullCodec.Matches(ref reader))
+        if (RealCodec.Matches(ref reader))
         {
             var @real = RealCodec.Decode(ref reader);
             return global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultOutOfRange.TMinNormalValue.FromReal(@real);
         }
-        if (NullCodec.Matches(ref reader))
+        if (UnsignedCodec.Matches(ref reader))
         {
             var @unsigned = UnsignedCodec.Decode(ref reader);
             return global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultOutOfRange.TMinNormalValue.FromUnsigned(@unsigned);
         }
-        if (NullCodec.Matches(ref reader))
+        if (DoubleCodec.Matches(ref reader))
         {
             var @double = DoubleCodec.Decode(ref reader);
             return global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultOutOfRange.TMinNormalValue.FromDouble(@double);
         }
-        if (NullCodec.Matches(ref reader))
+        if (IntegerCodec.Matches(ref reader))
         {
             var @integer = IntegerCodec.Decode(ref reader);
             return global::Baclib.Bacnet.Types.Application.FaultParameter.TFaultOutOfRange.TMinNormalValue.FromInteger(@integer);

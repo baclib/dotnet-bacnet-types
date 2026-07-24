@@ -28,7 +28,7 @@ public sealed class OptionalIntegerCodec :
             var @null = NullCodec.Decode(ref reader);
             return global::Baclib.Bacnet.Types.Application.OptionalInteger.FromNull(@null);
         }
-        if (NullCodec.Matches(ref reader))
+        if (IntegerCodec.Matches(ref reader))
         {
             var @integer = IntegerCodec.Decode(ref reader);
             return global::Baclib.Bacnet.Types.Application.OptionalInteger.FromInteger(@integer);

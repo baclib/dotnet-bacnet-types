@@ -28,7 +28,7 @@ public sealed class OptionalBitStringCodec :
             var @null = NullCodec.Decode(ref reader);
             return global::Baclib.Bacnet.Types.Application.OptionalBitString.FromNull(@null);
         }
-        if (NullCodec.Matches(ref reader))
+        if (BitStringCodec.Matches(ref reader))
         {
             var @bitstring = BitStringCodec.Decode(ref reader);
             return global::Baclib.Bacnet.Types.Application.OptionalBitString.FromBitstring(@bitstring);

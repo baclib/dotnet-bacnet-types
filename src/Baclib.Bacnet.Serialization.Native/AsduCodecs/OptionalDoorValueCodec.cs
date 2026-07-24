@@ -28,7 +28,7 @@ public sealed class OptionalDoorValueCodec :
             var @null = NullCodec.Decode(ref reader);
             return global::Baclib.Bacnet.Types.Application.OptionalDoorValue.FromNull(@null);
         }
-        if (NullCodec.Matches(ref reader))
+        if (DoorValueCodec.Matches(ref reader))
         {
             var @doorValue = DoorValueCodec.Decode(ref reader);
             return global::Baclib.Bacnet.Types.Application.OptionalDoorValue.FromDoorValue(@doorValue);

@@ -28,7 +28,7 @@ public sealed class OptionalOctetStringCodec :
             var @null = NullCodec.Decode(ref reader);
             return global::Baclib.Bacnet.Types.Application.OptionalOctetString.FromNull(@null);
         }
-        if (NullCodec.Matches(ref reader))
+        if (OctetStringCodec.Matches(ref reader))
         {
             var @octetstring = OctetStringCodec.Decode(ref reader);
             return global::Baclib.Bacnet.Types.Application.OptionalOctetString.FromOctetstring(@octetstring);

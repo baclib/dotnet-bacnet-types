@@ -41,47 +41,47 @@ public sealed class EventParameterTChangeOfDiscreteValueTNewValueCodec :
 
     public static global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue Decode(ref AsduReader reader)
     {
-        if (NullCodec.Matches(ref reader))
+        if (BooleanCodec.Matches(ref reader))
         {
             var @boolean = BooleanCodec.Decode(ref reader);
             return global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue.FromBoolean(@boolean);
         }
-        if (NullCodec.Matches(ref reader))
+        if (UnsignedCodec.Matches(ref reader))
         {
             var @unsigned = UnsignedCodec.Decode(ref reader);
             return global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue.FromUnsigned(@unsigned);
         }
-        if (NullCodec.Matches(ref reader))
+        if (IntegerCodec.Matches(ref reader))
         {
             var @integer = IntegerCodec.Decode(ref reader);
             return global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue.FromInteger(@integer);
         }
-        if (NullCodec.Matches(ref reader))
+        if (EnumeratedCodec.Matches(ref reader))
         {
             var @enumerated = EnumeratedCodec.Decode(ref reader);
             return global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue.FromEnumerated(@enumerated);
         }
-        if (NullCodec.Matches(ref reader))
+        if (CharacterStringCodec.Matches(ref reader))
         {
             var @characterstring = CharacterStringCodec.Decode(ref reader);
             return global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue.FromCharacterstring(@characterstring);
         }
-        if (NullCodec.Matches(ref reader))
+        if (OctetStringCodec.Matches(ref reader))
         {
             var @octetstring = OctetStringCodec.Decode(ref reader);
             return global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue.FromOctetstring(@octetstring);
         }
-        if (NullCodec.Matches(ref reader))
+        if (DateCodec.Matches(ref reader))
         {
             var @datepattern = DateCodec.Decode(ref reader);
             return global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue.FromDatepattern(@datepattern);
         }
-        if (NullCodec.Matches(ref reader))
+        if (TimeCodec.Matches(ref reader))
         {
             var @timepattern = TimeCodec.Decode(ref reader);
             return global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue.FromTimepattern(@timepattern);
         }
-        if (NullCodec.Matches(ref reader))
+        if (ObjectIdentifierCodec.Matches(ref reader))
         {
             var @objectidentifier = ObjectIdentifierCodec.Decode(ref reader);
             return global::Baclib.Bacnet.Types.Application.EventParameter.TChangeOfDiscreteValue.TNewValue.FromObjectidentifier(@objectidentifier);

@@ -23,7 +23,7 @@ public sealed class ProcessIdSelectionCodec :
 
     public static global::Baclib.Bacnet.Types.Application.ProcessIdSelection Decode(ref AsduReader reader)
     {
-        if (NullCodec.Matches(ref reader))
+        if (Unsigned32Codec.Matches(ref reader))
         {
             var @processIdentifier = Unsigned32Codec.Decode(ref reader);
             return global::Baclib.Bacnet.Types.Application.ProcessIdSelection.FromProcessIdentifier(@processIdentifier);

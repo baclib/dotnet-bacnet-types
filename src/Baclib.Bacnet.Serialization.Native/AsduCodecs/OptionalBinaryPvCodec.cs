@@ -28,7 +28,7 @@ public sealed class OptionalBinaryPvCodec :
             var @null = NullCodec.Decode(ref reader);
             return global::Baclib.Bacnet.Types.Application.OptionalBinaryPv.FromNull(@null);
         }
-        if (NullCodec.Matches(ref reader))
+        if (BinaryPvCodec.Matches(ref reader))
         {
             var @binaryPv = BinaryPvCodec.Decode(ref reader);
             return global::Baclib.Bacnet.Types.Application.OptionalBinaryPv.FromBinaryPv(@binaryPv);

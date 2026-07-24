@@ -28,7 +28,7 @@ public sealed class OptionalCharacterStringCodec :
             var @null = NullCodec.Decode(ref reader);
             return global::Baclib.Bacnet.Types.Application.OptionalCharacterString.FromNull(@null);
         }
-        if (NullCodec.Matches(ref reader))
+        if (CharacterStringCodec.Matches(ref reader))
         {
             var @characterstring = CharacterStringCodec.Decode(ref reader);
             return global::Baclib.Bacnet.Types.Application.OptionalCharacterString.FromCharacterstring(@characterstring);

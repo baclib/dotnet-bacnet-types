@@ -28,7 +28,7 @@ public sealed class OptionalRealCodec :
             var @null = NullCodec.Decode(ref reader);
             return global::Baclib.Bacnet.Types.Application.OptionalReal.FromNull(@null);
         }
-        if (NullCodec.Matches(ref reader))
+        if (RealCodec.Matches(ref reader))
         {
             var @real = RealCodec.Decode(ref reader);
             return global::Baclib.Bacnet.Types.Application.OptionalReal.FromReal(@real);

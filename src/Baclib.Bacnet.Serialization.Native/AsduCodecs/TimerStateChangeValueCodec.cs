@@ -53,62 +53,62 @@ public sealed class TimerStateChangeValueCodec :
             var @null = NullCodec.Decode(ref reader);
             return global::Baclib.Bacnet.Types.Application.TimerStateChangeValue.FromNull(@null);
         }
-        if (NullCodec.Matches(ref reader))
+        if (BooleanCodec.Matches(ref reader))
         {
             var @boolean = BooleanCodec.Decode(ref reader);
             return global::Baclib.Bacnet.Types.Application.TimerStateChangeValue.FromBoolean(@boolean);
         }
-        if (NullCodec.Matches(ref reader))
+        if (UnsignedCodec.Matches(ref reader))
         {
             var @unsigned = UnsignedCodec.Decode(ref reader);
             return global::Baclib.Bacnet.Types.Application.TimerStateChangeValue.FromUnsigned(@unsigned);
         }
-        if (NullCodec.Matches(ref reader))
+        if (IntegerCodec.Matches(ref reader))
         {
             var @integer = IntegerCodec.Decode(ref reader);
             return global::Baclib.Bacnet.Types.Application.TimerStateChangeValue.FromInteger(@integer);
         }
-        if (NullCodec.Matches(ref reader))
+        if (RealCodec.Matches(ref reader))
         {
             var @real = RealCodec.Decode(ref reader);
             return global::Baclib.Bacnet.Types.Application.TimerStateChangeValue.FromReal(@real);
         }
-        if (NullCodec.Matches(ref reader))
+        if (DoubleCodec.Matches(ref reader))
         {
             var @double = DoubleCodec.Decode(ref reader);
             return global::Baclib.Bacnet.Types.Application.TimerStateChangeValue.FromDouble(@double);
         }
-        if (NullCodec.Matches(ref reader))
+        if (OctetStringCodec.Matches(ref reader))
         {
             var @octetstring = OctetStringCodec.Decode(ref reader);
             return global::Baclib.Bacnet.Types.Application.TimerStateChangeValue.FromOctetstring(@octetstring);
         }
-        if (NullCodec.Matches(ref reader))
+        if (CharacterStringCodec.Matches(ref reader))
         {
             var @characterstring = CharacterStringCodec.Decode(ref reader);
             return global::Baclib.Bacnet.Types.Application.TimerStateChangeValue.FromCharacterstring(@characterstring);
         }
-        if (NullCodec.Matches(ref reader))
+        if (BitStringCodec.Matches(ref reader))
         {
             var @bitstring = BitStringCodec.Decode(ref reader);
             return global::Baclib.Bacnet.Types.Application.TimerStateChangeValue.FromBitstring(@bitstring);
         }
-        if (NullCodec.Matches(ref reader))
+        if (EnumeratedCodec.Matches(ref reader))
         {
             var @enumerated = EnumeratedCodec.Decode(ref reader);
             return global::Baclib.Bacnet.Types.Application.TimerStateChangeValue.FromEnumerated(@enumerated);
         }
-        if (NullCodec.Matches(ref reader))
+        if (DatePatternCodec.Matches(ref reader))
         {
             var @date = DatePatternCodec.Decode(ref reader);
             return global::Baclib.Bacnet.Types.Application.TimerStateChangeValue.FromDate(@date);
         }
-        if (NullCodec.Matches(ref reader))
+        if (TimePatternCodec.Matches(ref reader))
         {
             var @time = TimePatternCodec.Decode(ref reader);
             return global::Baclib.Bacnet.Types.Application.TimerStateChangeValue.FromTime(@time);
         }
-        if (NullCodec.Matches(ref reader))
+        if (ObjectIdentifierCodec.Matches(ref reader))
         {
             var @objectidentifier = ObjectIdentifierCodec.Decode(ref reader);
             return global::Baclib.Bacnet.Types.Application.TimerStateChangeValue.FromObjectidentifier(@objectidentifier);

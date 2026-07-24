@@ -28,7 +28,7 @@ public sealed class OptionalPriorityFilterCodec :
             var @null = NullCodec.Decode(ref reader);
             return global::Baclib.Bacnet.Types.Application.OptionalPriorityFilter.FromNull(@null);
         }
-        if (NullCodec.Matches(ref reader))
+        if (PriorityFilterCodec.Matches(ref reader))
         {
             var @filter = PriorityFilterCodec.Decode(ref reader);
             return global::Baclib.Bacnet.Types.Application.OptionalPriorityFilter.FromFilter(@filter);

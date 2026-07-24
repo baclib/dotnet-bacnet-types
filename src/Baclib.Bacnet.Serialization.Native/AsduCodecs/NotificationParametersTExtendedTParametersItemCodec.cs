@@ -50,62 +50,62 @@ public sealed class NotificationParametersTExtendedTParametersItemCodec :
             var @null = NullCodec.Decode(ref reader);
             return global::Baclib.Bacnet.Types.Application.NotificationParameters.TExtended.TParametersItem.FromNull(@null);
         }
-        if (NullCodec.Matches(ref reader))
+        if (RealCodec.Matches(ref reader))
         {
             var @real = RealCodec.Decode(ref reader);
             return global::Baclib.Bacnet.Types.Application.NotificationParameters.TExtended.TParametersItem.FromReal(@real);
         }
-        if (NullCodec.Matches(ref reader))
+        if (UnsignedCodec.Matches(ref reader))
         {
             var @unsigned = UnsignedCodec.Decode(ref reader);
             return global::Baclib.Bacnet.Types.Application.NotificationParameters.TExtended.TParametersItem.FromUnsigned(@unsigned);
         }
-        if (NullCodec.Matches(ref reader))
+        if (BooleanCodec.Matches(ref reader))
         {
             var @boolean = BooleanCodec.Decode(ref reader);
             return global::Baclib.Bacnet.Types.Application.NotificationParameters.TExtended.TParametersItem.FromBoolean(@boolean);
         }
-        if (NullCodec.Matches(ref reader))
+        if (IntegerCodec.Matches(ref reader))
         {
             var @integer = IntegerCodec.Decode(ref reader);
             return global::Baclib.Bacnet.Types.Application.NotificationParameters.TExtended.TParametersItem.FromInteger(@integer);
         }
-        if (NullCodec.Matches(ref reader))
+        if (DoubleCodec.Matches(ref reader))
         {
             var @double = DoubleCodec.Decode(ref reader);
             return global::Baclib.Bacnet.Types.Application.NotificationParameters.TExtended.TParametersItem.FromDouble(@double);
         }
-        if (NullCodec.Matches(ref reader))
+        if (OctetStringCodec.Matches(ref reader))
         {
             var @octetstring = OctetStringCodec.Decode(ref reader);
             return global::Baclib.Bacnet.Types.Application.NotificationParameters.TExtended.TParametersItem.FromOctetstring(@octetstring);
         }
-        if (NullCodec.Matches(ref reader))
+        if (CharacterStringCodec.Matches(ref reader))
         {
             var @characterstring = CharacterStringCodec.Decode(ref reader);
             return global::Baclib.Bacnet.Types.Application.NotificationParameters.TExtended.TParametersItem.FromCharacterstring(@characterstring);
         }
-        if (NullCodec.Matches(ref reader))
+        if (BitStringCodec.Matches(ref reader))
         {
             var @bitstring = BitStringCodec.Decode(ref reader);
             return global::Baclib.Bacnet.Types.Application.NotificationParameters.TExtended.TParametersItem.FromBitstring(@bitstring);
         }
-        if (NullCodec.Matches(ref reader))
+        if (EnumeratedCodec.Matches(ref reader))
         {
             var @enumerated = EnumeratedCodec.Decode(ref reader);
             return global::Baclib.Bacnet.Types.Application.NotificationParameters.TExtended.TParametersItem.FromEnumerated(@enumerated);
         }
-        if (NullCodec.Matches(ref reader))
+        if (DateCodec.Matches(ref reader))
         {
             var @date = DateCodec.Decode(ref reader);
             return global::Baclib.Bacnet.Types.Application.NotificationParameters.TExtended.TParametersItem.FromDate(@date);
         }
-        if (NullCodec.Matches(ref reader))
+        if (TimeCodec.Matches(ref reader))
         {
             var @time = TimeCodec.Decode(ref reader);
             return global::Baclib.Bacnet.Types.Application.NotificationParameters.TExtended.TParametersItem.FromTime(@time);
         }
-        if (NullCodec.Matches(ref reader))
+        if (ObjectIdentifierCodec.Matches(ref reader))
         {
             var @objectidentifier = ObjectIdentifierCodec.Decode(ref reader);
             return global::Baclib.Bacnet.Types.Application.NotificationParameters.TExtended.TParametersItem.FromObjectidentifier(@objectidentifier);

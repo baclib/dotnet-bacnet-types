@@ -23,7 +23,7 @@ public sealed class ClientCovCodec :
 
     public static global::Baclib.Bacnet.Types.Application.ClientCov Decode(ref AsduReader reader)
     {
-        if (NullCodec.Matches(ref reader))
+        if (RealCodec.Matches(ref reader))
         {
             var @realIncrement = RealCodec.Decode(ref reader);
             return global::Baclib.Bacnet.Types.Application.ClientCov.FromRealIncrement(@realIncrement);

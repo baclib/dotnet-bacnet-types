@@ -28,7 +28,7 @@ public sealed class OptionalTimePatternCodec :
             var @null = NullCodec.Decode(ref reader);
             return global::Baclib.Bacnet.Types.Application.OptionalTimePattern.FromNull(@null);
         }
-        if (NullCodec.Matches(ref reader))
+        if (TimePatternCodec.Matches(ref reader))
         {
             var @timeepattern = TimePatternCodec.Decode(ref reader);
             return global::Baclib.Bacnet.Types.Application.OptionalTimePattern.FromTimeepattern(@timeepattern);

@@ -28,7 +28,7 @@ public sealed class OptionalDoubleCodec :
             var @null = NullCodec.Decode(ref reader);
             return global::Baclib.Bacnet.Types.Application.OptionalDouble.FromNull(@null);
         }
-        if (NullCodec.Matches(ref reader))
+        if (DoubleCodec.Matches(ref reader))
         {
             var @double = DoubleCodec.Decode(ref reader);
             return global::Baclib.Bacnet.Types.Application.OptionalDouble.FromDouble(@double);

@@ -28,7 +28,7 @@ public sealed class OptionalUnsignedCodec :
             var @null = NullCodec.Decode(ref reader);
             return global::Baclib.Bacnet.Types.Application.OptionalUnsigned.FromNull(@null);
         }
-        if (NullCodec.Matches(ref reader))
+        if (UnsignedCodec.Matches(ref reader))
         {
             var @unsigned = UnsignedCodec.Decode(ref reader);
             return global::Baclib.Bacnet.Types.Application.OptionalUnsigned.FromUnsigned(@unsigned);
