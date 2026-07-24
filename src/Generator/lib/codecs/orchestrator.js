@@ -5,7 +5,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import { traverseDefinitions } from '@baclib/generic-bacnet-types/src/traverse.js';
 import { toPascalCase } from '../core/text.js';
-import { codecsOutputDir, generatorRoot } from '../core/paths.js';
+import { codecsOutputDir, generatorRoot, workingDir } from '../core/paths.js';
 import { ignoredCodecTypeNames } from '../core/constants.js';
 import { createFixedCodecGenerator } from './fixed.js';
 import { createChoiceCodecGenerator } from './choice.js';
@@ -32,9 +32,7 @@ const codecFilterEnvNames = Object.freeze([
 // Hand-written codecs that live in the generated output directory but are maintained by hand
 // and must never be deleted or regenerated. Any file ending in `.manual.cs` is preserved too.
 const preservedCodecFiles = Object.freeze([
-    'AnyCodec.cs',
-    'AnyMaterializer.cs',
-    'AnyStaticDispatch.cs'
+    'AnyCodec.cs'
 ]);
 
 function isPreservedCodecFile(file) {
@@ -86,6 +84,7 @@ async function removeIgnoredCodecs(directory) {
  * Generates every ASDU codec in-process and writes them to the output directory.
  *
  * @param {{ outputDir?: string }} [options] Overrides the default AsduCodecs output directory.
+ * @returns {Promise<string[]>} Generated codec file names as a JavaScript array.
  */
 export async function generateCodecs(options = {}) {
     const outputDir = options.outputDir
@@ -102,13 +101,31 @@ export async function generateCodecs(options = {}) {
 
     await cleanOutputDirectory(outputDir);
 
+    let codecTypes = [];
     for (const createGenerator of codecGeneratorFactories) {
-        await traverseDefinitions(createGenerator());
+        const generator = createGenerator();
+        await traverseDefinitions(generator);
+        codecTypes = [...codecTypes, ...generator.codecTypes];
     }
 
     // AnyCodec.cs is hand-written (full Any handling) and preserved by cleanOutputDirectory,
     // so it is intentionally not (re)generated here.
     await removeIgnoredCodecs(outputDir);
 
-    console.log(`All codecs generated in: ${outputDir}`);
+    const generatedCodecs = (await fs.readdir(outputDir))
+        .filter(file => file.endsWith('Codec.cs') && !isPreservedCodecFile(file))
+        .sort((left, right) => left.localeCompare(right));
+
+    const generatedCodecNames = new Set(generatedCodecs.map(file => file.slice(0, -3)));
+    codecTypes = codecTypes
+        .filter(codec => generatedCodecNames.has(codec.codec))
+        .sort((a, b) => a.codec.localeCompare(b.codec));
+
+    console.log(`[codecs] Generated ${codecTypes.length} codec files in: ${outputDir}`);
+    await fs.writeFile(path.join(workingDir, 'x-all-codecs.json'), JSON.stringify(codecTypes, null, 4) + '\n', 'utf-8');
+
+    //console.log(`Generated codecs JSON: ${JSON.stringify(generatedCodecs, null, 2)}`);
+    //console.log(`[codecs] Generated ${generatedCodecs.length} codec files in: ${outputDir}`);
+
+    return generatedCodecs;
 }

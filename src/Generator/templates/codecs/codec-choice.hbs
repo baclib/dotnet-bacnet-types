@@ -57,7 +57,7 @@ public sealed class {{className}} :
     {
 {{#if applicationItems.length}}
 {{#each applicationItems}}
-        if (NullCodec.Matches(ref reader))
+        if ({{codecRef}}.Matches(ref reader))
         {
             var @{{variableName}} = {{codecRef}}.Decode(ref reader);
             return {{../typeRef}}.From{{name}}(@{{variableName}});

@@ -27,7 +27,7 @@ export const pduTypes = Object.freeze([
 ]);
 
 /** PDU type names (including the abstract `pdu`) whose codecs must be removed after generation. */
-export const ignoredCodecTypeNames = Object.freeze(['pdu', ...pduTypes]);
+export const ignoredCodecTypeNames = Object.freeze(['pdu', ...pduTypes, 'any-primitive', 'optional-any']);
 
 /** Predefined / refined types rendered from the dedicated `predefined.hbs` template. */
 export const refinedTypes = Object.freeze([

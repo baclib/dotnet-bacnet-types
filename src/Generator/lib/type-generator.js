@@ -442,4 +442,11 @@ export async function generateTypes() {
     await generateBitStringTypes({
         outputDirectory: transformer.directory
     });
+
+    const generatedFiles = await fs.readdir(transformer.directory);
+    const generatedTypeCount = generatedFiles
+        .filter(file => file.endsWith('.cs') && !file.endsWith('.manual.cs'))
+        .length;
+
+    console.log(`[types] Generated ${generatedTypeCount} type files in ${transformer.directory}`);
 }

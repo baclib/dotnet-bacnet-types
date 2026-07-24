@@ -122,10 +122,12 @@ class SequenceCodecTransformer extends CodecGeneratorBase {
             }
         }
 
+        this.codecTypes = [];
         const templatePath = path.join(this.templatesDir, 'codec-sequence.hbs');
         const wrapperTemplatePath = path.join(this.templatesDir, 'codec-sequence-of-wrapper.hbs');
         for (const codecObject of this.codecObjects) {
             if (codecObject.isSeriesWrapper) {
+                this.codecTypes.push({ codec: codecObject.className, type: codecObject.typeRef.replace("global::Baclib.Bacnet.Types.Application.", "") });
                 const content = await this.render(wrapperTemplatePath, codecObject);
                 writeFileSync(path.join(this.directory, codecObject.fileName), content);
                 continue;
@@ -165,8 +167,10 @@ class SequenceCodecTransformer extends CodecGeneratorBase {
                 matchItems,
                 lengthSumExpressions
             });
+            this.codecTypes.push({ codec: codecObject.className, type: codecObject.typeRef.replace("global::Baclib.Bacnet.Types.Application.", "") });
             writeFileSync(path.join(this.directory, codecObject.fileName), content);
         }
+        this.codecTypes.sort((a, b) => a.codec.localeCompare(b.codec));
     }
 
     resolveSourceType(context) {

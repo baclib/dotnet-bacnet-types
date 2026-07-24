@@ -133,6 +133,7 @@ class ChoiceCodecTransformer extends CodecGeneratorBase {
             }
         }
 
+        this.codecTypes = [];
         const templatePath = path.join(this.templatesDir, 'codec-choice.hbs');
         for (const codecObject of this.codecObjects) {
             const resolvedItems = codecObject.items.map(item => ({
@@ -143,7 +144,7 @@ class ChoiceCodecTransformer extends CodecGeneratorBase {
                 codecRef: this.getCodecReference(item.sourceFullname),
                 kind: this.resolveKind(item.sourceFullname)
             }));
-
+            this.codecTypes.push({ codec: codecObject.className, type: codecObject.typeName });
             const content = await this.render(templatePath, {
                 ...codecObject,
                 items: resolvedItems,
@@ -152,6 +153,8 @@ class ChoiceCodecTransformer extends CodecGeneratorBase {
             });
             writeFileSync(path.join(this.directory, codecObject.fileName), content);
         }
+        this.codecTypes.sort((a, b) => a.codec.localeCompare(b.codec));
+
     }
 
     registerHelpers() {

@@ -234,15 +234,18 @@ class FixedCodecTransformer extends TemplateEngine {
     }
 
     async afterProcessing() {
+        this.codecTypes = [];
         const debugOutputPath = path.join(workingDir, 'fixed-codecs-debug.json');
         await fs.writeFile(debugOutputPath, JSON.stringify(this.primitiveCodecs, null, 4) + '\n', 'utf-8');
         for (const codec of this.primitiveCodecs) {
+            this.codecTypes.push({ codec: codec.className, type: codec.csharpType });
             // console.log(codec);
             const templatePath = path.join(this.templatesDir, 'primitive.hbs');
             const content = await this.render(templatePath, codec);
             const filePath = path.join(this.directory, `${codec.className}.cs`);
             writeFileSync(filePath, content);
         }
+        this.codecTypes.sort((a, b) => a.codec.localeCompare(b.codec));
     }
 }
 
@@ -250,6 +253,5 @@ class FixedCodecTransformer extends TemplateEngine {
 export function createFixedCodecGenerator() {
     return new FixedCodecTransformer();
 }
-
 
 //console.log(sourceTypesByIndex);
