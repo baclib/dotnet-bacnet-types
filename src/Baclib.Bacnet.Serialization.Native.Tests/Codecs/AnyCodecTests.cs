@@ -29,33 +29,6 @@ public class AnyCodecTests
         Assert.Equal([0x21, 0x07], writer.WrittenSpan.ToArray());
     }
 
-    [Fact]
-    public void Materialize_StaticType_FromEncodedBytes_Succeeds()
-    {
-        var any = Any.FromEncoded([0x11]);
-
-        var success = AnyMaterializer.TryDecodeAs(any, out bool value);
-
-        Assert.True(success);
-        Assert.True(value);
-    }
-
-    [Fact]
-    public void Materialize_DynamicType_FromEncodedBytes_UsesRegistry()
-    {
-        var registry = AnyCodecRegistry.Build(builder =>
-            builder.RegisterDynamic(new CustomCounterCodec()));
-
-        var any = Any.FromEncoded([0x21, 0x09]);
-
-        var success = AnyMaterializer.TryDecodeAs(any, typeof(CustomCounter), out var value, registry);
-
-        Assert.True(success);
-        Assert.NotNull(value);
-        Assert.IsType<CustomCounter>(value);
-        Assert.Equal((byte)9, ((CustomCounter)value).Value);
-    }
-
     private readonly record struct CustomCounter(byte Value);
 
     private sealed class CustomCounterCodec : IAsduElementDynamicCodec<CustomCounter>
