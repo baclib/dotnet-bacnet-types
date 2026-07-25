@@ -63,18 +63,7 @@ public ref struct AsduReader(ReadOnlySpan<byte> asdu)
 
     // ----------------------------------------------------------------
 
-    public readonly bool PeekPrimitiveTag(byte tagNumber)
-        => Asdu.PeekPrimitiveTag(_asdu[_index..], tagNumber);
-
     // ----------------------------------------------------------------
-
-
-
-
-
-
-
-
 
     public byte ReadContextTagNumber()
     { 
