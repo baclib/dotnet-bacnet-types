@@ -10,6 +10,7 @@ import { ignoredCodecTypeNames } from '../core/constants.js';
 import { createFixedCodecGenerator } from './fixed.js';
 import { createChoiceCodecGenerator } from './choice.js';
 import { createSequenceCodecGenerator } from './sequence.js';
+import { generateAnyCodec } from './any-codec.js';
 
 // Codec generators run in dependency order: primitives first, then the constructed and
 // restriction generators that reference them.
@@ -29,14 +30,25 @@ const codecFilterEnvNames = Object.freeze([
     'BITSTRING_CODEC_FILTER'
 ]);
 
-// Hand-written codecs that live in the generated output directory but are maintained by hand
-// and must never be deleted or regenerated. Any file ending in `.manual.cs` is preserved too.
-const preservedCodecFiles = Object.freeze([
-    'AnyCodec.cs'
-]);
+// Hand-written codecs that live in the generated output directory and must never be deleted.
+// Any file ending in `.manual.cs` is preserved too.
+const preservedCodecFiles = Object.freeze([]);
+const excludedCodecNames = new Set(['UnsignedCodec', 'IntegerCodec']);
 
 function isPreservedCodecFile(file) {
     return preservedCodecFiles.includes(file) || file.endsWith('.manual.cs');
+}
+
+function withTypePrefix(type) {
+    if (typeof type !== 'string' || type.length === 0) {
+        return type;
+    }
+
+    if (type.startsWith('T::')) {
+        return type;
+    }
+
+    return /^[a-z]/.test(type) ? type : `T::${type}`;
 }
 
 async function cleanOutputDirectory(directory) {
@@ -108,8 +120,6 @@ export async function generateCodecs(options = {}) {
         codecTypes = [...codecTypes, ...generator.codecTypes];
     }
 
-    // AnyCodec.cs is hand-written (full Any handling) and preserved by cleanOutputDirectory,
-    // so it is intentionally not (re)generated here.
     await removeIgnoredCodecs(outputDir);
 
     const generatedCodecs = (await fs.readdir(outputDir))
@@ -119,7 +129,13 @@ export async function generateCodecs(options = {}) {
     const generatedCodecNames = new Set(generatedCodecs.map(file => file.slice(0, -3)));
     codecTypes = codecTypes
         .filter(codec => generatedCodecNames.has(codec.codec))
+        .filter(codec => !excludedCodecNames.has(codec.codec))
+        .map(codec => ({ ...codec, type: withTypePrefix(codec.type), variable: 'var' + codec.codec.slice(0, -5) }))
         .sort((a, b) => a.codec.localeCompare(b.codec));
+
+    // AnyCodec is rendered from template and receives the full codec map so its dispatch
+    // can be migrated to template-driven generation incrementally.
+    await generateAnyCodec(outputDir, codecTypes);
 
     console.log(`[codecs] Generated ${codecTypes.length} codec files in: ${outputDir}`);
     await fs.writeFile(path.join(workingDir, 'x-all-codecs.json'), JSON.stringify(codecTypes, null, 4) + '\n', 'utf-8');
