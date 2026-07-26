@@ -6,12 +6,13 @@ using System.Runtime.CompilerServices;
 namespace Baclib.Bacnet.Serialization.Native;
 
 /// <summary>
-/// Provides methods for writing BACnet ASDU (Application Service Data Unit) encoded data to a byte buffer.
+/// Provides methods for writing BACnet ASDU (Application Service Data Unit) encoded data
+/// to a byte buffer.
 /// </summary>
 /// <remarks>
-/// This class implements serialization according to ANSI/ASHRAE 135-2024 Clause 20.2 (ASN.1 Encoding Rules).
-/// It supports all BACnet primitive types, constructed types, and context-specific encoding.
-/// The writer maintains an internal position index that advances as data is written.
+/// This class implements serialization according to ANSI/ASHRAE 135-2024 Clause 20.2
+/// (ASN.1 Encoding Rules). It supports primitive and constructed values and context-specific
+/// encoding. The writer maintains an internal position index that advances as data is written.
 /// </remarks>
 public ref struct AsduWriter
 {
@@ -20,23 +21,31 @@ public ref struct AsduWriter
     /// </summary>
     private readonly byte[] _buffer;
 
+    /// <summary>
+    /// Current write offset into <see cref="_buffer"/>.
+    /// </summary>
+    private int _index = 0;
 
+    #region Construction
 
-
-
-    public Span<byte> WriteTagAndReserve(ApplicationTagNumber tagNumber, int dataLength)
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AsduWriter"/> class with the specified
+    /// buffer size.
+    /// </summary>
+    /// <param name="size">The size of the buffer to allocate.</param>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="size"/> is negative.</exception>
+    public AsduWriter(int size)
     {
-        return Encode(tagNumber, dataLength);
+        if (size < 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(size), "Size must be non-negative.");
+        }
+        _buffer = new byte[size];
     }
 
-    public Span<byte> WriteTagAndReserve(byte tagNumber, int dataLength)
-    {
-        return Encode(tagNumber, dataLength);
-    }
+    #endregion
 
-
-
-    #region State and buffer views
+    #region State And Buffer Views
 
     /// <summary>
     /// Gets a copy of the encoded ASDU bytes.
@@ -65,25 +74,6 @@ public ref struct AsduWriter
     public readonly ReadOnlySpan<byte> WrittenSpan => _buffer.AsSpan(0, _index);
 
     /// <summary>
-    /// Current write offset into <see cref="_buffer"/>.
-    /// </summary>
-    private int _index = 0;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="AsduWriter"/> class with the specified buffer size.
-    /// </summary>
-    /// <param name="size">The size of the buffer to allocate.</param>
-    /// <exception cref="ArgumentOutOfRangeException">Thrown when size is negative.</exception>
-    public AsduWriter(int size)
-    {
-        if (size < 0)
-        {
-            throw new ArgumentOutOfRangeException(nameof(size), "Size must be non-negative.");
-        }
-        _buffer = new byte[size];
-    }
-
-    /// <summary>
     /// Resets the write position to the beginning so the buffer can be reused.
     /// Existing bytes are not cleared.
     /// </summary>
@@ -93,14 +83,15 @@ public ref struct AsduWriter
     /// <summary>
     /// Copies the encoded bytes into a new array.
     /// </summary>
+    /// <returns>A newly allocated array containing the bytes written so far.</returns>
     public readonly byte[] ToArray() => _buffer.AsSpan(0, _index).ToArray();
 
     /// <summary>
     /// Copies encoded bytes into a destination span.
     /// </summary>
-    /// <returns>
-    /// True if destination has enough capacity and copy succeeded; otherwise false.
-    /// </returns>
+    /// <param name="destination">The destination span to receive written bytes.</param>
+    /// <returns><see langword="true"/> when destination has enough capacity; otherwise
+    /// <see langword="false"/>.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly bool TryCopyTo(Span<byte> destination)
     {
@@ -115,7 +106,7 @@ public ref struct AsduWriter
 
     #endregion
 
-    #region Raw writing
+    #region Raw Writing
 
     /// <summary>
     /// Writes a single raw byte and advances the write position.
@@ -163,12 +154,10 @@ public ref struct AsduWriter
 
     #endregion
 
-
-    #region Tag handling
-
+    #region Tag Handling
 
     /// <summary>
-    /// Specifies the kind of BACnet ASN.1 tag used in APDU encoding.
+    /// Specifies the kind of BACnet ASN.1 enclosing tag used in APDU encoding.
     /// </summary>
     private enum AsduTagKind
     {
@@ -182,7 +171,6 @@ public ref struct AsduWriter
         /// </summary>
         Closing = 0xF00
     }
-
 
     /// <summary>
     /// Writes an enclosing context tag (opening or closing).
@@ -211,17 +199,21 @@ public ref struct AsduWriter
         }
     }
 
-    /// <summary>Writes an opening tag with the specified context tag number.</summary>
+    /// <summary>
+    /// Writes an opening tag with the specified context tag number.
+    /// </summary>
     /// <param name="number">The context tag number.</param>
     public void WriteOpeningTag(int number) => WriteEnclosingTag(number, AsduTagKind.Opening);
 
-    /// <summary>Writes a closing tag with the specified context tag number.</summary>
+    /// <summary>
+    /// Writes a closing tag with the specified context tag number.
+    /// </summary>
     /// <param name="number">The context tag number.</param>
     public void WriteClosingTag(int number) => WriteEnclosingTag(number, AsduTagKind.Closing);
 
     #endregion
 
-    #region Construct and series
+    #region Construct And Series
 
     /// <summary>
     /// Encodes a value using the provided codec.
@@ -241,9 +233,13 @@ public ref struct AsduWriter
     /// <param name="codec">The codec used to encode the value.</param>
     /// <param name="contextTagNumber">The context tag number to encode with.</param>
     /// <param name="value">The value to encode.</param>
+    /// <remarks>
+    /// This overload is currently a no-op because context-aware dynamic codec dispatch
+    /// is not yet wired in this writer.
+    /// </remarks>
     public void Encode<T>(IAsduElementDynamicCodec<T> codec, byte contextTagNumber, in T value)
     {
-        //codec.Encode(ref this, contextTagNumber, in value);
+        // codec.Encode(ref this, contextTagNumber, in value);
     }
 
     /// <summary>
@@ -276,8 +272,7 @@ public ref struct AsduWriter
 
     #endregion
 
-    #region Tag and payload encoding
-
+    #region Tag And Payload Encoding
 
     /// <summary>
     /// Writes an ASN.1 tag header into a destination span.
@@ -360,7 +355,8 @@ public ref struct AsduWriter
     /// <param name="tagNumber">The application tag number.</param>
     /// <param name="dataLength">The payload length in bytes.</param>
     /// <returns>A writable span for the payload bytes.</returns>
-    public Span<byte> Encode(ApplicationTagNumber tagNumber, int dataLength) => Encode(AsduTagClass.Application, (byte)tagNumber, dataLength);
+    public Span<byte> Encode(ApplicationTagNumber tagNumber, int dataLength)
+        => Encode(AsduTagClass.Application, (byte)tagNumber, dataLength);
 
     /// <summary>
     /// Writes a context tag header and reserves a payload span.
@@ -368,7 +364,32 @@ public ref struct AsduWriter
     /// <param name="tagNumber">The context tag number.</param>
     /// <param name="dataLength">The payload length in bytes.</param>
     /// <returns>A writable span for the payload bytes.</returns>
-    public Span<byte> Encode(byte tagNumber, int dataLength) => Encode(AsduTagClass.Context, tagNumber, dataLength);
+    public Span<byte> Encode(byte tagNumber, int dataLength)
+        => Encode(AsduTagClass.Context, tagNumber, dataLength);
+
+    /// <summary>
+    /// Alias for <see cref="Encode(ApplicationTagNumber, int)"/>.
+    /// Writes an application tag and reserves payload bytes.
+    /// </summary>
+    /// <param name="tagNumber">The application tag number.</param>
+    /// <param name="dataLength">The payload length in bytes.</param>
+    /// <returns>A writable span for the reserved payload bytes.</returns>
+    public Span<byte> WriteTagAndReserve(ApplicationTagNumber tagNumber, int dataLength)
+    {
+        return Encode(tagNumber, dataLength);
+    }
+
+    /// <summary>
+    /// Alias for <see cref="Encode(byte, int)"/>.
+    /// Writes a context tag and reserves payload bytes.
+    /// </summary>
+    /// <param name="tagNumber">The context tag number.</param>
+    /// <param name="dataLength">The payload length in bytes.</param>
+    /// <returns>A writable span for the reserved payload bytes.</returns>
+    public Span<byte> WriteTagAndReserve(byte tagNumber, int dataLength)
+    {
+        return Encode(tagNumber, dataLength);
+    }
 
     #endregion
 }
