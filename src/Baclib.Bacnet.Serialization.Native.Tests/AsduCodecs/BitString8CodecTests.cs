@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026, The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
-namespace Baclib.Bacnet.Serialization.Native.Tests.Codecs;
+namespace Baclib.Bacnet.Serialization.Native.Tests.AsduCodecs;
 
 // BitString8 is a bounded-scalar bit string (variable length up to 8 bits, byte storage, length field).
 public class BitString8CodecTests

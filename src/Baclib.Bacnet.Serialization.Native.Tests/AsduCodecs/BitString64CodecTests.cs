@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026, The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
-namespace Baclib.Bacnet.Serialization.Native.Tests.Codecs;
+namespace Baclib.Bacnet.Serialization.Native.Tests.AsduCodecs;
 
 // BitString64 is a bounded-scalar bit string (variable length up to 64 bits, ulong storage, length field).
 public class BitString64CodecTests

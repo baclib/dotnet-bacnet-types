@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026, The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
-namespace Baclib.Bacnet.Serialization.Native.Tests.Codecs;
+namespace Baclib.Bacnet.Serialization.Native.Tests.AsduCodecs;
 
 // StatusFlags is a fixed-scalar bit string (fixed 4-bit length, byte storage, no length field).
 public class StatusFlagsCodecTests

@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026, The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
-namespace Baclib.Bacnet.Serialization.Native.Tests.Codecs;
+namespace Baclib.Bacnet.Serialization.Native.Tests.AsduCodecs;
 
 // Application-tagged ObjectIdentifier: tag 12 (0xC), always 4 data bytes.
 //   Tag byte: (12 << 4) | 4 = 0xC4

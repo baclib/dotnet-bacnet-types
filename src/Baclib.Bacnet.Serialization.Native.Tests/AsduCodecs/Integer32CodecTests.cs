@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026, The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
-namespace Baclib.Bacnet.Serialization.Native.Tests.Codecs;
+namespace Baclib.Bacnet.Serialization.Native.Tests.AsduCodecs;
 
 // Application-tagged Signed Integer: tag 3, variable length 1–4 bytes.
 //   100       → 0x31 0x64              (1 byte, fits in [-128, 127])

@@ -3,7 +3,7 @@
 
 using Baclib.Bacnet.Types;
 
-namespace Baclib.Bacnet.Serialization.Native.Tests.Codecs;
+namespace Baclib.Bacnet.Serialization.Native.Tests.AsduCodecs;
 
 public class TimePatternCodecTests
 {
