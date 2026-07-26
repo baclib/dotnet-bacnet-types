@@ -66,8 +66,13 @@ public ref struct AsduReader(ReadOnlySpan<byte> asdu)
     // ----------------------------------------------------------------
 
     public byte ReadContextTagNumber()
-    { 
-        throw new NotImplementedException();
+    {
+        if (!Asdu.PeekContextTag(_asdu[_index..], out var tagNumber))
+        {
+            throw new AsduException("Expected context tag at current reader position.");
+        }
+
+        return tagNumber;
     }
 
     public void ReadOpeningTag(byte tagNumber)

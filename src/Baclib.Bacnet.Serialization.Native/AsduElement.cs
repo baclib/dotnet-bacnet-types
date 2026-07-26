@@ -32,7 +32,7 @@ public static class AsduElement
     public static Optional<T> DecodeOptional<TCodec, T>(ref AsduReader reader, byte tagNumber)
         where TCodec : IAsduElementCodec<T>
     {
-        if (TCodec.Matches(ref reader))
+        if (reader.PeekContextTag(tagNumber))
         {
             return Decode<TCodec, T>(ref reader, tagNumber);
         }

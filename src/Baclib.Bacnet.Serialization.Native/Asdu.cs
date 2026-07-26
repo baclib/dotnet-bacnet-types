@@ -369,9 +369,14 @@ public static class Asdu
         var offset = 0;
         while (offset < source.Length)
         {
+            if ((source[offset] & 0x07) == 7)
+            {
+                break;
+            }
+
             MeasureElement(source, ref offset);
         }
-        return source.Length;
+        return offset;
     }
 
     /// <summary>

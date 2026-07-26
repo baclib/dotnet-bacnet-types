@@ -67,7 +67,12 @@ public readonly partial record struct Time
         {
             throw new ArgumentOutOfRangeException();
         }
+        _centiseconds = total;
         TotalCentiseconds = total;
+        Hour = hour;
+        Minute = minute;
+        Second = second;
+        Hundredths = hundredths;
     }
 
     /// <summary>
