@@ -5,6 +5,10 @@ namespace Baclib.Bacnet.Serialization.Native;
 
 public static class Asdu
 {
+    /// <summary>
+    /// Checks whether the first encoded element is an application tag with the expected
+    /// <paramref name="tagNumber"/>.
+    /// </summary>
     public static bool PeekApplicationTag(ReadOnlySpan<byte> source, ApplicationTagNumber tagNumber)
     {
         if (source.IsEmpty)
@@ -16,6 +20,15 @@ public static class Asdu
         return (control & 0xF8) == ((byte)tagNumber << 4);
     }
 
+    /// <summary>
+    /// Checks whether the first encoded element is an application-tagged value and returns its
+    /// tag number.
+    /// </summary>
+    /// <param name="source">The bytes positioned at the start of an encoded element.</param>
+    /// <param name="tagNumber">When this method returns <see langword="true"/>, contains the
+    /// application tag number; otherwise contains the default value.</param>
+    /// <returns><see langword="true"/> when an application tag is present; otherwise
+    /// <see langword="false"/>.</returns>
     public static bool PeekApplicationTag(ReadOnlySpan<byte> source, out ApplicationTagNumber tagNumber)
     {
         if (source.IsEmpty)
@@ -35,6 +48,16 @@ public static class Asdu
         return true;
     }
 
+    /// <summary>
+    /// Checks whether the first encoded element is the expected application tag and, when it is,
+    /// reads the encoded data-length value from the tag header.
+    /// </summary>
+    /// <param name="source">The bytes positioned at the start of an encoded element.</param>
+    /// <param name="tagNumber">The expected application tag number.</param>
+    /// <param name="dataLength">When this method returns a non-zero value, contains the number
+    /// of payload bytes for the element.</param>
+    /// <returns>The number of bytes occupied by the tag header, or <c>0</c> when the expected tag
+    /// is not present or is truncated.</returns>
     public static int PeekApplicationTag(ReadOnlySpan<byte> source, ApplicationTagNumber tagNumber, out int dataLength)
     {
         if (source.IsEmpty)
@@ -53,6 +76,17 @@ public static class Asdu
         return ReadTagLength(source, 1, out dataLength);
     }
 
+    /// <summary>
+    /// Checks whether the first encoded element is application-tagged and, when it is, returns
+    /// both the tag number and payload length.
+    /// </summary>
+    /// <param name="source">The bytes positioned at the start of an encoded element.</param>
+    /// <param name="tagNumber">When this method returns a non-zero value, contains the
+    /// application tag number.</param>
+    /// <param name="dataLength">When this method returns a non-zero value, contains the number
+    /// of payload bytes for the element.</param>
+    /// <returns>The number of bytes occupied by the tag header, or <c>0</c> when the element is
+    /// not an application tag or is truncated.</returns>
     public static int PeekApplicationTag(ReadOnlySpan<byte> source, out ApplicationTagNumber tagNumber, out int dataLength)
     {
         if (source.IsEmpty)
@@ -74,6 +108,14 @@ public static class Asdu
         return ReadTagLength(source, 1, out dataLength);
     }
 
+    /// <summary>
+    /// Checks whether the first encoded element is a context tag with the expected
+    /// <paramref name="tagNumber"/>.
+    /// </summary>
+    /// <param name="source">The bytes positioned at the start of an encoded element.</param>
+    /// <param name="tagNumber">The expected context tag number.</param>
+    /// <returns><see langword="true"/> when the expected context tag is present; otherwise
+    /// <see langword="false"/>.</returns>
     public static bool PeekContextTag(ReadOnlySpan<byte> source, byte tagNumber)
     {
         if (tagNumber < 15)
@@ -97,6 +139,14 @@ public static class Asdu
         return false;
     }
 
+    /// <summary>
+    /// Checks whether the first encoded element is context-tagged and returns its tag number.
+    /// </summary>
+    /// <param name="source">The bytes positioned at the start of an encoded element.</param>
+    /// <param name="tagNumber">When this method returns <see langword="true"/>, contains the
+    /// context tag number; otherwise <c>0</c>.</param>
+    /// <returns><see langword="true"/> when a context tag is present; otherwise
+    /// <see langword="false"/>.</returns>
     public static bool PeekContextTag(ReadOnlySpan<byte> source, out byte tagNumber)
     {
         if (source.IsEmpty)
@@ -125,16 +175,43 @@ public static class Asdu
         return true;
     }
 
+    /// <summary>
+    /// Checks whether the first encoded element is a primitive context tag with the expected
+    /// <paramref name="tagNumber"/>.
+    /// </summary>
+    /// <param name="source">The bytes positioned at the start of an encoded element.</param>
+    /// <param name="tagNumber">The expected context tag number.</param>
+    /// <returns><see langword="true"/> when a matching primitive context element is present;
+    /// otherwise <see langword="false"/>.</returns>
     public static bool PeekContextPrimitive(ReadOnlySpan<byte> source, byte tagNumber)
     {
         return PeekContextTag(source, tagNumber) && (source[0] & 0x07) < 6;
     }
 
+    /// <summary>
+    /// Checks whether the first encoded element is a primitive context-tagged value and returns
+    /// its tag number.
+    /// </summary>
+    /// <param name="source">The bytes positioned at the start of an encoded element.</param>
+    /// <param name="tagNumber">When this method returns <see langword="true"/>, contains the
+    /// context tag number; otherwise <c>0</c>.</param>
+    /// <returns><see langword="true"/> when a primitive context element is present; otherwise
+    /// <see langword="false"/>.</returns>
     public static bool PeekContextPrimitive(ReadOnlySpan<byte> source, out byte tagNumber)
     {
         return PeekContextTag(source, out tagNumber) && (source[0] & 0x07) < 6;
     }
 
+    /// <summary>
+    /// Checks whether the first encoded element is a matching primitive context tag and, when it
+    /// is, reads the payload length.
+    /// </summary>
+    /// <param name="source">The bytes positioned at the start of an encoded element.</param>
+    /// <param name="tagNumber">The expected context tag number.</param>
+    /// <param name="dataLength">When this method returns a non-zero value, contains the number
+    /// of payload bytes for the element.</param>
+    /// <returns>The number of bytes occupied by the tag header, or <c>0</c> when a matching
+    /// primitive context element is not present or is truncated.</returns>
     public static int PeekContextPrimitive(ReadOnlySpan<byte> source, byte tagNumber, out int dataLength)
     {
         if (source.IsEmpty)
@@ -167,6 +244,17 @@ public static class Asdu
         return ReadTagLength(source, index, out dataLength);
     }
 
+    /// <summary>
+    /// Checks whether the first encoded element is a primitive context-tagged value and, when it
+    /// is, returns both the tag number and payload length.
+    /// </summary>
+    /// <param name="source">The bytes positioned at the start of an encoded element.</param>
+    /// <param name="tagNumber">When this method returns a non-zero value, contains the context
+    /// tag number.</param>
+    /// <param name="dataLength">When this method returns a non-zero value, contains the number
+    /// of payload bytes for the element.</param>
+    /// <returns>The number of bytes occupied by the tag header, or <c>0</c> when the element is
+    /// not a primitive context tag or is truncated.</returns>
     public static int PeekContextPrimitive(ReadOnlySpan<byte> source, out byte tagNumber, out int dataLength)
     {
         if (source.IsEmpty)
@@ -203,6 +291,13 @@ public static class Asdu
         return ReadTagLength(source, index, out dataLength);
     }
 
+    /// <summary>
+    /// Checks whether the first encoded element is the expected opening context tag.
+    /// </summary>
+    /// <param name="source">The bytes positioned at the start of an encoded element.</param>
+    /// <param name="tagNumber">The expected context tag number.</param>
+    /// <returns><see langword="true"/> when the expected opening tag is present; otherwise
+    /// <see langword="false"/>.</returns>
     public static bool PeekOpeningTag(ReadOnlySpan<byte> source, byte tagNumber)
     {
         if (tagNumber < 15)
@@ -222,6 +317,13 @@ public static class Asdu
         return false;
     }
 
+    /// <summary>
+    /// Checks whether the first encoded element is the expected closing context tag.
+    /// </summary>
+    /// <param name="source">The bytes positioned at the start of an encoded element.</param>
+    /// <param name="tagNumber">The expected context tag number.</param>
+    /// <returns><see langword="true"/> when the expected closing tag is present; otherwise
+    /// <see langword="false"/>.</returns>
     public static bool PeekClosingTag(ReadOnlySpan<byte> source, byte tagNumber)
     {
         if (tagNumber < 15)
@@ -241,6 +343,14 @@ public static class Asdu
         return false;
     }
 
+    /// <summary>
+    /// Reads and validates the expected opening context tag at the start of
+    /// <paramref name="source"/>.
+    /// </summary>
+    /// <param name="source">The bytes positioned at the opening tag.</param>
+    /// <param name="tagNumber">The expected context tag number.</param>
+    /// <returns>The number of bytes consumed by the opening tag (1 or 2).</returns>
+    /// <exception cref="AsduException">Thrown when the expected opening tag is absent.</exception>
     public static int ReadOpeningTag(ReadOnlySpan<byte> source, byte tagNumber)
     {
         if (!PeekOpeningTag(source, tagNumber))
@@ -250,6 +360,14 @@ public static class Asdu
         return tagNumber < 15 ? 1 : 2;
     }
 
+    /// <summary>
+    /// Reads and validates the expected closing context tag at the start of
+    /// <paramref name="source"/>.
+    /// </summary>
+    /// <param name="source">The bytes positioned at the closing tag.</param>
+    /// <param name="tagNumber">The expected context tag number.</param>
+    /// <returns>The number of bytes consumed by the closing tag (1 or 2).</returns>
+    /// <exception cref="AsduException">Thrown when the expected closing tag is absent.</exception>
     public static int ReadClosingTag(ReadOnlySpan<byte> source, byte tagNumber)
     {
         if (!PeekClosingTag(source, tagNumber))
@@ -306,6 +424,17 @@ public static class Asdu
         return 0;
     }
 
+    /// <summary>
+    /// Reads an application tag with the expected <paramref name="tagNumber"/> and returns its
+    /// header length.
+    /// </summary>
+    /// <param name="source">The bytes positioned at the start of an encoded element.</param>
+    /// <param name="tagNumber">The expected application tag number.</param>
+    /// <param name="dataLength">When this method returns, contains the number of payload bytes
+    /// for the element.</param>
+    /// <returns>The number of bytes occupied by the tag header.</returns>
+    /// <exception cref="AsduException">Thrown when the expected application tag is absent,
+    /// malformed, or truncated.</exception>
     public static int ReadTag(ReadOnlySpan<byte> source, ApplicationTagNumber tagNumber, out int dataLength)
     {
         int tagLength = PeekApplicationTag(source, tagNumber, out dataLength);
@@ -316,6 +445,17 @@ public static class Asdu
         return tagLength;
     }
 
+    /// <summary>
+    /// Reads a primitive context tag with the expected <paramref name="tagNumber"/> and returns
+    /// its header length.
+    /// </summary>
+    /// <param name="source">The bytes positioned at the start of an encoded element.</param>
+    /// <param name="tagNumber">The expected context tag number.</param>
+    /// <param name="dataLength">When this method returns, contains the number of payload bytes
+    /// for the element.</param>
+    /// <returns>The number of bytes occupied by the tag header.</returns>
+    /// <exception cref="AsduException">Thrown when the expected primitive context tag is absent,
+    /// malformed, or truncated.</exception>
     public static int ReadTag(ReadOnlySpan<byte> source, byte tagNumber, out int dataLength)
     {
         int tagLength = PeekContextPrimitive(source, tagNumber, out dataLength);
@@ -326,11 +466,27 @@ public static class Asdu
         return tagLength;
     }
 
+    /// <summary>
+    /// Writes an application or context data tag into <paramref name="destination"/>.
+    /// </summary>
+    /// <param name="destination">The destination span where tag bytes are written.</param>
+    /// <param name="tagNumber">The tag number to encode.</param>
+    /// <param name="tagClass">The tag class (application or context).</param>
+    /// <param name="dataLength">The encoded payload length to place in the tag header.</param>
+    /// <returns>The number of bytes written for the tag header.</returns>
     public static int WriteTag(Span<byte> destination, byte tagNumber, AsduTagClass tagClass, int dataLength)
     {
         return AsduWriter.WriteTag(destination, tagClass, tagNumber, dataLength);
     }
 
+    /// <summary>
+    /// Writes an opening or closing context tag to <paramref name="destination"/> and returns
+    /// the number of bytes written.
+    /// </summary>
+    /// <param name="destination">The destination span where tag bytes are written.</param>
+    /// <param name="tagNumber">The context tag number to encode.</param>
+    /// <param name="type">The enclosing tag type to encode.</param>
+    /// <returns>The number of bytes written for the tag (1 or 2).</returns>
     public static int WriteTag(Span<byte> destination, byte tagNumber, AsduTagType type)
     {
         if (tagNumber < 15)
@@ -343,20 +499,6 @@ public static class Asdu
         destination[1] = tagNumber;
         return 2;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     /// <summary>
     /// Validates that <paramref name="source"/> contains zero or more well-formed ASDU elements
     /// from start to end, and returns the total byte count.
@@ -411,11 +553,6 @@ public static class Asdu
         return offset;
     }
 
-
-
-
-
-
     /// <summary>
     /// Measures the total encoded length, in bytes, of exactly one complete ASDU element at the
     /// start of <paramref name="source"/>. The element may be a primitive value (application- or
@@ -443,7 +580,22 @@ public static class Asdu
         if (lvt == 6)
         {
             // Opening tag: constructed value delimited by a matching closing tag.
-            var tagNumber = ReadEnclosingTagNumber(source, ref offset);
+            var control = source[offset];
+            var tagNumber = control >> 4;
+            if (tagNumber == 15)
+            {
+                if (offset + 1 >= source.Length)
+                {
+                    throw new AsduException("Truncated extended tag number.");
+                }
+                tagNumber = source[offset + 1];
+                offset += 2;
+            }
+            else
+            {
+                offset += 1;
+            }
+
             while (true)
             {
                 if (offset >= source.Length)
@@ -453,7 +605,22 @@ public static class Asdu
 
                 if ((source[offset] & 0x07) == 7)
                 {
-                    var closingNumber = ReadEnclosingTagNumber(source, ref offset);
+                    control = source[offset];
+                    var closingNumber = control >> 4;
+                    if (closingNumber == 15)
+                    {
+                        if (offset + 1 >= source.Length)
+                        {
+                            throw new AsduException("Truncated extended tag number.");
+                        }
+                        closingNumber = source[offset + 1];
+                        offset += 2;
+                    }
+                    else
+                    {
+                        offset += 1;
+                    }
+
                     if (closingNumber != tagNumber)
                     {
                         throw new AsduException("Mismatched closing tag in constructed value.");
@@ -471,35 +638,11 @@ public static class Asdu
         }
 
         // Primitive/data tag: header followed by the data bytes.
-        MeasureDataTag(source, ref offset);
-    }
-
-    private static int ReadEnclosingTagNumber(ReadOnlySpan<byte> source, ref int offset)
-    {
-        var control = source[offset];
-        var number = control >> 4;
-        if (number == 15)
-        {
-            if (offset + 1 >= source.Length)
-            {
-                throw new AsduException("Truncated extended tag number.");
-            }
-            number = source[offset + 1];
-            offset += 2;
-        }
-        else
-        {
-            offset += 1;
-        }
-        return number;
-    }
-
-    private static void MeasureDataTag(ReadOnlySpan<byte> source, ref int offset)
-    {
-        var control = source[offset];
-        var number = control >> 4;
-        var isApplicationBoolean = (control & 0x08) == 0 && number == (byte)ApplicationTagNumber.Boolean;
+        var primitiveControl = source[offset];
+        var number = primitiveControl >> 4;
+        var isApplicationBoolean = (primitiveControl & 0x08) == 0 && number == (byte)ApplicationTagNumber.Boolean;
         offset += 1;
+
         if (number == 15)
         {
             if (offset >= source.Length)
@@ -509,15 +652,17 @@ public static class Asdu
             offset += 1;
         }
 
-        var lvt = control & 0x07;
+        var primitiveLvt = primitiveControl & 0x07;
         int dataLength;
+
         if (isApplicationBoolean)
         {
+            // BACnet application BOOLEAN encodes the value in LVT and carries no payload bytes.
             dataLength = 0;
         }
-        else if (lvt < 5)
+        else if (primitiveLvt < 5)
         {
-            dataLength = lvt;
+            dataLength = primitiveLvt;
         }
         else
         {
@@ -525,6 +670,7 @@ public static class Asdu
             {
                 throw new AsduException("Truncated extended length.");
             }
+
             var first = source[offset++];
             if (first < 254)
             {
