@@ -68,7 +68,7 @@ public readonly partial record struct Any
         public static implicit operator ReadOnlyMemory<byte>(AsduEncodedData value) => value.Memory;
     }
 
-    private Any(object value)
+    public Any(object value)
     {
         ArgumentNullException.ThrowIfNull(value);
         _value = value;

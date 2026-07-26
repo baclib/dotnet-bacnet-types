@@ -1,8 +1,6 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
-using System.Reflection;
-
 namespace Baclib.Bacnet.Serialization.Native;
 
 public static class Asdu
@@ -352,107 +350,61 @@ public static class Asdu
 
 
 
+
+
+
+
+
+
+
+    /// <summary>
+    /// Validates that <paramref name="source"/> contains zero or more well-formed ASDU elements
+    /// from start to end, and returns the total byte count.
+    /// </summary>
+    /// <param name="source">The bytes to validate.</param>
+    /// <returns>The length of <paramref name="source"/> in bytes.</returns>
+    /// <exception cref="AsduException">Thrown when any element is malformed or truncated.</exception>
+    public static int ReadAny(ReadOnlySpan<byte> source)
+    {
+        var offset = 0;
+        while (offset < source.Length)
+        {
+            MeasureElement(source, ref offset);
+        }
+        return source.Length;
+    }
+
+    /// <summary>
+    /// Validates a constructed ASDU value delimited by a matching opening/closing tag pair with
+    /// the given <paramref name="tagNumber"/>, including all enclosed elements, and returns the
+    /// total byte count (opening tag + content + closing tag).
+    /// </summary>
+    /// <param name="source">The bytes positioned at the opening tag.</param>
+    /// <param name="tagNumber">The context tag number of the opening and closing tags.</param>
+    /// <returns>The total number of bytes consumed, including both delimiter tags.</returns>
+    /// <exception cref="AsduException">Thrown when the opening tag is absent, any enclosed
+    /// element is malformed, the closing tag is missing, or data is truncated.</exception>
     public static int ReadAny(ReadOnlySpan<byte> source, byte tagNumber)
     {
-        return 0;
-    }
-
-    public static int ReadElement(ReadOnlySpan<byte> source)
-    {
-        var control = source[0];
-        var number = control >> 4;
-        if (number == 15)
+        if (!PeekOpeningTag(source, tagNumber))
         {
-            number = source[1];
+            throw new AsduException($"Expected opening tag {tagNumber} not found.");
         }
-        int length = control & 0x07;
-        if (length == 6)
+
+        var offset = tagNumber < 15 ? 1 : 2;
+
+        while (!PeekClosingTag(source[offset..], tagNumber))
         {
-            return ReadUntilClosingTag(source, number);
-
-        }
-        else if (length == 7)
-        {
-            throw new ArgumentException("Unexpected closing tag at element start.");
-        }
-        else
-        {
-            int dataLength;
-            ReadTagLength(source, number < 15 ? 1 : 2, out dataLength);
-            return (number < 15 ? 1 : 2) + dataLength;
-        }
-    }
-
-
-
-
-
-    private static int ReadUntilClosingTag(ReadOnlySpan<byte> source, int closingTagNumber)
-    {
-        int index = 0;
-        do
-        {
-            var control = source[index++];
-            var number = control >> 4;
-            if (number == 15)
+            if (offset >= source.Length)
             {
-                number = source[index++];
+                throw new AsduException($"Closing tag {tagNumber} not found.");
             }
-            int length = control & 0x07;
-            switch (length)
-            {
-                case < 5:
-                {
-                    index += length;
-                    break;
-                }
-                case 5:
-                {
-                    length = source[index++];
-                    if (length > 253)
-                    {
-                        if (length == 254)
-                        {
-                            length = AsduBinaryPrimitives.ReadUnsigned16(source.Slice(index, 2));
-                            index += 2;
-                        }
-                        else
-                        {
-                            length = AsduBinaryPrimitives.ReadInteger32(source.Slice(index, 4));
-                            index += 4;
-                        }
-                    }
-                    index += length;
-                    break;
-                }
-                case 6:
-                {
-                    index += ReadUntilClosingTag(source[index..], number);
-                    break;
-                }
-                case 7:
-                {
-                    if (number == closingTagNumber)
-                    {
-                        return index - (number < 15 ? 1 : 2);
-                    }
-                    throw new ArgumentException($"Invalid closing tag number {number}.");
-                }
-            }
+            MeasureElement(source, ref offset);
         }
-        while (index != source.Length);
-        return index;
+
+        offset += tagNumber < 15 ? 1 : 2;
+        return offset;
     }
-
-
-
-
-
-
-
-
-
-
 
 
 

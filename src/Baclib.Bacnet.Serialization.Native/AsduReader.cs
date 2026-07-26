@@ -111,27 +111,49 @@ public ref struct AsduReader(ReadOnlySpan<byte> asdu)
         return data;
     }
 
-    /// <summary>
-    /// Reads exactly one complete element (primitive or constructed) at the current position and
-    /// returns its raw encoded bytes, advancing past it.
-    /// </summary>
-    /// <returns>The raw encoded bytes of the element.</returns>
-    public ReadOnlySpan<byte> ReadElement()
+
+
+
+
+
+
+
+
+
+
+    public ReadOnlySpan<byte> ReadAny()
     {
-        var length = Asdu.ReadElement(_asdu[_index..]);
+        var length = Asdu.ReadAny(_asdu[_index..]);
         var data = _asdu.Slice(_index, length);
         _index += length;
         return data;
     }
 
-    /// <summary>
-    /// Reads and returns the raw encoded bytes of all elements from the current position up to,
-    /// but not including, the closing tag with the specified context tag number.
-    /// </summary>
-    /// <param name="tagNumber">The context tag number of the terminating closing tag.</param>
-    /// <returns>The raw encoded content bytes preceding the closing tag.</returns>
-    /// <exception cref="AsduException">Thrown when the closing tag is not found.</exception>
-    public ReadOnlySpan<byte> ReadRawUntilClosingTag(byte tagNumber)
+    public ReadOnlySpan<byte> ReadAny(byte tagNumber)
+    {
+        var length = Asdu.ReadAny(_asdu[_index..], tagNumber);
+        var data = _asdu.Slice(_index, length);
+        _index += length;
+        return data;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+    public ReadOnlySpan<byte> ReadUntilClosing()
+    {
+        throw new NotImplementedException();
+    }
+
+    public ReadOnlySpan<byte> ReadUntilClosing(byte tagNumber)
     {
         var start = _index;
         while (!PeekClosingTag(tagNumber))
