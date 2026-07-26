@@ -17,7 +17,7 @@ public sealed class AnyCodec : IAsduElementCodec<T.Any>
     public static T.Any Decode(ref AsduReader reader)
     {
         var span = reader.ReadAny();
-        var value = new AsduEncodedData(span);
+        var value = new T.Any.AsduEncodedData(span);
         return new T.Any(value);
     }
 
@@ -25,7 +25,7 @@ public sealed class AnyCodec : IAsduElementCodec<T.Any>
     public static T.Any Decode(ref AsduReader reader, byte tagNumber)
     {
         var span = reader.ReadAny(tagNumber);
-        var value = new AsduEncodedData(span);
+        var value = new T.Any.AsduEncodedData(span);
         return new T.Any(value);
     }
 

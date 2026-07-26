@@ -493,6 +493,7 @@ public static class Asdu
     {
         var control = source[offset];
         var number = control >> 4;
+        var isApplicationBoolean = (control & 0x08) == 0 && number == (byte)ApplicationTagNumber.Boolean;
         offset += 1;
         if (number == 15)
         {
@@ -505,7 +506,11 @@ public static class Asdu
 
         var lvt = control & 0x07;
         int dataLength;
-        if (lvt < 5)
+        if (isApplicationBoolean)
+        {
+            dataLength = 0;
+        }
+        else if (lvt < 5)
         {
             dataLength = lvt;
         }
