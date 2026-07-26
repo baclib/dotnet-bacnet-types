@@ -54,6 +54,11 @@ public static class AsduBinaryPrimitives
         return BinaryPrimitives.ReadUInt32BigEndian(bytes);
     }
 
+    /// <summary>
+    /// Reads a 32-bit BACnet unsigned integer value. Convenience alias for <see cref="ReadUnsigned32"/>.
+    /// </summary>
+    /// <param name="bytes">A span containing at least 4 bytes.</param>
+    /// <returns>The 32-bit unsigned integer.</returns>
     public static uint ReadUnsigned(ReadOnlySpan<byte> bytes)
         => ReadUnsigned32(bytes);
 
