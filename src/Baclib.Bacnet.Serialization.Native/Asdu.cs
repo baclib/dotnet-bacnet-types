@@ -1,6 +1,8 @@
 // SPDX-FileCopyrightText: Copyright 2024-2026 The BAClib Initiative and Contributors
 // SPDX-License-Identifier: EPL-2.0
 
+using System.Reflection;
+
 namespace Baclib.Bacnet.Serialization.Native;
 
 public static class Asdu
@@ -343,6 +345,119 @@ public static class Asdu
         destination[1] = tagNumber;
         return 2;
     }
+
+
+
+
+
+
+
+    public static int ReadAny(ReadOnlySpan<byte> source, byte tagNumber)
+    {
+        return 0;
+    }
+
+    public static int ReadElement(ReadOnlySpan<byte> source)
+    {
+        var control = source[0];
+        var number = control >> 4;
+        if (number == 15)
+        {
+            number = source[1];
+        }
+        int length = control & 0x07;
+        if (length == 6)
+        {
+            return ReadUntilClosingTag(source, number);
+
+        }
+        else if (length == 7)
+        {
+            throw new ArgumentException("Unexpected closing tag at element start.");
+        }
+        else
+        {
+            int dataLength;
+            ReadTagLength(source, number < 15 ? 1 : 2, out dataLength);
+            return (number < 15 ? 1 : 2) + dataLength;
+        }
+    }
+
+
+
+
+
+    private static int ReadUntilClosingTag(ReadOnlySpan<byte> source, int closingTagNumber)
+    {
+        int index = 0;
+        do
+        {
+            var control = source[index++];
+            var number = control >> 4;
+            if (number == 15)
+            {
+                number = source[index++];
+            }
+            int length = control & 0x07;
+            switch (length)
+            {
+                case < 5:
+                {
+                    index += length;
+                    break;
+                }
+                case 5:
+                {
+                    length = source[index++];
+                    if (length > 253)
+                    {
+                        if (length == 254)
+                        {
+                            length = AsduBinaryPrimitives.ReadUnsigned16(source.Slice(index, 2));
+                            index += 2;
+                        }
+                        else
+                        {
+                            length = AsduBinaryPrimitives.ReadInteger32(source.Slice(index, 4));
+                            index += 4;
+                        }
+                    }
+                    index += length;
+                    break;
+                }
+                case 6:
+                {
+                    index += ReadUntilClosingTag(source[index..], number);
+                    break;
+                }
+                case 7:
+                {
+                    if (number == closingTagNumber)
+                    {
+                        return index - (number < 15 ? 1 : 2);
+                    }
+                    throw new ArgumentException($"Invalid closing tag number {number}.");
+                }
+            }
+        }
+        while (index != source.Length);
+        return index;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     /// <summary>
     /// Measures the total encoded length, in bytes, of exactly one complete ASDU element at the

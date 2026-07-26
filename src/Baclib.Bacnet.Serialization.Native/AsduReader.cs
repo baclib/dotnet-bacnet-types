@@ -118,7 +118,7 @@ public ref struct AsduReader(ReadOnlySpan<byte> asdu)
     /// <returns>The raw encoded bytes of the element.</returns>
     public ReadOnlySpan<byte> ReadElement()
     {
-        var length = Asdu.MeasureElement(_asdu[_index..]);
+        var length = Asdu.ReadElement(_asdu[_index..]);
         var data = _asdu.Slice(_index, length);
         _index += length;
         return data;
